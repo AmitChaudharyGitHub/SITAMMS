@@ -1,0 +1,399 @@
+﻿
+
+
+@model MMS.Controllers.Print_Slip_For_ApprovalController.PrintData
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.min.js")" type="text/javascript"></script>
+
+
+    @* FOR EMPLOYEE NAME BINDING HERE *@
+
+
+    
+
+
+
+
+
+    <style>
+        td {
+            text-align: center;
+        }
+
+        table tr td {
+            font-size: 12px;
+        }
+    </style>
+    <style type="text/css">
+        .tblEmployee {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        .EmployeeTableTH {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        .EmployeeTableTD {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+    </style>
+
+
+    @*<script>
+            $(document).ready(function() {
+                $("#approved").click(function () {
+                    $("#yourDialog").show();
+                });
+            });
+        </script>*@
+
+
+
+    @* Print Code here *@
+    <style>
+        #divtoprint, #divtoprint * {
+            visibility: visible;
+        }
+
+        #divtoprint {
+        }
+    </style>
+
+
+
+
+    <script>
+        function PrintContent()
+        {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+    </script>
+
+
+
+</head>
+<body>
+    <div id="divtoprint">
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+                table {
+                    border-style: solid;
+                    border-color: #000000;
+                    border-top-width: 0.5px;
+                    border-left-width: 0.5px;
+                    border-bottom-width: 0px;
+                    border-right-width: 0px;
+                }
+
+                tr, td {
+                    border-style: solid;
+                    border-color: #000000;
+                }
+
+                tr {
+                    border-width: 0px;
+                }
+
+                .nb {
+                    border-bottom-width: 0px;
+                }
+
+                td, th {
+                    border-top-width: 0px;
+                    border-left-width: 0px;
+                    border-bottom-width: 0.5px;
+                    border-right-width: 0.5px;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+
+
+
+       
+
+        <h5 style="text-align:center;"><u>Manual Transfer Receive Note</u></h5>
+
+        <table class="table table-bordered" style="width:100%" cellpadding="4" cellspacing="0" border="1">
+
+            <thead>
+
+                <tr>
+                    <th style="text-align:left; font-size:12px;">Project Name & Address:</th>
+                    <th style="text-align:left; font-size:12px;">Manual Transfer No. : @Model.HeaderData.PurchaseOrderNo</th>
+                    <th style="text-align:left; font-size:12px;">Manual Transfer Date : @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy") </th>
+                    <input type="hidden" id="hdn_checkPOData" value="@Model.HeaderData.CheckedPoLimit" />
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:justify; width:40%; font-size:12px;">
+                        @Model.HeaderData.ProjectName
+                        <p style="margin:0px; font-size:12px;">@Model.HeaderData.Location</p>
+                    </td>
+                    <td colspan="2" style="color:black; text-align:left; font-size:12px;">
+                        MTR Ref No. @Model.HeaderData.IndentRefNo   Dtd. @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy")
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left; font-size:12px;">
+                        Project Site's Name & Address:
+                    </th>
+                    @*<th style="color:black; text-align:left; font-size:12px;">ACIL TIN No. : @Model.HeaderData.AcilTinNo </th>
+                        <th style="text-align:left; font-size:12px;"> ACIL GST No. : @Model.HeaderData.AcilGSTNo  </th>*@
+                </tr>
+                <tr>
+                    <td style="width:40%; text-align:justify;">
+                        @Model.HeaderData.Name     <br />  @Model.HeaderData.Address <br /> @Model.HeaderData.Vendor_country_state_city
+                        <p style="margin:0px; font-size:12px;">Supplier TIN No. @Model.HeaderData.VendorTInNO</p>
+                        <p style="margin:0px; font-size:12px;">Supplier GST No. @Model.HeaderData.VendorGSTNo</p>
+                        <p style="margin:0px; font-size:12px;">Contact:Mr. @Model.HeaderData.ContactPerson (@Model.HeaderData.MobileNo)</p>
+                    </td>
+                    <td colspan="2" valign="top" style="color:black; text-align:left;font-weight:100">
+                        Reference:@Model.HeaderData.Reference
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        @* Table for Dear sir *@
+
+      
+
+
+        <div class="panel-body pn">
+            
+
+            @{int rowNo = 1;}
+
+            <table id="t01" width="100%" style="font-size:10px;" cellpadding="4" cellspacing="0" border="1">
+                <thead>
+
+                    <tr>
+                        <th rowspan="2">S.No.</th>
+                        <th colspan="16" style="text-align:center">Description</th>
+                        <th>HSN Code</th>
+                        <th>Item Code</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Rate (Rs.) </th>
+                        <th>Discount (%) </th>
+                        <th>Amount(After Discount)</th>
+                        <th>P&F Chrg. %</th>
+                        <th>P&F Amt</th>
+                        <th>Cartage Type</th>
+                        <th>Cartage Type Rate</th>
+                        <th>Cartage Amt.</th>
+                        <th>Insurance (%)</th>
+                        <th>Ins. Amt.</th>
+                        <th>Taxable Amount</th>
+                        <th>CGST (%)</th>
+                        <th>SGST/UTGST (%) </th>
+                        <th>IGST (%) </th>
+                        <th>CGST Amt.(Rs.)</th>
+                        <th>SGST/UTGST Amt.(Rs.)</th>
+                        <th>IGST Amt.(Rs.)</th>
+                        <th>Amt(Rs.)</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+
+                    @foreach (var c in Model.ItemData)
+                    {
+
+
+                        <tr>
+                            <td rowspan="2"><label>@rowNo</label>   @{ rowNo++; }</td>
+                            <td colspan="16">
+                                @c.ItemName
+                                @if (c.ItemDescrp == null)
+                                {
+                                }
+                                else
+                                {
+
+                                    @c.ItemDescrp.ToString()
+                                }
+                            </td>
+                            <td>@c.HSNCode</td>
+                            <td>@c.ItemNo</td>
+                            <td>@c.UnitName</td>
+                        </tr>
+                        <tr>
+                            <td>@c.Qty</td>
+                            <td>@c.Rate</td>
+                            <td>@c.Discount</td>
+                            <td>@c.ItemToTAmt</td>
+                            <td>@c.PackagePercentage</td>
+                            <td>@c.PackingPercentageAmt</td>
+                            <td>@c.CartageType</td>
+                            <td>@c.CartageTypeRate</td>
+                            <td>@c.CartageAmt</td>
+                            <td>@c.InsurancePercentage</td>
+                            <td>@c.InsurancePercentageAmt</td>
+                            <td>@c.TaxableAmount</td>
+                            <td>@c.CGSTPercentage</td>
+                            <td>@c.SGSTAndUTGSTPercentage</td>
+                            <td>@c.IGST</td>
+                            <td>@c.CGSTAmt</td>
+                            <td>@c.SGSTAndUTGSTAmt</td>
+                            <td>@c.IGSTAmt</td>
+                            <td>@c.GrossAmount</td>
+                        </tr>
+
+                                }
+
+                </tbody>
+
+
+
+
+                <tfoot>
+                    <tr>
+                        <td colspan="2"><b>Total</b></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.Total</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalPackingSum</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalCartageSum</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalInsuranceSum</td>
+                        <td>@Model.HeaderData.TotalTaxableAmountSum</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalCGSTSum</td>
+                        <td>@Model.HeaderData.TotalSCGSTAndUTGSTSum</td>
+                        <td>@Model.HeaderData.IGSTSum</td>
+                        <td>@Model.HeaderData.GrandTotal</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="20" style="text-align:left;">
+                            <b> Amount In Word :</b>@ViewBag.PrintamountInWord
+                        </td>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+
+        </div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+        <table class="table table-bordered" style="width:100% ; display:none" cellpadding="4" cellspacing="0" border="1">
+            <thead>
+                <tr class="alert-danger">
+                    <th style="text-align:left; font-size:18px;">Acceptance of PO by Supplier</th>
+
+                    <th style="text-align:left; font-size:18px;">Authorised Signatory</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:left;"></td>
+                    <td></td>
+
+                    @*<td style="text-align:left;">@Model.HeaderData.PoApprovedBy <br /> Signature: </td>
+                        <td style="text-align:left;"> @Model.HeaderData.IsReleasePOBy <br /> Signature: </td>*@
+                </tr>
+            </tbody>
+        </table>
+
+
+        <br />
+
+
+        <table style="width:100%" cellpadding="4" cellspacing="0" border="1">
+            <tr>
+                <td>Correspondence Address:</td>
+                <td> A-177, Okhla Industrial Area, Phase-1, New Delhi - 110020</td>
+            </tr>
+
+        </table>
+
+        <div class="breakpage"></div>
+        @*<center>
+                <h5><u>General Terms & Conditions</u></h5>
+
+                <p style="font-size:12px;">(Reference PO No.<b style="color:blue;" id="bold1">@Model.HeaderData.PurchaseOrderNo</b> Dated @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy"))</p>
+
+            </center>*@
+
+
+
+
+        <br />
+
+
+    </div>
+
+    <div style="clear:both;"></div>
+    <div>
+        <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+    </div>
+
+</body>
+</html>

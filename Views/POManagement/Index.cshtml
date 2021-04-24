@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "PO Management";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PO Management</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <div class="form-horizontal">
+
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="col-md-12">
+                                            <div class="col-md-4">
+                                                <div class="section">
+                                                    <label class="field select">
+                                                        <select class="form-control" id="ddlProjects">
+                                                            <option value="">Select Project</option>
+                                                        </select>
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" name="name" value="" class="form-control" id="txtPONo"  />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="button" name="btn" value="Search"  id="btnSearch" class="btn btn-primary"/>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                               
+                                </form>
+                                <br/>
+
+                                <div class="row" id="process" style="display:none;">
+                                    <div class="col-md-12" style="text-align:center;">
+                                        <img src="~/Images/Loading.gif" alt="Loading Image" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" id="data">
+                                        
+                                    </div>
+                                </div>
+                               
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+
+
+@section scripts{
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+  <script type="text/javascript">
+      var GetProjects = '@Url.Action("GetProjects")';
+      var GetPODetails = '@Url.Action("GetPODetails")';
+      var UpdatePO = '@Url.Action("UpdatePO")';
+      $(document).ready(function () {
+          BindDdl('#ddlProjects', GetProjects, {}, 'Project');
+
+          $('#btnSearch').click(function () {
+              $('#process').show();
+              $('#data').html('');
+              if ($('#ddlProjects').val() != '') {
+                  $.ajax({
+                      url: GetPODetails,
+                      data: { ProjectId: $('#ddlProjects').val(), PONo: $('#txtPONo').val() },
+                      success: function (response) {
+                          $('#data').html(response);
+                          $('#process').hide();
+                      }
+                  });
+              }
+              else {
+                  alert('Please Select Project');
+              }
+          });
+
+          $(document).on('click', '.lnkDisapprove', function () {
+              var po=$(this).data('po');
+              $.get(UpdatePO, { PONo: po }, function (response) {
+                  if (response.Status == 1) {
+                      alert('P.O Disapproved Successfully.');
+                  }
+                  else if(response.Status==2) {
+                      alert('Qty already received on this P.O');
+                  }
+                  else {
+                      alert('Some error occured.');
+                  }
+              });
+          });
+      });
+
+    </script>    
+}

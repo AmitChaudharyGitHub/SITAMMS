@@ -1,0 +1,216 @@
+﻿@model MMS_P.ViewModels.PagedGateEntryMasterModel
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+    var fromDate = (DateTime)ViewBag.fromDate;
+    var toDate = (DateTime)ViewBag.toDate;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId= '@Url.Action("GetProjectByEmpId", "GateEntries")';
+    var Grid2= '@Url.Action("Grid2T", "GateEntries")';
+    var Grid3= '@Url.Action("Grid3T", "GateEntries")';
+    
+
+
+</script>
+<script src="~/Script/GEIndex.min.js"></script>
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label("Site Transfer & Receive", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @*@Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control" })*@
+
+                                            @if (ViewBag.EmpId == "0" || ViewBag.EmpId == "EMP0000001")
+                                            {
+                                                @Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control",@Disabled="Disabled" })
+                                            }
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <p>
+                                     
+                                        <a class="btn btn-primary" data-modal="" href="@Url.Action("CreateT", "GateEntries")" id="btnCreate">
+                                            Create New Gate Entry
+                                        </a>
+                                        </p>
+                                    </div>
+                                    </div>
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <p>
+
+                                            <a class="btn btn-primary" data-modal="" href="@Url.Action("DMR", "GateEntries")" id="btnCreate">
+                                                Show Item Wise View For Receive
+                                            </a>
+                                        </p>
+                                    </div>
+                                    </div>
+                            </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field select">
+                                                @Html.DropDownList("Prj", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Prj", @class = "form-control" })
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="section">
+                                            <input type="submit" value="Search By Last" id="btnDateLast" onclick="javascript:getblock1()" class="btn btn-success" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        @*Admin:     @Html.RadioButton("f", "All")
+                    Created:   @Html.RadioButton("f", "C", new { @checked = true })
+                    For Approvation:   @Html.RadioButton("f", "A")*@
+                                        @*Admin: <input type="radio" name="f" id="f" value="All"  />*@
+                                        @*Created:  <input type="radio" name="f" id="f" value="C" checked="checked" />
+                                        For Approval:  <input type="radio" name="f" id="f" value="A" />*@
+                                        @*<label for="bankName">Bank Name</label>*@
+                                    </div>
+
+                                  
+
+                                </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("fromDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "fromDate", @placeholder = "Enter From Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("toDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "toDate", @placeholder = "Enter To Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+                                @*<br />*@
+                                
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <input type="submit" value="Search By Date" id="btnDate" onclick="javascript:getblock()" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+                               
+
+                            </div>
+
+                            <div id="dvLoading"></div>
+
+
+                                <div class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+                                </div>
+
+
+
+
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "CashPurchaseChilds");}*@
+                                </div>
+
+
+
+                            </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

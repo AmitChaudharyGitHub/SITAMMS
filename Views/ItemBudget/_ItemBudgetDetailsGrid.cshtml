@@ -1,0 +1,83 @@
+﻿@model MMS.DAL.tblBudgetChild
+
+
+@if (Model != null)
+{
+   <div style="overflow:scroll; max-height:500px;">
+       <table class="table table-striped">
+           <thead>
+               <tr>
+                   <th>S No.</th>
+                   <th>Months</th>
+                   <th>Qty</th>
+               </tr>
+           </thead>
+           <tbody>
+               <tr>
+                   <td>1</td>
+                   <td>April</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>2</td>
+                   <td>May</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>3</td>
+                   <td>June</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>4</td>
+                   <td>July</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>5</td>
+                   <td>Aug</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>6</td>
+                   <td>Sep</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>7</td>
+                   <td>Oct</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>8</td>
+                   <td>Nov</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>9</td>
+                   <td>Dec</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>10</td>
+                   <td>Jan</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>11</td>
+                   <td>Feb</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+               <tr>
+                   <td>12</td>
+                   <td>March</td>
+                   <td><div class="col-md-4"><input type="text" name="apr" value="@Model.Apr" class="form-control" /></div></td>
+               </tr>
+           </tbody>
+       </table>
+   </div>
+}
+else
+{
+    <p style="color:red; font-size:large">No records found !!!!</p>
+}

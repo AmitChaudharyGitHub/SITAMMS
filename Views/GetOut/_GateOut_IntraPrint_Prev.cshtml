@@ -1,0 +1,359 @@
+﻿
+
+
+@model MMS_P.ViewModels.GetDetailOnPrint
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Tax Invoice</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+   
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+
+      function PrintContent() {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+
+    </script>
+</head>
+<body>
+    <div id="divtoprint">
+
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+
+                table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+
+                th, td {
+                    padding: 5px;
+                    text-align: left;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+
+        <table style="width:100%">
+            <tr>
+                <th style="width:100%; text-align: right;"><u>Form GST INV - 1</u></th>
+            </tr>
+        </table>
+        <table style="width:100%">
+            <tr>
+                <th colspan="8" style="background: linear-gradient(to bottom, #c5c2c2 0%, #ffffff 100%); width:90%"><center><u>TAX INVOICE</u></center></th>
+                <th style="width:10%"><center> Triplicate</center></th>
+            </tr>
+        </table>
+        <table style="width:100%">
+
+            <tr>
+                <th style="width:20%" rowspan="4"><center><img src="~/Images/logo.png" /></center></th>
+                <th rowspan="4" colspan="5" style="width:70%">
+                    <h2 align="center">Ahluwalia Contracts (India) Ltd.</h2>
+                    <h4 align="center">Registered Address: A-177, Okhla Industrial Area,Phase- 1, New Delhi- 202050<br />Project Address: PNB Head Office Building Project,<br />Plot No.4, Sec. 10, Dwarka, New Delhi- 110075<br />CIN:L45101DL 1979PLC009654<br />Email-Id:info@acilnet.com, Website:www.acilnet.com</h4>
+                </th>
+                <th style="width:10%; text-align: center;">Project: PNB</th>
+            </tr>
+            <tr>
+                <th rowspan="3"><p style="margin-top: -1px; text-align: center;">Pre-Authenticated</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p style="margin-bottom: 0px; text-align: center;">Authorised Signatory</p></th>
+            </tr>
+
+        </table>
+        <table style="width:100%">
+            <tr>
+                <td style="width:40%;"><b>GSTIN:</b></td>
+                <td style="width:10%;"><label>@Model.Header.ProjectGSTIN</label> <input type="hidden" id="hdnIntraTransMasterTransId" value="@Model.Header.IntarStateTaxableMasterTransID" />  <input type="hidden" id="hdnProjectId" value="@Model.Header.ProjectId" /> </td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:20%;"><b>Vehicle Own/TPT.</b></td>
+                <td colspan="3" style="width:10%"><label>@Model.Header.ModeOfTPT</label></td>
+            </tr>
+            <tr>
+                <td style="width:40%"><b>Invoice No.</b></td>
+                <td style="width:10%"><label id="lbltransferNumber">@Model.Header.TRansferNo</label></td>
+                <td style="width:10%"><label></label></td>
+                <td style="width:10%"><label></label></td>
+                <td style="width:20%"><b>Vehicle No.</b></td>
+                <td colspan="2" style="width:10%"><label>@Model.Header.VehicleNo</label></td>
+            </tr>
+            <tr>
+                <td style="width:40%;"><b>Date of Invoice No.</b></td>
+                <td style="width:10%;"><label>@Model.Header.Transferdate.ToString("dd/MM/yyyy")</label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:20%;"><b>Place of Supply</b></td>
+                <td colspan="2" style="width:10%"><label></label></td>
+            </tr>
+            <tr>
+                <td style="width:40%;"><b>E-Way Bill No.</b></td>
+                <td style="width:10%;"><label>@Model.Header.EWayBillNo</label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:20%;"><b>Date of Recv.</b></td>
+                <td colspan="2" style="width:10%"><label> @Model.Header.ReachingDateofDestination</label></td>
+            </tr>
+            <tr>
+                <td style="width:40%;"><b>Tax is payable on reverse charge</b></td>
+                <td style="width:10%;"><label>@Model.Header.TaxTapableStatus</label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:20%;"><b>Sate Code</b></td>
+                <td colspan="2" style="width:10%"><label></label></td>
+            </tr>
+            <tr>
+                <td style="width:40%;"><b>Gate Out Number</b></td>
+                <td style="width:10%;"><label>@Model.Header.GateOutNo</label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:10%;"><label></label></td>
+                <td style="width:20%;"><b>Gate Out Date</b></td>
+                <td colspan="2" style="width:10%"><label>@Model.Header.GateOutDate</label></td>
+            </tr>
+        </table>
+        <table style="width:100%">
+            <tr>
+                <th style="width:40%" colspan="2"><center>Detail of Receiver(Billed to)</center></th>
+                <th style="width:60%" colspan="2"><center>Detail of Consignee(Shipped to)</center></th>
+            </tr>
+            <tr>
+                <td style="width:10%">Name</td>
+                <td style="width:40%">@Model.Header.ProjectName</td>
+                <td style="width:10%">Name</td>
+                <td style="width:40%">@Model.Header.TransferProjectName</td>
+            </tr>
+            <tr>
+                <td style="width:10%">Add.</td>
+                <td style="width:40%">@Model.Header.ProjectAddress</td>
+                <td style="width:10%">Add.</td>
+                <td style="width:40%">@Model.Header.TransferProjectAddress</td>
+            </tr>
+            <tr>
+                <td style="width:10%">State</td>
+                <td style="width:40%">@Model.Header.ProjectState</td>
+                <td style="width:10%">State</td>
+                <td style="width:40%">@Model.Header.TransferProjectState</td>
+            </tr>
+            <tr>
+                <td style="width:10%">State Code</td>
+                <td style="width:40%"></td>
+                <td style="width:10%">State Code</td>
+                <td style="width:40%"></td>
+            </tr>
+            <tr>
+                <td style="width:10%">GSTIN</td>
+                <td style="width:40%">@Model.Header.ProjectGSTIN</td>
+                <td style="width:10%">GSTIN</td>
+                <td style="width:40%">@Model.Header.TarnsferProjectGSTIN</td>
+            </tr>
+        </table>
+        <style>
+            th, td {
+                padding: 0px;
+            }
+        </style>
+
+        <div class="panel-body pn">
+
+            @{int rowNo = 1;}
+
+            <table id="t01" width="100%" style="font-size:10px;" cellpadding="4" cellspacing="0" border="1">
+
+
+                <tr>
+                    <th style="text-align:center" rowspan="2">S.No.</th>
+                    <th colspan="16" style="text-align:center">Description</th>
+                    <th style="text-align:center">HSN Code</th>
+                    <th style="text-align:center">Item Code</th>
+                    <th style="text-align:center">Unit</th>
+                </tr>
+                <tr>
+                    <th style="text-align:center">Qty</th>
+                    <th style="text-align:center">Rate (Rs.) </th>
+                    <th style="text-align:center">Discount (%) </th>
+                    <th style="text-align:center">Amount(After Discount)</th>
+                    <th style="text-align:center">P&F Chrg. %</th>
+                    <th style="text-align:center">P&F Amt</th>
+                    <th style="text-align:center">Cartage Type</th>
+                    <th style="text-align:center">Cartage Type Rate</th>
+                    <th style="text-align:center">Cartage Amt.</th>
+                    <th style="text-align:center">Insurance (%)</th>
+                    <th style="text-align:center">Ins. Amt.</th>
+                    <th style="text-align:center">Taxable Amount</th>
+                    <th style="text-align:center">CGST (%)</th>
+                    <th style="text-align:center">SGST/UTGST (%) </th>
+                    <th style="text-align:center">IGST (%) </th>
+                    <th style="text-align:center">CGST Amt.(Rs.)</th>
+                    <th style="text-align:center">SGST/UTGST Amt.(Rs.)</th>
+                    <th style="text-align:center">IGST Amt.(Rs.)</th>
+                    <th style="text-align:center">Amt(Rs.)</th>
+                </tr>
+
+
+
+                @foreach (var c in Model.ItemData)
+                {
+
+
+                    <tr>
+                        <td style="text-align:center" rowspan="2"><label>@rowNo</label>   @{ rowNo++; }</td>
+                        <td style="text-align:center" colspan="16">
+                            @c.ItemName
+                            @if (c.Item_Description == null)
+                            {
+                            }
+                            else
+                            {
+
+                                @c.Item_Description.ToString()
+                            }
+                        </td>
+                        <td style="text-align:center">@c.HSNCode</td>
+                        <td style="text-align:center">@c.GIETMCode</td>
+                        <td style="text-align:center">@c.UnitCode</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center">@c.Qty</td>
+                        <td style="text-align:center">@c.Rate</td>
+                        <td style="text-align:center">@c.Discount</td>
+                        <td style="text-align:center">@c.Total</td>
+                        <td style="text-align:center">@c.PackingChargesPercentage</td>
+                        <td style="text-align:center">@c.PackingChargesAmount</td>
+                        <td style="text-align:center">@c.CartageTypeName</td>
+                        <td style="text-align:center">@c.Cartage_rate</td>
+                        <td style="text-align:center">@c.CartageAmount</td>
+                        <td style="text-align:center">@c.InsuranceAmount</td>
+                        <td style="text-align:center">@c.InsuranceAmount</td>
+                        <td style="text-align:center">@c.SubTotal2</td>
+                        <td style="text-align:center">@c.CGSTPercentage</td>
+                        <td style="text-align:center">@c.SGSTPercentage</td>
+                        <td style="text-align:center">@c.IGSTPercentage</td>
+                        <td style="text-align:center">@c.CGSTAmount </td>
+                        <td style="text-align:center">@c.SGSTAmount</td>
+                        <td style="text-align:center">@c.IGSTAmount</td>
+                        <td style="text-align:center">@c.GrossAmount</td>
+                    </tr>
+
+                            }
+
+
+
+
+
+
+                <tr>
+                    <td colspan="2"><b>Total</b></td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Model.Header.Total</td>
+                    <td>&nbsp;</td>
+                    <td>@Model.Header.Total_PAndF </td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Model.Header.Total_Cartage</td>
+                    <td>&nbsp;</td>
+                    <td>@Model.Header.Total_Insurance </td>
+                    <td>@Model.Header.Total_Taxable</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@Model.Header.Total_CGST</td>
+                    <td>@Model.Header.Total_SGSTAndUTGST</td>
+                    <td>@Model.Header.Total_IGST </td>
+                    <td>@Model.Header.GrandTotal</td>
+                </tr>
+
+                <tr>
+                    <td colspan="20" style="text-align:left;">
+                        <b> Amount In Word :</b>@*@ViewBag.PrintamountInWord*@ @Model.Header.Total_NetAmountInWords
+                    </td>
+                </tr>
+
+
+
+            </table>
+
+        </div>
+
+
+
+
+
+
+
+        <table style="width: 100%">
+            <tr>
+                <th style="width:40%">Terms & Condition of Sale/Service </th>
+                <th style="width:60%;background: linear-gradient(to bottom, #c5c2c2 0%, #ffffff 100%);">For Ahluwalia Contracts India Limited </th>
+            </tr>
+            <tr>
+                <td rowspan="2"><p>1) Please make the payment within 15 days time,<br />otherwise 18% interest shall be charged.<br />2) All disputes subject to delhi jurisdiction only.<br />3) E & O.E</p></td>
+                <td><p>&nbsp;</p><p>&nbsp;</p></td>
+            </tr>
+            <tr><td style="background: linear-gradient(to bottom, #c5c2c2 0%, #ffffff 100%);">ghchcgh</td></tr>
+        </table>
+
+
+
+
+
+    </div>
+
+    <br />
+    <div style="clear:both;"></div>
+    <div class="row">
+
+
+        <div class="col-md-pull-3">
+            <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+
+        </div>
+
+
+    </div>
+
+</body>
+</html>

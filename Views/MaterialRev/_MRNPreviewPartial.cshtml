@@ -1,0 +1,523 @@
+﻿@model MMS.Models.MRNEntryPreview
+
+
+<div class="container">
+    @if (Model != null)
+    {
+    <div class="row" id="mrk_drdetail">
+        <div class="col-md-12">
+
+
+
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">MRN No.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_MRNNO">@Model.MRNDetail.MRN</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">MRN Date.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_mrnDate">@Model.MRNDetail.MRNCreatedDAte</label>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+
+
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">GRN No.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_grnNo">@Model.MRNDetail.GateEntryNo</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">GRN Date</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_grnDateAndTime">@Model.MRNDetail.GateEntryCreatedDate</label>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+
+
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">Bill No.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_billNo">@Model.MRNDetail.BillNo</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">Bill Date.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_billdate">@Model.MRNDetail.BillDate</label>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+
+
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">PO No.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_PONo">@Model.MRNDetail.PONO</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">PO Date.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_poNoDate">@Model.MRNDetail.PODate</label>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12">
+
+
+
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">E-Way Bill No.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_PONo">@Model.EwayBillNo</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">Date Of E-Way Bill.</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_poNoDate">@Model.DMRDate</label>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12" style="font:bold">
+            <div class="col-md-3">
+                <div class="section">
+
+                    <label style="font:bold">Name Of Supplier</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_vendorName">@ViewBag.Vendor</label>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">VehicleNo</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_VehicleNo">@Model.MRNDetail.VehicleNo</label>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="col-md-12" style="font:bold">
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold">Address</label>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="section">
+
+                    <label style="font:bold" id="lbl_Address">@ViewBag.Address</label>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (Model.RecItems.Count > 0)
+            {
+                var grid1 = new WebGrid(source: Model.RecItems, canPage: true, rowsPerPage: 50, ajaxUpdateContainerId: "positionGrid");
+
+              <div style="overflow:scroll" id="tbl_MRNItem">
+                  @grid1.GetHtml(mode: WebGridPagerModes.All,
+                     tableStyle: "gridTable",
+                     headerStyle: "gridHead",
+                     footerStyle: "gridFooter",
+                     rowStyle: "gridRow",
+                     alternatingRowStyle: "gridAltRow",
+                     htmlAttributes: new { id = "positionGrid" },
+                     fillEmptyRows: false,
+                     columns: grid1.Columns(
+                         grid1.Column(header: "S.No.", format: @<text><div style="text-align:center;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>),
+                          grid1.Column("GroupName", header: "Item Group", style: "my-classL"),
+                          grid1.Column("ItemNo", header: "Item Code", style: "my-classC"),
+                           grid1.Column("ItemName", header: "Item Description", style: "my-classL"),
+                            grid1.Column("UnitCode", header: "Unit", style: "my-classL"),
+                             grid1.Column("QTy", header: "Qty.", style: "my-classR"),
+                              grid1.Column("Rate", header: "Rate", style: "my-classR"),
+                              grid1.Column("DiscountPercentage", header: "Discount(%)", style: "my-classR"),
+                               grid1.Column("Discount", header: "Amount after discount", style: "my-classR"),
+                                grid1.Column("PandF", header: "P&F ", style: "my-classR"),
+                                 grid1.Column("CartageAmt", header: "Cartage", style: "my-classR"),
+                                  grid1.Column("InsuranceAmt", header: "Insurance", style: "my-classR"),
+                                    grid1.Column("CGSTPer", header: "CGST(%)", style: "my-classR"),
+                                     grid1.Column("SGSTAndUTGSTPer", header: "SGST/\nUTGST(%)", style: "my-classR"),
+                                      grid1.Column("IGSTPer", header: "IGST(%)", style: "my-classR"),
+                                       grid1.Column("CGSTAmt", header: "CGST Amt.", style: "my-classR"),
+                                        grid1.Column("SGSTAndUTGSTAmt", header: "SGST/UTGST Amt.", style: "my-classR"),
+                                         grid1.Column("IGSTAmt", header: "IGST Amt.", style: "my-classR"),
+                                         grid1.Column("TCSPer", header: "TCS (%).", style: "my-classR"),
+                                         grid1.Column("TCSAmt", header: "TCS Amt.", style: "my-classR"),
+                                          grid1.Column("GrandTotal", header: "Grand Total", style: "my-classR")
+
+
+                      ))
+                  
+                  <p style="text-align:right"><h3>Grand Total: @Model.GrandTotal</h3></p>
+              </div>
+
+                <br />
+                <div style="text-align:left;" class="hide">
+                    @Html.ActionLink("Export to Excel", "GetExcel", "NewDMR_Report", new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Print", "DMRStockPdf", "NewDMR_Report", new { @class = "btn btn-primary", @target = "_blank" })
+                </div>
+            }
+            else
+            {
+                <p style="color:red; font-size:large">No records found !!!!</p>
+            }
+        </div>
+    </div>
+    }
+    else {
+        <div class="row">
+            <div class="col-md-12">
+                <h3>No Data Found!</h3>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+
+<script>
+    var gsttype = '@Model.RecItems[0].TaxType';
+    var tcsactive = @Model.MRNDetail.TCSActive.ToString().ToLower();
+    var gstcls="";
+    var igstcls="";
+    if(tcsactive)
+    {
+        if (gsttype.indexOf("IGST") == -1)
+        {
+            igstcls='hide';
+        }
+        else
+        {
+            gstcls='hide';
+        }
+    }
+
+    var dataSumRow = '<tr class="gridRow"><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>'
+        + '<td colspan="4" class="my-classL">Total</td><td class="my-classR">@Model.GetTotalDiscount</td><td class="my-classR">@Model.GetTotalPF</td>'
+        + '<td class="my-classR">@Model.GetTotalCartage</td><td class="my-classR">@Model.GetTotalInsurance</td><td class="'+gstcls+'">&nbsp;</td><td class="'+gstcls+'">&nbsp;</td>'
+        + '<td class="'+igstcls+'">&nbsp;</td><td class="my-classR '+gstcls+'">@Model.GetTotalCgst</td><td class="my-classR '+gstcls+'">@Model.GetTotalSgst</td><td class="my-classR '+igstcls+'">@Model.GetTotalIgst</td>'
+    if(tcsactive)
+    {
+        dataSumRow+='<td></td><td>@Model.GetTotalTCS</td>';
+    }
+    dataSumRow +='<td class="my-classR">@Model.GetTotalGrand</td></tr>';
+    $("#tbl_MRNItem table").append(dataSumRow);
+
+    if(tcsactive)
+    {
+        if (gsttype.indexOf("IGST") == -1)
+        {
+            $('.gridHead th:eq(14), .gridHead th:eq(17)').css('display','none');
+            //$('.gridRow td:eq(14), .gridRow td:eq(17)').css('display','none');
+            $.each($('.gridTable tbody tr:not(:last)'), function () {
+                $(this).children('td:eq(14)').css('display', 'none');
+                $(this).children('tr td:eq(17)').css('display', 'none');
+            });
+        }
+        else{
+            $('.gridHead th:eq(12), .gridHead th:eq(13), .gridHead th:eq(15), .gridHead th:eq(16)').css('display','none');
+            //$('.gridRow td:eq(12), .gridRow td:eq(13), .gridRow td:eq(15), .gridRow td:eq(16)').css('display','none');
+
+            $.each($('.gridTable tbody tr:not(:last)'), function () {
+                $(this).children('td:eq(12)').css('display', 'none');
+                $(this).children('tr td:eq(13)').css('display', 'none');
+                $(this).children('td:eq(15)').css('display', 'none');
+                $(this).children('tr td:eq(16)').css('display', 'none');
+            });
+        }
+    }
+    else{
+        $('.gridHead th:eq(18), .gridHead th:eq(19)').css('display','none');
+        $.each($('.gridTable tbody tr:not(:last)'), function () {
+            $(this).children('td:eq(18)').css('display', 'none');
+            $(this).children('tr td:eq(19)').css('display', 'none');
+        });
+    }
+</script>

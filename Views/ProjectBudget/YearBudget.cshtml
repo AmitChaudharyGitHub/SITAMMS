@@ -1,0 +1,248 @@
+﻿
+@{
+    ViewBag.Title = "YearBudget";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Project Year Budget </span>
+                                </div>
+
+
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "ddlProject", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        @Html.TextBox("txtMonths", "", new { @placeholder = "Enter Budget Months" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3" id="vndr_drp">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("ItemGroup", new SelectList(string.Empty, "Value", "Text"), "Select Item Group", htmlAttributes: new { @id = "ddlItemGroup", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="container">
+                                            <form method="post" action="SaveProjectYearBudget" name="YearFormBudget">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div id="itemgrid" style="max-height:500px; overflow-y:scroll">
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <input type="submit" class="btn btn-default" value="Save Budget" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+<script>
+     var getGroups = '@Url.Action("GetItemGroups", "IssueReturn")';
+    var getAllProjects = '@Url.Action("GetAllProjectExceptSelectedProject", "IntraTransfer")';
+
+    $(window).load(function () {
+        BindDdl('#ddlItemGroup', getGroups, {}, 'Item Group');
+        BindDdl('#ddlProject', getAllProjects, {}, 'Project');
+    });
+
+    $(document).ready(function () {
+        //$.post("GetItems", { ItemGroup: "IG00000001", Months: 72 }, function (response) {
+        //    $('#itemgrid').html(response);
+        //});
+
+        $('#btn_Search').click(function () {
+            var prj_id = $('#ddlProject').val();
+            var itm_grp = $('#ddlItemGroup').val();
+            var month = $('#txtMonths').val();
+
+            if (prj_id == '' || itm_grp == '' || month == '')
+                alert('All Fields required');
+            else {
+                $.post("GetItems", { ItemGroup: itm_grp, Months: month, ProjectID: prj_id }, function (response) {
+                    $('#itemgrid').html(response);
+                });
+            }
+        });
+
+        $("body").on('change', '.BudgetQty', function () {
+            if ($(this).val() != '') {
+                var divqty = (parseFloat($(this).val()) / $('.YearQty' + $(this).attr('indexnum')).length);
+                $('.YearQty' + $(this).attr('indexnum')).val(divqty.toFixed(3));
+            }
+        });
+
+        $("body").on('change', '.BudgetRate', function () {
+            if ($(this).val() != '') {
+                $('.YearRate' + $(this).attr('indexnum')).val($(this).val());
+                var totalamt = parseFloat($(this).val()) * parseFloat($('input.BudgetQty[indexnum="' + $(this).attr('indexnum') + '"]').val());
+                $('.BudgetAmt' + $(this).attr('indexnum')).val(totalamt.toFixed(2));
+                $('.YearAmt' + $(this).attr('indexnum')).val((totalamt / parseInt($('.YearAmt' + $(this).attr('indexnum')).length)).toFixed(2));
+            }
+        });
+
+        $("body").on('change', 'input[class*="YearRate"]', function () {
+            if ($(this).val() != '') {
+                var indx = $(this).attr('class').slice(8).split(' ');
+                var inpName = $(this).attr('name').split('.');
+                var yrtotalamt = parseFloat($(this).val()) * parseFloat($('input[name="' + inpName[0] + '.ItemQty"]').val());
+                $('input[name="' + inpName[0] + '.TotalAmt"]').val(yrtotalamt.toFixed(2));
+                var yearsAmt = 0;
+                $.each($('.YearAmt' + indx[0]), function () {
+                    yearsAmt += parseFloat($(this).val());
+                });
+                $('.BudgetAmtDiff' + indx[0]).val((parseFloat($('.BudgetAmt' + indx[0]).val()) - yearsAmt).toFixed(2));
+            }
+            else {
+                alert('Enter Item Qty');
+                $(this).val().focus();
+            }
+        });
+
+        $("body").on('change', 'input[class*="YearQty"]', function () {
+            if ($(this).val() != '') {
+                var indx = $(this).attr('class').slice(7).split(' ');
+                var inpName = $(this).attr('name').split('.');
+                var yrtotalamt = parseFloat($(this).val()) * parseFloat($('input[name="' + inpName[0] + '.ItemRate"]').val());
+                $('input[name="' + inpName[0] + '.TotalAmt"]').val(yrtotalamt.toFixed(2));
+                var yearsAmt = 0;
+                var yearsQty = 0;
+                $.each($('.YearAmt' + indx[0]), function () {
+                    yearsAmt += parseFloat($(this).val());
+                });
+                $.each($('.YearQty' + indx[0]), function () {
+                    yearsQty += parseFloat($(this).val());
+                });
+
+                $('.BudgetAmtDiff' + indx[0]).val((parseFloat($('.BudgetAmt' + indx[0]).val()) - yearsAmt).toFixed(2));
+              //  alert($('input[name="' + inpName[0] + '.BudgetItemQty"]').val() + ' ' + yearsQty + ' ' + inpName[0]);
+                $('.BudgetQtyDiff' + indx[0]).val((parseFloat($('input[name="YearBudget[' + indx[0] + '].BudgetItemQty"]').val()) - yearsQty).toFixed(3));
+            }
+            else {
+                alert('Enter Item Qty');
+                $(this).focus();
+            }
+        });
+
+
+        //$("body").on('change', '.BudgetAmt', function () {
+        //    if ($(this).val() != '') {
+        //        var divqty = (parseFloat($(this).val()) / $('.YearAmt' + $(this).attr('indexnum')).length);
+        //        $('.YearAmt' + $(this).attr('indexnum')).val(divqty);
+        //    }
+        //});
+
+        $("[name='YearFormBudget']").submit(function (event) {
+            event.preventDefault(); //prevent default action 
+            for (i = 0; i < $('input[class*="BudgetAmtDiff"]').length; i++) {
+                if ($('input[class*="BudgetAmtDiff"]').eq(i).val() != '' && parseFloat($('input[class*="BudgetAmtDiff"]').eq(i).val()) != 0)
+                {
+                    alert($('input[name="ItemName"]').eq(i).val() + ' Budget Amount not matched.');
+                    return false;
+                }
+            }
+
+            for (i = 0; i < $('input[class*="BudgetQtyDiff"]').length; i++) {
+                if ($('input[class*="BudgetQtyDiff"]').eq(i).val() != '' && parseFloat($('input[class*="BudgetQtyDiff"]').eq(i).val()) != 0) {
+                    alert($('input[name="ItemName"]').eq(i).val() + ' Budget Qty not matched.');
+                    return false;
+                }
+            }
+
+            var post_url = $(this).attr("action"); //get form action url
+            var form_data = $(this).serialize(); //Encode form elements for submission
+
+            $.post(post_url, form_data, function (response) {
+                alert(response);
+                $("#btn_Search").click();
+            });
+        });
+
+
+        $("body").on("keypress keyup blur", "[Class*='BudgetQty'], body [Class*='BudgetRate']", function (event) {
+            //this.value = this.value.replace(/[^0-9\.]/g,'');
+            $(this).val($(this).val().replace(/[^0-9\.]/g, ''));
+            if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
+    });
+</script>

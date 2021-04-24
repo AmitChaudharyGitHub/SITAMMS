@@ -1,0 +1,65 @@
+﻿
+@model IEnumerable<MMS.Models.GetMovingData>
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;" class="table table-hover">
+    <tr class="primary">
+        <td style="width: 70px; text-align: center; border: 1px solid black; ">
+            Sr.No.
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+        Ageing Type
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+          Minimum Days
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+           Maximum Days
+        </td>
+
+        <td style="width: 200px; text-align: center; border: 1px solid black;">
+            Created Date
+        </td>
+
+
+
+
+
+
+
+
+        @foreach (var item in Model)
+        {
+        <tr>
+
+            <td style="width: 70px; text-align: center; border: 1px solid black; ">
+                @Html.DisplayFor(x => item.TransID)
+            </td>
+
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.MovingType)
+            </td>
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.MinMonth)
+            </td>
+
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.MaxMonth)
+            </td>
+
+            <td style="width: 200px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+
+
+        </tr>
+        }
+    </table>

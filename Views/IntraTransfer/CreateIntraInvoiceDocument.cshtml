@@ -1,0 +1,446 @@
+﻿
+@{
+    ViewBag.Title = "IntraStateTransfer";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+    var OutTransferDate = (DateTime)ViewBag.OuterTranDate;
+}
+
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td, td .form-control {
+        padding: 4px 4px !important;
+    }
+
+        td .form-control {
+            height: 28px !important;
+        }
+
+        td input[type="text"] {
+            padding: 2px !important;
+        }
+</style>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+
+<script>
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId =  '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetProjectDetail = '@Url.Action("GetProjectDetail", "IntraTransfer")';
+    var GetTranspoartationType = '@Url.Action("GetTransportationMode", "IntraTransfer")';
+    var GetVehicle = '@Url.Action("GetVehicleType", "IntraTransfer")';
+    var GetGroup  =  '@Url.Action("GetItemGroupMaster", "IntraTransfer")';
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+    var GetItemDetail = '@Url.Action("GetItemDetail", "IntraTransfer")';
+    var GetTransferCodeOnly =  '@Url.Action("GetTRansferCode", "IntraTransfer")';
+    var GetTaxPayableOnReverseCharges =  '@Url.Action("GetTaxPayableStatusOnReverseCharges", "IntraTransfer")';
+    var AddIntraTransferDocuments = '@Url.Action("AddIntraStateTrasferDocument", "IntraTransfer")';
+    var GetAllProjectexceptSelectedProject = '@Url.Action("GetAllProjectExceptSelectedProject", "IntraTransfer")';
+    var geturlred = '@Url.Action("IntraInvoiceDocument", "IntraTransfer")';
+</script>
+
+<script src="~/Script/CreateIntraSiteDocument.js?v=1.0"></script>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <div class="center-block">
+            <div class="admin-form theme-primary">
+                <!-- Begin: Content Header -->
+                <!-- Begin: Admin Form -->
+                <div class="form-headerStyle theme-primary">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <div class="section-divider mb40" id="spy1">
+                                <span style="color:#4a89dc">Create Invoice Item Document for Inter State Transfer </span>
+                            </div>
+                            <!-- .section-divider -->
+                            <!-- Basic Inputs -->
+                            <p>
+                                <a class="btn btn-primary" data-modal="" href="@Url.Action("IntraInvoiceDocument", "IntraTransfer")" id="btnCreate">
+                                    Back To Inter Invoice Document List
+                                </a>
+                            </p>
+                            <!-- Input Icons -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-horizontal">
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+                                        <div class="row" style="text-align:right; margin-right: 20px;">
+                                            <div class="col-md-12">
+                                                <div class="section">
+                                                    <label class="field prepend-icon">
+                                                        <span style="font:bold" id="dateTime"></span>
+
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="section">
+                                                    <label class="field select">
+                                                        @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "ddlProject", @class = "form-control" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <div class="section">
+                                                    <label class="field select">
+                                                        @Html.DropDownList("Transfer Project", new SelectList(string.Empty, "Value", "Text"), "Select Transfer Project", htmlAttributes: new { @id = "ddlTransferProject", @class = "form-control" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row" id="pnl_toggel_Project_Detail" style="display:none">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="col-md-3"><span><b> Project Address :</b> </span></td>
+                                                                <td class="col-md-3"><span><b> State : </b></span> </td>
+                                                                @*<td class="col-md-3"><span>State Code :</span> </td>*@
+                                                                <td class="col-md-3"><span><b> GSTIN :</b></span> </td>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="col-md-3"><label id="lbl_project_name"></label> <br /> <label id="lbl_Project_address"></label>  </td>
+
+                                                                <td class="col-md-3">  <label id="lbl_Project_State"></label></td>
+                                                                @*<td class="col-md-3"><label id="lbl_project_stateCode"></label></td>*@
+                                                                <td class="col-md-3"><label id="lbl_project_GSTIN"></label></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr id="hr1" style="display:none" />
+
+                                        <div class="row" id="pnl_toggel_TransferProject_Detail" style="display:none">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="col-md-3"><span><b> Transfer Project Address :</b> </span></td>
+                                                                <td class="col-md-3"><span> <b> State : </b></span> </td>
+                                                                @*<td class="col-md-3"><span>State Code :</span> </td>*@
+                                                                <td class="col-md-3"><span><b> GSTIN :</b></span> </td>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="col-md-3"><label id="lbl_Transferproject_name"></label> <br /> <label id="lbl_TransferProject_address"></label>  </td>
+
+                                                                <td class="col-md-3">  <label id="lbl_TransferProject_State"></label></td>
+                                                                @*<td class="col-md-3"><label id="lbl_Transferproject_stateCode"></label></td>*@
+                                                                <td class="col-md-3"><label id="lbl_Transferproject_GSTIN"></label></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" id="pnl_toggel_TransferProject_Detail2" style="display:none">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="col-md-2"><span><b> Mode of TPT :</b> </span></td>
+                                                                <td class="col-md-3"><span> <b> Vehicle  :</b></span> </td>
+                                                                <td class="col-md-3"><span> <b> Vehical No. :</b></span> </td>
+                                                                <td class="col-md-2"><span class="hide"> <b> E-way Bill No. : </b></span> </td>
+                                                                <td class="col-md-2"><span> <b> Tax Payable On Reverse Charge : </b></span> </td>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="col-md-2">
+
+
+                                                                    @Html.DropDownList("TPT", new SelectList(string.Empty, "Value", "Text"), "Select Mode Of TPT", htmlAttributes: new { @id = "ddlmodeofTPT", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+
+
+
+
+                                                                </td>
+
+                                                                <td class="col-md-3">
+
+
+                                                                    @Html.DropDownList("Vehicle", new SelectList(string.Empty, "Value", "Text"), "Select Vehicle Owner Type", htmlAttributes: new { @id = "ddlVehicleOwnerType", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+
+
+                                                                </td>
+                                                                <td class="col-md-3">
+                                                                    @Html.TextBox("VehicleNo", null, new { id = "txtVehicalNo", @class = "form-control gui-input required", @PlaceHolder = "Vehicle No." })
+                                                                </td>
+                                                                <td class="col-md-2">
+                                                                    @Html.TextBox("E-way Bill No", null, new { id = "txtGRNo", @class = "form-control gui-input hide", @PlaceHolder = "E-way Bill No."})
+                                                                </td>
+
+                                                                <td class="col-md-2">
+                                                                    @Html.DropDownList("Tax Payable On Reverse Charges", new SelectList(string.Empty, "Value", "Text"), "Select Status", htmlAttributes: new { @id = "ddlTaxPayableOnReverse", @class = "form-control" })
+                                                                </td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr id="hr2" style="display:none" />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="section">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("TransferDate", string.Format("{0:dd MMM yyy}", OutTransferDate), new { @class = "DatePicker form-control", @id = "txtTransferDate", @placeholder = " Transfer Date", autocomplete="off" })
+                                                        <label for="RefNo" class="field-icon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </label>
+                                                    </label>
+                                                    <p style="color:red">Last Transfer Date: <span id="txtLastDate"></span></p>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-md-6">
+                                                
+                                                <div class="section">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("Transfer Number", null, new { id = "txtTransferNumber", @class = "form-control gui-input required", @placeholder = "Inter State Transfer Number.", @readonly = "readonly" })
+
+                                                        <label for="firstname" class="field-icon">
+                                                            <i class="fa fa-building"></i>
+                                                        </label>
+                                                    </label>
+                                                    <p style="color:red">Last Transfer No.: <span id="txtLastNo"></span></p>
+                                                </div>
+                                            </div>
+
+                                            
+                                        </div>
+
+
+
+
+
+                                        @*<div style="text-align:right;"><b>Current Stock Quantity :</b><label id="showBalanceData" style="color:red; font-size:large"></label></div>*@
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered mbn">
+                                                        <thead>
+                                                            <tr class="primary">
+                                                                <th>#</th>
+                                                                <th width="130">Item Group</th>
+                                                                <th width="130">Item Name</th>
+                                                                <th>Unit</th>
+                                                                <th>HSN Code</th>
+                                                                <th width="110">GIETM Code</th>
+                                                                <th>Stock Quantity</th>
+                                                                <th>Delivery Quantity</th>
+                                                                <th>Balance Quantity</th>
+                                                                @*<th>Discounted Rate</th>*@
+                                                                @*<th>Delivery Rate</th>*@
+                                                                <th width="150">Estimated Value (Rs.)</th>
+                                                                <th>Add</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>1</td>
+                                                                <td class="col-sm2">
+                                                                    @*@Html.DropDownList("ItemGroup", null, "Select Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })*@
+
+                                                                    @Html.DropDownList("ItemGroup", new SelectList(string.Empty, "Value", "Text"), "Select Item Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @*@Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item", new { @id = "ItemMaster", @class = "form-control" })*@
+                                                                    @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item", htmlAttributes: new { @id = "ItemMaster", @class = "form-control" })
+
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("Unit", null, new { id = "Unit", @class = "form-control gui-input", @readonly = "readonly", @UNo = "" })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("HSN", null, new { id = "HSNCode", @class = "form-control gui-input", @readonly = "readonly", @HSN = "" })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("GIETM", null, new { id = "GIETNCode", @class = "form-control gui-input", @readonly = "readonly", @GIETN = "" })
+                                                                </td>
+
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("Stock Qty", null, new { id = "txtStockQty", @class = "form-control gui-input", @readonly = "readonly", })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("Delivery Qty", null, new { id = "txtDeliveryQty", @class = "form-control gui-input" })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("Balance Qty", null, new { id = "txtBalanceQty", @class = "form-control gui-input", @readonly = "readonly", })
+                                                                </td>
+
+                                                                @*<td class="col-sm2">
+                                                                    @Html.TextBox("Discounted Rate", null, new { id = "txtDiscountedRate", @class = "form-control gui-input", @readonly = "readonly" })
+                                                                </td>*@
+                                                                @Html.Hidden("txtDeliveryRate")
+                                                                @*<td class="col-sm2">
+                                                                    @Html.TextBox("Delivery Rate", null, new { id = "txtDeliveryRate", @class = "form-control gui-input" , @onkeypress = "return isNumberKey(event)" })
+                                                                </td>*@
+                                                                @Html.Hidden("txtDeliveryRate")
+                                                                <td class="col-sm2">
+                                                                    @Html.TextBox("Estimated Value", null, new { id = "txtEstimatedValue", @class = "form-control gui-input", @readonly = "readonly" })
+                                                                </td>
+                                                                <td class="col-sm2">
+                                                                    <input type="submit" value="Add" class="btn btn-primary btn-sm" id="addNew" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        @* Dynamic Webgrid Design Here *@
+
+                                        <div class="row">
+                                            <div class="col-sm-12 table-responsive">
+                                                <table class="table" id="grid">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Item Group</th>
+                                                            <th>Item Name</th>
+                                                            <th>Unit</th>
+                                                            <th>HSN Code</th>
+                                                            <th>GIETN Code</th>
+                                                            <th>Stock Quantity</th>
+                                                            <th>Delivery Quantity</th>
+                                                            <th>Balance Quantity</th>
+                                                            @*<th>Discounted Rate</th>
+                                                            <th>Delivery Rate</th>*@
+                                                            <th>Estimated Value (Rs.)</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="grid"></tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+
+
+                                        <br />
+
+
+                                        <div class="row">
+
+                                            <div class="clearfix"></div>
+                                            <div id="dvLoading"></div>
+                                            <div class="text-right">
+                                                <input type="button" id="Submit" class="btn btn-primary btn-sm" value="Create Invoice Document" />
+                                            </div>
+                                            
+                                            @*<div class="col-md-3"></div> <div class="col-md-3"></div>*@
+                                        </div>
+
+                                    </div>
+
+                                    <div id="myModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                    <h4 class="modal-title">Confirmation</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                    <p class="text-danger">Data Save Successfully</p>
+                                                    <p>Your Transaction No. Is <b id="trans_num"></b>. Please write down for future use.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div id="dialog-amount-details" style="display:none;">
+
+</div>
+
+
+

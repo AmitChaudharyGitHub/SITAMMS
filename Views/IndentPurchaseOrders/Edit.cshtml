@@ -1,0 +1,396 @@
+﻿@model MMS_P.ViewModels.IndentPurchaserOrder
+
+@{
+
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+    ViewBag.Title = "Create";
+
+    DateTime? Date = null;
+    if (ViewBag.Date != null)
+    { Date = (DateTime)ViewBag.Date; }
+    //DateTime? CreatedDate = null;
+    //if (ViewBag.CreatedDate != null)
+    //{ CreatedDate = (DateTime)ViewBag.CreatedDate; }
+}
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+     .Piv2 {
+        display: none;
+    }
+</style>
+}
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "IndentPurchaseOrders")';
+    var Master = @Html.Raw(Json.Encode(Model.Master));
+    var VG=  @Html.Raw(Json.Encode(ViewBag.VG));
+    var GetProjectPurchaseOrderNo = '@Url.Action("GetProjectPurchaseOrderNo", "IndentPurchaseOrders")';
+    var GetVendorByGroup = '@Url.Action("GetVendorByGroup", "IndentPurchaseOrders")';
+    var GetVendorDetail = '@Url.Action("GetVendorDetail", "IndentPurchaseOrders")';
+    var Grid = '@Url.Action("Grid", "IndentPurchaseOrders")';
+    var UpM_UpC = '@Url.Action("UpM_UpC", "IndentPurchaseOrders")';
+    var Child = @Html.Raw(Json.Encode(Model.Child));
+</script>  
+
+
+
+
+
+<script src="~/Script/IPOEdit.min.js"></script>
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Indent Order Entry</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <p>
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                </p>
+                                <!-- Input Icons -->
+                                <div class="row">
+
+                                    @*@using (Html.BeginForm())
+                                    {*@
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Date", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "Date", @placeholder = "Order Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6" style="display:none">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("AcilTinNo", null, new { id = "AcilTinNo", @class = "form-control gui-input required", @placeholder = "Acil Tin No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Projects", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("PurchaseOrderNo", null, new { id = "PurchaseOrderNo", @class = "form-control gui-input required",@placeholder="Order No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ProjectAddress", null, new { id = "ProjectAddress", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Project Address" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Employee",  new SelectList(string.Empty, "Value", "Text"), "Select Employee Name", htmlAttributes: new { @id = "Employee", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("VGId", null, "Select Vendor Group", htmlAttributes: new { @id = "VGID", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+
+                                                            @Html.DropDownList("VNAME", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select Vendor", htmlAttributes: new { @id = "VNAME", @class = "form-control" })
+                                                            @*<select id="ddlBlock" name="BlockId" style="width: 250px" onchange="javascript:GetFloor(this.value);"></select>*@
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("SupplierAddress", null, new { id = "SupplierAddress", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Supplier Address" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("SupplierTinNo", null, new { id = "SupplierTinNo", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Supplier Tin No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                               
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Indents", new SelectList(string.Empty, "Value", "Text"), "Select Indent", htmlAttributes: new { @id = "Indents", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                       
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    @*}*@
+
+                                    <br />
+                                    <div id="dvLoading"></div>
+                                    <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                    <div class="pager glyphicon-align-center" id="formbody">
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("Total", null, new { id = "Total", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Total" })
+
+                                                   
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("Vat", null, new { id = "Vat", @class = "form-control gui-input required", @placeholder = "Vat %" })
+
+                                                  
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("VatAmount", null, new { id = "VatAmount", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Vat Amount" })
+
+                                                 
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("SubTotal", null, new { id = "SubTotal", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Sub Total" })
+
+                                                   
+                                                </label>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("SurCharge", null, new { id = "SurCharge", @class = "form-control gui-input required", @placeholder = "SurCharge" })
+
+
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("Cartage", null, new { id = "Cartage", @class = "form-control gui-input required", @placeholder = "Cartage/Loading" })
+
+
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("GrandTotal", null, new { id = "GrandTotal", @class = "form-control gui-input required", @readonly = "readonly", @placeholder = "Grand Total" })
+
+
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("Rupees", null, new { id = "Rupees", @class = "form-control gui-input required", @placeholder = "Amount in Word" })
+
+
+                                                </label>
+                                            </div>
+                                        </div>                                    
+                                      
+
+                                    </div>
+                                    <br />
+                                    <div>
+                                        <input type="button" id="btnCalc" class="btn btn-danger" value="Calculate" />
+                                        <input type="button" id="btnsave" class="btn btn-danger" value="Submit" />
+                                    </div>
+
+
+                                    <div id="myModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                    <h4 class="modal-title">Confirmation</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                    <p class="text-danger">Data Save Successfully</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+                                    <!-- end .section row section -->
+                                    <!-- end .form-footer section -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

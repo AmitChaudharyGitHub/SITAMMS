@@ -1,0 +1,130 @@
+﻿
+<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+            text-align: center;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+</style>
+
+
+
+
+
+
+<div id="myPager" class="primary">
+
+
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 50, canSort: true, ajaxUpdateContainerId: "grid");
+        //  var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "positionGrid");
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                 fillEmptyRows: false,
+                  tableStyle: "webgrid-table",
+                   headerStyle: "webgrid-header",
+                     footerStyle: "webgrid-footer",
+                     alternatingRowStyle: "webgrid-alternating-row",
+                     rowStyle: "webgrid-row-style",
+                     htmlAttributes: new { id = "grid" },
+                                   columns: grid1.Columns(
+                       grid1.Column(header: "S.No.", format: @<text><div style="text-align:center;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>),
+                    grid1.Column("DebitNoteCode", header: "Debit Note No.", style: "my-classC"),
+                    grid1.Column("DebitNoteDate", header: "Debit Note Date", style: "my-classC"),
+                    grid1.Column("VendorName", header: "Vendor Name", style: "my-classC"),
+                    grid1.Column("CreatedDate", header: "Created Date", style: "my-classC"),
+                    grid1.Column("", header: "Status", format:@<text>@("Transfered")</text>)
+                    ));
+}
+
+else
+{
+    <p style="color:red; font-size:large">No records found !!!!</p>
+
+}
+
+
+</div>

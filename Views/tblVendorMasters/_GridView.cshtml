@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+<style type="text/css">
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        /*color: white;*/
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+        max-width:100px !important;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+        max-width:100px !important;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+
+    .addressStyle{
+        width:100px !important;
+        word-break:break-all;
+    }
+     .TinNoStyle{
+        width:90px !important;
+        word-break:break-all;
+    }
+   
+
+</style>
+
+
+<div id="myPager" style="margin-top:17px;">
+    
+    @if (Model.Count > 0) { 
+    var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 15, ajaxUpdateContainerId: "grid", canSort: false);
+       
+
+        @grid.GetHtml(
+                        mode: WebGridPagerModes.All,
+                            htmlAttributes: new { id = "grid" },
+                              tableStyle: "gridTable",
+                  headerStyle: "gridHead",
+                  footerStyle: "gridFooter",
+                  rowStyle: "gridRow",
+                  alternatingRowStyle: "gridAltRow",
+            fillEmptyRows: false,
+            columns: grid.Columns(
+        //    grid.Column("tblRegistrationType.RegistrationType",
+        //header: "Group", style: "text-align: center;"),
+           grid.Column("Name",header: "Name", style: "text-align: center"),
+           grid.Column("VendorType", header: "Vendor Type", style: "text-align:center;"),
+           //grid.Column("TinNo",header: "Tin No", style: "TinNoStyle"),
+           grid.Column("Address", header: "Address",style:"addressStyle"),
+           //grid.Column("PanNo", header: "PAN No.", style: "text-align: center"),
+           grid.Column("GSTNo", header: "GST No", style: "text-align: center"),
+           //grid.Column("AadhaarNo", header: "Aadhaar No", style: "text-align: center;"),
+           grid.Column("ContactPerson", header: "Contact Person", style: "text-align: center;"),
+           grid.Column("MobileNo", header: "Mobile No", style: "text-align: center;"),
+           grid.Column("PhoneNo", header: "Phone No", style: "text-align: center;"),
+            grid.Column("Region", header: "Region", style: "text-align: center;"),
+           grid.Column(header: " Action ", canSort: false, style: "action",format: @<text>
+                                                <a data-modal='' href='@Url.Action("Details", "tblVendorMasters", new { id = item.TransID })' id='@item.TransID' title='Detail'> <span class='btn btn-success btn-xs'>Detail</span> </a>
+                                                <a data-modal='' href='@Url.Action("Edit", "tblVendorMasters", new { id = item.TransID })' id='@item.TransID' title='Edit'> <span class='btn btn-primary btn-xs'>Edit </span> </a>
+                                                <a data-modal='' href='@Url.Action("Delete", "tblVendorMasters", new { id = item.TransID })' id='@item.TransID' title='Delete'> <span class='btn btn-danger btn-xs'>Delete </span> </a>
+                                                </text>)));
+    }
+    else
+    {
+        <p style="color:red; font-size:large; text-align:center;">No records found !!!!</p>
+    }
+
+
+</div>
+

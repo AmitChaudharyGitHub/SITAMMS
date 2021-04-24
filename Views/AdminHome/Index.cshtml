@@ -1,0 +1,438 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+      
+         window['GetFloor'] = function () {
+        ///$("#partialviews").load('/home/GetAddressForjQuery');
+            var url = '@Url.Action("Grid", "AdminHome")';            
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: { PId: $('#prjtid1').val() },
+                complete: function () {                 
+                },
+                success: function (result) {
+                    
+                    //if (result != null) {
+                    $('#formbody').html(result);
+                    //}
+                    //else {
+                    //}
+                    
+                }
+            });
+            return false;
+        }
+        GetFloor();
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblEmployee1 tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllDMRDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading1").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Item Name</th><th align='left' class='EmployeeTableTH'>Today Recieve Quantity</th><th align='left' class='EmployeeTableTH'>Purchase Order No.</th>"
+                    + "</tr>";
+                $('#tblEmployee1 tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    var rows = "<tr class='system'>"
+                   + "<td class='EmployeeTableTD'>" + item.Name + "</td>"
+                    + "<td class='EmployeeTableTD'>" + item.Quantity + "</td>"
+                    + "<td class='EmployeeTableTD'>" + item.Po + "</td>"
+                    + "</tr>";
+                    $('#tblEmployee1 tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblEmployee tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllProjectContractDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Project Name</th><th align='left' class='EmployeeTableTH'>Contract Value</th>"
+                    + "</tr>";
+                $('#tblEmployee tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    var rows = "<tr class='success'>"
+                    + "<td class='EmployeeTableTD'>" + item.Name + "</td>"
+                    + "<td class='EmployeeTableTD'>" + item.Value + "</td>"
+                    + "</tr>";
+                    $('#tblEmployee tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>
+
+<style type="text/css">
+    .tblEmployee {
+        font-family: verdana,arial,sans-serif;
+        font-size: 11px;
+        color: #333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+
+    .EmployeeTableTH {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #dedede;
+    }
+
+    .EmployeeTableTD {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
+</style>
+
+
+<!-- Begin: Content -->
+<section id="content_wrapper">
+    <section id="content" class="animated fadeIn">
+        @*<h3 style="visibility:hidden;">Welcome @(Request.IsAuthenticated ? HttpContext.Current.User.Identity.Name : "Guest") - This is for Authorized user </h3>*@
+        <!-- Dashboard Tiles -->
+        <div class="row mb10 hidden">
+            <div class="col-sm-6 col-md-3 hidden">
+                <div class="panel bg-alert light of-h mb10">
+                    <div class="pn pl20 p5">
+                        <div class="icon-bg">
+                            <i class="fa fa-pagelines"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b>Welcome</b>
+                        </h2>
+                        <h5 class="text-muted">@(Request.IsAuthenticated ? HttpContext.Current.User.Identity.Name : "Guest")</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-sm-6 col-md-3 hidden">
+                <div class="panel bg-info light of-h mb10">
+                    <div class="pn pl20 p5">
+                        <div class="icon-bg">
+                            <i class="fa fa-magnet"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b>348</b>
+                        </h2>
+                        <h5 class="text-muted">Total Raw Material</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 hidden">
+                <div class="panel bg-danger light of-h mb10">
+                    <div class="pn pl20 p5">
+                        <div class="icon-bg">
+                            <i class="fa fa-bar-chart-o"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b>267</b>
+                        </h2>
+                        <h5 class="text-muted">Reach</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3 hidden">
+                <div class="panel bg-warning light of-h mb10">
+                    <div class="pn pl20 p5">
+                        <div class="icon-bg">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b>714</b>
+                        </h2>
+                        <h5 class="text-muted">Comments</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            @*<div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-title">WELCOME </span>
+                        
+                    </div>
+                    <div class="panel-body pn">
+                        <table class="table mbn tc-med-1 tc-bold-last">
+                            <thead>
+                                <tr class="hidden">
+                                    <th>#</th>
+                                    <th>First Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="flag-xs flag-in mr5 va-b"></span>
+                                        
+                                    </td>
+                                    <td>@ViewBag.prjtidname</td>
+                                </tr>                                                            
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>*@          
+
+            <div class="col-md-4">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-title">Total No. of Project : <b class="text-danger">@ViewBag.Totalprjc</b></span>
+                        <span style="float:right;"><a href="#" class="text-primary">View Details</a></span>
+                    </div>
+                    <div class="panel-body pn">
+                        <table id="tblEmployee" class="table">
+                            <thead>
+                                <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading" class="Load" style="width:100px; height:100px" />
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-title">DMR Details </span>
+                        <span style="float:right;"><a href="#" class="text-primary">View Details</a></span>
+                    </div>
+                    <div class="panel-body pn">
+                        <table id="tblEmployee1" class="table">
+                            <thead>
+                                <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:100px; height:100px" />
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+                @*<div class="col-md-6">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="panel-title">Top Referals</span>
+                    </div>
+                    <div class="panel-body pn">
+                        <table class="table mbn tc-med-1 tc-bold-last">
+                            <thead>
+                                <tr class="hidden">
+                                    <th>#</th>
+                                    <th>First Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="favicons google va-t mr10"></span>http://madeupurl.com/pictures/doors
+                                    </td>
+                                    <td>28%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="favicons google va-t mr10"></span>http://secondulr.com/article/14
+                                    </td>
+                                    <td>25%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="favicons yahoo va-t mr10"></span>http://urlthird.com/infogram/ten
+                                    </td>
+                                    <td>21%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="favicons google va-t mr10"></span>http://fourthlink.com/boats/glass
+                                    </td>
+                                    <td>18%</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="favicons bing va-t mr10"></span>http://lastlink.com/thebest/ever
+                                    </td>
+                                    <td>10%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>*@
+            </div>
+
+
+
+
+        <!-- Chart Column -->
+
+        <div class="col-md-12 admin-grid" id="grid-3">
+
+            <div id="p0" class="panel">
+                <div class="panel-heading">
+                    <span class="panel-title">Management Dashboard</span>
+                    <span class="panel-controls"><a class="panel-control-loader" href="#"></a><a class="panel-control-remove" href="#"></a><a class="panel-control-title" href="#"></a><a class="panel-control-color" href="#"></a><a class="panel-control-collapse" href="#"></a><a class="panel-control-fullscreen" href="#"></a></span>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <!-- Chart Column -->
+                        <div class="col-md-4 pln br-r mvn15">
+
+                            <h5 class="ml5 mt20 ph10 pb5 br-b fw600">
+                                @*Visitors*@
+                                <small class="pull-right fw600">
+                                    
+                                    <span class="text-primary"></span>
+                                </small>
+                            </h5>
+                            @*<div style="width: 100%; height: 255px; margin: 0 auto" id="high-column2" data-highcharts-chart="1"><div class="highcharts-container" id="highcharts-2" style="position: relative; overflow: hidden; width: 248px; height: 255px; text-align: left; line-height: normal; z-index: 0; left: 0px; top: 0.600006px;"><svg version="1.1" style="font-family:&quot;Lucida Grande&quot;, &quot;Lucida Sans Unicode&quot;, Arial, Helvetica, sans-serif;font-size:12px;" xmlns="http://www.w3.org/2000/svg" width="248" height="255"><desc>Created with Highcharts 4.0.4</desc><defs><clipPath id="highcharts-3"><rect x="0" y="0" width="228" height="200" /></clipPath></defs><rect x="0" y="0" width="248" height="255" strokeWidth="0" fill="#FFFFFF" class=" highcharts-background" /><g class="highcharts-grid" zIndex="1" /><g class="highcharts-grid" zIndex="1" /><g class="highcharts-axis" zIndex="2"><path fill="none" d="M 110.5 225 L 110.5 231" stroke="#C0D0E0" stroke-width="1" opacity="1" /><path fill="none" d="M 200.5 225 L 200.5 231" stroke="#C0D0E0" stroke-width="1" opacity="1" /><path fill="none" d="M 21.5 225 L 21.5 231" stroke="#C0D0E0" stroke-width="1" opacity="1" /></g><g class="highcharts-axis" zIndex="2" /><g class="highcharts-series-group" zIndex="3"><g class="highcharts-series highcharts-tracker" visibility="visible" zIndex="0.1" transform="translate(15,25) scale(1 1)" style="" clip-path="url(#highcharts-3)"><rect x="3.5" y="80.5" width="5" height="120" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="12.5" y="60.5" width="5" height="140" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="21.5" y="-0.5" width="5" height="201" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="30.5" y="10.5" width="5" height="190" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="39.5" y="120.5" width="5" height="80" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="48.5" y="80.5" width="5" height="120" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="57.5" y="60.5" width="5" height="140" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="66.5" y="-0.5" width="5" height="201" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="75.5" y="150.5" width="5" height="50" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="84.5" y="40.5" width="5" height="160" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="93.5" y="120.5" width="5" height="80" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="102.5" y="80.5" width="5" height="120" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="111.5" y="60.5" width="5" height="140" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="120.5" y="-0.5" width="5" height="201" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="129.5" y="10.5" width="5" height="190" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="138.5" y="150.5" width="5" height="50" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="147.5" y="40.5" width="5" height="160" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="156.5" y="120.5" width="5" height="80" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="165.5" y="80.5" width="5" height="120" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="173.5" y="60.5" width="5" height="140" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="182.5" y="-0.5" width="5" height="201" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="191.5" y="10.5" width="5" height="190" fill="#f6bb42" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="200.5" y="150.5" width="5" height="50" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="209.5" y="40.5" width="5" height="160" fill="#3bafda" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /><rect x="218.5" y="120.5" width="5" height="80" fill="#4a89dc" rx="0" ry="0" stroke="#FFFFFF" stroke-width="1" /></g><g class="highcharts-markers" visibility="visible" zIndex="0.1" transform="translate(15,25) scale(1 1)" clip-path="none" /></g><g class="highcharts-axis-labels highcharts-xaxis-labels" zIndex="7"><text x="21.62166405023548" text-anchor="middle" style="color:#606060;cursor:default;font-size:11px;fill:#606060;" y="245" opacity="1">0</text><text x="111.10361067503925" text-anchor="middle" style="color:#606060;cursor:default;font-size:11px;fill:#606060;" y="245" opacity="1">10</text><text x="200.585557299843" text-anchor="middle" style="color:#606060;cursor:default;font-size:11px;fill:#606060;" y="245" opacity="1">20</text></g><g class="highcharts-axis-labels highcharts-yaxis-labels" zIndex="7" /><g class="highcharts-tooltip" zIndex="8" style="cursor:default;padding:0;white-space:nowrap;" transform="translate(1,-9999)" opacity="0"><path fill="none" d="M 3.5 0.5 L 107.5 0.5 C 110.5 0.5 110.5 0.5 110.5 3.5 L 110.5 53.5 C 110.5 56.5 110.5 56.5 107.5 56.5 L 27.5 56.5 21.5 62.5 15.5 56.5 3.5 56.5 C 0.5 56.5 0.5 56.5 0.5 53.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5" isShadow="true" stroke="black" stroke-opacity="0.049999999999999996" stroke-width="5" transform="translate(1, 1)" width="110" height="56" /><path fill="none" d="M 3.5 0.5 L 107.5 0.5 C 110.5 0.5 110.5 0.5 110.5 3.5 L 110.5 53.5 C 110.5 56.5 110.5 56.5 107.5 56.5 L 27.5 56.5 21.5 62.5 15.5 56.5 3.5 56.5 C 0.5 56.5 0.5 56.5 0.5 53.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5" isShadow="true" stroke="black" stroke-opacity="0.09999999999999999" stroke-width="3" transform="translate(1, 1)" width="110" height="56" /><path fill="none" d="M 3.5 0.5 L 107.5 0.5 C 110.5 0.5 110.5 0.5 110.5 3.5 L 110.5 53.5 C 110.5 56.5 110.5 56.5 107.5 56.5 L 27.5 56.5 21.5 62.5 15.5 56.5 3.5 56.5 C 0.5 56.5 0.5 56.5 0.5 53.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5" isShadow="true" stroke="black" stroke-opacity="0.15" stroke-width="1" transform="translate(1, 1)" width="110" height="56" /><path fill="rgba(249, 249, 249, .85)" d="M 3.5 0.5 L 107.5 0.5 C 110.5 0.5 110.5 0.5 110.5 3.5 L 110.5 53.5 C 110.5 56.5 110.5 56.5 107.5 56.5 L 27.5 56.5 21.5 62.5 15.5 56.5 3.5 56.5 C 0.5 56.5 0.5 56.5 0.5 53.5 L 0.5 3.5 C 0.5 0.5 0.5 0.5 3.5 0.5" stroke="#4a89dc" stroke-width="1" /></g></svg><div class="highcharts-tooltip" style="position: absolute; left: 1px; top: -9999px; visibility: visible;"><span style="position: absolute; white-space: nowrap; font-family: &quot;Lucida Grande&quot;,&quot;Lucida Sans Unicode&quot;,Arial,Helvetica,sans-serif; font-size: 12px; color: rgb(51, 51, 51); margin-left: 0px; margin-top: 0px; left: 8px; top: 8px;" zindex="1"><span style="font-size:10px">0</span><table><tbody><tr><td style="color:;padding:0">Tokyo: </td><td style="padding:0"><b>12.0 mm</b></td></tr></tbody></table></span></div></div></div>*@
+                        </div>
+
+                        <!-- Multi Text Column -->
+                        <div class="col-md-8 br-r">
+                            <div class="col-md-4 hidden">@Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control", @onchange = "javascript:GetFloor(this.value);" })</div>
+                            <div id="formbody">
+                                
+                            </div>
+                            
+                        </div>
+
+                        <!-- Flag/Icon Column -->
+                        @*<div class="col-md-4">                           
+                            
+                        </div>*@
+
+                        <!-- Icon Column -->
+                        @*<div class="col-md-4 hidden">
+                            <h5 class="mt5 ph10 pb5 br-b fw600">
+                                Content Viewed
+                                <small class="pull-right fw600 text-primary">
+                                    Refresh
+                                </small>
+                            </h5>
+                            <table class="table mbn">
+                                <thead>
+                                    <tr class="hidden">
+                                        <th class="mw30">#</th>
+                                        <th>First Name</th>
+                                        <th>Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fs17 text-center w30">
+                                            <span class="fa fa-desktop text-warning"></span>
+                                        </td>
+                                        <td class="va-m fw600 text-muted">Television</td>
+                                        <td class="fs14 fw600 text-muted text-right">
+                                            <i class="fa fa-caret-up text-info pr10"></i>$855,913
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fs17 text-center">
+                                            <span class="fa fa-microphone text-primary"></span>
+                                        </td>
+                                        <td class="va-m fw600 text-muted">Radio</td>
+                                        <td class="fs14 fw600 text-muted text-right">
+                                            <i class="fa fa-caret-down text-danger pr10"></i>$349,712
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fs17 text-center">
+                                            <span class="fa fa-newspaper-o text-info"></span>
+                                        </td>
+                                        <td class="va-m fw600 text-muted">Newspaper</td>
+                                        <td class="fs14 fw600 text-muted text-right">
+                                            <i class="fa fa-caret-up text-info pr10"></i>$1,259,742
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fs17 text-center">
+                                            <span class="fa fa-facebook text-alert"></span>
+                                        </td>
+                                        <td class="va-m fw600 text-muted">Social Media</td>
+                                        <td class="fs14 fw600 text-muted text-right">
+                                            <i class="fa fa-caret-up text-info pr10"></i>$3,512,672
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fs17 text-center">
+                                            <span class="fa fa-bank text-alert"></span>
+                                        </td>
+                                        <td class="va-m fw600 text-muted">Investments</td>
+                                        <td class="fs14 fw600 text-muted text-right">
+                                            <i class="fa fa-caret-up text-info pr10"></i>$3,512,672
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Admin-panels -->
+    </section>
+    <!-- End: Content -->
+    </section>

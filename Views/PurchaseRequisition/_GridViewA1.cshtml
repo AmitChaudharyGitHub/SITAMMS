@@ -1,0 +1,90 @@
+﻿@model MMS_P.ViewModels.PagedPurchaseIRMasterModel
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+<style type="text/css">
+   .user{
+
+font-size:10px;
+}
+   .user1{
+
+font-size:10px;
+}
+</style>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //alert("A");
+
+        $(".viewDialog").live("click", function (e) {
+            var url = $(this).attr('href');
+           // alert(url);
+            $("#dialog-view").dialog({
+                title: 'Purchase Indent Details',
+                autoOpen: false,
+                resizable: false,
+                height: 750,
+                width: 1200,
+                show: { effect: 'explode', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).dialog('close');
+                }
+            });
+
+            $("#dialog-view").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").live("click", function (e) {
+            $("#dialog-edit").dialog('close');
+
+        });
+    });
+</script>
+    <div id="myPager" style="margin-top:17px;">
+        @{
+            var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+            grid.Bind(Model.Master, rowCount: Model.TotalRows, autoSortAndPage: false);
+            grid.Pager(WebGridPagerModes.All);
+
+            @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+                     columns: grid.Columns(
+                                         grid.Column("Date", format: (item) => item.Date != null ? item.Date.ToString("dd/MM/yyyy") : null),
+                                         grid.Column("PurRequisitionNo", header: "Purchase Requisition No.", format: @<text>@Html.ActionLink(item.PurRequisitionNo != null ? (string)item.PurRequisitionNo : "A", "Details", new { id = item.UId }, new { @class = "viewDialog", @id = "text1", @style = "color:#497bf9" })</text>, style: "user"),
+                                         grid.Column("ProjectName", header: "Project Name", style: "user"),
+                                         grid.Column("SendToName", header: "For Employee"),
+                                         grid.Column("CreatedByName", header: "Created By")                              
+                                        
+                                          ));
+        }
+
+
+    </div>
+
+<div id="dialog-view" style="display: none">
+</div>

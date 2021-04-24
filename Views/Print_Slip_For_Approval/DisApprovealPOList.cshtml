@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "DisApprovalPO";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetDisApprvdGrid = '@Url.Action("DisApprovedPOGrid", "Print_Slip_For_Approval")';
+    var getVendorList = '@Url.Action("GetVendorListByprojectWise", "MRNListClassification")';
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Project").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Project").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Project');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    if('@ViewBag.PId' !=''){
+                        $('#Project option:selected').val('@ViewBag.PId');
+                        GetData();
+                    }
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+           return false;
+        };
+        GetPrj();
+
+
+
+        $("#Project").change(function(){
+            GetData();
+            BindDdl('#ddlVendor',getVendorList,{ProjectId:$(this).val()},'Vendor');
+        });
+
+        $('#btnSearch').click(GetData)
+
+
+    });
+
+    function GetData()
+    {
+        $("#dvLoading").show();
+
+        if ($('#Project option:selected').val() != 0)
+        {
+            $.get(GetDisApprvdGrid,
+               {
+                   ProjectId: $('#Project option:selected').val(),
+                   PONumber:$('#txtPONumber').val(),
+                   VendorId:$('#ddlVendor option:selected').text()
+               },
+               function (result)
+               {
+                   $('#formbody').show();
+                   $('#formbody').html(result);
+                   $("#dvLoading").hide();
+                      
+               });
+        }
+    }
+
+
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Dis-Approve PO List</span>
+                                </div>
+
+
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    
+                                                    <div class="col-md-3">
+                                                             <div class="section">
+                                                            <label class="field select">
+                                                            
+                                                                @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id =   "Project", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                              
+                                                            </label>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                <select id="ddlVendor" class="form-control">
+                                                                    <option value="">Select Vendor</option>
+                                                                </select>
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="txt" value="" class="form-control" id="txtPONumber" placeholder="Purchase Order Number" autocomplete="off" />
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnSearch" />
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="container tabs-wrap">
+
+                                            <div class="container tabs-wrap">
+                                                
+
+
+                                                <div class="panel-body">
+                                                    <div class="tab-content pn br-n">
+                                                      
+
+                                                            <div class="row">
+
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <div class="form-horizontal">
+
+
+                                                                    <div class="row">
+
+                                                                        <div id="dvLoading"></div>
+                                                                        <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                                                        <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                                                        </div>
+
+                                                                        <div class="section-divider mt40 mb25" id="spy5">
+                                                                            <span></span>
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                       
+
+                                                        
+
+
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+         
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

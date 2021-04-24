@@ -1,0 +1,281 @@
+﻿@model BusinessObjects.Entity.tblPcContractorMaster
+
+@{
+
+    ViewBag.Title = "Detail";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+}
+
+
+<style type="text/css">
+    dt {
+        color: #5D9CEC;
+    }
+</style>
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form method="post" action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>PC Contractor Master</span>
+                                </div>
+
+                                <div class="row">
+
+                                    <div>
+                                        <h3 class="text-danger">Details</h3>
+                                        <hr />
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.PRJID)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.PRJID)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.tblPC_RegistrationType.RegistrationType)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.tblPC_RegistrationType.RegistrationType)
+                                            </dd>
+
+
+
+
+
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Name)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Name)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Address)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Address)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Country)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Country)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.State)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.State)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.City)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.City)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.PinCode)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.PinCode)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Status)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Status)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.ContactPerson)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.ContactPerson)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.MobileNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.MobileNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.Email)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Email)
+                                            </dd>
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.VendorType)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.VendorType)
+                                                </dd>*@
+
+
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.CreatedBy)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.CreatedBy)
+                                                </dd>
+
+                                                <dt>
+                                                    @Html.DisplayNameFor(model => model.CreatedDate)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.CreatedDate)
+                                                </dd>*@
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.VendorTypeCode)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.VendorTypeCode)
+                                                </dd>*@
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.PanNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.PanNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.TinNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.TinNo)
+                                            </dd>
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.EccNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.EccNo)
+                                                </dd>*@
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.Vat)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.Vat)
+                                                </dd>*@
+
+
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.SalesTaxNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.SalesTaxNo)
+                                                </dd>*@
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.CSTNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.CSTNo)
+                                                </dd>*@
+
+                                            @*<dt>
+                                                    @Html.DisplayNameFor(model => model.ServiceTaxNo)
+                                                </dt>
+
+                                                <dd>
+                                                    @Html.DisplayFor(model => model.ServiceTaxNo)
+                                                </dd>*@
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.PhoneNo)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.PhoneNo)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.BlackListStatus)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.BlackListStatus)
+                                            </dd>
+
+                                        </dl>
+                                    </div>
+                                    <p>
+                                        @Html.ActionLink("Edit", "Edit", new { id = Model.PcContractorID }, new { @class = "btn btn-primary" }) |
+                                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                    </p>
+                                </div>
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</section>

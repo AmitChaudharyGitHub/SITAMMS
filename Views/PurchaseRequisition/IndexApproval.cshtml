@@ -1,0 +1,222 @@
+﻿@model MMS_P.ViewModels.PagedCashPurchaseMasterModel
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    var fromDate = (DateTime)ViewBag.fromDate;
+    var toDate = (DateTime)ViewBag.toDate;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">
+
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "PurchaseRequisition")';
+    var Grid3 = '@Url.Action("Grid3", "PurchaseRequisition")';
+
+    var Grid2 = '@Url.Action("Grid2", "PurchaseRequisition")';
+
+    var UpdateList2 = '@Url.Action("UpdateList2", "PurchaseRequisition")';
+
+
+
+</script>
+<script src="~/Script/PurchaseIRIndex.min.js"></script>
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label("Purchase Indent Requisition For Approve", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                @*<div class="col-md-2">
+                                    All : <input type="radio" name="Comp" id="Comp" value="All" checked="checked" />
+                                </div>*@
+                                <div class="col-md-3">
+                                    Part Approve: <input type="radio" name="Comp" id="Comp" value="InComplete" checked="checked"   />
+                                </div>
+                                <div class="col-md-3">
+                                    Full  Approve:  <input type="radio" name="Comp" id="Comp" value="Complete" />
+                                </div>
+
+                               
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @*@Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control" })*@
+
+                                            @if (ViewBag.EmpId == "0" || ViewBag.EmpId == "EMP0000001")
+                                            {
+                                                @Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control",@Disabled="Disabled" })
+                                            }
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <p>
+                                        @*@Html.ActionLink("Create New", "Create")*@
+                                        @*<a class="btn btn-primary" data-modal="" href="@Url.Action("Create","CashPurchaseChilds" )" id="btnCreate">
+                                            Create New
+                                        </a>*@
+                                    </p>
+
+
+                                </div>
+                            </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field select">
+                                                @Html.DropDownList("Prj", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Prj", @class = "form-control" })
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                  
+                                        @*Created:  <input type="radio" name="f" id="f" value="C" checked="checked" />*@
+                                        For Approval:  <input type="radio" name="f" id="f" value="To" checked="checked" />
+                                      
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <input type="submit" value="Search By Last" id="btnDateLast" onclick="javascript:getblock1()" class="btn btn-success" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("fromDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "fromDate", @placeholder = "Enter From Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("toDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "toDate", @placeholder = "Enter To Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <input type="submit" value="Search By Date" id="btnDate" onclick="javascript:getblock()" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+
+                              
+
+                                <br />
+                                <div id="dvLoading"></div>
+
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "CashPurchaseChilds");}*@
+                                </div>
+
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                            <h4 class="modal-title">Confirmation</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @*<p>Do you want to save changes you made to document before closing?</p>*@<p></p>
+                                            <p class="text-danger">Data Save Successfully</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            @*<button type="button" class="btn btn-primary">Save changes</button>*@<button type="button" class="btn btn-primary"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

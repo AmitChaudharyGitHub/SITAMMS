@@ -1,0 +1,63 @@
+﻿
+@model List<MMS.ViewModels.TransferEWayBill>
+    @{ int row = 1;}
+
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>S.No.</th>
+            <th>Transfer Number</th>
+            <th>Project Name</th>
+            <th>Transfer Date</th>
+            <th>E-Way Bill</th>
+            <th>E-Way Bill Date</th>
+            <th>Amount</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="8">No Record Found</td>
+            </tr>
+        }
+        @foreach (var data in Model)
+        {
+            <tr>
+                <td>@row</td>
+                <td>
+                    @data.TransferNumber
+                </td>
+                <td>@data.ProjectName</td>
+                <td>@data.TransferDate.Value.ToString("dd/MM/yyyy")</td>
+
+                <td>@data.EWayBill</td>
+                <td>
+                    @if (data.EWayBillDate != null)
+                    {
+                       <span>@data.EWayBillDate.Value.ToString("dd/MM/yyyy")</span> 
+                    }
+                </td>
+
+                <td>@data.Amount</td>
+            <td>
+                @if (ViewBag.TransferType == "InterTransfer")
+                {
+                    <a class="IntrDialog" target="_blank" href="/IntraTransfer/UpdateEWayBillInterTransfer_Print?TransferNo=@data.TransferNumber">View</a><br />
+                }
+                @if (ViewBag.TransferType == "IntraTransfer")
+                {
+                    <a class="IntrDialog" target="_blank" href="/IntraTransfer/UpdateEWayBillIntraTransfer_Print?TransferNo=@data.TransferNumber">View</a><br />
+                        
+                }
+            </td>
+        </tr>
+            row++;
+        }
+    </tbody>
+</table>
+
+

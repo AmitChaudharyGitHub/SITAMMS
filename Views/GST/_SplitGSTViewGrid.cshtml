@@ -1,0 +1,134 @@
+﻿
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 5px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px;
+        margin: 5px;
+        color: #333;
+        text-align: center;
+        font-weight: normal;
+        font-size: 11px;
+    }
+
+    .gridRow td {
+        padding: 10px;
+        color: #333;
+        text-align: center;
+        font-weight: normal;
+        font-size: 11px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .aaaa {
+        width: 60px;
+    }
+
+
+
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+</style>
+
+
+<div id="gridposition" class="table-responsive" style="width: 100%; ">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, canSort: false, rowsPerPage: 20, ajaxUpdateContainerId: "positionGrid");
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+
+                    grid1.Column("TransId", "S.No"),
+                     grid1.Column("TaxSlab", "Tax Slab"),
+                       grid1.Column("TaxRateType", "Tax Rate Type"),
+                      grid1.Column("CGST", "CGST"),
+                       grid1.Column("SGST", "SGST"),
+                        grid1.Column("UGST", "UGST"),
+                         grid1.Column("IGST", "IGST"),
+                       grid1.Column("CreatedDate", header: "Created Date", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.CreatedDate))
+
+                        ))
+
+    }
+    else
+    {
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+
+</div>
+

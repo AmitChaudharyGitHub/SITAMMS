@@ -1,0 +1,100 @@
+﻿@model IEnumerable<BusinessObjects.Entity.tblUnitMaster>
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+<section id="content_wrapper">
+
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <!-- Begin: Content Header -->
+                <!-- Begin: Admin Form -->
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form method="post" action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Unit Master</span>
+                                </div>
+
+                                <div class="row">
+                                    <p>
+                                        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+                                    </p>
+                                    <table class="table table-hover">
+                                        <tr class="primary">
+
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.UnitName)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.UnitCode)
+                                            </th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Status)
+                                            </th>
+
+                                            <th>Action</th>
+                                        </tr>
+                                        @if (Model != null)
+                                        {
+                                            foreach (var item in Model)
+                                            {
+                                                <tr class="success info primary warning danger alert system">
+
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.UnitName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.UnitCode)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Status)
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.ActionLink("Edit", "Edit", new { id = item.TransID }, new { @class = "btn btn-primary" }) |
+                                                        @Html.ActionLink("Details", "Details", new { id = item.TransID }, new { @class = "btn btn-success" })
+                                                        @*@Html.ActionLink("Delete", "Delete", new { id = item.TransID }, new { @class = "btn btn-danger" })*@
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </table>
+                                </div>
+
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</section>

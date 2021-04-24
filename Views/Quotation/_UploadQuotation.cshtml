@@ -1,0 +1,265 @@
+﻿
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 5px;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px;
+        margin: 5px;
+        color: #333;
+        text-align: center;
+        font-weight: normal;
+        font-size: 11px;
+    }
+
+    .gridRow td {
+        padding: 10px;
+        color: #333;
+        text-align: center;
+        font-weight: normal;
+        font-size: 11px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .aaaa {
+        width: 60px;
+    }
+
+
+
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        $(".ViewDialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-edit-1").dialog({
+                title: 'Quotation Remarks',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit-1").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit-1").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+        $(".download_Dialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-edit-2").dialog({
+                title: 'Download Attached File',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 650,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit-2").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit-2").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+
+
+
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-edit-1").dialog('close');
+
+        });
+    });
+
+</script>
+
+
+<script>
+    function GetRemarks() {
+
+      
+        var url = '@Url.Action("GetQuotationRemark", "Quotation")';
+        debugger;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#text1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                debugger;
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+    function GetDownload()
+    {
+
+        var url = '@Url.Action("GetDownloadFileDetail", "Quotation")';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#text1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                debugger;
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+
+
+
+</script>
+
+<div id="gridposition" class="table-responsive" >
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, canSort: false, rowsPerPage: 20, ajaxUpdateContainerId: "positionGrid");
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+                      grid1.Column("PurchaseReqNo", "Purchase Indent No."),
+                      grid1.Column("QuotationRefNo", header: "Quotation Ref. No."),
+                      grid1.Column("CreatedDate", header: "Quotation Updated Date", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.CreatedDate)),
+                      grid1.Column("Name", header: "Created By"),
+                       grid1.Column("TransId", header: "Remark",  canSort: false, format: @<text> @Html.ActionLink("View", "GetQuotationRemark", new { TrandId = item.TransId }, new { @class = "ViewDialog", @id = "text1", @onchange = "javascript:GetRemarks(this.value);", @style = "color:#497bf9" })</text>),
+                        grid1.Column("TransId", header: "Quotation Documents",  canSort: false, format: @<text> @Html.ActionLink("View attachment", "GetDownloadFileDetail", new { TransId = item.TransId } , new { @class = "download_Dialog", @id = "text1", @onchange = "javascript:GetDownload(this.value);", @style = "color:#497bf9" }) </text>),
+                        grid1.Column("TransId", header: "Update Attachments", canSort: false, format: @<text> @Html.ActionLink("Update Documents", "AddQuotation", new { Uid = item.Uid,Edit=1 }, new {  @style = "color:#497bf9" }) </text>)
+                       ))
+
+}
+else
+{
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+
+</div>
+
+
+
+<div id="dialog-edit-1" style="display: none">
+</div>
+
+<div id="dialog-edit-2" style="display: none">
+</div>

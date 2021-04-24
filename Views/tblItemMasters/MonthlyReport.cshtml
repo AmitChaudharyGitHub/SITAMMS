@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    var fromDate = (DateTime)ViewBag.fromDate;
+    var toDate = (DateTime)ViewBag.toDate;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+@*<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>*@
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+
+    var GetItemByGroup='@Url.Action("GetItemByGroupStock", "tblItemMasters")';
+    var GetItemGroup='@Url.Action("GetItemGroupStock", "tblItemMasters")';
+
+    var ReportGrid = '@Url.Action("ReportGrid", "tblItemMasters")';
+
+    
+    var SearchItemByGroup='@Url.Action("SearchItemByGroupStock", "tblItemMasters")';
+
+
+
+
+</script>  
+
+<script src="~/Script/MonthlyReport.js"></script>
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label(" Item Monthly Statements  ", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">                                       
+                                         
+                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("ItemGroups", new SelectList(string.Empty, "Value", "Text"), "For All Item Groups", htmlAttributes: new { @id = "ItemGroups", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("Items", new SelectList(string.Empty, "Value", "Text"), "For All Item", htmlAttributes: new { @id = "Items", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                              
+                                                            
+                               
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                         D1-   @Html.TextBox("fromDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "fromDate", @placeholder = "Enter From Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            D2-  @Html.TextBox("toDate", string.Format("{0:dd MMM yyy}", toDate), new { @class = "DatePicker form-control", @id = "toDate", @placeholder = "Enter To Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+                                @*<br />*@
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <input type="submit" value="Search By Date" id="btnDate" onclick="javascript:getblock()" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+                                </div>
+
+
+
+
+
+
+                            <br />
+                            <div id="dvLoading"></div>
+                            <table class="table" id="grid1">
+                                <thead>
+                                    <tr>
+                                        <th>Group</th>
+                                        <th>Item</th>
+                                        <th>Units</th>
+                                        <th>Average Rate</th>
+                                        <th>Total Q Till D1</th>
+                                        <th>Total Q D1 To D2</th>
+                                        <th>Total Q </th>
+                                        <th>Total I Till D1</th>
+                                        <th>Total I D1 To D2</th>
+                                        <th>Total I </th>
+                                        <th>Balace Q</th>
+                                        <th>Value Of Balance Q</th>
+                                        <th>Value Of Q D1 To D2 </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grid"></tbody>
+                            </table>
+                            <table class="table" id="grid">
+                                @*<thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Item Group</th>
+                    <th>Item Name</th>
+                    <th>Opening</th>
+                    <th>Balance</th>
+                </tr>
+            </thead>*@
+                                <tbody id="grid"></tbody>
+                            </table>
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

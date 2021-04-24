@@ -1,0 +1,39 @@
+﻿@model IEnumerable<MMS.ViewModels.GetMSRItemDetail>
+
+
+<table class="table-bordered" style="width:100%; font-size:8px;" cellpadding="4" cellspacing="0" border="1">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SNo)
+        </th>
+        <th> @Html.DisplayNameFor(model => model.Item) </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Unit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MRN_Receive)
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="font-size:10px;">
+                @Html.DisplayFor(modelItem => item.SNo)
+
+            </td>
+            <td style="font-size:10px;">
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td style="font-size:10px;">   
+                @Html.DisplayFor(modelItem => item.Unit)
+            </td>
+            <td style="font-size:10px;">
+                @Html.DisplayFor(modelItem => item.MRN_Receive)
+            </td>
+
+        </tr>
+    }
+
+</table>

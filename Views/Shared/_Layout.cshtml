@@ -1,0 +1,1998 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>@ViewBag.Title</title>
+
+    <meta name="keywords" content="HTML5 Bootstrap 3 Admin Template UI Theme" />
+    <meta name="description" content="AdminDesigns - A Responsive HTML5 Admin UI Framework">
+    <meta name="author" content="AdminDesigns">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="~/Content/Respons_Form.css" rel="stylesheet" type="text/css" />
+
+    <!-- Font CSS (Via CDN) -->
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600'>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" href="~/Content/admindesigns.com/demos/admin/theme/assets/skin/default_skin/css/theme.css">
+    <link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+    <!-- Admin Forms CSS -->
+    <link rel="stylesheet" type="text/css" href="~/Content/admindesigns.com/demos/admin/theme/assets/admin-tools/admin-forms/css/admin-forms.css">
+
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/Content/admindesigns.com/demos/admin/theme/assets/img/favicon.ico">
+
+    <link href="~/Content/css/modal_mdl.css" rel="stylesheet" />
+    <link href="~/Content/select2/select2.min.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+        .loader {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url('/Images/loader.gif') 50% 50% no-repeat rgb(249,249,249);
+            opacity: .8;
+        }
+
+        .select2-selection {
+            height: 42px !important;
+        }
+
+        .select2-selection__rendered {
+            padding-top: 6px;
+        }
+
+        .ajax-loader {
+            display: none;
+            position: fixed;
+            background: #000000;
+            opacity: 0.7;
+            z-index: 2147483647 !important;
+            overflow: visible;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            padding-top: 30%;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+
+
+    <style>
+
+        .loading {
+            position: fixed;
+            z-index: 999;
+            height: 2em;
+            width: 2em;
+            overflow: show;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+            /* Transparent Overlay */
+            .loading:before {
+                content: '';
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0, .8));
+                background: -webkit-radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0,.8));
+            }
+
+            /* :not(:required) hides these rules from IE9 and below */
+            .loading:not(:required) {
+                /* hide "loading..." text */
+                font: 0/0 a;
+                color: transparent;
+                text-shadow: none;
+                background-color: transparent;
+                border: 0;
+            }
+
+                .loading:not(:required):after {
+                    content: '';
+                    display: block;
+                    font-size: 10px;
+                    width: 1em;
+                    height: 1em;
+                    margin-top: -0.5em;
+                    -webkit-animation: spinner 150ms infinite linear;
+                    -moz-animation: spinner 150ms infinite linear;
+                    -ms-animation: spinner 150ms infinite linear;
+                    -o-animation: spinner 150ms infinite linear;
+                    animation: spinner 150ms infinite linear;
+                    border-radius: 0.5em;
+                    -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+                    box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+                }
+
+        /* Animation */
+
+        @@-webkit-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-moz-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-o-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+ 
+
+</head>
+<body class="dashboard-page sb-l-o sb-r-c onload-check sb-l-m sb-l-disable-animation">
+
+    <!-----------loader----------------->
+
+    <div id="page_loader" class="loading" style="display:none">Loading&#8230;</div>
+
+    <!-------------------------------------------------------------+
+      <body> Helper Classes:
+    ---------------------------------------------------------------+
+      '.sb-l-o' - Sets Left Sidebar to "open"
+      '.sb-l-m' - Sets Left Sidebar to "minified"
+      '.sb-l-c' - Sets Left Sidebar to "closed"
+
+      '.sb-r-o' - Sets Right Sidebar to "open"
+      '.sb-r-c' - Sets Right Sidebar to "closed"
+    ---------------------------------------------------------------+
+     Example: <body class="example-page sb-l-o sb-r-c">
+     Results: Sidebar left Open, Sidebar right Closed
+    --------------------------------------------------------------->
+    <!-- For Demo Purposes - Theme Settings Pane -->
+    <div id="skin-toolbox" class="hidden">
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-icon">
+                    <i class="fa fa-gear text-primary"></i>
+                </span>
+                <span class="panel-title"> Theme Options</span>
+            </div>
+            @*<div class="panel-body pn">
+                <ul class="nav nav-list nav-list-sm pl15 pt10" role="tablist">
+                    <li class="active">
+                        <a href="#toolbox-header" role="tab" data-toggle="tab">Navbar</a>
+                    </li>
+                    <li>
+                        <a href="#toolbox-sidebar" role="tab" data-toggle="tab">Sidebar</a>
+                    </li>
+                    <li>
+                        <a href="#toolbox-settings" role="tab" data-toggle="tab">Misc</a>
+                    </li>
+                </ul>*@
+            <div class="tab-content p20 ptn pb15">
+                <div role="tabpanel" class="tab-pane active" id="toolbox-header">
+                    <form id="toolbox-header-skin">
+                        <h4 class="mv20">Header Skins</h4>
+                        <div class="skin-toolbox-swatches">
+                            <div class="checkbox-custom checkbox-disabled fill mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin8" checked value="">
+                                <label for="headerSkin8">Light</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-primary mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin1" value="bg-primary">
+                                <label for="headerSkin1">Primary</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-info mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin3" value="bg-info">
+                                <label for="headerSkin3">Info</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-warning mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin4" value="bg-warning">
+                                <label for="headerSkin4">Warning</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-danger mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin5" value="bg-danger">
+                                <label for="headerSkin5">Danger</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-alert mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin6" value="bg-alert">
+                                <label for="headerSkin6">Alert</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-system mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin7" value="bg-system">
+                                <label for="headerSkin7">System</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-success mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin2" value="bg-success">
+                                <label for="headerSkin2">Success</label>
+                            </div>
+                            <div class="checkbox-custom fill mb5">
+                                <input type="radio" name="headerSkin" id="headerSkin9" value="bg-dark">
+                                <label for="headerSkin9">Dark</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="toolbox-sidebar">
+                    <form id="toolbox-sidebar-skin">
+                        <h4 class="mv20">Sidebar Skins</h4>
+                        <div class="skin-toolbox-swatches">
+                            <div class="checkbox-custom fill mb5">
+                                <input type="radio" name="sidebarSkin" checked id="sidebarSkin3" value="">
+                                <label for="sidebarSkin3">Dark</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-disabled mb5">
+                                <input type="radio" name="sidebarSkin" id="sidebarSkin1" value="sidebar-light">
+                                <label for="sidebarSkin1">Light</label>
+                            </div>
+                            <div class="checkbox-custom fill checkbox-light mb5">
+                                <input type="radio" name="sidebarSkin" id="sidebarSkin2" value="sidebar-light light">
+                                <label for="sidebarSkin2">Lighter</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="toolbox-settings">
+                    <form id="toolbox-settings-misc">
+                        <h4 class="mv20 mtn">Layout Options</h4>
+                        <div class="form-group">
+                            <div class="checkbox-custom fill mb5">
+                                <input type="checkbox" checked="" id="header-option">
+                                <label for="header-option">Fixed Header</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-custom fill mb5">
+                                <input type="checkbox" checked="" id="sidebar-option">
+                                <label for="sidebar-option">Fixed Sidebar</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-custom fill mb5">
+                                <input type="checkbox" id="breadcrumb-option">
+                                <label for="breadcrumb-option">Fixed Breadcrumbs</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-custom fill mb5">
+                                <input type="checkbox" id="breadcrumb-hidden">
+                                <label for="breadcrumb-hidden">Hide Breadcrumbs</label>
+                            </div>
+                        </div>
+                        <h4 class="mv20">Layout Options</h4>
+                        <div class="form-group">
+                            <div class="radio-custom mb5">
+                                <input type="radio" id="fullwidth-option" checked name="layout-option">
+                                <label for="fullwidth-option">Fullwidth Layout</label>
+                            </div>
+                        </div>
+                        <div class="form-group mb20">
+                            <div class="radio-custom radio-disabled mb5">
+                                <input type="radio" id="boxed-option" name="layout-option" disabled>
+                                <label for="boxed-option">
+                                    Boxed Layout
+                                    <b class="text-muted">(Coming Soon)</b>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form-group mn br-t p15">
+                @*<a href="#" id="clearLocalStorage" class="btn btn-primary btn-block pb10 pt10">Clear LocalStorage</a>*@
+            </div>
+        </div>
+    </div>
+
+    <!-- End: Theme Settings Pane -->
+    <!-- Start: Main -->
+    <div id="main">
+
+        <!-----------------------------------------------------------------+
+           ".navbar" Helper Classes:
+        -------------------------------------------------------------------+
+           * Positioning Classes:
+            '.navbar-static-top' - Static top positioned navbar
+            '.navbar-static-top' - Fixed top positioned navbar
+
+           * Available Skin Classes:
+             .bg-dark    .bg-primary   .bg-success
+             .bg-info    .bg-warning   .bg-danger
+             .bg-alert   .bg-system
+        -------------------------------------------------------------------+
+          Example: <header class="navbar navbar-fixed-top bg-primary">
+          Results: Fixed top navbar with blue background
+        ------------------------------------------------------------------->
+        <!-- Start: Header -->
+        <header class="navbar navbar-fixed-top">
+            <div class="navbar-branding">
+                <a class="navbar-brand" href="@Url.Action("MyDashBoard", "Home")">
+                    <b>ACIL</b>Dashboard
+                </a>
+                <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
+            </div>
+            @*<ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a class="sidebar-menu-toggle" href="#">
+                            <span class="ad ad-ruby fs18"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="topbar-menu-toggle" href="#">
+                            <span class="ad ad-wand fs16"></span>
+                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a class="request-fullscreen toggle-active" href="#">
+                            <span class="ad ad-screen-full fs18"></span>
+                        </a>
+                    </li>
+                </ul>*@
+            <form class="navbar-form navbar-left navbar-search" role="search">
+                <div class="form-group">
+                    @*<input type="text" class="form-control" placeholder="Search..." value="Search...">*@
+                </div>
+            </form>
+
+            @* INDENT REQUESITION NOTIFICATIONS *@
+            <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="display:none">
+                        <span class="ad ad-radio-tower fs18"></span>
+                        <span class="badge badge-danger badge-hero" id="span1">
+                            @{
+                                if (ViewBag.message == null)
+                                {
+                                    @Html.Label("span1", new { style = "display: none;" })
+
+                                }
+                                else
+                                {
+                                    @ViewBag.message
+                                }
+                            }
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu media-list w350 animated animated-shorter fadeIn" role="menu">
+                        <li class="dropdown-header">
+                            <span class="dropdown-title"><a class="text-primary" href="#" style="cursor:default;"> Indent Notifications </a></span>
+                        </li>
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="media-heading">
+                                    Indent Requisition
+                                    <small class="text-muted">- @ViewBag.Date1</small>
+                                </h5> Sent By
+                                <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    &nbsp; <span class="fa fa-user"></span>
+                                    @ViewBag.Emplyeename1
+                                </a>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="media-heading mv5">
+                                    Indent Requisition
+                                    <small class="text-muted"> - @ViewBag.Date2</small>
+                                </h5>
+                                Sent By
+                                <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename2
+                                </a>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="media-heading">
+                                    Indent Requisition
+                                    <small class="text-muted">- @ViewBag.Date3</small>
+                                </h5> Sent By
+                                <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename3
+                                </a>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="media-heading mv5">
+                                    Indent Requisition
+                                    <small class="text-muted">- @ViewBag.Date4</small>
+                                </h5> Sent By
+                                <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename4
+                                </a>
+                            </div>
+                        </li>
+                        <li class="media">
+                            <div class="media-body">
+                                <h5 class="media-heading mv5">
+                                    Indent Requisition
+                                    <small class="text-muted">- @ViewBag.Date5</small>
+                                </h5> Sent By
+                                <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename5
+                                </a>
+                            </div>
+                        </li>
+                        <li class="dropdown-header">
+                            <span class="dropdown-title">
+                                <a class="text-primary-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                    View All
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="display:none">
+                        <span class="flag-xs flag-in"></span> India
+                    </a>
+                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="flag-xs flag-in mr10"></span> India
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                @*<li class="menu-divider hidden-xs">
+                        <i class="fa fa-circle"></i>
+                    </li>*@
+                @{
+                    string user = "";
+                    if (Session["EmailCheck"] != null)
+                    {
+                        user = Session["EmailCheck"].ToString();
+                    }
+                }
+                <li>
+                    <p style="color:red; width:500px">Due to system upgradation user may face some problem in PO approval and disapproval module. We will inform you once it resolved. Thank you for your patience.</p>
+                </li>
+                <li style="padding-top:12px;">
+                    <select id="ddlDivisions" class="form-control">
+                        <option value="">Select Division</option>
+                    </select>
+                </li>
+               
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
+                        <img src="~/Content/admindesigns.com/demos/admin/theme/assets/img/avatars/profile.jpg" alt="avatar" class="mw30 br64 mr15"> @*@HttpContext.Current.Session["Emp_Name"].ToString()*@
+                        <span class="hidden-xs" id="spUserName">@(user)</span>
+                    </a>
+                    <ul class="dropdown-menu list-group dropdown-persist w250" role="menu">
+
+                        <li class="list-group-item" style="padding:12px">
+                            @{
+                                if (Request.IsAuthenticated)
+                                {
+                                    using (Html.BeginForm("Logout", "MyAccount", FormMethod.Post, new { id = "logoutForm", @class = "animated animated-short fadeInUp block" }))
+                                    {
+                                        <a href="javascript:document.getElementById('logoutForm').submit()" class="btn-block" style="text-decoration:none;"><span class="fa fa-power-off"></span> Logout </a>
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Login", "Login", "MyAccount")
+                                }
+                            }
+                            @*<a href="#" class="animated animated-short fadeInUp">
+                                    <span class="fa fa-power-off pr5"></span> Logout
+                                </a>*@
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </header>
+        <!-- End: Header -->
+        <!-----------------------------------------------------------------+
+           "#sidebar_left" Helper Classes:
+        -------------------------------------------------------------------+
+           * Positioning Classes:
+            '.affix' - Sets Sidebar Left to the fixed position
+
+           * Available Skin Classes:
+             .sidebar-dark (default no class needed)
+             .sidebar-light
+             .sidebar-light.light
+        -------------------------------------------------------------------+
+           Example: <aside id="sidebar_left" class="affix sidebar-light">
+           Results: Fixed Left Sidebar with light/white background
+        ------------------------------------------------------------------->
+        <!-- Start: Sidebar Left -->
+        <aside id="sidebar_left" class="nano nano-primary affix">
+
+            <!-- Start: Sidebar Left Content -->
+            <div class="sidebar-left-content nano-content">
+
+                <!-- Start: Sidebar Header -->
+                <header class="sidebar-header">
+
+                    <!-- Sidebar Widget - Menu (Slidedown) -->
+                    <div class="sidebar-widget menu-widget">
+                        <div class="row text-center mbn">
+                            <div class="col-xs-4">
+                                <a href="@Url.Action("MyDashBoard", "Home")" class="text-primary" data-toggle="tooltip" data-placement="top" title="Dashboard">
+                                    <span class="glyphicon glyphicon-home"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-info" data-toggle="tooltip" data-placement="top" title="Messages">
+                                    <span class="glyphicon glyphicon-inbox"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-alert" data-toggle="tooltip" data-placement="top" title="Tasks">
+                                    <span class="glyphicon glyphicon-bell"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-system" data-toggle="tooltip" data-placement="top" title="Activity">
+                                    <span class="fa fa-desktop"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-danger" data-toggle="tooltip" data-placement="top" title="Settings">
+                                    <span class="fa fa-gears"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-warning" data-toggle="tooltip" data-placement="top" title="Cron Jobs">
+                                    <span class="fa fa-flask"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Widget - Author (hidden)  -->
+                    @*<div class="sidebar-widget author-widget hidden">
+                        <div class="media">
+                            <a class="media-left" href="#">
+                                <img src="assets/img/" class="img-responsive">
+                            </a>
+                            <div class="media-body">
+                                <div class="media-links">
+                                    <a href="#" class="sidebar-menu-toggle">User Menu -</a> <a href="pages_login(alt).html">Logout</a>
+                                </div>
+                                <div class="media-author"></div>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <!-- Sidebar Widget - Search (hidden) -->
+                    @*<div class="sidebar-widget search-widget hidden">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input type="text" id="sidebar-search" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>*@
+
+                </header>
+                <!-- End: Sidebar Header -->
+                <!-- Start: Sidebar Left Menu -->
+                <ul class="nav sidebar-menu">
+                    <li class="sidebar-label pt20">Menu</li>
+
+                    <li class="active">
+                        <a href="@Url.Action("MyDashBoard", "Home")">
+                            <span class="glyphicon glyphicon-home"></span>
+                            <span class="sidebar-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <!-- starting Menu here -->
+                    <li class="sidebar-label pt15"></li>
+
+                    @{
+
+                        var menu = Session["PermissionData"] as List<MMS.ViewModels.AllowPermissionViewModel>;
+
+                        if (menu != null)
+                        {
+                            foreach (var t in menu)
+                            {
+
+                                if (t.HName == "Material Opening")
+                                {
+
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-user"></span>
+                                            <span class="sidebar-title">Material Opening</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+
+
+                                        <ul class="nav sub-nav">
+
+                                            @foreach (var x in t.P_Child)
+                                            {
+                                                if (x.SubHeaderName == "Units")
+                                                {
+
+                                                }
+                                                else if (x.SubHeaderName == "Item Group")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Global Items")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Items Opening")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("ItemOpeningFirst", "tblItemMasters")">
+                                                            <span class="fa fa-money"></span>  Items Opening
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x.SubHeaderName == "Vendor Groups")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Vendor Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Sub/PC Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Block Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Floor Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "PO T&C")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Add Price Cap")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Ageing Status")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Conversion Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Source Location")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Conversion Mapping")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Equipment Master")
+                                                {
+                                                }
+                                                else if (x.SubHeaderName == "Opening Date")
+                                                {
+                                                }
+                                                else { }
+
+                                            }
+
+                                        </ul>
+
+
+
+                                    </li>
+
+
+                                }
+
+                                else if (t.HName == "Requisition")
+                                {
+                                    <li>
+
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                            <span class="sidebar-title">Requisition</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+
+                                            @foreach (var x1 in t.P_Child)
+                                            {
+
+                                                if (x1.SubHeaderName == "Issue Requisition")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "IndentRequistion")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> Issue Requisition
+                                                        </a>
+                                                    </li>
+
+                                                }
+
+
+                                                else if (x1.SubHeaderName == "Issue Requisition Approval")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "ApprovedIssueQuantity")">
+                                                            <span class="glyphicon glyphicon-check"></span> Issue Requisition Approval
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x1.SubHeaderName == "View Issue Requisition")
+                                                {
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                                            <span class="glyphicon glyphicon-grain"></span> View Issue Requisition
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x1.SubHeaderName == "Purchase Indent")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("IndexNew", "PurchaseRequisition")">
+                                                            <span class="glyphicon glyphicon-envelope"></span> Purchase Indent
+                                                        </a>
+                                                    </li>
+
+                                                }
+
+                                                else if (x1.SubHeaderName == "Add FOC/Cash Item")
+                                                {
+
+                                                    <li>
+
+                                                        <a href="@Url.Action("Index", "OutProPurchaseIndent")">
+                                                            <span class="glyphicon glyphicon-envelope"></span> Add FOC/Cash Item
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x1.SubHeaderName == "Update FOC/Cash Item")
+
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "PIOrderOutPIType")">
+                                                            <span class="glyphicon glyphicon-envelope"></span> Update FOC/Cash Item
+                                                        </a>
+                                                    </li>
+                                                }
+
+
+
+
+
+
+                                                else if (x1.SubHeaderName == "Purchase Indent Approval")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("IndexApproval", "PurchaseRequisition")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> Purchase Indent Approval
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else { }
+
+                                            }
+
+                                        </ul>
+
+
+                                    </li>
+
+
+
+                                }
+                                else if (t.HName == "Material Purchase")
+                                {
+
+                                    <li>
+
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-expand"></span>
+                                            <span class="sidebar-title">Material Purchase</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+
+
+                                            @foreach (var x2 in t.P_Child)
+                                            {
+                                                if (x2.SubHeaderName == "Comparative/Quotation")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "Quotation")">
+                                                            <span class="glyphicon glyphicon-user"></span> Add Comparetive/Quotation
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x2.SubHeaderName == "Local Purchase")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index2", "CashPurchaseChilds")">
+                                                            <span class="glyphicon glyphicon-user"></span> Local Purchase
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x2.SubHeaderName == "Purchase Orders")
+                                                {
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "piorder")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> Purchase Orders
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x2.SubHeaderName == "Po Closer")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "PoCloser")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> PO Closer
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x2.SubHeaderName == "PO Re-Calculation")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "POCalculation")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> PO Re-Calculation
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x2.SubHeaderName == "PO Approval")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "Print_Slip_For_Approval")">
+                                                            <span class="glyphicon glyphicon-ok-sign"></span> PO Approval
+                                                        </a>
+                                                    </li>
+                                                }
+
+
+                                                else if (x2.SubHeaderName == "Dis-Approve PO")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("DisApprovealPOList", "Print_Slip_For_Approval")">
+                                                            <span class="glyphicon glyphicon-ok-sign"></span> Dis-Approve PO
+                                                        </a>
+                                                    </li>
+                                                }
+
+
+
+                                                else if (x2.SubHeaderName == "View PO Approval")
+                                                {
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "View_Print_Slip_Approval")">
+                                                            <span class="glyphicon glyphicon-warning-sign"></span> View PO Approval
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x2.SubHeaderName == "PO Release")
+                                                {
+
+                                                    <li>
+                                                        <a href="@Url.Action("RelesedPO", "IndentPurchaseOrders")">
+                                                            <span class="glyphicon glyphicon-warning-sign"></span> PO Release
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x2.SubHeaderName == "Draft PO")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("PendingPODraft", "purchaseOrder")">
+                                                            <span class="glyphicon glyphicon-bookmark"></span>Draft Purchase
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                            @if (Session["EmailCheck"].ToString() == "jaipal.singh@acilnet.com")
+                                            {
+                                                <li>
+                                                    <a href="@Url.Action("Index", "set_up")">
+                                                        <span class="glyphicon glyphicon-bookmark"></span>Acceptable Qty. Variation
+                                                    </a>
+                                                </li>
+                                            }
+                                           
+                                        </ul>
+                                    </li>
+                                }
+                                else if (t.HName == "Material Receive")
+                                {
+
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-expand"></span>
+                                            <span class="sidebar-title">Material Receive</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+
+                                            @foreach (var x3 in t.P_Child)
+                                            {
+
+                                                if (x3.SubHeaderName == "Gate Receipt")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "GateEntryListClassification")">
+                                                            <span class="glyphicon glyphicon-user"></span> Gate Receipt
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x3.SubHeaderName == "Store Receipt")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "MRNListClassification")">
+                                                            <span class="glyphicon glyphicon-tags"></span> Store Receipt
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "BillUpload")">
+                                                            <span class="glyphicon glyphicon-tags"></span> Bill Upload
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x3.SubHeaderName == "Cartage Re-Calculation")
+                                                {
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "CartageCalculation")">
+                                                            <span class="glyphicon glyphicon-folder-close"></span> Cartage Re-Calculation
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x3.SubHeaderName == "Get Out")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("index", "GetOut")">
+                                                            <span class="glyphicon glyphicon-tags"></span> Gate Out
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else { }
+
+                                            }
+                                        </ul>
+                                    </li>
+
+                                }
+                                else if (t.HName == "Material Issue")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-info-sign"></span>
+                                            <span class="sidebar-title">Material Issue</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+                                            @foreach (var x4 in t.P_Child)
+                                            {
+
+                                                if (x4.SubHeaderName == "Material Issue")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "QuantityIssues")">
+                                                            <span class="glyphicon glyphicon-random"></span>  Material Issue
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else { }
+
+                                            }
+
+                                        </ul>
+                                    </li>
+
+
+
+                                }
+                                else if (t.HName == "Contra Entry")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-info-sign"></span>
+                                            <span class="sidebar-title">Contra Entry</span>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="nav sub-nav">
+                                            @foreach (var x5 in t.P_Child)
+                                            {
+                                                if (x5.SubHeaderName == "Return Material")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "IssueReturn")">
+                                                            <span class="glyphicon glyphicon-random"></span> Return Material
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                else if (t.HName == "Intra Site Transfer")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-expand"></span>
+                                            <span class="sidebar-title">Transfer</span>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="nav sub-nav">
+                                            @foreach (var x5 in t.P_Child)
+                                            {
+                                                if (x5.SubHeaderName == "Intra State Transfer Document")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Transfer", "IntraTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Inter / Intra Transfer
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "Transfer E-Way Bill")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("TransferEwayBill", "IntraTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Transfer E-Way Bill
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "Transfer E-Way Bill Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("TransferEWayBillReport", "IntraTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Transfer E-Way Bill Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "Cancel Transfer")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("RejectTransfer", "IntraTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Cancel Transfer
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "Cancel Transfer Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("RejectedTransfer", "IntraTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Cancel Transfer Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*else if (x5.SubHeaderName == "Intra State Taxable Transfer List")
+                                    {
+                                       <li>
+                                           <a href="@Url.Action("IntraTransferTaxableList", "IntraTransfer")">
+                                               <span class="glyphicon glyphicon-tags"></span> Intra State Taxable Transfer List
+                                           </a>
+                                       </li>
+                                    }*@
+                                                @*else if (x5.SubHeaderName == "View Material Dispatch & Receive")
+                                    {
+                                       <li>
+                                           <a href="@Url.Action("DMR", "GateEntries")">
+                                               <span class="glyphicon glyphicon-tags"></span> View Material Dispatch & Receive
+                                           </a>
+                                       </li>
+                                    }
+                                    else if (x5.SubHeaderName == "Debit Credit Report for Site")
+                                    {
+                                       <li>
+                                           <a href="@Url.Action("DebitCredit", "OST")">
+                                               <span class="glyphicon glyphicon-user"></span> Debit Credit Report for Site
+                                           </a>
+                                       </li>
+                                    }*@
+                                                else { }
+                                            }
+
+                                        </ul>
+                                    </li>
+
+                                }
+                                else if (t.HName == "Mannual Transfer")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-expand"></span>
+                                            <span class="sidebar-title">Mannual Transfer</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+
+                                            @foreach (var x5 in t.P_Child)
+                                            {
+                                                if (x5.SubHeaderName == "Add Mannual Transfer")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "MannualTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Add Manual Trasnfer
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "Update Mannual Transfer")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("UpDateMannualTransfer", "MannualTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> Update Mannual Transfer
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x5.SubHeaderName == "PIC Approval")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("MannualTransferPurchaseOrderAtPIC", "MannualTransfer")">
+                                                            <span class="glyphicon glyphicon-user"></span> PIC Approval
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else { }
+                                            }
+
+
+                                        </ul>
+
+
+                                    </li>
+                                }
+
+
+                                //
+
+
+                                else if (t.HName == "Debit Note")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-expand"></span>
+                                            <span class="sidebar-title">Debit Notes</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+
+                                            @foreach (var xa in t.P_Child)
+                                            {
+                                                if (xa.SubHeaderName == "PC Debit Note")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("PCDebitNote", "IssueStock")">
+                                                            <span class="glyphicon glyphicon-user"></span> PC Debit Note
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (xa.SubHeaderName == "Vendor Debit Note")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "VendorDebitNote")">
+                                                            <span class="glyphicon glyphicon-user"></span> Vendor Debit Note
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ViewDebitNote", "VendorDebitNote")">
+                                                            <span class="glyphicon glyphicon-user"></span> View Vendor Debit Note
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else { }
+                                            }
+
+
+                                        </ul>
+
+
+                                    </li>
+                                }
+
+
+                                //
+
+
+
+                                else if (t.HName == "Shuttering Material")
+                                {
+                                    <li>
+
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-repeat"></span>
+                                            <span class="sidebar-title">Shuttering Material</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                    </li>
+
+                                }
+                                else if (t.HName == "Equipments")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-equalizer"></span>
+                                            <span class="sidebar-title">Equipments</span>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="nav sub-nav">
+                                            @foreach (var x4 in t.P_Child)
+                                            {
+
+                                                if (x4.SubHeaderName == "View Equipment")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("SerachEquipmentMaster", "EquipmentMaster")">
+                                                            <span class="glyphicon glyphicon-random"></span>  View Equipment
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else { }
+
+                                            }
+
+                                        </ul>
+
+                                    </li>
+                                }
+                                else if (t.HName == "Report")
+                                {
+                                    <li class="sidebar-label pt15"></li>
+
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-record"></span>
+                                            <span class="sidebar-title">Reports</span>
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul class="nav sub-nav">
+                                            @foreach (var x6 in t.P_Child)
+                                            {
+                                                if (x6.SubHeaderName == "MSP Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "MSPReport")">
+                                                            <span class="glyphicon glyphicon-record"></span>  MSP Report
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "POCloserReport")">
+                                                            <span class="glyphicon glyphicon-record"></span>  PO Closer Report
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x6.SubHeaderName == "Item Purchase Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("ItemPurchaseReport", "Report")">
+                                                            <span class="glyphicon glyphicon-record"></span>  Item Purchase Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Current Stock")
+                                                {
+
+                                                    <li>
+                                                    <a href = "@Url.Action("Index", "CurrentStock")">
+
+
+                                                    <span class="glyphicon glyphicon-record"></span> Current Stock
+</a>
+
+</li>
+                                                                    }
+
+                                                else if (x6.SubHeaderName == "Daily Issue Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("DailyMaterialIssueReport", "CurrentStock")">
+                                                            <span class="glyphicon glyphicon-record"></span> Daily Issue Summary
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x6.SubHeaderName == "DMR Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "NewDMR_Report")">
+                                                            <span class="glyphicon glyphicon-record"></span> DMR Report
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x6.SubHeaderName == "Receipt Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "VendorWiseReport")">
+                                                            <span class="glyphicon glyphicon-record"></span> Receipt Report
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "ReceiptVsPO")">
+                                                            <span class="glyphicon glyphicon-record"></span> Receipt Vs PO Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Issued Stock")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "IssueStock")">
+                                                            <span class="glyphicon glyphicon-record"></span> Issued Stock
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="@Url.Action("ReturnReport", "IssueReturn")">
+                                                            <span class="glyphicon glyphicon-record"></span> Retrun Quantity
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Transferred Stock")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "TransferStock")" style="display:none">
+                                                            <span class="glyphicon glyphicon-record"></span> Transferred Stock
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Ageing Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("MovableReport", "MovableStatus")">
+                                                            <span class="glyphicon glyphicon-record"></span> Ageing Report
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else if (x6.SubHeaderName == "Issue Report By Indent")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "IssueStock")">
+                                                            <span class="glyphicon glyphicon-record"></span> Issue Report By Indent
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "All Quantity Report")
+                                                {
+                                                    <li>
+                                                        <a href="#">
+                                                            <span class="glyphicon glyphicon-record"></span> All Quantity Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Gate And Store Receipt")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "GateReceiptVsStoreReceipt")">
+                                                            <span class="glyphicon glyphicon-record"></span> Gate Receipt Vs Store Receipt
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "PI Vs PO Detail")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("PIdetail", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> PI Vs PO Detail
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "PO Vs Receipt")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "PuchaseOrder_ReceiptReport")">
+                                                            <span class="glyphicon glyphicon-record"></span> PO Vs Receipt
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Purchase Order Detail")
+                                                {
+                                                    @*<li>
+                    <a href="@Url.Action("POdetail", "DesignDemo")">
+                        <span class="glyphicon glyphicon-record"></span> Purchase Order Detail
+                    </a>
+                </li>*@
+                                                }
+                                                else if (x6.SubHeaderName == "Pending PO Qty  Detail")
+                                                {
+                                                    @*<li>
+                    <a href="@Url.Action("POQtyDetail", "DesignDemo")">
+                        <span class="glyphicon glyphicon-record"></span> Pending PO Qty  Detail
+                    </a>
+                </li>*@
+                                                }
+                                                else if (x6.SubHeaderName == "Status Of PO Vetted By PMC ")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("POPMCdetail", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> Status Of PO Vetted By PMC
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "PO Vetted Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("POVettedReport", "MSPReport")">
+                                                            <span class="glyphicon glyphicon-record"></span>P.O Vetted Summary Report
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Stock Ledger Detail")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("StockLedgerDetail", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> Stock Ledger Detail
+                                                        </a>
+                                                    </li>
+                                                }
+                                                else if (x6.SubHeaderName == "Supplier Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("SupplierReport", "VendorWiseReport")">
+                                                            <span class="glyphicon glyphicon-record"></span> Supplier Report
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "Transfer Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "TransferReport")">
+                                                            <span class="glyphicon glyphicon-record"></span> Transfer Report
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "Transfer Receive Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Receipt", "TransferReport")">
+                                                            <span class="glyphicon glyphicon-record"></span> Transfer Receive Report
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "MSP Summary Report")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("Index", "MSPSummary")">
+                                                            <span class="glyphicon glyphicon-record"></span> MSP Summary
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "PI vs PO & Qty")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("PIvsPOandReceivedQty", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> PI vs PO & Recd. Qty
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "Material Status Against PO")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("POMaterialStatus", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> Material Status against PO
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                                else if (x6.SubHeaderName == "Debit Note Summary")
+                                                {
+                                                    <li>
+                                                        <a href="@Url.Action("DebitNoteSummary", "DesignDemo")">
+                                                            <span class="glyphicon glyphicon-record"></span> Debit Note Summary
+                                                        </a>
+                                                    </li>
+                                                }
+
+
+                                                @*else if (x6.SubHeaderName == "Issue Report")
+            {
+                <li>
+                    <a href="@Url.Action("Index", "MSPReport")">
+                        <span class="glyphicon glyphicon-record"></span> Issue Report
+                    </a>
+                </li>
+            }
+            else if (x6.SubHeaderName == "Issue to PC Report")
+            {
+                <li>
+                    <a href="@Url.Action("Index", "MSPReport")">
+                        <span class="glyphicon glyphicon-record"></span> Issue to PC Report
+                    </a>
+                </li>
+            }*@
+
+                                                else { }
+                                            }
+
+
+                                        </ul>
+                                    </li>
+
+
+                                }
+
+                                else if (t.HName == "Excess Qty")
+                                {
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-adjust"></span>
+                                            <span class="sidebar-title">Excess Qty</span>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="nav sub-nav">
+
+                                            <li>
+                                                <a href="@Url.Action("Index", "Set_Up")">
+                                                    <span class="glyphicon glyphicon-record"></span>Excess Qty
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+
+                                else if (t.HName == "Utilities")
+                                {
+                                    <li class="sidebar-label pt15">User Controls</li>
+                                    <li>
+                                        <a class="accordion-toggle" href="#">
+                                            <span class="glyphicon glyphicon-user"></span>
+                                            <span class="sidebar-title">Utilities</span>
+                                            <span class="caret"></span>
+                                        </a>
+                                        <ul class="nav sub-nav">
+
+                                            <li>
+                                                <a href="#">
+                                                    <span class="glyphicon glyphicon-user"></span> User Mapping
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="@Url.Action("ChangePassword","MyAccount")">
+                                                    <span class="glyphicon glyphicon-tags"></span> Change Password
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+                                }
+                                else { }
+                                // end here.
+                            }
+                        }
+
+
+                    }
+                </ul>
+                <!-- End: Sidebar Menu -->
+                <!-- Start: Sidebar Collapse Button -->
+                <div class="sidebar-toggle-mini">
+                    <a href="#">
+                        <span class="fa fa-sign-out"></span>
+                    </a>
+                </div>
+                <!-- End: Sidebar Collapse Button -->
+
+            </div>
+            <!-- End: Sidebar Left Content -->
+
+        </aside>
+        <!-- End: Sidebar Left -->
+        <!-- Start: Content-Wrapper -->
+        <section id="content_wrapper">
+
+            <!-- Start: Topbar-Dropdown -->
+            <div id="topbar-dropmenu">
+                <div class="topbar-menu row">
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-inbox"></span>
+                            <span class="metro-title">Messages</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="metro-title">Users</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-headphones"></span>
+                            <span class="metro-title">Support</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="fa fa-gears"></span>
+                            <span class="metro-title">Settings</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-facetime-video"></span>
+                            <span class="metro-title">Videos</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-picture"></span>
+                            <span class="metro-title">Pictures</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div style="display:none;" id="loader" class="loader"></div>
+            <!-- End: Topbar-Dropdown -->
+            <!-- Start: Topbar -->
+            @*<header id="topbar">
+                    <div class="topbar-left">
+                        <ol class="breadcrumb">
+                            <li class="crumb-active">
+                                <a href="@Url.Action("Index", "Home")">Dashboard</a>
+                            </li>
+                            <li class="crumb-icon">
+                                <a href="@Url.Action("Index", "Home")">
+                                    <span class="glyphicon glyphicon-home"></span>
+                                </a>
+                            </li>
+                            <li class="crumb-link">
+                                <a href="@Url.Action("Index", "Home")">Home</a>
+                            </li>
+                            <li class="crumb-trail">Dashboard</li>
+                        </ol>
+                    </div>
+
+                </header>*@
+            <!-- End: Topbar -->
+
+
+        </section>
+        <!-- End: Content-Wrapper -->
+        <div>
+            @RenderBody()
+
+            @Scripts.Render("~/bundles/jquery")
+
+
+
+        </div>
+    </div>
+
+
+    <div class="ajax-loader" style="display:none;">
+        <img src="~/img/ajax-loader.gif" alt="loading.." /><br />
+        Please wait...
+    </div>
+
+    <!-- End: Main -->
+    <!-- BEGIN: PAGE SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery_ui/jquery-ui.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+
+
+    <!-- HighCharts Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/highcharts/highcharts.js"></script>
+
+    <!-- Sparklines Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Simple Circles Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/circles/circles.js"></script>
+
+    <!-- JvectorMap Plugin + US Map (more maps in plugin/assets folder) -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/jvectormap/jquery.jvectormap.min.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/jvectormap/assets/jquery-jvectormap-us-lcc-en.js"></script>
+
+    <!-- Theme Javascript -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/utility/utility.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/demo/demo.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/main.js"></script>
+
+    <!-- Widget Javascript -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/demo/widgets.js"></script>
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Content/select2/select2.min.js"></script>
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+
+    <script type="text/javascript">
+        var GetProjects = '@Url.Action("BindProjectNew","POCloser")';
+        var GetDivisions = '@Url.Action("GetDivisions","Home")';
+        jQuery(document).ready(function () {
+            BindDdlWithFun('#ddlDivisions', GetDivisions, {}, 'Division', function () {
+                $("#ddlDivisions > [value=" + @Session["Division"] + "]").attr("selected", "true");
+            });
+            setColour(0);
+
+            $('#ddlDivisions').change(function () {
+                if ($('#ddlDivisions').val() == '') {
+                    alert('Please select Division to Select.');
+                    return false;
+                }
+                else {
+                    $.get('@Url.Action("SetDivision","Home")', { value: $('#ddlDivisions').val(), text: $('#ddlDivisions option:selected').text() }, function (response) {
+                        setColour($('#ddlDivisions').val());
+                        $('#spDivision').text($('#ddlDivisions option:selected').text());
+                        location.reload();
+                    });
+                }
+            });
+
+
+            function disableBack() { window.history.forward() }
+
+            window.onload = disableBack();
+            window.onpageshow = function (evt) { if (evt.persisted) disableBack() }
+            $.ajaxSetup({
+                start: function (xhr) {
+                    $('input[type="button"]').attr('disabled', 'disabled');
+                },
+                complete: function (xhr, status) {
+                    $('input[type="button"]').removeAttr('disabled');
+                },
+                error: function (xhr, status, error) {
+                    $('input[type="button"]').removeAttr('disabled');
+                }, failure: function () {
+                    $('input[type="button"]').removeAttr('disabled');
+                }
+            });
+
+
+            $('.datepicker-field').datepicker({
+                dateFormat: 'dd-mm-yy'
+            });
+
+
+            $('.monthYearPicker').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'MM yy',
+
+                onSelect: function () {
+                    var iMonth = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                    var iYear = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                    $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+                },
+
+                beforeShow: function () {
+                    if ((selDate = $(this).val()).length > 0) {
+                        iYear = selDate.substring(selDate.length - 4, selDate.length);
+                        iMonth = jQuery.inArray(selDate.substring(0, selDate.length - 5), $(this).datepicker('option', 'monthNames'));
+                        $(this).datepicker('option', 'defaultDate', new Date(iYear, iMonth, 1));
+                        $(this).datepicker('setDate', new Date(iYear, iMonth, 1));
+                    }
+                }
+            });
+
+
+            //$(document).ajaxStart(function () { $('.ajax-loader').show(); })
+            //$(document).ajaxStop(function () { $('.ajax-loader').hide(); })
+            //$(document).ajaxError(function () { $('.ajax-loader').hide(); })
+
+
+
+
+            "use strict";
+
+            // Init Theme Core
+            Core.init();
+
+            // Init Demo JS
+            Demo.init();
+
+
+            // Form Switcher
+            $('#form-switcher > button').on('click', function () {
+                var btnData = $(this).data('form-layout');
+                var btnActive = $('#form-elements-pane .admin-form.active');
+
+                // Remove any existing animations and then fade current form out
+                btnActive.removeClass('slideInUp').addClass('animated fadeOutRight animated-shorter');
+                // When above exit animation ends remove leftover classes and animate the new form in
+                btnActive.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    btnActive.removeClass('active fadeOutRight animated-shorter');
+                    $('#' + btnData).addClass('active animated slideInUp animated-shorter')
+                });
+            });
+
+            // Cache several DOM elements
+            var pageHeader = $('.content-header').find('b');
+            var adminForm = $('.admin-form');
+            var options = adminForm.find('.option');
+            var switches = adminForm.find('.switch');
+            var buttons = adminForm.find('.button');
+            var Panel = adminForm.find('.panel');
+
+            // Form Skin Switcher
+            $('#skin-switcher a').on('click', function () {
+                var btnData = $(this).data('form-skin');
+
+                $('#skin-switcher a').removeClass('item-active');
+                $(this).addClass('item-active')
+
+                adminForm.each(function (i, e) {
+                    var skins = 'theme-primary theme-info theme-success theme-warning theme-danger theme-alert theme-system theme-dark';
+                    var panelSkins = 'panel-primary panel-info panel-success panel-warning panel-danger panel-alert panel-system panel-dark';
+                    $(e).removeClass(skins).addClass('theme-' + btnData);
+                    Panel.removeClass(panelSkins).addClass('panel-' + btnData);
+                    pageHeader.removeClass().addClass('text-' + btnData);
+                });
+
+                $(options).each(function (i, e) {
+                    if ($(e).hasClass('block')) {
+                        $(e).removeClass().addClass('block mt15 option option-' + btnData);
+                    } else {
+                        $(e).removeClass().addClass('option option-' + btnData);
+                    }
+                });
+                $(switches).each(function (i, ele) {
+                    if ($(ele).hasClass('switch-round')) {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-round switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-round switch-' + btnData);
+                        }
+                    } else {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-' + btnData);
+                        }
+                    }
+
+                });
+                buttons.removeClass().addClass('button btn-' + btnData);
+            });
+
+            setTimeout(function () {
+                adminForm.addClass('theme-primary');
+                Panel.addClass('panel-primary');
+                pageHeader.addClass('text-primary');
+
+                $(options).each(function (i, e) {
+                    if ($(e).hasClass('block')) {
+                        $(e).removeClass().addClass('block mt15 option option-primary');
+                    } else {
+                        $(e).removeClass().addClass('option option-primary');
+                    }
+                });
+                $(switches).each(function (i, ele) {
+
+                    if ($(ele).hasClass('switch-round')) {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-round switch-primary');
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-round switch-primary');
+                        }
+                    } else {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-primary');
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-primary');
+                        }
+                    }
+                });
+                buttons.removeClass().addClass('button btn-primary');
+            }, 800);
+
+        });
+
+        function setColour(department) {
+            if (department == 0)
+                department = '@(Session["Division"]!=null? Session["Division"]:"")';
+
+            $('header').css('backgroundColor', '@Session["Colour"].ToString()');
+        }
+
+
+        $(function () {
+            $(document).ajaxStart(function () {
+                $("#page_loader").css('display', 'block');
+            });
+
+            $(document).ajaxStop(function () {
+                $("#page_loader").css('display', 'none');
+            });
+
+            $(document).ajaxError(function () {
+                $("#page_loader").css('display', 'none');
+            });
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

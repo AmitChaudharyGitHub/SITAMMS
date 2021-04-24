@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "demo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <div class="container tabs-wrap">
+            @*<div class="panel-heading"><span class="panel-title"><span class="glyphicon glyphicon-hand-down"></span>Well Tabs</span></div>*@
+            <div class="container tabs-wrap">
+                <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#indentorder" aria-controls="indentorder" role="tab" data-toggle="tab" aria-expanded="true">Purchase Order</a>
+                    </li>
+                    <li>
+                        <a href="#deliverydetails" aria-controls="deliverydetails" role="tab" data-toggle="tab" aria-expanded="false">Delivery Details</a>
+                    </li>
+                    <li>
+                        <a href="#billing" aria-controls="billing" role="tab" data-toggle="tab" aria-expanded="false">Specific Terms & Conditions</a>
+                    </li>
+                    <li>
+                        <a href="#shipping" aria-controls="shipping" role="tab" data-toggle="tab" aria-expanded="false">Specific Instructions</a>
+                    </li>
+                    <li>
+                        <a href="#review" aria-controls="review" role="tab" data-toggle="tab" aria-expanded="false">General Terms & Conditions</a>
+                    </li>
+                </ul>
+
+                <div class="panel-body">
+                    <div class="tab-content pn br-n">
+                        <div role="tabpanel" class="tab-pane active" id="indentorder">
+
+                            <div class="row" style="width:850px;">
+
+                                @*@using (Html.BeginForm())
+                                    {*@
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-horizontal">
+
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                    <div class="row">
+                                        
+                                        
+                                    </div>
+
+                                    <div class="row">
+
+                                    </div>
+
+
+
+                                    <div class="row">
+
+                                    
+                                    </div>
+                                    <div class="row">
+                                    </div>
+
+                                </div>
+                                @*}*@
+
+                                <br />
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+                                </div>                               
+
+                                <div class="row">
+                                    
+                              
+                                </div>
+
+                                <div class="row">
+                                   
+                                </div>
+
+
+
+                               
+                                <div>
+                                    <input type="button" id="btnCalc" class="btn btn-danger" value="Calculate" onclick="clickme();" />
+                                    <a class="btn btn-primary continue">Next >></a>
+
+                                   
+                                </div>
+                              
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+
+
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="deliverydetails">
+
+                            <div class="row">
+                                <div class="col-md-11">
+
+                                    <div class="panel-body p25">
+                                        <div class="col-md-12" style="margin-left:-30px;">
+                                            <div class="row">
+                                              
+
+                                            </div>
+                                            <div class="row">
+                                               
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- end .form-body section -->
+
+                                </div>
+
+                            </div>
+
+
+                            <a class="btn btn-primary back"><< Back</a>
+                            @*<input type="button" id="Submit" class="btn btn-danger" value="Submit" />*@
+                            <a class="btn btn-primary continue">Next >></a>
+                        </div>             
+                        
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+

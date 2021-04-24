@@ -1,0 +1,490 @@
+﻿@model MMS_P.ViewModels.PurchaseIRNew
+@{
+    ViewBag.Title = "PurchaseReqViewDetail";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td {
+        padding: inherit 2px;
+    }
+
+        td input {
+            width: 80px;
+            font-size: 11px !important;
+        }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+
+
+</script>
+<script type="text/javascript">
+   var Redurl = '@Url.Action("IndexNew", "PurchaseRequisition")';
+</script>
+@*<script src="~/Script/PurchaseIRDetailsA.min.js"></script>*@
+@*<script src="~/Script/PurchaseIRDetailsA.js"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        GetSumOfAll();
+        var ID = '@ViewBag.ID';
+
+        $('#btnPIPrint').click(function () {
+            var url = '/PurchaseRequisition/PIPrint/' + ID;
+            $("#dialog-edit-abc").dialog({
+                title: 'Purchase Indent Details',
+                autoOpen: false,
+                resizable: false,
+                height: 650,
+                width: 1100,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit-abc").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit-abc").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+       
+        $("td[class^='Amount_").each(function () {
+       
+         
+            var str = $(this).attr('class');
+            var a = str.substring(7);
+            var kk = $(".aprvdqty_" + a);
+            var Apprvqty = $("#aprvdqty_" + a).val();
+
+            var Rate = $("#hdrate_" + a).val();
+            if (Rate != null && Apprvqty != null) {
+                var temp = Apprvqty * Rate;
+                var Amount = temp.toFixed(2);
+         
+                $("#lblamt_" + a).text(temp.toFixed(2));
+               
+                //$("#hdTotamt_" + a).val() = temp.toFixed(2);
+              // TotalSum(temp.toFixed(2));
+            }
+
+
+        
+
+        })
+
+        function TotalSum(x)
+        {
+            var T = 0;
+
+
+            $("td[class^='Amount_").each(function () {
+                var str = $(this).attr('class');
+                var a = str.substring(7);
+                
+                //if ($(this).find('input').val() != null) {
+                //    var A = $(this).find('input').val() lblamt_
+                //    T = +T + +A;
+                //}
+        
+                if (x != null)
+                {
+                    
+                   
+                     T = +T + +x;
+                    
+                }
+            });
+
+            $("#lblTotalValue").text(T.toFixed(2));
+        }
+
+
+        function GetSumOfAll()
+        {
+            var SumOfTotamt = 0; Amount = 0;
+
+            $("td[class^='Amount_").each(function () {
+
+                var str = $(this).attr('class');
+                var a = str.substring(7);
+                var Apprvqty = $("#aprvdqty_" + a).val();
+                var Rate = $("#hdrate_" + a).val();
+                if (Rate != null && Apprvqty != null) {
+                    var temp = Apprvqty * Rate;
+                     Amount = temp.toFixed(2);
+
+                }
+
+
+                debugger;
+                //var totamteachitem = $("#lblamt_" + a).val();
+                if (Amount != null ) {
+                    SumOfTotamt = +SumOfTotamt + +Amount;
+                }
+
+
+            });
+
+            $("#lblTotalValue").text(SumOfTotamt.toFixed(2));
+
+        }
+
+       
+       
+
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".DetailapiremarkDialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-edit-abc").dialog({
+                title: 'Remarks Details',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit-abc").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit-abc").dialog('open');
+           // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-edit-abc").dialog('close');
+
+        });
+    });
+</script>
+
+
+<script>
+    function GetData() {
+        debugger;
+        //var url = "/FloorMasters/Grid/";
+        var url = '@Url.Action("GetRemarks", "PurchaseRequisition")';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#text1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+
+                $('#formbody').html(result);
+                //GetSumOfAll();
+            }
+        });
+        return false;
+    }
+
+</script>
+
+
+
+
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <div class="section-divider mb40" id="spy1">
+                                <span>
+                                    Purchase Indent  Detail @*Created By @Model.Master.CreatedByName  </span>*@
+                                    @*for @Model.MasterNew.SendToName  and Date is @Html.DisplayFor(model => model.MasterNew.Date2)*@
+                                </span>
+                            </div>
+
+                            <p>
+                                <a class="btn btn-primary" data-modal="" href="@Url.Action("IndexNew", "PurchaseRequisition")" id="btnCreate">
+                                    Purchase Indent List
+
+                                    <input type="hidden" id="hdnTypeSelect" value=@ViewBag.TypeSelect />
+                                    <input type="hidden" value="@ViewBag.PurchaseTypeId" id="purchadeid" />
+                                </a>
+
+                                @if (ViewBag.Closed_Date != null)
+                                {
+                                <button class="btn btn-default" style="float: right;"><b>Closed Date: @ViewBag.Closed_Date</b></button>
+                                }
+                            </p>
+
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr><td class="MasterId" colspan="10" muid=@Model.MasterNew.UId> </td>   </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Project Name:")</th>
+                                        <th>@Html.DisplayName("Purchase Indent No:")</th>
+                                        <th>@Html.DisplayName("PIC Purchase Limit Value :")</th>
+                                        <th>@Html.DisplayName("Purchase Indent Remarks :")</th>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.MasterNew.ProjectName)</td>
+                                        <td>@Html.DisplayFor(model => model.MasterNew.PurRequisitionNo)</td>
+                                        <td><label id="lblprojectValue">@ViewBag.LastLimitVal</label></td>
+                                        <td>@Html.ActionLink("Click here to see detail", "GetRemarks", new { PI = ((string)Model.MasterNew.PurRequisitionNo).Replace("/", "#") }, new { @class = "DetailapiremarkDialog", @id = "text1", @onchange = "javascript:GetData(this.value);", @style = "color:#497bf9" })</td>
+                                    </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Purchase Indent Date:")</th>
+                                        <th>@Html.DisplayName("Purchase Type:")</th>
+                                        <th>@Html.DisplayName("Purchase Created By:")</th>
+                                        <th>@Html.DisplayName("Delivery Date:")</th>
+                                    </tr>
+                                    <tr>
+                                       
+                                        <td>@Html.DisplayFor(model => model.MasterNew.Date , "{0:dd/MM/yyyy}")</td>
+                                        <td>@ViewBag.FinalPurchaseType</td>
+                                        <td>@Html.DisplayFor(model => model.MasterNew.CreatedByName)</td>
+                                        <td>@(Model.MasterNew.DeliveryDate.HasValue?Model.MasterNew.DeliveryDate.Value.ToString("dd/MM/yyyy"):"")</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="4">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+
+                                <br /><br />
+
+                                @if (ViewBag.Attach != null)
+                                {
+                                    <table class="table table-responsive table-bordered">
+                                        <thead>
+                                           <tr>
+                                               <th><b>Attachment</b></th>
+                                               <th><b>Attachment Name</b></th>
+                                           </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var attach in (List<MMS.DAL.tbl_PurchaseRequistionAttachFiles>)ViewBag.Attach)
+                                            {
+                                                <tr>
+                                                    <td><a target="_blank" href="/PurchaseIndentAttachment/@attach.AttachFile">Download</a></td>
+                                                    <td>@attach.AttachFile_Name</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+
+                                <br /><br />
+
+                                @if (Model.ChildNew.Count != 0)
+                                {
+                                    <table class="table table-hover" id="gridPurRewD">
+                                        <tr class="primary">
+                                            <th>
+                                                @Html.DisplayName("SrNo.")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Group Name")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Item Name")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Description")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Unit")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Demand Qty")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Approve Qty")
+                                            </th>
+                                          
+                                            <th>
+                                                @Html.DisplayName("Rate")
+                                            </th>
+
+                                            <th>
+                                                @Html.DisplayName("Current Value")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Received Upto")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Balanced")
+                                            </th>
+                                           
+                                        </tr>
+                                        @{int i = 0;}
+                                        @foreach (var item in Model.ChildNew)
+                                        {
+                                            var a = @item.UId;
+                                            var It = @item.ItemNo;
+
+
+                                       
+                                            <tr id=@a style="font-size:11px;">
+                                                <td class=SrNo_@a uid=@a it=@It>
+                                                    @(++i)
+                                                </td>
+                                                <td class=Group_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                                    @Html.HiddenFor(modelItem => item.ItemGroupNo)
+                                                </td>
+                                                <td class=Item_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemName)
+                                                    @Html.HiddenFor(modelItem => item.ItemNo)
+                                                </td>
+                                                <td class=Item_@a>
+                                                    @Html.DisplayFor(modelItem => item.Remarks)
+                                                    @Html.HiddenFor(modelItem => item.Remarks)
+                                                </td>
+                                                <td class=Unit_@a>
+                                                    @Html.DisplayFor(modelItem => item.Unit)
+                                                    @Html.HiddenFor(modelItem => item.UnitNo)
+                                                </td>
+                                                <td>
+                                                    <span  id=DemandQty_@a>
+                                                       @Html.DisplayFor(modelItem => item.DemandQty)
+                                                  
+                                                    </span>
+                                                </td>
+                                                <td>
+
+                                                    <span  id=ApprovedQty_@a>
+                                                        @Html.DisplayFor(modelItem => item.ApprovedQty)
+                                                       <input type="hidden" value="@item.ApprovedQty" id="aprvdqty_@a" />
+                                                    </span>
+                                                </td>
+                                               
+                                                <td class="Rate_@a">
+                                                    @Html.DisplayFor(modelItem => item.CurrentRate)
+                                                    <input type="hidden" value="@item.CurrentRate" id="hdrate_@a" />
+                                                </td>
+                                                <td class="Amount_@a">
+                                                    <label id="lblamt_@a"  />
+                                                   
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ReceiveUpto)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelitem => item.Balanced)
+                                                </td>
+                                              </tr>
+                                        }
+
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><b>Total*  </b></td>
+                                            <td><label id="lblTotalValue"></label></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                }
+                            </div>
+
+
+
+                            <br />
+
+                            <div>
+                                <input type="button" name="btnPrint" value="Print" class="btn btn-primary btn-sm" id="btnPIPrint" />
+                            </div>
+
+
+
+                            <br />
+                            
+                            <div class="section-divider mt40 mb25" id="spy5">
+                                <span></span>
+                            </div>
+
+
+
+                        </div>
+                        
+
+                        <div id="dialog-edit-abc" style="display: none">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+
+

@@ -1,0 +1,208 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+   $(function () {
+       $(".multiselect").multiselect({
+           includeSelectAllOption: true,
+           buttonWidth:'100%'
+       });
+
+       //$('#btnsave').click(function () {
+       //    alert($('#PRJID').val());
+       //    alert($('#RegistrationType').val());
+       //    alert($("[name='BlackListStatus']:checked").val());
+       //});
+
+   });
+</script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetSourceLocation = '@Url.Action("GetSourceLocationProjectWise", "ConversionMaster")';
+    var GetItemGroup = '@Url.Action("GetAllItemGroup", "ConversionMaster")';
+   var GetItemDetail = '@Url.Action("GetAllItemGroupWise", "ConversionMaster")';
+    var GetFromUnitDetail ='@Url.Action("GetAllFromConversionUnit", "ConversionMaster")'
+    var GetUnitConversionTo ='@Url.Action("GetUniteConversion", "ConversionMaster")'
+    var GetConversionRate = '@Url.Action("GetRate", "ConversionMaster")'
+    var MappData =  '@Url.Action("Add_Mapped", "ConversionMaster")'
+    var RedirUrl = '@Url.Action("CreateMapping", "ConversionMaster")';
+
+</script> 
+<script src="~/Script/ConversationMapping.js"></script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Conversation Mapping Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("SourceLocation", new SelectList(string.Empty, "Value", "Text"), "Select SourceLocation", htmlAttributes: new { @id = "ddlSourceLocation", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("ItemGroup", new SelectList(string.Empty, "Value", "Text"), "Select ItemGroup", htmlAttributes: new { @id = "ddlItemGroup", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("ItemName", new SelectList(string.Empty, "Value", "Text"), "Select ItemName", htmlAttributes: new { @id = "ddlItemName", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                             
+
+
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("UnitId", new SelectList(string.Empty, "Value", "Text"), "Select Unit", htmlAttributes: new { @id = "ddlUnit", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("UnitConversation", new SelectList(string.Empty, "Value", "Text"), "Select UnitConversion", htmlAttributes: new { @id = "ddlUnitConversation", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Conversion Rate", null, new { id = "txtConversionRate", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                @*@Html.Hidden("RedirectTo", Url.Action("Index", "ConversionMaster"))*@
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right; margin-top:-25px;"><input type="button" id="btnsave" class="btn btn-primary" value="Add" /></div>
+                                                <div class="col-md-4" style="text-align:left; margin-top:-25px;">
+                                                    @Html.ActionLink("Back to List", "CreateMapping", null, new { @class = "btn btn-primary" })
+                                                </div>
+                                                </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+                             
+
+                            
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

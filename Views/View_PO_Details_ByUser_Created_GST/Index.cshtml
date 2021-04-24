@@ -1,0 +1,127 @@
+﻿@{
+
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+   // $(document.body).on('change', '#Stats', function () {
+        var url = '@Url.Action("Grid", "View_PO_Details_ByUser_Created_GST")';
+        $("#imgLoading1").show();
+        debugger;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { },
+            complete: function () {
+                $("#imgLoading1").hide();
+            },
+
+            success: function (result) {
+                $("#imgLoading1").hide();
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+   });
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">VIEW PO DETAILS</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            @*<div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Stats", new[] { new SelectListItem() { Text = "Approved", Value = "Approved" }, new SelectListItem() { Text = "Not Approved", Value = "Not Approved" } }, "Select Status", new { htmlAttributes = new { @class = "form-control gui-input" } })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                </div>*@
+
+                                            <div class="row">
+
+
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+                                </form>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+                                    <p id="para"></p>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

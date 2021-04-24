@@ -1,0 +1,5 @@
+﻿@media print {
+input #btnPrint {
+display: none;
+}
+}

@@ -1,0 +1,265 @@
+﻿@model MMS_P.ViewModels.GetInterDetailOnPrint
+@{
+    Layout = null;
+    var projectBillObj = new MMS.DAL.tblBillingAddress();
+    projectBillObj = (MMS.DAL.tblBillingAddress)(ViewBag.ProjectBillAddress);
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Delivery Challan</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+    <script type="text/javascript">
+        function PrintContent() {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+    </script>
+
+</head>
+<body>
+    <div id="divtoprint">
+
+
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+
+                table, th, td {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                }
+
+                th, td {
+                    padding: 5px;
+                    text-align: left;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+
+
+
+
+        <table style="width:100%">
+            <tr>
+                <th style="width:100%; text-align: right;">
+                    Original/Duplicate/Triplicate
+                </th>
+            </tr>
+        </table>
+
+
+        <table style="width:100%">
+
+            <tr>
+                <th style="width:20%" rowspan="5"><center><img src="~/Images/logo.png" /></center></th>
+                @*<th colspan="2">
+                        <p style="font-size: 8px; text-align:center">Delivery Challan</p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-6" style="float:left;"><p style="font-size: 8px"><b>GSTIN.:</b> 09AABCA4304K1ZV </p></div>
+                                <div class="col-md-6" style="float:right;"><p style="font-size: 8px">ORIGINAL/DUPLICATE/TRIPLICATE</p></div>
+
+                            </div>
+                        </div>
+                        <h2 align="center">Ahluwalia Contracts (India) Ltd.</h2>
+
+                        <h4 align="center">Registered Address: @projectBillObj.Address <br/> GST: @projectBillObj.ProGSTIN</h4>
+                    </th>*@
+            </tr>
+            <tr>
+                <th><p style="text-align:center; margin: 0px;"><b><u>Delivery Challan</u></b></p></th>
+            </tr>
+            <tr>
+                <th>
+                    <h2 align="center" style="margin: 5px 0px;">Ahluwalia Contracts (India) Ltd.</h2>
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <p style="text-align:center; font-size: 13px;margin: 0px;">
+                        Principal Place Of Business: @projectBillObj.Address
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p style="text-align:center; font-size: 13px;margin: 0px;">GST: @projectBillObj.ProGSTIN</p>
+                </td>
+            </tr>
+            @*<tr>
+                    <td colspan="3">
+                        <p align="center">
+                            Head Office Address.: A-177, Okhla Industrial Area, Phase-1, New Delhi-110020</br>
+                            Email: mail@acilnet.com | Website: www.acilnet.com | Tel. 011-49410517, 49410599
+                        </p>
+                    </td>
+                </tr>*@
+        </table>
+        <table style="width:100%">
+            <tr>
+                <td colspan="3">
+                    <h3><u>PROJECT ADDRESS</u></h3>
+                    <p align="left">Ahluwalia Contracts (India) Ltd.<br /> @Model.Header.ProjectName <br />    @Model.Header.ProjectAddress</p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p>  Transfer No.: <label>@Model.Header.TRansferNo</label></p>
+                    <p>@*Delivery Challan No.: <labe> @Model.Header.ch</labe>*@  Date: <label>@Model.Header.Transferdate.ToString("dd MMM yyyy")</label></p>
+                </td>
+                <td colspan="2"><p>Last Date of Receive: <label>@Model.Header.ReachingDateofDestination</label></p></td>
+            </tr>
+        </table>
+        <table style="width:100%">
+            <tr>
+                <th colspan="2"></th>
+                <th>Mode of TPT</th>
+                @*By Road/By Rail/By Air :*@
+                <th>@Model.Header.ModeOfTPT</th>
+            </tr>
+            <tr>
+                <th>Dispatched To:</th>
+                <td><label>Ahluwalia Contracts (India) Ltd. C/O</label><br />@Model.Header.TransferProjectName</td>
+                <th>Vehicle Own/TPT</th>
+                <td><label>@Model.Header.VehicleType</label></td>
+            </tr>
+            <tr>
+                <th rowspan="5">Address</th>
+                <td rowspan="5">@Model.Header.TransferProjectAddress</td>
+                <th>Vehicle No.</th>
+                <td>@Model.Header.VehicleNo</td>
+            </tr>
+            <tr>
+                <th>GR No.if any</th>
+                <td><label>@Model.Header.GRNumber</label></td>
+            </tr>
+            <tr>
+                <th>Place of Supply</th>
+                <td><label>@Model.Header.TransferProjectState</label></td>
+            </tr>
+            <tr>
+                <th>E-Way Bill No.</th>
+                <td><label>@Model.Header.EWayBillNo</label></td>
+            </tr>
+            <tr>
+                <th>E-Way Bill Date</th>
+                <td><label>@(((DateTime?)ViewBag.EWayBillDate).Value.ToString("dd/MM/yyyy"))</label></td>
+            </tr>
+            <tr>
+                <th>GSTIN</th>
+                <td><label>@Model.Header.TarnsferProjectGSTIN</label></td>
+                <th>State Code</th>
+                <td>@ViewBag.TransferStateCode</td>
+
+            </tr>
+        </table>
+        <table style="width:100%">
+            @{int rowNo = 1;}
+            <tr>
+                <th>S.No</th>
+                <th>Description of Good</th>
+                <th>HSN Code</th>
+                <th>UOM</th>
+                <th>Stock Qty.</th>
+                <th>Stock Delivery Qty.</th>
+
+                <th>Balance Quantity</th>
+
+                <th>Delivery Rate</th>
+                <th>Discounted Rate</th>
+                <th> Estimated Value @*Estimated Value(rs.)*@</th>
+            </tr>
+
+            @foreach (var dt in Model.ItemData)
+            {
+
+
+                <tr>
+                    <td><label>@rowNo</label>   @{ rowNo++; }</td>
+                    <td><label>@dt.ItemName</label></td>
+                    <td><label>@dt.HSNCode</label></td>
+                    <td><label>@dt.UnitCode</label></td>
+                    <td style="text-align:right"><label>@dt.StockQty</label></td>
+                    <td style="text-align:right"><label>@dt.DeliveryQty</label></td>
+
+                    <td style="text-align:right"><label>@dt.StockBalancedQty</label></td>
+                    <td style="text-align:right"><label>@dt.DeliveryRate</label></td>
+                    <td style="text-align:right"><label>@dt.DiscountedRate</label></td>
+                    <td style="text-align:right"><label>@dt.PICEstimatedValue</label></td>
+
+                </tr>
+
+
+
+                        }
+            <tr>
+                <td colspan="12">
+                    <h4 align="right">For Ahluwalia Contracts(India) Ltd.</h4>
+                    <div class="row">
+                        <div class="col-sm-12"><div class="col-sm-6" style="float: left;"><p align="left">Sign. of Store In-charge</p></div><div class="col-sm-6" style="float: right;"><p align="right">Signature of Authorised Person</p></div></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%">
+            <tr>
+                <td style="text-align:center">H.O:A-177, Okhla Industrial Area, Phase-1, New Delhi-1100020 Tel.:011-49410517 & 599, Fax:011-49410553</td>
+            </tr>
+            <tr>
+                <td style="text-align:center">E-mail: info@acilnet.com, Website: www.acilnet.com, CIN: L45101DL1979PLC009654</td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    <div style="clear:both;"></div>
+    <div class="row">
+
+
+        <div class="col-md-pull-3">
+            <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+
+        </div>
+
+
+    </div>
+
+    </div>
+</body>
+</html>
+

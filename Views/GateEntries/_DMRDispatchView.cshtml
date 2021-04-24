@@ -1,0 +1,57 @@
+﻿ @model MMS_P.ViewModels.PagedGateEntryChildModel
+
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+<style type="text/css">
+    .user {
+        font-size: 10px;
+    }
+
+    .user1 {
+        font-size: 10px;
+    }
+</style>
+       <label >Dispatching Item To Other Site & There Amount With Delivry/Unit & Tax</label>
+    <div id="myPager" style="margin-top:17px;">
+        @{
+            var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+            grid.Bind(Model.Child, rowCount: Model.TotalRows, autoSortAndPage: false);
+            grid.Pager(WebGridPagerModes.All);
+
+            @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+                     columns: grid.Columns(
+                                         grid.Column("Date", format: (item) => item.Date != null ? item.Date.ToString("dd/MM/yyyy") : null),
+                                           // grid.Column("Date", format: @<text> @item.Date.ToString("dd/MM/yyyy")</text>, style: "user"),
+                                             //grid.Column(String.Format("{0:MM/dd/yyyy}", "Date"), header: "Date"),
+                                                                                      grid.Column("GateEntryNo", header: "GateEntry No.", style: "user"),
+                                                                                      grid.Column("Vendor", header: "Receiving Site", style: "user"),
+                                                                                      grid.Column("Status", header: "Type", style: "user"),
+                                                                                      grid.Column("StatusTypeNo", header: "TransferNo.", style: "user"),
+                                                                                      grid.Column("ItemGroup", header: " Group", style: "user"),
+                                                                                      grid.Column("Item", header: "Item", style: "user"),
+                                                                                      grid.Column("ReceiveQty", header: "Qty", style: "user"),
+                                                                                      grid.Column("Rate", header: "Rate", style: "user"),
+                                                                                      grid.Column("Amount", header: "Amount", style: "user"),
+                                                                                      grid.Column("TaxPer", header: "Tax%", style: "user"),
+                                                                                      grid.Column("DeliveryUnitCharge", header: "Delivery/Unit", style: "user"),
+                                                                                      grid.Column("AllAmount", header: "Total", style: "user")
+
+
+
+
+                                                                                                                                                     ));
+}
+
+
+    </div>
+

@@ -1,0 +1,271 @@
+﻿@model MMS_P.ViewModels.Dx1
+
+@{
+    ViewBag.Title = "Index";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Local Purchase  Created By @Model.Master.CreaterName  </span>
+                                    <span>  for @Model.Master.EmpName  and Date is @Html.DisplayFor(model => model.Master.Date2)</span>
+                                </div>
+                            <table><tr><td>
+                                           <dl class="dl-horizontal">
+                                               <dt>
+                                                   @Html.DisplayNameFor(model => model.Master.ProjectName)
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.ProjectName)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayNameFor(model => model.Master.CashPurchaseNo)
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.CashPurchaseNo)
+                                               </dd>
+
+                                               @*<dt>
+                                                   @Html.DisplayNameFor(model => model.Master.EmpName)
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.EmpName)
+                                               </dd>*@
+                                               <dt>
+                                                   @Html.DisplayNameFor(model => model.Master.tblVendorMaster.Name)
+                                               </dt>
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.tblVendorMaster.Name)
+                                               </dd>
+                                             
+                                           </dl>
+
+                                </td>><td>
+                                          <dl class="dl-horizontal">
+                                             
+                                              <dt>
+                                                  @Html.DisplayNameFor(model => model.Master.Date)
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.Date)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayNameFor(model => model.Master.RefNo)
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.RefNo)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayNameFor(model => model.Master.RefDate)
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.RefDate)
+                                              </dd>
+                                          </dl>
+
+                                </td></tr></table>
+                            @if(Model.Child.Count!=0)
+                            { 
+                            <div id="myPager" style="margin-top:17px;">
+                                @{
+                                    var grid = new WebGrid(
+                                                    canPage: true,
+                                                    rowsPerPage: Model.PageSize,
+                                                    canSort: false,
+                                                    ajaxUpdateContainerId: "grid");
+
+                                    grid.Bind(Model.Child, rowCount: Model.TotalRows, autoSortAndPage: false);
+                                    grid.Pager(WebGridPagerModes.All);
+
+                                    @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                                   grid.Column("SrNo",
+                             header: "Sr No."),
+                 grid.Column("tblItemMaster.ItemName",
+                                      header: "Item Name"
+
+         ), grid.Column("Unit",
+                                                                 header: "Unit"
+
+                                    ),
+                  grid.Column("tblItemMaster.Make",
+                                                        header: "Make"
+
+                           ),
+                  grid.Column("tblItemMaster.PartNo",
+                                                                          header: "Part No"
+
+                           ), grid.Column("PurchaseQty",
+                                                                                            header: "Qty"
+
+                                     ), grid.Column("Receive",
+                                                                                             header: "Receive"
+
+                                     ), grid.Column("Rate",
+                                                                                                              header: "Rate"
+
+                                             ), grid.Column("Discount",
+                                                                                                                       header: "Discount"
+
+                                             ), grid.Column("TaxType",
+                                                                                                              header: "Tax Type"
+
+                                             ), grid.Column("Vat",
+                                                                                                              header: "Vat"
+
+                                             ), grid.Column("Amount",
+                                                                                                              header: "Amount"
+
+                                             ) 
+
+                                              @*grid.Column(header: "Action", canSort: false, style: "action",
+                                                format: @<text>
+                                              
+                                                <a data-modal='' href='@Url.Action("Details", "CashPurchaseChilds", new { id = item.UId })' id='@item.UId' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>
+                                                <a data-modal='' href='@Url.Action("Edit", "CashPurchaseChilds", new { id = item.UId })' id='@item.UId' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>
+                                                <a data-modal='' href='@Url.Action("Delete", "CashPurchaseChilds", new { id = item.UId })' id='@item.UId' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>
+                                                </text>)*@
+                                    
+                                                                                                                                         ));
+                                }
+
+
+                            </div>
+
+                            }
+                          
+                        </div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.Delivery_Address)
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.Delivery_Address)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.Delivery_Date)
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.Delivery_Date)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.ExciseDuty)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.ExciseDuty)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.Freight)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.Freight)
+                                        </dd>
+                                    
+                                    </dl>
+
+                                </td>>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.P_F)
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.P_F)
+                                        </dd>
+                                       
+                                        
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.D_Charges)
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.D_Charges)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.Vat)
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.Vat)
+                                        </dd>
+                                      
+
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.RondOff)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.RondOff)
+                                        </dd>
+                                      
+                                        <dt>
+                                            @Html.DisplayNameFor(model => model.Master.GrandTotal)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.GrandTotal)
+                                        </dd>
+                                    </dl>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+                        <p>
+                       
+                            @Html.ActionLink("Back to List", "Index2")
+                        </p>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

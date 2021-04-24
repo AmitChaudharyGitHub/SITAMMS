@@ -1,0 +1,555 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+}
+
+
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+<script>
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var getVendorList = '@Url.Action("GetVendorListByprojectWise", "MRNListClassification")';
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#prjtid1").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#prjtid1").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#prjtid1');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+                    if('@ViewBag.PId' !=''){
+                        $('#prjtid1 option:selected').val('@ViewBag.PId');
+                        function_Pending();
+                    }
+                 
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#prjtid2").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#prjtid2").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#prjtid2');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                 //   $("#prjtid2").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#prjtid3").html(procemessage).show();
+                    $("#prjtid4").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#prjtid3").html(markup).show();
+                    $("#prjtid4").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#prjtid3');
+                    var selectedDeviceModelFor4 = $('#prjtid4');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+                    $.each(result, function (index, item) {
+                        selectedDeviceModelFor4.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                 //   $("#prjtid2").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+
+
+
+
+    });
+</script>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#btnSearch1').click(function(){
+            function_Pending();
+        });
+
+        $('#btnSearch2').click(function(){
+            function_NotApproved();
+        });
+
+        $('#btnSearch3').click(function(){
+            function_ApprovedPMC();
+        });
+
+        $('#btnSearch4').click(function(){
+            function_Approved();
+        });
+
+        $("#prjtid1").change(function(){
+            function_Pending();
+            BindDdl('#ddlVendorPending',getVendorList,{ProjectId:$(this).val()},'Vendor');
+        });
+
+        $("#prjtid3").change(function(){
+            function_NotApproved();
+            BindDdl('#ddlVendorNotApproved',getVendorList,{ProjectId:$(this).val()},'Vendor');
+        });
+
+        $("#prjtid4").change(function(){
+            function_ApprovedPMC();
+            BindDdl('#ddlVendorPMCApproved',getVendorList,{ProjectId:$(this).val()},'Vendor');
+        });
+
+        $("#prjtid2").change(function(){
+            function_Approved();
+            BindDdl('#ddlVendorApproved',getVendorList,{ProjectId:$(this).val()},'Vendor');
+        });
+
+    });
+
+    function function_Pending() {
+        $.ajax({
+            url:  '@Url.Action("GridFilterByProject", "Print_Slip_For_Approval")',
+            type: 'GET',
+            data: { PrjId: $("#prjtid1 option:selected").val() , Status: "Pending",PONumber:$('#txtPONumber1').val(),VendorId:$('#ddlVendorPending option:selected').text() },
+            complete: function () {
+                $("#imgLoading1").hide();
+            },
+            success: function (result) {
+                $("#imgLoading1").hide();
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+    function function_Approved() {
+        $.ajax({
+            url: '@Url.Action("GridFilterByProject", "Print_Slip_For_Approval")',
+            type: 'GET',
+            data: { PrjId: $("#prjtid2 option:selected").val() ,Status: "Approved",PONumber:$('#txtPONumber4').val(),VendorId:$('#ddlVendorApproved option:selected').text()},
+            complete: function () {
+                $("#imgLoading1").hide();
+            },
+            success: function (result) {
+                $("#imgLoading1").hide();
+                $('#formbody2').html(result);
+            }
+        });
+        return false;
+    }
+
+    function function_NotApproved() {
+        $("#imgLoading1").show();
+
+        $.ajax({
+            url: '@Url.Action("GridFilterByProject", "Print_Slip_For_Approval")',
+            type: 'GET',
+            data: {PrjId: $("#prjtid3 option:selected").val(), Status: "Not Approved",PONumber:$('#txtPONumber2').val(),VendorId:$('#ddlVendorNotApproved option:selected').text()},
+            complete: function () {
+                $("#imgLoading1").hide();
+            },
+            success: function (result) {
+                $("#imgLoading1").hide();
+                $('#formdisApprove').html(result);
+            }
+        });
+    }
+
+    function function_ApprovedPMC() {
+
+        $.ajax({
+            url: '@Url.Action("GridFilterByProject", "Print_Slip_For_Approval")',
+            type: 'GET',
+            data: { PrjId: $("#prjtid4 option:selected").val() ,Status: "ApprovedPMC",PONumber:$('#txtPONumber3').val(),VendorId:$('#ddlVendorPMCApproved option:selected').text()},
+            complete: function () {
+                $("#imgLoading1").hide();
+            },
+            success: function (result) {
+                $("#imgLoading1").hide();
+                $('#formbody4').html(result);
+            }
+        });
+        return false;
+    }
+
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">VIEW PO APPROVAL REQUISTION</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <div class="container tabs-wrap">
+                                            <ul class="nav nav-tabs nav-tabs-border" role="tablist" id="tabstrip">
+                                                <li role="presentation" class="active">
+                                                    <a href="#indentorder" aria-controls="indentorder" role="tab" data-toggle="tab" aria-expanded="true">Pending Purchase Order</a>
+                                                </li>
+                                                @*<li>
+                                                    <a href="#mydisapprovepo" aria-controls="mydisapprovepo" role="tab" data-toggle="tab" aria-expanded="false">Dis-Approved Purchase Order</a>
+                                                </li>*@
+                                                <li>
+                                                    <a href="#ApprvPoByPMC" aria-controls="ApprvPoByPMC" role="tab" data-toggle="tab" aria-expanded="false">Approved Purchase Order By PMC</a>
+                                                </li> 
+
+                                                <li>
+                                                    <a href="#deliverydetails" aria-controls="deliverydetails" role="tab" data-toggle="tab" aria-expanded="false">Approved Purchase Order</a>
+                                                </li>                                                                                           
+                                            </ul>
+
+                                            <div class="panel-body">
+                                                <div class="tab-content pn br-n">
+                                                    <div role="tabpanel" class="tab-pane active" id="indentorder">
+
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        @Html.DropDownList("prjtid", new SelectList(string.Empty, "Value", "Text"), "Search By Project Name", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        <select id="ddlVendorPending" class="form-control">
+                                                                            <option value="">Select Vendor</option>
+                                                                        </select>
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <input type="text" name="txt" value="" class="form-control" id="txtPONumber1" placeholder="Purchase Order Number" autocomplete="off" />
+                                                            </div>
+
+                                                            <div class="col-md-3">
+                                                                <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnSearch1" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="pager glyphicon-align-center" id="formbody">
+                                                                    <p id="para"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div role="tabpanel" class="tab-pane" id="mydisapprovepo">
+
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        @Html.DropDownList("prjtid3", new SelectList(string.Empty, "Value", "Text"), "Search By Project Name", htmlAttributes: new { @id = "prjtid3", @class = "form-control" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        <select id="ddlVendorNotApproved" class="form-control">
+                                                                            <option value="">Select Vendor</option>
+                                                                        </select>
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <input type="text" name="txt" value="" class="form-control" id="txtPONumber2" placeholder="Purchase Order Number" autocomplete="off" />
+                                                            </div>
+                                                           
+                                                            <div class="col-md-3">
+                                                                <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnSearch2" />
+                                                            </div>
+
+                                                            </div>
+
+  
+                                                            <div class="col-md-12">
+                                                                <div class="pager glyphicon-align-center" id="formdisApprove" style="margin-top:-30px;">
+                                                                    
+                                                                    <p id="parad"></p>
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+                                                            </div>
+
+                                                      
+
+
+
+                                                    </div>
+
+                                                    <div role="tabpanel" class="tab-pane" id="ApprvPoByPMC">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                       @Html.DropDownList("prjtid4", new SelectList(string.Empty, "Value", "Text"), "Search By Project Name", htmlAttributes: new { @id = "prjtid4", @class = "form-control" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        <select id="ddlVendorPMCApproved" class="form-control">
+                                                                            <option value="">Select Vendor</option>
+                                                                        </select>
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <input type="text" name="txt" value="" class="form-control" id="txtPONumber3" placeholder="Purchase Order Number" autocomplete="off" />
+                                                            </div>
+                                                           
+                                                            <div class="col-md-3">
+                                                                <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnSearch3" />
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <div class="col-md-12">
+                                                                        <div class="row">
+                                                                            <div class="pager glyphicon-align-center" id="formbody4" style="margin-top:-30px;">
+                                                                               
+                                                                                <p id="para"></p>
+                                                                            </div>
+
+                                                                            <div class="section-divider mt40 mb25" id="spy5">
+                                                                                <span></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                                <!-- end .form-body section -->
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div role="tabpanel" class="tab-pane" id="deliverydetails">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        @*@Html.DropDownList("prjtid2", null, "Search By Project Name", htmlAttributes: new { @id = "prjtid2", @class = "form-control" })*@
+
+                                                                        @Html.DropDownList("prjtid2", new SelectList(string.Empty, "Value", "Text"), "Search By Project Name", htmlAttributes: new { @id = "prjtid2", @class = "form-control" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        <select id="ddlVendorApproved" class="form-control">
+                                                                            <option value="">Select Vendor</option>
+                                                                        </select>
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <input type="text" name="txt" value="" class="form-control" id="txtPONumber4" placeholder="Purchase Order Number" autocomplete="off" />
+                                                            </div>
+                                                           
+                                                            <div class="col-md-3">
+                                                                <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnSearch4" />
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="">
+                                                                    <div class="col-md-12">
+                                                                        <div class="row">                                                                          
+                                                                                <div class="pager glyphicon-align-center" id="formbody2" style="margin-top:-30px;">
+                                                                                    @*@Html.Partial("_PartialView_for_Approval", Model.GetDetails_Approved_PO_Slip)*@
+                                                                                    <p id="para"></p>
+                                                                                </div>
+
+                                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                                    <span></span>
+                                                                                </div>
+                                                                            </div>                                                                      
+                                                                        
+                                                                    </div>
+
+                                                                </div>
+                                                                <!-- end .form-body section -->
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                     
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                  
+                                </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

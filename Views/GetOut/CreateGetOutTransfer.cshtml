@@ -1,0 +1,443 @@
+﻿
+@{
+    ViewBag.Title = "CreateGetOutTransfer";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+
+    ViewBag.Title = "CreateTaxableIntraStateDocument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // WebGrid grid = new WebGrid(source: Model, canPage: false);
+    var Date = (DateTime)ViewBag.Transfer_Date;
+    var Today = (DateTime)System.DateTime.Now;
+}
+
+<script>
+    var tDate = '@Date';
+</script>
+
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/Loading.gif) no-repeat center center;
+        height: 64px;
+        width: 64px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -16px 0 0 -16px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+
+    .Piv2 {
+        display: none;
+    }
+</style>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc"> Create Gate Out Transfer Document   </span>
+                                </div>
+
+                                <input type="hidden" value="@ViewBag.TransferNUMBER" id="hdnTransferNo" />
+                                <input type="hidden" value="@ViewBag.Transfer_Type" id="hdnTransferType" />
+                                <input type="hidden" value="@ViewBag.Transfer_Date" id="hdnTransferDate" />
+                                <input type="hidden" id="hdn_IntraTransferMasterDocumentId" />
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+
+                                        <div class="container tabs-wrap">
+
+
+
+                                            <div class="panel-body">
+                                                <div class="tab-content pn br-n">
+
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            @*@using (Html.BeginForm())
+                                                                {*@
+                                                            @Html.AntiForgeryToken()
+
+                                                            <div class="form-horizontal">
+
+                                                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="section">
+                                                                            <label class="field prepend-icon">
+                                                                                <span style="font:bold" id="dateTime"></span>
+
+                                                                            </label>
+
+
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div class="table-responsive">
+                                                                            <table class="table">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <td class="col-md-3"><span><b> Project Address :</b> </span></td>
+                                                                                        <td class="col-md-3"><span><b> State : </b></span> </td>
+                                                                                        <td class="col-md-3"><span><b> GSTIN :</b></span> </td>
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="col-md-3"><label id="lbl_project_name">@ViewBag.ProjectName</label> <br /> <label id="lbl_Project_address">@ViewBag.SiteAddress</label> <input type="hidden" id="hdn_IntraProjectId" value="@ViewBag.ProjectId" />  </td>
+
+                                                                                        <td class="col-md-3">  <label id="lbl_Project_State">@ViewBag.State</label></td>
+
+                                                                                        <td class="col-md-3"><label id="lbl_project_GSTIN">@ViewBag.ProjectGSTNo</label></td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+
+
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <td class="col-md-3"><span><b>Transfer Project / Vendor Address :</b></span> <label>@ViewBag.VendorAddress</label></td>
+                                                                                        <td class="col-md-3"><span> <b> State :</b></span><label>@ViewBag.VendorState</label></td>
+
+                                                                                        <td class="col-md-3"><span><b> GSTIN :</b></span><label>@ViewBag.VendorGSTNo</label> </td>
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="col-md-3"><label id="lbl_Transferproject_name"></label> <br /> <label id="lbl_TransferProject_address"></label> <input type="hidden" id="hdn_TransferProjectId" />  </td>
+
+                                                                                        <td class="col-md-3">  <label id="lbl_TransferProject_State"></label></td>
+
+                                                                                        <td class="col-md-3"><label id="lbl_Transferproject_GSTIN"></label></td>
+                                                                                    </tr>
+                                                                                </tbody>
+
+                                                                                <thead>
+
+                                                                                    <tr>
+                                                                                        <td class="col-md-3"><span><b> Mode of TPT :</b> </span></td>
+                                                                                        <td class="col-md-3"><span> <b> Vehicle  :</b></span> </td>
+                                                                                        <td class="col-md-2"><span> <b> Vehical No. :</b></span> </td>
+                                                                                        <td class="col-md-2"><span> <b> E-way Bill No. : </b></span> </td>
+                                                                                        <td class="col-md-2"><span style="color:red"> <b> Last Date Of Recv. : </b></span> </td>
+
+
+                                                                                    </tr>
+
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td class="col-md-3">
+                                                                                            <label id="lblTransportationMode"></label>
+                                                                                        </td>
+
+                                                                                        <td class="col-md-3">
+                                                                                            <label id="lblVehicleType"></label>
+
+
+                                                                                        </td>
+                                                                                        <td class="col-md-2">
+                                                                                            <label id="lblVehicleNumber"></label>
+                                                                                        </td>
+                                                                                        <td class="col-md-2">
+                                                                                            <label id="lblEwayBillNo"></label>
+                                                                                        </td>
+                                                                                        <td class="col-md-2">
+                                                                                            <label id="lblLastDateofReachDestination"></label>
+                                                                                        </td>
+
+
+                                                                                    </tr>
+                                                                                </tbody>
+
+
+
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+
+
+
+
+
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="table-responsive">
+                                                                            <table class="table">
+                                                                                <thead>
+                                                                                    <tr>
+
+                                                                                        <td class="col-md-4">Transfer No. :</td>
+                                                                                        <td class="col-md-4">Gate Out Date:</td>
+                                                                                        <td class="col-md-4">Gate Out No.:</td>
+
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("TransferNo", null, new { id = "txtIntraTransferNo", @class = "form-control gui-input required", @placeholder = "Intra Transfer Number", @readonly = "readonly" })
+
+                                                                                                <label for="firstname" class="field-icon">
+                                                                                                    <i class="fa fa-building"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("Date", null, new { @class = "DatePicker form-control", @id = "txtGetoutDate", @placeholder = "Gate Out Date",autocomplete="off" })
+                                                                                                <label for="RefNo" class="field-icon">
+                                                                                                    <i class="fa fa-calendar"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("GetOutNo", null, new { id = "txtGetOutNo", @class = "form-control gui-input required", @placeholder = "Gate Out Number", @readonly = "readonly" })
+
+                                                                                                <label for="firstname" class="field-icon">
+                                                                                                    <i class="fa fa-building"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                </tbody>
+
+                                                                                <thead>
+                                                                                    <tr>
+
+                                                                                        <td class="col-md-4">Chalan No. :</td>
+                                                                                        <td class="col-md-4">Chalan Date:</td>
+                                                                                        <td class="col-md-4">Vehicle No.:</td>
+
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr>
+
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("Chalan No", null, new { id = "txtChalanNumber", @class = "form-control gui-input required", @placeholder = "Chalan Number" })
+
+                                                                                                <label for="firstname" class="field-icon">
+                                                                                                    <i class="fa fa-building"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("Chalan Date", string.Format("{0:dd MMM yyy}", Today), new { @class = "DatePicker form-control", @id = "txtChalanDate", @placeholder = "Chalan Date" })
+                                                                                                <label for="RefNo" class="field-icon">
+                                                                                                    <i class="fa fa-calendar"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("Vehicle No", null, new { id = "txtVehicleNumber", @class = "form-control gui-input required", @placeholder = "Vehicle Number" })
+
+                                                                                                <label for="firstname" class="field-icon">
+                                                                                                    <i class="fa fa-building"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="col-md-4">
+
+                                                                                            <label class="field prepend-icon">
+                                                                                                @Html.TextBox("EWay Bill No", null, new { id = "txtEWayBill", @class = "form-control gui-input required", @placeholder = "E-Way Bill Number", @maxlength="50" })
+
+                                                                                                <label for="firstname" class="field-icon">
+                                                                                                    <i class="fa fa-building"></i>
+                                                                                                </label>
+                                                                                            </label>
+
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <br />
+
+
+                                                            </div>
+                                                            <!--naveen-->
+                                                            <div class="col-md-12">
+                                                                <div class="innerPanel-group" id="formbody">
+
+
+                                                                </div>
+                                                            </div>
+                                                            <!--naveen-->
+
+                                                            <div class="col-md-12">
+
+                                                                <br />
+                                                                <div id="dvLoading"></div>
+                                                                <div id="#progress" style="display:none"><img src="~/Images/Loading.gif" /></div>
+
+                                                            </div>
+
+
+                                                            <div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                                            <h4 class="modal-title">Confirmation</h4>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p class="text-danger"><small>Items are successfully gate out.</small></p>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                         
+
+                                                            <!-- end .section row section -->
+                                                            <!-- end .form-footer section -->
+
+
+
+                                                            <div class="row">
+                                                                <div class="text-right">
+                                                                    <input type="button" id="Submit" class="btn btn-primary btn-sm" value="Allow for Gate Out" />
+                                                                </div>
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+
+
+
+
+
+
+
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<script type="text/javascript">
+    var GetIntraProjectDetail = '@Url.Action("GetTransferDetailOnGetOutPanel", "GetOut")';
+    var GetGrid = '@Url.Action("GetTransferItemDetailAtGetOut", "GetOut")';
+    var GetOutCodeOnly = '@Url.Action("GetOutCode", "GetOut")';
+    var Savegetout = '@Url.Action("SaveGetout", "GetOut")';
+    var redurl = '@Url.Action("index", "GetOut")';
+    var transferType = '@ViewBag.Transfer_Type';
+    var tId = '@ViewBag.TransId';
+</script>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Script/CreateGetoutIntraTransferDetail.js"></script>
+
+

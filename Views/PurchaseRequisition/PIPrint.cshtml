@@ -1,0 +1,264 @@
+﻿@model MMS_P.ViewModels.PurchaseIRNew
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <style type="text/css">
+        .tblEmployee {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        .EmployeeTableTH {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        .EmployeeTableTD {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+    </style>
+
+
+    @* Print Code here *@
+    <style>
+        #printSection, #printSection * {
+            visibility: visible;
+        }
+
+        #printSection {
+        }
+    </style>
+
+    <script>
+        function PrintContent()
+        {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+        }
+    </script>
+
+</head>
+<body>
+    <div id="divtoprint">
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+                table {
+                    border-style: solid;
+                    border-color: #000000;
+                    border-top-width: 0.5px;
+                    border-left-width: 0.5px;
+                    border-bottom-width: 0px;
+                    border-right-width: 0px;
+                }
+
+                tr, td {
+                    border-style: solid;
+                    border-color: #000000;
+                }
+
+                tr {
+                    border-width: 0px;
+                }
+
+                .nb {
+                    border-bottom-width: 0px;
+                }
+
+                td, th {
+                    border-top-width: 0px;
+                    border-left-width: 0px;
+                    border-bottom-width: 0.5px;
+                    border-right-width: 0.5px;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+
+        <center>
+            <table class="tblEmployee" cellpadding="4" cellspacing="0" border="1" width="100%">
+
+                <tbody>
+                    <tr>
+                        <td><img src="~/Images/logo.png" /></td>
+                        <td>
+                           <center>
+                               <h3>Ahluwalia Contracts (India) Ltd</h3>
+                               Project: @ViewBag.ProjectName<br/>
+                               F-01/QMSP-08<br/>
+                               <h5 style="text-decoration:underline;">Purchase Indent</h5>
+                           </center>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+
+       <br/><br />
+        <div>
+            <table width="100%">
+                <tr>
+                    <td colspan="2">PI. No. <strong>@Model.MasterNew.PurRequisitionNo</strong></td>
+                    <td>Date: <strong>@ViewBag.PurchaseIndentDate.ToString("dd MMM yyyy")</strong></td>
+                    <td colspan="2">P.I. Type: <strong>@ViewBag.PIForwardTo </strong></td>
+                    <td>Store Req.: <strong>@ViewBag.PIType</strong></td>
+
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>Delivery Date: <strong>@Model.MasterNew.DeliveryDate.Value.ToString("dd MMM yyyy")</strong></td>
+                    <td></td>
+                    <td>Decision Type: <strong>@ViewBag.DesType</strong></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <br />
+        <div class="panel-body pn">
+
+            @{int rowNo = 1;}
+
+            <table id="t01" width="100%" style="font-size:12px;" cellpadding="4" cellspacing="0" border="1">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Item Code</th>
+                        <th>Item Group</th>
+                        <th>Item Name</th>
+                        <th>Description</th>
+                        <th>HSN Code</th>
+                        <th>Unit</th>
+                        <th>PI Qty.</th>
+                        <th>Approved Qty.</th>
+                        <th>Rate</th>
+                        <th>Amount</th>
+                        <th width="35px">Qty. Received upto date</th>
+                        <th>Qty. balance in stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var c in Model.ChildNew1)
+                    {
+                        <tr>
+                            <td>@(rowNo++)</td>
+                            <td>@c.ItemNo</td>
+                            <td>@c.ItemGroupName</td>
+                            <td>@c.ItemName</td>
+                            <td>@c.Remarks</td>
+                            <td>@c.HSNCode</td>
+                            <td>@c.Unit</td>
+                            <td style="text-align:right">@c.DemandQty</td>
+                            <td style="text-align:right">@c.ApprovedQty</td>
+                            <td style="text-align:right">@c.CurrentRate</td>
+                            <td style="text-align:right">@c.CurrentValue</td>
+                            <td style="text-align:right">@c.ReceiveUpto</td>
+                            <td style="text-align:right">@c.Balanced</td>
+                        </tr>
+
+                      }
+
+                </tbody>
+
+                <tfoot style="width:100%; font-weight:bold">
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right"><b>Total</b></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td style="text-align:right">@Model.ChildNew1.Sum(x=>x.DemandQty)</td>
+                        <td style="text-align:right">@Model.ChildNew1.Sum(x => x.ApprovedQty)</td>
+                        <td></td>
+                        <td style="text-align:right">@Model.ChildNew1.Sum(x=>x.CurrentValue)</td>
+                        <td style="text-align:right">@Model.ChildNew1.Sum(x => x.ReceiveUpto)</td>
+                        <td style="text-align:right">@Model.ChildNew1.Sum(x => x.Balanced)</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+        <br />
+        <div>
+            <h4>Remarks</h4>
+            <table width="100%" border="1">
+                <tr>
+                    <td>Store Incharge</td>
+                    <td>Project Incharge</td>
+                    <td>Cluster Head</td>
+                </tr>
+                <tr>
+                    <th>@ViewBag.StoreRemarks</th>
+                    <th>@ViewBag.PICRemarks</th>
+                    <th>@ViewBag.MangRemarks</th>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <div>
+            <table width="100%" border="1">
+                <tr>
+                    <th>@Model.MasterNew.CreatedByName</th>
+                    <th>@ViewBag.PICApproval</th>
+                    <th>@ViewBag.HeadApproval</th>
+                </tr>
+                <tr>
+                    <td>Prepared By/Store Incharge</td>
+                    <td>Project Incharge</td>
+                    <td>Cluster Head</td>
+                </tr>
+            </table>
+        </div>
+        <br/>
+        <div class="breakpage"></div>
+
+    </div>
+
+    <div style="clear:both;"></div>
+    <div>
+        <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+    </div>
+
+</body>
+</html>

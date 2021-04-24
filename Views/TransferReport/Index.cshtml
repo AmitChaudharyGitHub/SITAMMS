@@ -1,0 +1,348 @@
+﻿@{
+    ViewBag.Title = "Transfer Issue Report";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+@section scripts{
+    @*<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>*@
+    <script type="text/javascript">
+        var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+        var GetTransferProjects = '@Url.Action("GetTransferProjects")';
+        var GetItemGroups = '@Url.Action("GetTransferProjectsItemGroups")';
+        $(document).ready(function () {
+            $("#fromdate").datepicker();
+            $("#todate").datepicker();
+
+
+            $('#ddlProjects').select2();
+            $('#ddlTransferTypes').select2();
+            $('#ddlTransferProjects').select2();
+            $('#ddlItemGroups').select2();
+            $('#ddlItems').select2();
+
+
+            $('#ddlTransferTypes').change(BindTransferProjects);
+            //$('#ddlTransferProjects').change(BindItemGroups);
+            $("#ddlItemGroups").change(BindItems);
+
+            $('#btnSearch').click(Search);
+            $('#ddlProjects').change(OnProjectChange);
+        });
+
+        function OnProjectChange() {
+            $('#ddlTransferTypes').prop('selectedIndex', 0);
+            $('#ddlTransferProjects').empty();
+            $("#ddlTransferProjects").append($("<option></option").val("").html("Select Transfer Project"));
+            $('#ddlItemGroups').empty();
+            $("#ddlItemGroups").append($("<option></option").val("").html("Select Item Group"));
+            $('#ddlItems').empty();
+            $("#ddlItems").append($("<option></option").val("").html("Select Item Name"));
+            BindItemGroups();
+        }
+
+        function BindTransferProjects() {
+            $("#ddlTransferProjects").empty();
+            $("#ddlTransferProjects").append($("<option></option").val("").html("Select Transfer Project"));
+
+            if ($("#ddlTransferTypes option:selected").val() !== 0) {
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetTransferProjects,
+                    dataType: 'json',
+                    data: { TransferType: $("#ddlTransferTypes").val(), ProjectId: $('#ddlProjects option:selected').val() },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        console.log(names);
+                        names = $.parseJSON(names)
+
+                        $.each(names, function (i, itname) {
+                            $("#ddlTransferProjects").append('<option value="' + itname.ProjectId + '">' +
+                                 itname.ProjectName + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Transfer Project Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        }
+
+
+        function BindItemGroups() {
+            $("#ddlItemGroups").empty();
+            $("#ddlItemGroups").append($("<option></option").val("").html("Select Item Group"));
+
+            if ($("#ddlProjects option:selected").val() !== 0) {
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemGroups,
+                    dataType: 'json',
+                    data: { TransferProjectId: $("#ddlProjects").val() },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        names = $.parseJSON(names)
+
+                        $.each(names, function (i, itname) {
+                            $("#ddlItemGroups").append('<option value="' + itname.GroupId + '">' +
+                                 itname.GroupName + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        }
+
+
+        function BindItems() {
+            $("#ddlItems").empty();
+            $("#ddlItems").append($("<option></option").val("").html("Select Item Name"));
+
+            if ($("#ddlItemGroups option:selected").val() !== 0) {
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemByGroup,
+                    dataType: 'json',
+                    data: { id: $("#ddlItemGroups").val() },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        names = $.parseJSON(names)
+
+                        $.each(names, function (i, itname) {
+                            $("#ddlItems").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        }
+
+
+
+        function Search() {
+
+            if ($('#ddlProjects').val() == '') {
+                alert('Kindly select Project');
+                return false;
+            }
+            $('#loadingModal').modal();
+            var transferType = $('#ddlTransferTypes option:selected').val();
+           
+
+            $('#dvLoading').show();
+            $.get('@Url.Action("SearchData")',{ ProjectId: $('#ddlProjects').val(), TransferProjectId: $('#ddlTransferProjects').val(), ItemGroupId: $('#ddlItemGroups').val(), ItemId: $('#ddlItems').val(), TransferType: transferType, FromDate: $('#fromdate').val(), ToDate: $('#todate').val() },
+                function (result) {
+                    console.log(result);
+                    $('#formbody').empty();
+                    $('#formbody').html(result);
+                    $('#loadingModal').modal('hide');
+                });
+
+            @*$.ajax({
+                type: 'POST',
+                url: '@Url.Action("SearchData")',
+                dataType: 'html',
+
+                complete: function () {
+                    console.log('complete '+result);
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    console.log(result);
+                    $('#formbody').empty();
+                    $('#formbody').html(result);
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Item Name.' + ex.responseText);
+                }
+            });*@
+
+        }
+    </script>
+}
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Transfer Issue Report</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+
+
+                                <div class="row">
+                                    <div class="form-horizontal">
+
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                       
+                                                                 @Html.DropDownList("Projects", null, "Select Project", htmlAttributes: new { @id = "ddlProjects", @class = "form-control" })
+                                                           
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("TransferTypes", null, "Select Transfer Type", htmlAttributes: new { @id = "ddlTransferTypes", @class = "form-control" })
+                                                           
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            <select id="ddlTransferProjects" class="form-control">
+                                                                <option value="">Select Transfer Project</option>
+                                                            </select>
+                                                            
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            <select id="ddlItemGroups" class="form-control">
+                                                                <option value="">Select Item Group</option>
+                                                            </select>
+                                                            
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            <select id="ddlItems" class="form-control">
+                                                                <option value="">Select Item Name</option>
+                                                            </select>
+                                                           
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "From Date", @id = "fromdate" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "To Date", @id = "todate" })
+                                                        <label for="firstname" class="field-icon">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </label>
+                                                    </label>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <a class="btn btn-primary" href="javascript:void(0);" id="btnSearch">Search</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+<div class="modal fade" id="loadingModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/Images/36.gif" />
+            </div>
+        </div>
+    </div>
+</div>

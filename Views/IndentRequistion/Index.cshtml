@@ -1,0 +1,1017 @@
+﻿Indenttype
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    WebGrid grid = new WebGrid(source: Model, canPage: false);
+
+}
+
+
+
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+
+<script type="text/javascript">
+
+
+    function putIndentReqdisable() {
+        document.getElementById('Submit').setAttribute("disabled", "disabled");
+    }
+
+
+    $(document).ready(function () {
+        //$("#prjtid1").prop('selectedIndex', 1).trigger('change');
+        $('#itemgroupname1').select2();
+        $('#tblItemMaster').select2();
+        $('#btnSearch').click(SearchItems);
+        $("#txtDate").datepicker({
+            dateFormat: 'dd-M-yy',
+            changeMonth: true,
+            changeYear: true,
+            value: "",
+            maxDate: new Date()
+        });
+
+        $(document).on('click','.amountDetails',function () {
+            var qty = $(this).attr('data');
+            var itemId = $(this).attr('data1');
+            $("#dialog-amount-details").dialog({
+                modal: true,
+                title: "Amount Details",
+                width: 350,
+                height: 350,
+                autoOpen: false,
+                open: function () {
+                    $.get('/IndentRequistion/AmountDetails', { ProjectId: $('#prjtid1 option:selected').val(), ItemId: itemId, Qty: qty },
+                        function (response) {
+                            $('#dialog-amount-details').html(response);
+                    });
+                },
+                buttons: [
+                {
+                    id: "Close",
+                    text: "Close",
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+                ]
+            });
+
+            $('#dialog-amount-details').dialog('open');
+        });
+
+
+
+
+
+        //$('#quantity1').change(function () {
+        //    $('#amount1').val('');
+
+        //    $('#amount1').val(($('#quantity1').val() * $('#rate1').val()).toFixed(2));
+        //});
+
+
+        $('#quantity1').change(function () {
+            if ($('#prjtid1 option:selected').val() == '') {
+                alert('Please select project');
+                $('#quantity1').val('');
+                return false;
+            }
+            if ($('#tblItemMaster option:selected').val() == '') {
+                alert('Please select item');
+                $('#quantity1').val('');
+                return false;
+            }
+
+            if ($('#quantity1').val() == '') {
+
+                return false;
+            }
+
+            $('#amount1').val('');
+            $.get('/IndentRequistion/GetAmount', { ProjectId: $('#prjtid1 option:selected').val(), ItemId: $('#tblItemMaster option:selected').val(), Qty: $('#quantity1').val() },
+            function (result) {
+                console.log(result);
+                $('#amount1').val(result);
+            });
+            //$('#amount1').val(($('#quantity1').val() * $('#rate1').val()).toFixed(2));
+        });
+
+
+        $("#txtDate").change(function () {
+            $("#name").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getprojectcodes")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#prjtid1").val(),date:$('#txtDate').val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+
+                    if (states.New_No != null && states.New_No != undefined)
+                        //    $.each(states, function (i, state) {
+                        //alert(state.Value)
+                    {
+                        $("#name").val(states.New_No);
+                        $('#txt_LastIndentDate').text(states.Last_Date);
+                        $('#txt_LastIndentNo').text(states.Last_No);
+                    }
+                        // });
+                    else {
+                        //states.length = 0;
+                        $("#name").val('');
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Indent No. Not Created', 'Project Code Empty');
+                        alert('Project Code Empty');
+                    }
+
+                },
+                error: function (ex) {
+                    debugger;
+                    alert('Failed to retrieve Project Code.' + ex);
+                }
+            });
+
+            @*$("#BlockMaster").empty();
+            $("#BlockMaster").append($("<option></option").val("").html("Select Block"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetBlocknames")', // Calling json method
+
+                dataType: 'json',
+
+                data: { fid: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (namesfs) {
+
+                    $.each(namesfs, function (i, fitnames) {
+                        $("#BlockMaster").append('<option value="' + fitnames.Value + '">' +
+                             fitnames.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve BLOCK NAME.');
+                    alert('Failed to retrieve BLOCK NAME.' + ex);
+                }
+            });*@
+            return false;
+        });
+        $("#prjtid1").val($("#prjtid1 option:eq(1)").val());
+        $("#prjtid1").trigger('change');
+
+    });
+
+    function SearchItems() {
+        var url = '@Url.Action("GetItemDetails", "PurchaseRequisition")';
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { ItemGroupId: $('#ddlItemG').val(), ItemName: $("#ItemName").val(), HSNCode: $('#HSNCode').val(), UnitId: $('#ddlUnits').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                console.log(result);
+                $('#formbody').html(result);
+            }
+        });
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#tblItemMaster").change(function () {
+            $("#make1").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getitemnmakepartno")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#tblItemMaster").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+
+                    //    $.each(states, function (i, state) {
+                    //alert(state.Value)
+                    $("#make1").val(states);
+                    // });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Make.');
+                    alert('Failed to retrieve Make.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#tblItemMaster").change(function () {
+            $("#make1").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getitemnmake")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#tblItemMaster").val() },
+                // Get Selected Country ID.
+
+                success: function (partes) {
+
+                    //    $.each(states, function (i, state) {
+                    //alert(state.Value)
+                    $("#partno1").val(partes);
+                    // });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Part No.');
+                    alert('Failed to retrieve Part No.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#tblItemMaster").change(function () {
+            $("#make1").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getitemnunit")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#tblItemMaster").val() },
+                // Get Selected Country ID.
+
+                success: function (units) {
+
+                    //    $.each(states, function (i, state) {
+                    //alert(state.Value)
+                    $("#unit1").val(units);
+                    // });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Unit Code.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#tblItemMaster").change(function () {
+            //$("prjtid1").val();
+            //$("itemgroupname1").val();
+            $.ajax({
+                type: 'POST',
+                @*url: '@Url.Action("Getitemn_balance")', // Calling json method*@
+                url: '@Url.Action("Getitemn_balance", "PurchaseRequisition")' ,
+
+                dataType: 'json',
+
+                data: { PrjId: $("#prjtid1 option:selected").val(), IG: $("#itemgroupname1 option:selected").val(), itemid: $("#tblItemMaster").val() },
+                // Get Selected Country ID.
+
+                success: function (balance1) {
+                    $("#showBalanceData").text(balance1);
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Unit Code.' + ex);
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetItemPrice")' ,
+                dataType: 'json',
+                data: { ProjectId: $("#prjtid1 option:selected").val(), ItemGroupId: $("#itemgroupname1 option:selected").val(), ItemId: $("#tblItemMaster option:selected").val() },
+
+                success: function (price1) {
+                    $("#rate1").val(price1.Rate);
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Item Price.' + ex);
+                }
+            });
+    });
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#itemgroupname1").change(function () {
+            $("#tblItemMaster").empty();
+            $("#tblItemMaster").append($("<option></option").val("").html("Select Item Name"));
+            $("#unit1").val('');
+            $("#make1").val('');
+            $("#partno1").val('');
+            $('#rate1').val('');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetGroupitem")', // Calling json method
+
+                dataType: 'json',
+
+                data: { ProjectId: $('#prjtid1').val(), id: $("#itemgroupname1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#tblItemMaster").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Item Name.');
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+<script>
+    //java script array;
+    var gridList = [];
+    $(document).ready(function () {
+
+        $('#quantity1').keypress(function (event) {
+            if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
+                    $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        }).on('paste', function (event) {
+            event.preventDefault();
+        });
+
+        $("#addNew").click(function () {
+
+
+            //check Received Qty till IndentDate
+            if ($('#prjtid1').val() == '') {
+                alert('Please select Project');
+                return false;
+            }
+            if ($('#txtDate').val() == '') {
+                alert('Please select Indent Date');
+                return false;
+            }
+
+            if ($('#quantity1').val() == '') {
+                alert('Enter Item quantity!');
+                return;
+            }
+
+            if (gridList.findIndex(x=>x.ItemID == $("#tblItemMaster option:selected").val()) > -1) {
+                alert('Item already added!');
+                return;
+            }
+
+            $.get('@Url.Action("IsQtyAllowedToIssue","IndentRequistion")', { ProjectId: $('#prjtid1').val(), ItemId: $('#tblItemMaster').val(), Date: $('#txtDate').val(), IssueQty: $("#quantity1").val() }, function (response) {
+                if (response.Status != "" && response.Status == 1) {
+                    //javascript object;
+                    var obj = new Object();
+                    obj.Id = getUniqueId();
+                    obj.ProjectID = $("#prjtid1 option:selected").val();
+                    obj.ProjectName = $("#prjtid1 option:selected").text();
+                    obj.IndentNo = $("#name").val();
+                    obj.EmployeeID = $("#empName1 option:selected").val();
+                    obj.EmployeeName = $("#empName1 option:selected").text();
+
+                    // here block , floor, indent type and indent desciption code
+                    obj.BlockId = $("#BlockMaster option:selected").val();
+                    obj.BlockName = $("#BlockMaster option:selected").text();
+                    obj.FloorId = $("#FloorMaster option:selected").val();
+                    obj.FloorName = $("#FloorMaster option:selected").text();
+                    obj.IndentType = $("#Indenttype option:selected").text();
+                    obj.IndentOtherDesc = $("#indenttext1").val();
+
+
+
+                    obj.ItemGroupName = $("#itemgroupname1 option:selected").text();
+                    obj.ItemGroupID = $("#itemgroupname1 option:selected").val();
+                    obj.Itemname = $("#tblItemMaster option:selected").text();
+                    obj.ItemID = $("#tblItemMaster option:selected").val();
+
+
+                    obj.Unitname = $("#unit1").val();
+                    obj.Makename = $("#make1").val();
+                    obj.Partname = $("#partno1").val();
+                    obj.Quantityname = $("#quantity1").val();
+
+                    obj.CurrentRate = $('#rate1').val();
+                    obj.Amount = $('#amount1').val();
+
+
+
+                    if (obj.Quantityname.trim() == "") {
+                        $('#quantity1').css('border-color', '#f0551b');
+
+                        //$('#ItemID').css('border-color', '#f0551b');
+                        //$('#Unitname').css('border-color', '#f0551b');
+                    }
+                        //else {
+                        //    $('#quantity1').css('border-color', '');
+                        //}
+                        //if ($("#empName1").val()=="")
+                        //{
+                        //    $('#empName1').css('border-color', '#f0551b');
+                        //}
+
+                    else {
+                        gridList.push(obj);
+                        $("#grid").prepend("<tr class='danger _tempRow'><td>" + obj.ItemGroupName + "</td><td>" + obj.Itemname + "</td><td>" + obj.Unitname + "</td><td>" + obj.Makename + "</td><td>" + obj.Partname + "</td><td>" + obj.Quantityname + "</td><td>" + obj.Amount + "</td><td><a href='#' id='removeItem' uniqueId='" + obj.Id + "'>Remove</a> &nbsp;  <a class='amountDetails' href='javascript:void(0);' data='" + obj.Quantityname + "' data1='" + $('#tblItemMaster option:selected').val() + "'>Amount Details</a></td></tr>");
+                        $("#unit1").val('');
+                         $("#make1").val('');
+                        $("#partno1").val('');
+                        $('#itemgroupname1').change();
+                        //$('#grid').each(function () {
+                        //    var text = $(this).val();
+                        //    if ($.inArray(text, gridList) === -1) {
+                        //        alert('Oops! You Can Not Enter Duplicate Data');
+                        //        gridList.push(text);
+                        //    } else {
+                        //        //$(this).parent().hide()
+                        //    }
+                        //})
+
+
+                        $("#quantity1").val('');
+                        $('#amount1').val('');
+                       // $('#quantity1').trigger('change');
+                        //for removing border color here
+                        $('#quantity1').css('border-color', '');
+                    }
+                }
+                else if (response.Status == 2) {
+                    alert('Balance Qty. is ' + response.Qty + ' till the Indent Date.');
+                }
+                else {
+                    alert('Some error occured.');
+                }
+            });
+
+
+
+
+
+        });
+
+        $("#Submit").click(function () {
+           // debugger;
+            var year = $("#prjtid1 option:selected").val();
+            var gpname = $("#itemgroupname1 option:selected").val();
+            var empnames = $("#empName1 option:selected").val();
+            var itmnamess = $("#tblItemMaster option:selected").val();
+            var indentsno = $("#name").val();
+            var date = $('#txtDate').val();
+
+            if (indentsno.trim() == "") {
+                $('#name').css('border-color', '#f0551b');
+                alert('Oops! Indent no is empty');
+                return false;
+            }
+            else {
+                $('#name').css('border-color', '');
+            }
+
+            if (date.trim() == "") {
+                $('#txtDate').css('border-color', '#f0551b');
+                alert('Oops! Indent Date is empty');
+                return false;
+            }
+            else {
+                $('#txtDate').css('border-color', '');
+            }
+
+
+            if (year == "") {
+                $('#prjtid1').css('border-color', '#f0551b');
+                return false;
+            }
+            else {
+                $('#prjtid1').css('border-color', '');
+            }
+            if (gpname == "") {
+                $('#itemgroupname1').css('border-color', '#f0551b');
+                return false;
+            }
+            else {
+                $('#itemgroupname1').css('border-color', '');
+            }
+
+            if (empnames == "") {
+                return false;
+                $('#empName1').css('border-color', '#f0551b');
+            }
+            else {
+                $('#empName1').css('border-color', '');
+            }
+
+            //if (itmnamess == "") {
+            //    return false;
+            //    $('#tblItemMaster').css('border-color', '#f0551b');
+            //}
+            //else {
+            //    $('#tblItemMaster').css('border-color', '');
+            //}
+
+            if (gridList.length == 0) {
+                alert("Please add item.");
+                return;
+            }
+
+            var url = '@Url.Action("SendList", "IndentRequistion")';
+
+
+            $.ajax({
+                type: "Post", 		//GET or POST or PUT or DELETE verb
+                //url: "/IndentRequistion/SendList", 		// Location of the service
+                url: url,
+                data: JSON.stringify({ ListData: gridList, IndentDate: date }), 		//Data sent to server
+                contentType: "application/json; charset=utf-8",		// content type sent to server
+                dataType: "json", 	//Expected data format from server
+                processdata: true, 	//True or False
+                success: function (json) {//On Successful service call
+                    if (json.Result == 1) {
+                        $("#trans_num").text(json.TansNo);
+                        $("#myModal").modal('show');
+                        $("#name").val('');
+                        $("#prjtid1").val('');
+                        //$("#empName1").val('');
+                        $("#itemgroupname1").val('');
+                        $("#tblItemMaster").val('');
+                        //$("#BlockMaster").val('');
+                        //$("#FloorMaster").val('');
+                        //$("#Indenttype").val('');
+                        //$("#indenttext1").val('');
+
+                        gridList = [];
+                        $("#grid").empty();
+
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.success('Submit Data Successfully');
+                        $("#confirm_link").attr("href", '/QuantityIssues/Index?Indent=' + json.TansNo);
+                       // location.href = '/QuantityIssues/Index?Indent=' + json.TansNo;
+                    }
+                    else if (json.Result == 3) {
+
+
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Project Id and Employee Id should be not empty', 'alert');
+                    }
+                    else if (json.Result == 4) {
+                        alert("Data not valid.");
+                    }
+
+                    else if (json.Result < 0) {
+                        alert('Indent No. Exist Already Exists. Try Again!');
+                    }
+                    else if(json.Result==0)
+                    {
+                        alert('Indent date must be greater than last Indent date '+json.TansNo);
+                    }
+                    else {
+                        console.log(json.TansNo);
+                        alert("Something went wrong.");
+                    }
+
+                },
+                error: function () {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Error in Submit Data');
+                    alert('Error in Submit Data');
+                }
+                // When Service call fails
+            });
+        })
+        $("body").on("click", "#removeItem", function () {
+            var id = $(this).attr("uniqueId");
+
+            for (var index = 0; index < gridList.length; index++) {
+                if (gridList[index].Id == id) {
+
+                    gridList.splice(index, 1);
+                    $(this).parents("._tempRow").remove();
+                }
+            }
+        })
+
+        var uniqueId = null;
+        getUniqueId = function () {
+            if (!uniqueId) uniqueId = (new Date()).getTime();
+            return uniqueId++;
+        };
+
+        $("#quantity1").keyup(function (event) {
+            debugger;
+            var limitval = $('#showBalanceData').text();
+            var qty = $('#quantity1').val();
+            if (+qty <= +limitval) {
+                return true;
+            }
+            else {
+                alert('Enter Quantity less than the available Quantity. ')
+                $('#quantity1').val('');
+            }
+
+        });
+
+
+
+    });
+
+
+
+</script>
+
+
+<script>
+    $(function () {
+        //$("#divothertype").hide();
+        //$("#Indenttype").change(function () {
+        //    if ($(this).val() == "Other") {
+        //        $("#divothertype").show();
+        //        $("#blockdiv").hide();
+        //        $("#floordiv").hide();
+        //    } else {
+        //       // $("#blockdiv").hide();
+        //        //$("#floordiv").hide();
+        //    }
+
+        //    if ($(this).val() == "Block Wise") {
+        //        $("#blockdiv").show();
+        //        $("#floordiv").show();
+        //        $("#divothertype").hide();
+        //    } else {
+
+        //        //$("#divothertype").hide();
+        //    }
+
+        //});
+    });
+</script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">ISSUE REQUISITION</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <input type="text" name="txt" value="" id="txtDate" class="form-control" autocomplete="off" placeholder="Select Indent Date" />
+                                                    <p style="color:red">
+                                                        Last Indent Date : <span id="txt_LastIndentDate"></span>&nbsp;&nbsp;
+                                                    </p>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("name", null, new { id = "name", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            @*@Html.ValidationMessageFor(, "", new { @class = "text-danger" })*@
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                        <p style="color:red">
+                                                            Last Indent No : <span id="txt_LastIndentNo"></span>&nbsp;&nbsp;
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("empName1", null, new { @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                               
+                                            </div>
+                                            <div class="col-md-4">
+                                                
+                                            </div>
+                                            <div class="col-md-4">
+                                           
+                                            </div>
+
+                                            @* partial div close here *@
+
+                                            @* partial div close here *@
+                                            @* partial div close here *@
+
+
+                                            @* partial div close here *@
+
+
+
+                                            @*<div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        <input type="submit" value="Create" class="btn btn-primary" />
+                                                    </div>
+                                                </div>*@
+                                        </div>
+                                    }
+
+                                    <div style="text-align:right;"><b>Available Quantity is:</b><label id="showBalanceData" style="color:red; font-size:large"></label></div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+
+
+                                            <table class="table table-bordered mbn">
+                                                <thead>
+                                                    <tr class="primary">
+                                                        <th>#</th>
+                                                        <th>Item Group</th>
+                                                        <th>Item Name</th>
+                                                        <th>Unit</th>
+                                                        <th>Make</th>
+                                                        <th>Part No.</th>
+                                                        <th>Quantity</th>
+                                                        @*<th>Current Rate</th>*@
+                                                        <th>Amount</th>
+                                                        <th>ADD</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="success">
+                                                        <td>1</td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("itemgroupname", null, "Select Item Group", htmlAttributes: new { @id = "itemgroupname1", @class = "form-control" })
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-3">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("tblItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item Name", new { @class = "form-control" })
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-1">
+                                                            <div class="section">
+                                                                @Html.TextBox("unit", null, new { id = "unit1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-1">
+                                                            <div class="section">
+                                                                @Html.TextBox("make", null, new { id = "make1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-1">
+                                                            <div class="section">
+                                                                @Html.TextBox("partno", null, new { id = "partno1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-1">
+                                                            <div class="section">
+                                                                @Html.TextBox("quantity", null, new { id = "quantity1", @class = "form-control gui-input" })
+                                                            </div>
+                                                        </td>
+                                                        @*<td class="col-sm-2">
+                                                                <div class="section">
+                                                                  @Html.TextBox("rate1", null, new { id = "rate1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                                </div>
+                                                            </td>*@
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                @Html.TextBox("amount", null, new { id = "amount1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-1">
+                                                            <div class="section">
+                                                                <input type="submit" value="Add" class="btn btn-primary btn-xs" id="addNew" />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+
+                                    @* Dynamic Webgrid Design Here *@
+
+                                    <table class="table" id="grid">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Group</th>
+                                                <th>Item Name</th>
+                                                <th>Unit</th>
+                                                <th>Make</th>
+                                                <th>Part No.</th>
+                                                <th>Quantity</th>
+                                                @*<th>Current Rate</th>*@
+                                                <th>Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="grid"></tbody>
+                                    </table>
+
+                                    <br />
+                                    <div>
+                                        <input type="button" id="Submit" class="btn btn-danger" value="Submit" onclick="putIndentReqdisable()" />
+                                    </div>
+
+
+                                </form>
+                                <br />
+                                <h4>Search Item</h4>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("ItemName", null, new { id = "ItemName", @class = "form-control gui-input required", placeholder = "Item Name" })
+                                                <label for="ItemName" class="field-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <input type="button" id="btnSearch" class="btn btn-danger" value="Search" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" id="formbody">
+
+                                    </div>
+                                </div>
+
+
+                                <div>
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                                    <h4 class="modal-title"><span class="text-danger">Confirmation</span></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Data Saved Successfully. Your Transaction No. <span id="trans_num"></span></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="" id="confirm_link" class="btn btn-default">Close</a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div id="dialog-amount-details" style="display:none;">
+
+</div>

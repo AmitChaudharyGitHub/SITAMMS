@@ -1,0 +1,38 @@
+﻿@model List<MMS.Models.GetItemsList>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <p><storng>Search Result</storng></p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Item Code</th>
+                <th>Name</th>
+                <th>Group Name</th>
+                <th>HSN Code</th>
+                <th>Unit Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(++i)</td>
+                    <td>@item.ItemId</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.GroupName</td>
+                    <td>@item.HSNCode</td>
+                    <td>@item.UnitName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else
+{
+   <p style="color:red; font-size:20px; text-align:center;">No Item found.</p>
+}

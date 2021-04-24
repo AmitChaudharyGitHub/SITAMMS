@@ -1,0 +1,104 @@
+﻿@model BusinessObjects.Entity.FloorMaster
+
+@{
+    ViewBag.Title = "Details";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+@*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+<style type="text/css">
+    dt {
+        color: #5D9CEC;
+    }
+</style>
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <!-- Begin: Content Header -->
+                <!-- Begin: Admin Form -->
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form method="post" action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Floors Master</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                @*<p>
+                                        @Html.ActionLink("Create New", "Create")
+                                    </p>*@
+                                <div class="row">
+                                    <div>
+                                        <h4>Details</h4>
+                                        <hr />
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.BlockMaster.tblProjectMaster.ProjectName)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.BlockMaster.tblProjectMaster.ProjectName)
+                                            </dd>
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.BlockMaster.BlockName)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.BlockMaster.BlockName)
+                                            </dd>
+
+                                            <dt>
+                                                @Html.DisplayNameFor(model => model.FloorName)
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.FloorName)
+                                            </dd>
+
+                                        </dl>
+                                    </div>
+                                    <p>
+                                        @Html.ActionLink("Edit", "Edit", new { id = Model.FloorId }, new { @class = "btn btn-primary" }) |
+                                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                    </p>
+                                </div>
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

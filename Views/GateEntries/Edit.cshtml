@@ -1,0 +1,277 @@
+﻿@model MMS_P.ViewModels.GateEntry_UpdateChild
+
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+    DateTime? Date = null;
+    if (ViewBag.Date != null)
+    { Date = (DateTime)ViewBag.Date; }
+
+    DateTime? ChallanDate = null;
+    if (ViewBag.ChallanDate != null)
+    { ChallanDate = (DateTime)ViewBag.ChallanDate; }
+}
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+     .Piv2 {
+        display: none;
+    }
+</style>
+}
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "GateEntries")';
+    var Master = @Html.Raw(Json.Encode(Model.Master));
+    var Child = @Html.Raw(Json.Encode(Model.Child));
+    var GetProjectGateEntryNo ='@Url.Action("GetProjectGateEntryNo", "GateEntries")';
+    var GetStatusTypeNo='@Url.Action("GetStatusTypeNo", "GateEntries")';
+    var Grid = '@Url.Action("Grid", "GateEntries")';
+    var UpM_UpC= '@Url.Action("UpM_UpC", "GateEntries")';
+   
+  
+
+</script>
+<script src="~/Script/GEEdit.min.js"></script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Gate Entry Edit Mode</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <p>
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                </p>
+                                <!-- Input Icons -->
+                                <div class="row">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Date", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "Date", @placeholder = "Order Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Time", null, "Select Time", htmlAttributes: new { @id = "Time", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Projects", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("GateEntryNo", null, new { id = "GateEntryNo", @class = "form-control gui-input required" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Employee", new SelectList(string.Empty, "Value", "Text"), "Select Employee Name", htmlAttributes: new { @id = "Employee", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanNo", null, new { id = "ChallanNo", @class = "form-control gui-input required", @placeholder = "Challan No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanDate", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "ChallanDate", @placeholder = "Challan Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("VehicleNo", null, new { id = "VehicleNo", @class = "form-control gui-input required", @placeholder = "Vehicle No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Status", null, "Select Status", htmlAttributes: new { @id = "Status", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("StatusTypeNo", new SelectList(string.Empty, "Value", "Text"), "Select Status No.", htmlAttributes: new { @id = "StatusTypeNo", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                    <div id="dvLoading"></div>
+                                    <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                    <div class="pager glyphicon-align-center" id="formbody">
+
+                                    </div>
+
+
+                                    <br />
+                                    <div>
+                                        <input type="button" id="btnsave" class="btn btn-danger" value="Submit" />
+                                    </div>
+
+
+                                    <div id="myModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                    <h4 class="modal-title">Confirmation</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                    <p class="text-danger">Data Save Successfully</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+                                    <!-- end .section row section -->
+                                    <!-- end .form-footer section -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

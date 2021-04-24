@@ -1,0 +1,264 @@
+﻿@model MMS.ViewModels.File.QuotDetail
+@{
+    ViewBag.Title = "ViewQuotDetail";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td {
+        padding: inherit 2px;
+    }
+
+        td input {
+            width: 80px;
+            font-size: 11px !important;
+        }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        debugger;
+        $(".ViewQRDialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-QRemark-1").dialog({
+                title: 'Quotation Remarks',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-QRemark-1").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-QRemark-1").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+    
+        $(".QdownloadF_Dialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-QDown-1").dialog({
+                title: 'Download Attached File',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 650,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-QDown-1").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-QDown-1").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+
+
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-QRemark-1").dialog('close');
+
+        });
+    });
+
+</script>
+
+<script>
+    function GetQRemarks() {
+
+
+        var url = '@Url.Action("GetQuotationRemark", "Quotation")';
+        debugger;
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#text1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                debugger;
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+    function QdownloadF_Dialog() {
+
+        var url = '@Url.Action("GetDownloadFileDetail", "Quotation")';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#text1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                debugger;
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+   
+
+
+
+
+</script>
+
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <div class="section-divider mb40" id="spy1">
+                                <span>
+                                    Quotation Detail 
+                                    
+                                </span>
+                            </div>
+
+                            
+
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    @*<tr><td class="MasterId" colspan="10" muid=@Model.TransId> </td>   </tr>*@
+                                    <tr>
+                                        <th>@Html.DisplayName("Purchase Indent No:")</th>
+                                        <th>@Html.DisplayName("Quotation Reference No:")</th>
+                                        
+                                    </tr>
+                                    <tr>
+
+                                        <td>@Html.DisplayFor(model => model.PurchaseReqNo)</td>
+                                        <td>@Html.DisplayFor(model => model.QuotationRefNo)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Date of Creation :")</th>
+                                        <th>@Html.DisplayName("Created By :")</th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>@Html.DisplayFor(model=>model.CreatedDate, "{0:dd/MM/yyyy}")</td>
+                                        <td>@Html.DisplayFor(model=>model.Name)</td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>@Html.DisplayName("Remarks:")</th>
+                                        <th>@Html.DisplayName("Attached Document:")</th>
+                                        
+                                    </tr>
+                                    <tr>
+
+                                        <td>@Html.ActionLink("Click To See Remarks", "GetQuotationRemark", new { TrandId = Model.TransId }, new { @class = "ViewQRDialog", @id = "text1", @onchange = "javascript:GetQRemarks(this.value);", @style = "color:#497bf9" })</td>
+                                        <td>@Html.ActionLink("Click To See Attachments", "GetDownloadFileDetail", new { TransId = Model.TransId }, new { @class = "QdownloadF_Dialog", @id = "text1", @onchange = "javascript:GetQFDownload(this.value);", @style = "color:#497bf9" }) </td>
+                                        
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+
+
+
+                            <div class="section-divider mt40 mb25" id="spy5">
+                                <span></span>
+                            </div>
+
+
+
+                        </div>
+
+
+                        <div id="dialog-QRemark-1" style="display: none">
+                        </div>
+
+                        <div id="dialog-QDown-1" style="display: none">
+                        </div>
+
+
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

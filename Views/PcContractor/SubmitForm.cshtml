@@ -1,0 +1,118 @@
+﻿@model BusinessObjects.Entity.tblPcContractorMaster
+@{
+    ViewBag.Title = "SubmitForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script language="javascript" type="text/javascript">
+
+    function GetState(_CountryId)
+    {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlState").html(procemessage).show();
+        //var url = "/tblVendorMasters/GetStateByCountryId/";
+        var url = '@Url.Action("GetStateByCountryId", "PcContractor")';
+        $.ajax({
+            url: url,
+            data: { CountryId: _CountryId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select State</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+                }
+                $("#ddlState").html(markup).show();
+            },
+
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCity(_StateId)
+    {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlCity").html(procemessage).show();
+        //var url = "/tblVendorMasters/GetCityByStateId/";
+        var url = '@Url.Action("GetCityByStateId", "PcContractor")';
+        $.ajax({
+            url: url,
+            data: { StateId: _StateId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select City</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+                }
+                $("#ddlCity").html(markup).show();
+            },
+
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    $('#btnsave').click(function (event)
+    { alert("A");
+        var valid = ValidMaster();
+        if (valid == false)
+        {
+            event.preventDefault();
+            $j('#Submit').attr('onclick', '').unbind('click');
+        }
+
+    });
+
+    function ValidMaster()
+    {
+        alert("B");
+        var rr = true;
+        var RegistrationType = $("#RegistrationType option:selected").val();
+        if (RegistrationType == "0" || RegistrationType == "")
+        {
+            $('#RegistrationType').css('border-color', '#f0551b');
+            alert("Select RegistrationType");
+            rr = false;
+        }
+        else
+        {
+            $('#RegistrationType').css('border-color', '');
+
+        }
+
+
+        var PRJID = $("#PRJID option:selected").val();
+        if (PRJID == "0" || PRJID == "") {
+            $('#PRJID').css('border-color', '#f0551b');
+            alert("Select Project");
+            rr = false;
+        }
+        else {
+            $('#PRJID').css('border-color', '');
+
+        }
+
+        return rr;
+
+    }
+</script>
+
+
+
+@using (Html.BeginForm("SubmitForm", "PcContractor", FormMethod.Post))
+{
+    <div class="main-Background">
+        ******lots of other html here*******
+        <button type="submit" id="btnSave">Save</button>
+
+    </div>
+}
+

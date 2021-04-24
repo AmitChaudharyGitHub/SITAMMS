@@ -1,0 +1,219 @@
+﻿@model MMS_P.ViewModels.PurchaseIR
+
+@{
+    ViewBag.Title = "Index";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">
+
+
+
+    var UpdateList2 = '@Url.Action("UpdateList2", "PurchaseRequisition")';
+
+
+
+</script>
+<script src="~/Script/PurchaseIRDetailsA.min.js"></script>
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <p>
+
+                                <a class="btn btn-primary" data-modal="" href="@Url.Action("IndexApproval", "PurchaseRequisition")" id="btnCreate">
+                                    Back to List
+                                </a>
+                            </p>
+                            <div class="section-divider mb40" id="spy1">
+                                <span>
+                                    Purchase Indent @*Created By @Model.Master.CreatedByName  </span>*@
+                                    for @Model.Master.SendToName  and Date is @Html.DisplayFor(model => model.Master.Date2)
+                                </span>
+                            </div>
+                            <table>
+                                <tr><td class="MasterId" colspan="10" muid=@Model.Master.UId> </td>   </tr>
+                                <tr>
+                                    <td>
+                                        <dl class="dl-horizontal">
+                                            <dt>
+                                                @Html.DisplayName("Project Name:")
+                                            </dt>
+
+                                            <dd>
+                                                @Html.DisplayFor(model => model.Master.ProjectName)
+                                            </dd>
+                                            <dt style="width:200px; text-align:left;">
+                                                @Html.DisplayName("Purchase Requisition No:")
+                                            </dt>
+
+                                            <dd style="width:200px; text-align:left; white-space:nowrap;">
+                                                @Html.DisplayFor(model => model.Master.PurRequisitionNo)
+                                            </dd>
+
+
+
+                                        </dl>
+
+                                    </td>
+                                </tr>
+                            </table>
+                            @if (Model.Child.Count != 0)
+                            {
+                                <table class="table table-hover" id="gridD">
+
+                                    <tr class="primary">
+
+
+                                        <th>
+                                            @Html.DisplayName("SrNo.")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Group Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Item Name")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Unit")
+                                        </th>
+
+
+                                        <th>
+                                            @Html.DisplayName("Demand Qty")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Approve Qty")
+                                        </th>
+                                        <th>
+                                            @Html.DisplayName("Current Approve")
+                                        </th>
+
+                                    </tr>
+
+                                    @foreach (var item in Model.Child)
+                                    {
+                                        var a = @item.UId;
+                                        var It = @item.ItemNo;
+
+
+                                        <tr id=@a>
+
+                                            <td class=SrNo_@a uid=@a it=@It>
+                                                @Html.DisplayFor(modelItem => item.SNo)
+                                            </td>
+                                            <td class=Group_@a>
+                                                @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                            </td>
+                                            <td class=Item_@a>
+                                                @Html.DisplayFor(modelItem => item.ItemName)
+                                            </td>
+                                            <td class=Unit_@a>
+                                                @Html.DisplayFor(modelItem => item.Unit)
+                                            </td>
+
+
+
+                                            <td>
+                                                <span class="checkVal" id=DemandQty_@a>
+                                                    @Html.TextBoxFor(modelItem => item.DemandQty, new { disabled = "disabled", @readonly = "readonly" })
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="checkVal" id=ApprovedQty_@a>
+                                                    @Html.TextBoxFor(modelItem => item.ApprovedQty, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+                                                </span>
+                                            </td>
+                                            <td class=Current_@a>
+                                                @Html.Editor("Current")
+                                            </td>
+
+
+                                        </tr>
+                                    }
+
+                                </table>
+
+                            }
+
+                        </div>
+
+
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="section">
+                                <input type="submit" value="Save" id="SubmitA" class="btn btn-success" />
+                            </div>
+                        </div>
+                        <div id="myModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                        <h4 class="modal-title">Confirmation</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        @*<p>Do you want to save changes you made to document before closing?</p>*@<p></p><p></p>
+                                        <p class="text-danger">Data Save Successfully</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        @*<button type="button" class="btn btn-primary">Save changes</button>*@<button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

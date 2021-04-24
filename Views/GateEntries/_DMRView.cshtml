@@ -1,0 +1,40 @@
+﻿ @model MMS_P.ViewModels.PagedGateEntryChildModel
+
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+
+    <div id="myPager" style="margin-top:17px;">
+        @{
+            var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+            grid.Bind(Model.Child, rowCount: Model.TotalRows, autoSortAndPage: false);
+            grid.Pager(WebGridPagerModes.All);
+
+            @grid.GetHtml(htmlAttributes: new { id = "grid" },   
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                    grid.Column("GateEntryNo",  header: "GateEntry No."),
+                                    grid.Column("Vendor", header: "Vendor"),   
+                                    grid.Column("Status", header: "Type"),                                   
+                                    grid.Column("StatusTypeNo",   header: "No."    ),
+                                    grid.Column("ItemGroup", header: " Group"),
+                                    grid.Column("Item", header: "Item"),
+                                    grid.Column("ReceiveQty", header: "Qty"),
+                                    grid.Column(String.Format("{0:MM/dd/yyyy}", "Date"), header: "Date"  )
+                                               
+                                            
+
+                                                                                                                                            ));
+        }
+
+
+    </div>
+

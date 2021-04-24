@@ -1,0 +1,122 @@
+﻿@model MMS.Models.SourceLocation
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Source Location</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("prjtid", null, "Select Petty Contrator", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("empsname", null, "Forword To", new { id = "empsname1", @class = "form-control gui-input" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-user"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <input type="button" id="Submit" class="btn btn-primary" value="Create" />
+                                                    <input type="button" id="Back" class="btn btn-danger" value="Back" data-modal="" onclick="@("window.location.href='" + @Url.Action("Index", "SourceLocation") + "'");" />
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+                                        <br />
+
+
+
+
+                                    }
+
+
+
+                                </form>
+
+                            </div>
+
+
+                            <br />
+
+
+
+
+
+
+                            <div class="section-divider mt40 mb25" id="spy5">
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+    </section>
+    <!-- End: Content -->
+</section>
+

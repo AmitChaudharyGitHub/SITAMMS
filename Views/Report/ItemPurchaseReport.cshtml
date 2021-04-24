@@ -1,0 +1,351 @@
+﻿
+@{
+    ViewBag.Title = "Item Purchase Report";
+
+    string layout = "";
+    if (Session["EmailCheck"] == null)
+    {
+        Response.Redirect("/MyAccount/login");
+        return;
+    }
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/Loading.gif) no-repeat center center;
+        height: 64px;
+        width: 64px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -16px 0 0 -16px;
+    }
+</style>
+
+
+<section id="content_wrapper" ng-app="app" ng-controller="ctrl">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Item Purchase Report</span>
+                                </div>
+                                <br/>
+
+                               <div class="well">
+                                   <div class="row">
+                                       <div class="col-md-12">
+                                           <div class="col-md-3">
+                                               <select id="ddlStates" class="form-control">
+                                                   <option value="">Select State</option>
+                                               </select>
+                                           </div>
+                                           <div class="col-md-3">
+                                               <select id="Projects" class="form-control">
+                                                   <option value="">Select Project</option>
+                                               </select>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <br />
+                                   <div class="row">
+                                       <div class="col-md-12">
+                                           <div class="col-md-3">
+                                               <select id="ddlGroups" class="form-control">
+                                                   <option value="">Select Item Group</option>
+                                               </select>
+                                           </div>
+                                           <div class="col-md-3">
+                                               <select id="ddlItems" class="form-control">
+                                                   <option value="">Select Item</option>
+                                               </select>
+                                           </div>
+                                           <div class="col-md-3">
+                                               <input type="text" name="txt" value="" class="form-control" id="txtItemCode" autocomplete="off" placeholder="Item Code" />
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <br />
+                                   <div class="row">
+                                       <div class="col-md-12">
+                                           <div class="col-md-3">
+                                               <input type="text" name="txt" value="" id="txtFromDate" class="form-control" autocomplete="off" placeholder="From Date" />
+                                           </div>
+                                           <div class="col-md-3">
+                                               <input type="text" name="txt" value="" id="txtToDate" class="form-control" autocomplete="off" placeholder="To Date" />
+                                           </div>
+                                           <div class="col-md-3">
+                                               <input type="button" name="btn" value="Search" id="btnSearch" ng-click="GetData()" class="btn btn-sm btn-primary" /> &nbsp;&nbsp;&nbsp;
+                                               <a href="javascript:void(0);" class="btn btn-sm btn-primary" id="exportExcel">Export Excel</a> &nbsp;&nbsp;&nbsp;
+                                               @*<a href="javascript:void(0);" class="btn btn-sm btn-primary" id="exportPDF">Export PDF</a>*@
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                                <br/>
+                                
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No.</th>
+                                                    <th>State</th>
+                                                    <th>Project Name</th>
+                                                    <th>Vendor Name</th>
+                                                    <th>P.O. No./PO Date</th>
+                                                    <th>Item Name</th>
+                                                    <td>Unit</td>
+                                                    <th>Qty.</th>
+                                                    <th>Discounted Rate</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-show="Data.length==0">
+                                                    <td colspan="12">
+                                                        <p class="alert alert-default">No Data Found.</p>
+                                                    </td>
+                                                </tr>
+                                                <tr ng-show="progress" ng-hide="!progress">
+                                                    <td colspan="12">
+                                                        <div id="dvLoading"></div>
+                                                        <div id="#progress" style="display:none;"><img src="~/Images/36.gif" /></div>
+                                                    </td>
+                                                </tr>
+                                                @*<tr dir-paginate="item in Data | itemsPerPage:10 track by $index">*@
+
+                                                    <tr ng-repeat="item in Data">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.Region}}</td>
+                                                    <td>{{item.ProjectName}}</td>
+                                                    <td>
+                                                       <p>{{item.Vendor}}</p>
+                                                       <p>{{item.City}},{{item.State}}</p>
+                                                    </td>
+                                                    <td>
+                                                        <p><a href="javascript:void(0);" class="viewPo">{{item.PONO}}</a></p>
+                                                        <p>{{item.PODate}}</p>
+                                                    </td>
+                                                    <td>{{item.ItemName}}</td>
+                                                    <td>{{item.UnitName}}</td>
+                                                    <td>{{item.Qty}}</td>
+                                                    <td>{{item.Rate}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @*<div class="col-md-12">
+                                        <dir-pagination-controls></dir-pagination-controls>
+                                    </div>*@
+                                </div>
+                                <br/>
+                               
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+
+                                    <span></span>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</section>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg" style="width:1100px;">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">P.O Detail</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+
+
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+<script type="text/javascript">
+    var getGroups = '@Url.Action("GetItemGroups", "IssueReturn")';
+    var getItems = '@Url.Action("GetItemName", "IssueReturn")';
+
+    $(document).ready(function () {
+        var app = angular.module('app', ['angularUtils.directives.dirPagination']);
+        app.controller('ctrl', function ($scope) {
+            $scope.Data = [];
+            $scope.progress = false;
+            $scope.currentPage = 1;
+            $scope.itemsPerPage = 10;
+            $scope.GetData = function () {
+                var stateId = $('#ddlStates').val();
+                var projectId = $('#Projects').val();
+                var itemId = $('#ddlItems').val();
+                var itemCode = $('#txtItemCode').val();
+                var fromDate = $('#txtFromDate').val();
+                var toDate =   $('#txtToDate').val();
+                if (stateId == '') {
+                    alert('Select State');
+                    return false;
+                }
+                if (itemId == '' && itemCode=='') {
+                    alert('Select Item Name or Enter Item Code');
+                    return false;
+                }
+                $scope.Data = [];
+                $scope.progress = true;
+                $.get('@Url.Action("ItemPurchaseReportData")', { StateId: stateId, ProjectId: projectId, ItemId: itemId, ItemCode: itemCode,FromDate:fromDate,ToDate:toDate},
+                    function (response) {
+                        if (response.Status == 1) {
+                            $scope.Data = JSON.parse(response.Data);
+                        }
+                        else {
+                            $scope.Data = [];
+                        }
+                        $scope.progress = false;
+                        $scope.$apply();
+                    });
+            }
+        });
+
+        $(document).on('click', '.viewPo', function () {
+            var po = $(this).text();
+            $.ajax({
+                url: '@Url.Action("GetPO_details", "View_Print_Slip_Approval")',
+                data: { Id: po },
+                success: function (response) {
+                    $('#modalBody').html('');
+                    $('#modalBody').html(response);
+                    $('#myModal').modal();
+                }
+            });
+        });
+
+        $("#txtFromDate").datepicker({ dateFormat: 'dd-mm-yy' });
+        $("#txtToDate").datepicker({ dateFormat: 'dd-mm-yy' });
+
+        BindDdl('#ddlStates', '@Url.Action("GetStates")', {}, 'State');
+
+        BindDdl('#ddlGroups', getGroups, {}, 'Item Group');
+
+        $('#ddlGroups').change(function () {
+            if ($(this).val() != '') {
+                BindDdl('#ddlItems', getItems, { GroupId: $(this).val() }, 'Item');
+            }
+            else {
+                ClearDdl('ddlItems', 'Item');
+            }
+            $('#ddlItems').select2();
+        });
+
+
+       
+
+        $('#ddlStates').select2();
+        $('#Projects').select2();
+        $('#ddlGroups').select2();
+        $('#ddlItems').select2();
+
+        $('#ddlStates').change(function () {
+            if ($(this).val() == '')
+                ClearDdl('#Projects', 'State');
+            else
+                BindDdl('#Projects', '@Url.Action("GetProjectsByState")', { StateId: $(this).val() }, 'Project');
+
+            $('#Projects').select2();
+        });
+
+
+
+        $(document).on('click', '#exportExcel', function () {
+            var stateId = $('#ddlStates').val();
+            var projectId = $('#Projects').val();
+            var itemId = $('#ddlItems').val();
+            var itemCode = $('#txtItemCode').val();
+            var fromDate = $('#txtFromDate').val();
+            var toDate = $('#txtToDate').val();
+
+            if (stateId == '') {
+                alert('Select State');
+                return false;
+            }
+            if (itemId == '' && itemCode == '') {
+                alert('Select Item Name or Enter Item Code');
+                return false;
+            }
+
+            window.open('@Url.Action("ItemPurchaseReportExcel")'+'?s='+stateId+'&p='+projectId+'&i='+itemId+'&ic='+itemCode+'&f='+fromDate+'&t='+toDate, '_blank');
+
+        });
+
+        $(document).on('click', '#exportExcel', function () {
+            var stateId = $('#ddlStates').val();
+            var projectId = $('#Projects').val();
+            var itemId = $('#ddlItems').val();
+            var itemCode = $('#txtItemCode').val();
+            var fromDate = $('#txtFromDate').val();
+            var toDate = $('#txtToDate').val();
+
+            if (stateId == '') {
+                alert('Select State');
+                return false;
+            }
+            if (itemId == '' && itemCode == '') {
+                alert('Select Item Name or Enter Item Code');
+                return false;
+            }
+
+            window.open('', '_blank');
+        });
+
+    });
+</script>
+<script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+<script src="~/Scripts/Helpers/dirPagination.js"></script>
+}

@@ -1,0 +1,28 @@
+﻿@model List<MMS.DAL.tblVendorDebitNoteChild>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Item Name</th>
+            <th>Qty</th>
+            <th>Transfer Qty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{int i = 0;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(++i)</td>
+                <td>@item.ItemNo</td>
+                <td>@item.Qty</td>
+                <td>@item.TransferQty</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

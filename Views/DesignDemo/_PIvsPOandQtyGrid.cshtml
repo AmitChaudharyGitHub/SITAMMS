@@ -1,0 +1,219 @@
+﻿@model IList<MMS.Models.PIDetailWithPoAndQtyViewModel>
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+<div style="overflow:auto;">
+    <table class="gridTable" id="positionGrid" data-swhgajax="true" data-swhgcontainer="positionGrid" data-swhgcallback="">
+        <thead>
+            <tr class="gridHead">
+                <th scope="col">
+                    S.No
+                </th>
+                <th scope="col" style="width:10px; text-wrap:normal;">
+                    <a data-swhglnk="true" href="#">PI. No.</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">PI Date</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Item Group</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Item Code</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Item Name</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Unit</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">PI Qty.</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Appd.PI.Qty</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">PO No.</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">PO Date</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">PO Qty</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Rate</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Amount</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">MRN No.</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">MRN Date</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Recd. Qty</a>
+                </th>
+                <th scope="col">
+                    <a data-swhglnk="true" href="#">Balance Qty</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int i=0;
+                foreach (var item in Model)
+                {
+                    <tr class="gridRow">
+                        <td class="my-classC">@(++i)</td>
+                        <td class="my-classL" style="width:10px; text-wrap:normal;">@item.PurRequisitionNo</td>
+                        <td class="my-classL">@item.PIDate</td>
+                        <td class="my-classC">@item.ItemGroup</td>
+                        <td class="my-classC">@item.ItemCode</td>
+                        <td class="my-classL">@item.ItemName</td>
+                        <td class="my-classL">@item.Unit</td>
+                        <td class="my-classR">@item.PIQty</td>
+                        <td class="my-classR">@item.ApprovePIQty</td>
+                        <td class="my-classC">@item.PONo</td>
+                        <td class="my-classC">@item.PODate</td>
+                        <td class="my-classR">@item.POQty</td>
+                        <td class="my-classR">@item.Rate</td>
+                        <td class="my-classR">@item.Amount</td>
+                        <td class="my-classC">@item.MRNNo</td>
+                        <td class="my-classC">@item.MRNDate</td>
+                        <td class="my-classR">@item.ReceivedQty</td>
+                        <td class="my-classR">@item.BalanceQty</td>
+                    </tr>
+
+                }
+            }
+            else
+            {
+                <p style="text-align:center; color:red;">No Record found</p>
+            }
+        </tbody>
+        @if (Model.Count > 0)
+        {
+            <tfoot style="color:black;border-top:1px solid black;">
+                <tr>
+                    <td colspan="7" align="right"><strong>Total:</strong></td>
+                    <td>@ViewBag.TotalPIQty</td>
+                    <td>@ViewBag.TotalApprovedPIQty</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@ViewBag.TotalPOQty</td>
+                    <td>&nbsp;</td>
+                    <td>@ViewBag.TotalPOAmount INR</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>@ViewBag.TotalRecdQty</td>
+                    <td align="right">@ViewBag.TotalBalancedQty</td>
+                </tr>
+            </tfoot>
+        }
+    </table>
+</div>
+<br />
+<div style="text-align:left;">
+    @Html.ActionLink("Export to Excel", "PIvsPOandReceivedQtyExcel", "DesignDemo", new { @class = "btn btn-primary" })
+    @Html.ActionLink("Print", "PIvsPOandReceivedQtyPdf", "DesignDemo", new { @class = "btn btn-primary", @target = "_blank" })
+</div>
+
+

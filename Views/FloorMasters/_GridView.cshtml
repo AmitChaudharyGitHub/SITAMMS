@@ -1,0 +1,93 @@
+﻿@model MMS_P.ViewModels.PagedFloorMasterModel
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+
+
+<style type="text/css">
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-size: 1.0em;
+        width: 100%;
+        display: table;
+        border-collapse: separate;
+        background-color: white;
+    }
+
+        .webgrid-table td, th {
+            text-align: left;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #3780d9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        height: 10px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #b3d5ee;
+        padding: 3px 7px 2px;
+    }
+</style>
+
+<div id="myPager" style="margin-top:17px;">
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.FloorMasterBll, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+                              tableStyle: "webgrid-table",
+                              headerStyle: "webgrid-header",
+                              footerStyle: "webgrid-footer",
+                              alternatingRowStyle: "webgrid-alternating-row",
+                              rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                     columns: grid.Columns(
+                     //grid.Column("BlockMaster.tblProjectMaster.ProjectName",
+                     //                  header: "Project"),
+                    grid.Column("BlockMaster.BlockName",
+                              header: "Block Name"),
+        grid.Column("FloorName",
+                    header: "Floor Name"
+
+),
+
+                                 grid.Column(header: "Action", canSort: false, style: "action",
+                                   format: @<text>
+                                    <a data-modal='' href='@Url.Action("details", "FloorMasters", new { id = item.FloorId })' id='@item.FloorId' title='Detail'> <span class='btn btn-system'>Detail</span> </a>
+                                    <a data-modal='' href='@Url.Action("edit", "FloorMasters", new { id = item.FloorId })' id='@item.FloorId' title='Edit'> <span class='btn btn-primary'>Edit</span> </a>
+                                    <a data-modal='' href='@Url.Action("delete", "FloorMasters", new { id = item.FloorId })' id='@item.FloorId' title='Delete'> <span class='btn btn-danger'>Delete</span> </a>
+
+                                </text>)
+
+                                                                                                                                  ));
+    }
+
+
+</div>

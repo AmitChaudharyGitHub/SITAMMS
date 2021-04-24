@@ -1,0 +1,256 @@
+﻿@model MMS.ViewModels.Genral_Terms_and_conditions_WebGrids
+
+@{
+    Layout = null;
+}
+
+
+
+
+
+<style type="text/css">
+    .edit-mode {
+    }
+
+    .edit-user_Gtc {
+    }
+
+        .edit-user_Gtc display-mode {
+        }
+
+    .save-user_Gtc edit-mode {
+    }
+
+    .display-mode {
+    }
+
+    .cancel-user_Gtc {
+    }
+
+    .webgrid-table {
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        width: 100%;
+        display: table;
+        border-collapse: collapse;
+        border: solid px #C5C5C5;
+        background-color: white;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #C5C5C5;
+            padding: 3px 7px 2px;
+        }
+
+    .webgrid-header, .webgrid-header a {
+        background-color: #0094ff;
+        color: #ffffff;
+        text-align: left;
+        text-decoration: none;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: azure;
+        padding: 3px 7px 2px;
+    }
+
+    .hidecol {
+        visibility: hidden;
+    }
+
+    .col3Width {
+        width: 150px;
+    }
+
+    .srnwid {
+        width: 20px;
+    }
+</style>
+
+
+@*<script type="text/javascript">
+
+            $(function () {
+                $('.edit-mode').hide();
+                $('.edit-user_Gtc, .cancel-user_Gtc').on('click', function () {
+                    var tr = $(this).parents('tr:first');
+                    tr.find('.edit-mode, .display-mode').toggle();
+                });
+
+                $('.save-user_Gtc').on('click', function () {
+                    var tr = $(this).parents('tr:first');
+                    var Id = tr.find("#Id").html();
+                    var Header_Title = tr.find("#Header_Title").val();
+                    var GTC_Description = tr.find("#GTC_Description").val();
+                    var ProjectId = tr.find("#ProjectId").val();
+                    var name = $("#PurchaseOrderNo").val();
+                    //Creating Employee JSON object
+                    var GTCModel =
+                    {
+                        "GTC_Master_ID": Id,
+                        "Header_Title": Header_Title,
+                        "GTC_Description": GTC_Description,
+                        "ProjectId": ProjectId,
+                        "Purchase_Order_No": name
+
+                    };
+                    //debugger;
+                    //Posting Employee object to controller's Update action method
+                    $.ajax({
+
+                        url: '@Url.Action("Update_GTC", "IndentPurchaseOrders")',
+                        data: JSON.stringify(GTCModel),
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+
+                            tr.find('.edit-mode, .display-mode').toggle();
+                            tr.find("#lblGTC_Description").text(tr.find("#GTC_Description").val());
+                            alert('Record updated Successfully!!');
+                        }
+                    });
+                });
+
+                $('.edit-user_Gtc').on('click', function () {
+                    var tr = $(this).parents('tr:first');
+                    var Id = tr.find("#Id").html();
+                    var Header_Title = tr.find("#Header_Title").val();
+                    var GTC_Description = tr.find("#GTC_Description").val();
+
+                    tr.find("#lblHeader_Title").text(Header_Title);
+                    tr.find("#lblGTC_Description").text(GTC_Description);
+                });
+
+
+
+
+                $('.delete-user_Gtc').on('click', function () {
+
+                    var tr = $(this).parents('tr:first');
+                    var Id = tr.find("#Id").html();
+                    var Header_Title = tr.find("#Header_Title").val();
+                    var GTC_Description = tr.find("#GTC_Description").val();
+                    var ProjectId = tr.find("#ProjectId").val();
+                    var GTCModel =
+                    {
+                        "Id": Id,
+                        "Header_Title": Header_Title,
+                        "GTC_Description": GTC_Description,
+                        "ProjectId": ProjectId
+
+                    };
+                    $.ajax({
+                        url: '@Url.Action("Delete_GTC", "IndentPurchaseOrders")',
+                        data: JSON.stringify(GTCModel),
+                        type: 'POST',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            alert('Record Deleted Successfully!!');
+                        }
+                    });
+                });
+
+
+            })
+    </script>*@
+
+<script>
+    $(document).ready(function () {
+        $('.webgrid-table td:nth-child(3),th:nth-child(3)').hide();
+        $('.webgrid-table td:nth-child(5),th:nth-child(5)').hide();
+        $('.webgrid-table td:nth-child(6),th:nth-child(6)').hide();
+    });
+</script>
+
+
+
+
+
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid_gtcs");
+
+        grid.Bind(Model.GTCDATAS, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid_gtcs" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+              headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                              columns: grid.Columns(
+
+         grid.Column(format:@<text><input id="checkbox_Stc1" type="checkbox" checked="checked"   name="ids" value="@item.Id" /></text>, header: "", style: "srnwid"),
+
+          grid.Column(header: "S.No.", format: @<text><div>@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>, style: "srnwid"),
+
+
+
+          grid.Column("Header_Title", "Title", format: @<text><span class="display-mode">
+                                        <label id="lblHeader_Title">@item.Header_Title</label>
+                                    </span><input type="text" id="Header_Title" value="@item.Header_Title" class="edit-mode" /></text>, style: "col2Width"),
+
+         grid.Column("GTC_Description", "Description", format: @<text> <span class="display-mode"></span>
+                                    <textarea type="text" id="GTC_Description" class="edit-mode" style="width:100%; height:80px;">@item.GTC_Description</textarea>
+        </text>, style: "col2Width"),
+
+
+
+                                @*grid.Column("Action", format: @<text>
+                                     <button class="edit-user_Gtc  display-mode btn btn-primary">Edit</button>
+                                    <button class="delete-user_Gtc display-mode btn btn-danger"> Disable</button>
+                                     <button class="save-user_Gtc edit-mode btn btn-success">Save</button>
+                                     <button class="cancel-user_Gtc  edit-mode btn btn-danger">Cancel</button>
+                                                 </text>, style: "col3Width", canSort: false),*@
+
+                                   grid.Column("", "", style: "hidecol", format: @<text> <span class="display-mode">
+                <label id="lblProjectId" style="display:none; visibility:hidden">@item.ProjectId</label>
+            </span>
+            <input type="hidden" id="ProjectId" value="@item.ProjectId" class="edit-mode" />
+                                </text>),
+                                   grid.Column("", format: @<text><span class="display-mode">@item.Id</span>
+                                <label id="Id" class="edit-mode">@item.Id</label></text>,
+                    style: "hidecol")
+
+
+                                                                     ));
+    }
+
+
+</div>
+
+
+<div id="myModal2" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Issue Quantity Approved Successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

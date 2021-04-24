@@ -1,0 +1,31 @@
+﻿@model List<MMS.Models.VMPODataForDisapproval>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>S.No</th>
+            <th>Project Name</th>
+            <th>Purchase Order No</th>
+            <th>Created By</th>
+            <th>Qty. Received</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int i = 0; }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(++i)</td>
+                <td>@item.ProjectName</td>
+                <td>@item.PONo</td>
+                <td>@item.CreatedBy</td>
+                <td>@(item.ReceivedQty==0?"No":"Yes")</td>
+                <td>
+                    <a href="javascript:void(0)" class="lnkDisapprove" data-po="@item.PONo">Disapprove P.O</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

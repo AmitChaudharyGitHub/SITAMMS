@@ -1,0 +1,35 @@
+﻿@model MMS.ViewModels.DashView2
+
+@{
+    WebGrid grid = new WebGrid(source: Model.C, canSort: false);
+    //WebGrid grid = new WebGrid(source: Model, canSort: false);
+    Layout = null;
+}
+
+
+
+
+
+
+
+
+<div id="main" style="padding:25px; background-color:white;">
+    @grid.GetHtml(
+    htmlAttributes: new { id = "gridT", width = "700px" },
+    columns: grid.Columns(
+        //grid.Column(header: "Serial No", format:@<text><div>@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>),
+        grid.Column("ItemId", "Item ID"),
+        //grid.Column(header:"Order Date",format:(item)=> string.Format("{0:dd-MM-yyyy}",item.order.OrderDate)),
+        grid.Column("ItemName", "Item Name"),
+        //grid.Column("C.ItemName", canSort: false, format: (item => Html.ActionLink((string)(@item.M.GroupName).ToString(), "Edit", new { ItemID = @item.M.GroupId }))),
+        grid.Column("Qty", "Quantity")
+
+        )
+    )
+
+
+
+</div>
+
+@* Here I will add some jquery code for make this nested grid collapsible *@
+

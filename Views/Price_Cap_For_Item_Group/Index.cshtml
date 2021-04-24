@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+@*<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>*@
+
+
+<script>
+    GetIGs();
+    function GetIGs()
+    {
+        debugger;
+     var url = '@Url.Action("View_IGData", "Price_Cap_For_Item_Group")';
+    $('#progress').show();
+        $.ajax({
+        url: url,
+        type: 'GET',
+        data: { },
+        complete: function () {
+          $('#progress').hide();
+        },
+        success: function (result) {
+
+            $('#IG_DatasLoad').html(result);
+        }
+        });
+        return false;
+        GetIGs();
+ }
+
+</script>
+
+
+
+
+
+
+
+@* Here Jquery code for block and floor details and selection *@
+
+
+<script>
+    $(document).ready(function ()
+    {
+        $('#Submit').click(function (e)
+        {
+            //var V=   Valid();
+
+            //if(V==false)
+            //    return;
+
+            //debugger;
+            var _griddata = gridToArray();
+            //console.log(_griddata);
+            //console.log(otArr);
+            var url ='@Url.Action("ADD_ItemGroups_Name", "Price_Cap_For_Item_Group")';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json" ,
+                processdata: true,
+
+                success: function (json)
+                {
+                    if (json.Status == "1")
+                    {
+                        alert("Data Saved Successfully");
+                       // $("#myModal").modal('show');
+                        url: json.redidtUrl,
+
+
+                        $("#Date").datepicker("setDate", "");                                                          
+
+                    }
+
+                },
+
+                error: function ()
+                {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridTojson() {
+            var json = '{';
+            var otArr = [];
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                if ($(this)[0].rowIndex != 0) {
+                    x = $(this).children();
+                    var itArr = [];
+                    x.each(function () {
+                        if ($(this).children('input').length > 0) {
+                            itArr.push('"' + $(this).children('input').val() + '"');
+                        }
+                        else {
+                            itArr.push('"' + $(this).text() + '"');
+                        }
+                    });
+                    otArr.push('"' + i + '": [' + itArr.join(',') + ']');
+                }
+            })
+            json += otArr.join(",") + '}'
+            return json;
+        }
+        function gridToArray() {
+            //debugger;         
+
+            var otArr2 = [];
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+
+                var obj = new Object();
+                if ($(this)[0].rowIndex != 0)
+                {
+
+                    x = $(this).children().eq(0).find('input');
+                    var c = x.is(':checked');
+                   // var c = x.attr("checked");
+                    //if (x.checked == "checked")
+                    if (c == true)
+                    {
+                       // debugger;
+                        //obj.IndentId = $(this).children().eq(0).text().trim();
+                        obj.ItemGroupID = $(this).children().eq(2).find('label').text().trim();
+
+                        obj.ItemGroupName = $(this).children().eq(3).find('label').text().trim();
+
+                        otArr2.push(obj);
+                    }
+
+                }
+            })                  
+
+
+            var session = {                
+                'Child2': otArr2               
+            };
+            return session;
+        }
+      
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">ENABLE ITEM GROUP FOR RATE CAPTION</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+                                                @*<div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>*@  
+                                               
+                                            </div>
+
+                                            <div id="IG_DatasLoad">
+
+                                            </div>
+
+                                        </div>
+                                        <br />
+
+                                    }
+
+                                    
+
+                                </form>
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+
+                                <br />
+                                <div>
+                                    <input type="button" id="Submit" class="btn btn-danger" value="Save" />
+                                    @*@Html.ActionLink("Go To View", "ViewApprovedStock_Indent", "ApprovedIssueQuantity", null, new { @class = "btn btn-system" })*@
+                                </div>
+
+
+
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger">Issue Quantity Approved Successfully</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

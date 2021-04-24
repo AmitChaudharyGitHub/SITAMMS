@@ -1,0 +1,252 @@
+﻿@model MMS.ViewModels.GateEntryDetailOnMRNViewModel
+
+
+
+
+
+<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }
+
+    input[id="Date"] {
+        width: 400px;
+        font-weight: bold;
+    }
+
+    input[id="ChallanDate"] {
+        width: 300px;
+        font-weight: bold;
+    }
+</style>
+
+
+<table class="table table-hover" id="gridM">
+    @*<tr><td class="Ven" colspan="10" vid=@Model.VendorNo> @Model.Vendor</td>   </tr>*@
+    <tr class="primary">
+
+
+        <th>
+            @Html.DisplayName("Sr No")
+        </th>
+        <th>
+            @Html.DisplayName("Group Name")
+        </th>
+        <th>
+            @Html.DisplayName("Item Name")
+        </th>
+        <th>
+            @Html.DisplayName("Unit")
+        </th>
+
+        <th class="hide">
+            @Html.DisplayName("Purchase Indent Number")
+        </th>
+        <th class="hide">
+            @Html.DisplayName("Purchase Order Number")
+        </th>
+        <th>
+            @Html.DisplayName("PO Qty")
+        </th>
+        @if (ViewBag.Type != "ManualReceive")
+        {
+            <th>
+                @Html.DisplayName("Qty. Variation (%)")
+            </th>
+            <th>
+                @Html.DisplayName("Acceptable Qty")
+            </th>
+        }
+        <th>
+            @Html.DisplayName("GateEntry Receive Qty")
+        </th>
+        <th>
+            @Html.DisplayName("Receive Qty")
+        </th>
+        <th>
+            @Html.DisplayName("Current-Receive")
+        </th>
+        <th>Cartage Type</th>
+        <th>Cartage Amount</th>
+
+
+
+    </tr>
+
+    @foreach (var item in Model.GRN_Mod)
+    {
+        var a = @item.Sno;
+        var itemno = @item.ItemNo;
+        var itemgrpid = @item.ItemGroupNo;
+        var unitid = @item.UnitNo;
+        var gateentrychildid = @item.GateEntryChildId;
+        var rate = @item.Rate;
+        var pochildId = @item.POChildId;
+        var POID = @item.POID;
+        <tr id=@a>
+
+            <td class=SrNo_@a rate="@rate" itemno="@itemno" itemgrpid="@itemgrpid" unitid="@unitid" gateentrychildid="@gateentrychildid" pochildId="@pochildId" POID="@POID" cartageId="@item.CartageTypeId">
+                @Html.DisplayFor(modelItem => item.Sno)
+
+
+
+            </td>
+            <td class=Group_@a>
+                @Html.DisplayFor(modelItem => item.ItemGroup)
+            </td>
+            <td class=Item_@a>
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td class=Unit_@a>
+                @Html.DisplayFor(modelItem => item.Unit)
+            </td>
+
+
+            <td class="Indent_@a hide">
+                @Html.DisplayFor(modelItem => item.PurchaseIndentNo)
+            </td>
+            <td class="pono_@a hide">
+                @Html.DisplayFor(modelItem => item.PONumber)
+            </td>
+            <td class=Indent_1 id="POQty_@a">
+                @*@Html.DisplayFor(modelItem => item.POQty)*@
+                @Html.TextBoxFor(modelItem => item.POQty, new { disabled = "disabled", @readonly = "readonly", @id="POQty"+a })
+            </td>
+            @if (ViewBag.Type != "ManualReceive")
+            {
+                <td class="exitmPerctg_@a">
+
+                    @Html.DisplayFor(modelItem => item.Item_ExcessPercentage)
+                </td>
+                <td id="exitmqty_@a">
+
+                    @Html.TextBoxFor(modelItem => item.Item_ExcessQuantity, new { disabled = "disabled", @readonly = "readonly" })
+                </td>
+            }
+            <td class=Indent_1 id="POGateRecv_@a">
+                @*@Html.DisplayFor(modelItem => item.GateEntryRecvQty)*@
+                @Html.TextBoxFor(modelItem => item.GateEntryRecvQty, new { disabled = "disabled", @readonly = "readonly", @id = "GateEntryRecvQty" + a })
+            </td>
+
+
+            <td>
+                <span class="checkVal" id=PReceive_@a>
+                    @Html.TextBoxFor(modelItem => item.Receive, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0", @id = "Item_Receive" + a })
+                </span>
+            </td>
+            <td class=Receive_@a>
+                
+                <input type="text" name="Receive" id = "Receive_@a" />
+            </td>
+            <td>
+                <span id="cartageType_@a">@item.CartageType</span>
+            </td>
+            <td>
+                @if (item.CartageTypeId == 2 || item.CartageTypeId == 3 || item.CartageTypeId==5)
+                {
+                    <input type="text" name="txt" value="" class="form-control" id="cartageAmt_@a" />
+                }
+                else
+                {
+                    <input type="text" name="txt" value="" class="form-control" id="cartageAmt_@a" disabled />
+                }
+            </td>
+
+
+
+
+
+        </tr>
+    }
+
+</table>

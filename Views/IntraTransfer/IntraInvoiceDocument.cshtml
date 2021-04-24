@@ -1,0 +1,321 @@
+﻿
+@{
+    ViewBag.Title = "IntraIndex";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+   
+}
+
+<style type="text/css">
+    #loading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+
+    .Piv2 {
+        display: none;
+    }
+</style>
+
+<style>
+    .nav-tabs.nav-tabs-border > li.active > a {
+        border-top: 2px solid #4a89dc;
+        margin-top: -1px;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background: #ffffff none repeat scroll 0 0;
+        color: #555555;
+        cursor: default;
+    }
+
+    .nav-tabs-left > li > a {
+        border-left: 1px solid transparent;
+        border-right: 1px solid #ddd;
+    }
+
+    .nav-tabs > li > a {
+        border-left: 1px solid #ddd;
+        border-radius: 0;
+        color: #777;
+        font-size: 12px;
+        line-height: 18px;
+        padding: 10px 18px;
+    }
+
+    .tab-content .tab-pane {
+        padding: 20px 0;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetPendingIntraTransfer = '@Url.Action("IntraStateTrasferDocumentList", "IntraTransfer")';
+    var GetPendingIntraTaxableTransfer = '@Url.Action("IntraStateTransferTaxableList", "IntraTransfer")';
+    var GetUpdatedIntraTaxableTransfer = '@Url.Action("UpdateIntraStateTransferTaxableList", "IntraTransfer")';
+</script>
+
+<script src="~/Script/IntraInvoiceDocumentList.js?v=1.0"></script>
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Inter State Transfer Document List</span>
+                                </div>
+
+                                <input type="hidden" id="hdnLoggedType" value="@ViewBag.EmpType" />
+                             
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <p>
+
+                                                        <a class="btn btn-primary" data-modal="" href="@Url.Action("CreateIntraInvoiceDocument","IntraTransfer" )" id="btnCreate">
+                                                            Create New Transfer Document
+                                                        </a>
+
+                                                    </p>
+
+
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Project Assign", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="container tabs-wrap">
+                                            
+                                            <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                                                <li role="presentation"  id="pndgtxdetl">
+                                                    <a href="#WithoutTaxableIntraTransfer" aria-controls="WithoutTaxableIntraTransfer" role="tab" data-toggle="tab" aria-expanded="true">Pending Taxable</a>
+                                                </li>
+                                                <li id="pictabopn">
+                                                    <a href="#UpdateTaxableIntraTransfer" aria-controls="UpdateTaxableIntraTransfer" role="tab" data-toggle="tab" aria-expanded="false"> Pending at PIC</a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="#ApprovedIntraTransfer" aria-controls="ApprovedIntraTransfer" role="tab" data-toggle="tab" aria-expanded="false">Approved Taxable Transfer
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+
+                                            <div class="panel-body">
+                                                <div class="tab-content pn br-n">
+                                                    <div role="tabpanel" class="tab-pane" id="WithoutTaxableIntraTransfer">
+
+                                                        <div class="row">
+
+
+                                                            @Html.AntiForgeryToken()
+
+                                                            <div class="form-horizontal">
+
+
+                                                                <div class="row">
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="col-md-4"></div>
+                                                                            <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                                                        </div>
+                                                                        <div class="col-md-4"></div>
+                                                                    </div>
+                                                                    <div class="pager glyphicon-align-center" id="formbody">
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+
+                                                            </div>
+
+                                                            <br />
+
+
+                                                        </div>
+
+
+
+                                                    </div>
+
+                                                    <div role="tabpanel" class="tab-pane" id="UpdateTaxableIntraTransfer">
+
+
+                                                        <div class="row">
+
+                                                            <div class="form-horizontal">
+                                                                <div class="row">
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="col-md-4"></div>
+                                                                            <div class="col-md-4">
+                                                                                <div style="display:none;" id="loadingApproval" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4"></div>
+                                                                    </div>
+
+                                                                    <div class="pager glyphicon-align-center" id="formbodyApproval">
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                            <br />
+                                                            <div>
+
+
+                                                                <div style="visibility:hidden;" id="container"></div>
+
+                                                            </div>
+
+                                                            <div class="section-divider mt40 mb25" id="spy5">
+                                                                <span></span>
+                                                            </div>
+
+                                                        </div>
+
+
+
+                                                    </div>
+
+                                                    <div role="tabpanel" class="tab-pane" id="ApprovedIntraTransfer">
+
+                                                        <div class="row">
+
+                                                            <div class="form-horizontal">
+                                                                <div class="row">
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <div class="col-md-4"></div>
+                                                                            <div class="col-md-4">
+                                                                                <div style="display:none;" id="loadingApproval1" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-4"></div>
+                                                                    </div>
+
+                                                                    <div class="pager glyphicon-align-center" id="formbodyApproval_Approved">
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                            <br />
+                                                            <div>
+
+
+                                                                <div style="visibility:hidden;" id="container"></div>
+
+                                                            </div>
+
+                                                            <div class="section-divider mt40 mb25" id="spy5">
+                                                                <span></span>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

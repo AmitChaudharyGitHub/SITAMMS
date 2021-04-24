@@ -1,0 +1,318 @@
+﻿@model List<MMS.Models.VendorSearchItem>
+
+@{
+    ViewBag.Title = "Debit Note";
+    Layout = null;
+
+}
+
+
+<style type="text/css">
+    #webgrid td {
+        vertical-align: middle;
+        font-size: 12px;
+        color: #808080;
+    }
+
+    #webgrid table.inner td {
+        vertical-align: middle;
+        font-size: 12px;
+        padding: 4px;
+        color: #333;
+    }
+
+    #webgrid table.inner tr.hdng td {
+        font-size: 11px;
+    }
+
+    #webgrid input {
+        max-width: 73px;
+        font-size: 12px;
+        border-color: #666;
+        border-width: 1px;
+        height: 26px;
+    }
+
+    .affix {
+        top: 60px;
+    }
+
+    .fxm.affix {
+        width: 100%;
+        max-width: 1135px;
+        min-width: 965px;
+        z-index: 1;
+    }
+
+    .affix + .panel {
+        padding-top: 114px;
+    }
+
+    body {
+        position: relative !important;
+    }
+
+    #webgrid textarea {
+        font-size: 12px;
+        resize: none;
+        border-color: #666;
+    }
+
+    #webgrid select {
+        min-width: 90px;
+        height: 26px;
+        padding: 2px 0;
+        border-color: #666;
+        font-size: 12px;
+    }
+</style>
+<div class="list-group" id="webgrid">
+    @{int rowNo = 0; int uid = 0;}
+    <div class="list-group-item fxm" style="background-color:#caddf5;color:#333" >
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th>S.No</th>
+                    <td><strong>Item Name</strong></td>
+                    <td width="110"><strong>Unit</strong></td>
+                    <td width="110"><strong>Rem/Appr Qty</strong></td>
+                    <td width="110"><strong>Total</strong></td>
+                    <td width="110"><strong>Sub Total 1</strong></td>
+                    <td width="110"><strong>Sub Total 2</strong></td>
+                    <td width="110"><strong>Grand Total</strong></td>
+                    <td width="110"><strong>Last Purchase Rate</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            uid++;
+            var ReminingQty = item.QuantityReceived;
+            <input type="hidden" value="@uid" id="hdn_pur_req_id_@uid" name="hdn_pur_req_id_@uid" />
+            <input type="hidden" id="hdn_item_approv_qty_@uid" value="@item.QuantityReceived" />
+
+            <div class="panel list-group-item single" data-parent="@uid" style="background-color:#f8f8f8">
+
+                <a data-toggle="collapse" data-parent="#webgrid" href="#SrNo_@uid" id="aid_@uid">
+                    <div class="table-responsive">
+                        <table class="table" id="tbl_topnm">
+                            <tr class="mahajet" data-trautoincrm="@uid" id="@item.TransId">
+                                <td>@(++rowNo)</td>
+                                <td><label id="itemName_@uid" data="@item.ItemID">@item.ItemName</label></td>
+                                <td width="110" class="getcrval"><lable id="unitName_@uid">@item.Unit</lable></td>
+                                <td width="110">@ReminingQty<input type="hidden" id="hdn_remaing_qty_@uid" value="@ReminingQty" /> </td>
+                                <td width="110" class="ctot_@uid"><input type="text" id="Ctotal_amount_@uid"  readonly disabled value="@item.Total"  /> <input type="hidden" value="@(rowNo) " id="hdn_itemnoto_@uid" />      </td>
+                                <td width="110" class="tot_sub1_@uid"><input type="text" id="total_SubTotal_Amount1_@uid" readonly disabled value="@item.SubTotal1"  /></td>
+                                <td width="110" class="tot_sub2_@uid"><input type="text" id="total_SubTotal_Amount2_@uid" readonly disabled value="@item.SubTotal2"  /></td>
+                                <td width="110" class="tot_grnd_@uid"><input type="text" id="total_GrandTotal_Amount_@uid" readonly disabled value="@item.GrossAmount"  /></td>
+
+                                <td width="110">
+                                    0.00
+                                    <input type="hidden" id="hdn_indent_uid_@uid" value="@uid" />
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </a>
+
+
+                <div id="SrNo_@uid" class="second panel-collapse collapse" data-dhdn="@uid" style="background-color:#fff;margin-bottom:6px;">
+                    <div class="panel-body">
+
+                        <div class="table table-responsive" id="inner_div_input_id">
+
+                            <table class="table inner description1" id="kghdd">
+
+                                <tr class="hdng">
+                                    <td>Description</td>
+                                    <td>Current Qty</td>
+                                    <td>Rate</td>
+                                    <td>Discount (%)</td>
+                                    <td>P&F (%)</td>
+                                    <td>P&F Amount </td>
+                                    <td>Cartage Type* </td>
+                                    <td>Cartage Rate </td>
+                                    <td>Cartage Amount </td>
+                                </tr>
+
+                                <tr class="getItems-1" id=@uid>
+
+                                    <td class="SrNo_@uid">
+                                        @Html.TextArea("IDesc_" + @uid,item.Item_Description, new { Style = "width:190px;", id = "IDesc_" + uid })
+                                    </td>
+
+
+                                    <td class=CQty_@uid>
+
+                                        <input id="Qty" class="Qty_@uid" type="text" style="width: 45px;" value="@item.QuantityReceived" />
+
+                                    </td>
+
+                                    <td class=CRate_@uid>
+                                        <input id="Rate" class="Rate_@uid" type="text" value="@item.Rate" />
+
+                                        <input type="hidden" id="hdndiscountedRate_@uid" />
+
+                                    </td>
+
+
+
+                                    <td class=CDiscount_@uid>
+                                        @*@Html.EditorFor(modelitem => item.Discount)*@
+                                        <input id="txtDiscount_@uid" type="text" value="@item.Discount" />
+                                    </td>
+
+
+
+                                    <td class=PackingchargePercentage_@uid>
+
+                                        <input id="txtpackingChargePercentage_@uid" type="text" value="@item.PackingChargesPercentage" />
+                                    </td>
+
+
+                                    <td class=PackingchargePertageAmt_@uid>
+                                        <input id="txtpackingChargePercentageAmount_@uid" type="text" value="@item.PackingChargesAmount" />
+                                    </td>
+
+
+
+                                    <td class=CartageType_@uid>
+
+                                        @Html.DropDownList("TotalCartagetest", (IEnumerable<SelectListItem>)ViewBag.TotalCartagetest, "Select", htmlAttributes: new { @id = "CartageTypeddl_" + @uid, @data_cartage1 = @uid, @class = "car1-type1 form-control",selected=item.CartageTypeId })<SelectListItem><SelectListItem>
+
+
+                                    </td>
+
+
+                                    <td class=CartagerateValue_@uid>
+
+                                        <input id="CartageRate1_@uid" type="text" class="cartage1-Inputrate" data-itval="@uid" value="@item.Cartage_rate" />
+                                    </td>
+
+                                    <td class="adnd Cartageamt_@uid">
+
+                                        <input id="CartageAmount1" type="text" class="car1amttkval caramt_@uid" data-cart1amtvalsum="@uid" value="@item.CartageAmount" />
+                                    </td>
+
+
+                                </tr>
+
+
+
+                            </table>
+
+                            <table class="table inner description2" id="kghddu" style="border-top:1px dashed #999">
+                                <tr class="hdng">
+                                    <td>Insurance(%)</td>
+                                    <td>Insurance Amount</td>
+                                    <td>GST Slab *(%)</td>
+                                    <td>CGST Rate(%)</td>
+                                    <td>SGST/UTGST Rate(%)</td>
+                                    <td>IGST Rate(%)</td>
+                                    <td>CGST Amount</td>
+                                    <td>SGST/UTGST Amount</td>
+                                    <td>IGST Amount</td>
+                                    <td>Total GST Amount</td>
+                                    <td>Gross Amount</td>
+                                </tr>
+
+                                <tr class="getItems" id=@uid>
+
+                                    <td class=InsuranceRatePercentage_@uid>
+
+                                        <input id="txtInsuranceRatePercentage_@uid" type="text" value="@item.InsuranceRate" />
+                                    </td>
+                                    <td class=InsurancePercentageAmt_@uid>
+
+                                        <input id="txtInsurancePercentageAmt_@uid" type="text" value="@item.InsuranceAmount" />
+                                    </td>
+
+
+                                    <td class="GSTSlab_@uid">
+                                        @Html.DropDownList("MyTotalGSTlst", (IEnumerable<SelectListItem>)ViewBag.MyTotalGSTlst, "Select GST", htmlAttributes: new { @id = "ddlGSTSlabs_" + @uid, @data_gstval = @uid, @class = "gst-slab-ddl form-control",selected=item.TaxCode })<SelectListItem><SelectListItem>
+                                    </td>
+
+
+                                    <td class=CGSTPer_@uid>
+
+                                        <input id="txtCGSTPerctg_@uid" type="text" value="@item.CGSTPercentage" />
+                                    </td>
+
+                                    <td class=SGSTOrUTGSTPer_@uid>
+
+                                        <input id="txtSGSTOrUTGSTPerctg_@uid" type="text" value="@item.SGSTPercentage" />
+                                    </td>
+
+                                    <td class=IGSTPer_@uid>
+
+                                        <input id="txtIGSTPerctg_@uid" type="text" value="@item.IGSTPercentage" />
+                                    </td>
+
+
+
+
+                                    <td class=CGSTPerAmtValue_@uid>
+
+                                        <input id="txtCGSTPerAmtValue_@uid" type="text" value="@item.CGSTAmount" />
+                                    </td>
+
+
+
+                                    <td class=SGSTOrUTGSTPerAmtValue_@uid>
+
+                                        <input id="txtSGSTOrUTGSTPerAmtValue_@uid" type="text" value="@item.SGSTAmount" />
+                                    </td>
+
+
+                                    <td class=IGSTPerAmtValue_@uid>
+
+                                        <input id="txtIGSTPerAmtValue_@uid" type="text" value="@item.IGSTAmount" />
+                                    </td>
+
+                                    <td class=TotalGSTAmtValue_@uid>
+
+                                        <input id="txtTotalGSTAmtValue_@uid" type="text" value="@item.TotalGSTAmount" />
+                                    </td>
+
+                                    <td class=TotalGrossAmtValue_@uid>
+
+                                        <input id="txtTotalGrossAmtValue_@uid" type="text" value="@item.GrossAmount" />
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td colspan="11">
+
+                                        <input type="button" value="Calculate" class="itemwise_cal  btn btn-info btn-block btn-sm" id="btn_cal_itemwise_@uid" data-btnautoidbind="@uid" onclick="Setof_ItemWiseFullCalculation(@uid)" />
+
+                                    </td>
+                                </tr>
+
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+
+<script>
+$(function() {
+    $('.navbar-fixed-top').height($("#nav").height());
+
+    $('.fxm').affix({
+        offset: { top: $('.fxm').offset().top }
+    });
+    //$('.fxm').width($("#webgrid").width());
+
+});
+</script>

@@ -1,0 +1,169 @@
+﻿
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+
+
+
+<div id="gridposition" style="width: 100%; overflow:scroll">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "positionGrid");
+
+        @*@grid1.GetHtml(mode: WebGridPagerModes.All,
+                      tableStyle: "gridTable",
+                      headerStyle: "gridHead",
+                      footerStyle: "gridFooter",
+                      rowStyle: "gridRow",
+                      alternatingRowStyle: "gridAltRow",
+                      htmlAttributes: new { id = "positionGrid" },
+                      fillEmptyRows: false,
+                      columns: grid1.Columns(
+                          grid1.Column(header: "S.No", format: @<text><div style="text-align:center;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text> , style: "my-classC"),
+                       grid1.Column("ReceiveDate", header: "Receipt Date", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.ReceiveDate)),
+                       grid1.Column("GRNNo", header: "GRN No", style: "my-classL"),
+                       grid1.Column("ChallanNo", header: "Challan No", style: "my-classC"),
+                       grid1.Column("StatusTypeNo", header: "PO No.", style: "my-classL"),
+                       grid1.Column("Vendor", header: "Vendor", style: "my-classL"),
+                       grid1.Column("GroupName", header: "Group", style: "my-classL"),
+                       grid1.Column("ItemName", header: "Item", style: "my-classL"),
+                       grid1.Column("UnitName", header: "Unit", style: "my-classL"),
+                       grid1.Column("ReceiveQty", header: "Quantity", format: (item) => string.Format("{0:0.00}", item.ReceiveQty), style: "my-classR"),
+                       grid1.Column("ReceiveAmt", header: "Amount", format: (item) => string.Format("{0:0.00}", item.ReceiveAmt), style: "my-classR")
+                       ))*@
+
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                      tableStyle: "gridTable",
+                      headerStyle: "gridHead",
+                      footerStyle: "gridFooter",
+                      rowStyle: "gridRow",
+                      alternatingRowStyle: "gridAltRow",
+                      htmlAttributes: new { id = "positionGrid" },
+                      fillEmptyRows: false,
+                      columns: grid1.Columns(
+                          grid1.Column(header: "S.No", format: @<text><div style="text-align:center;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text> , style: "my-classC"),
+                       grid1.Column("10-Apr-2017", header: "Receipt Date"),
+                       grid1.Column("MRN/DEMO/2017-18/00001", header: "GRN No", style: "my-classL"),
+                       grid1.Column("4456", header: "Challan No", style: "my-classC"),
+                       grid1.Column("ACIL/EM/DEMO/2017-18/00001", header: "PO No.", style: "my-classL"),
+                       grid1.Column("ULTRATECH CEMENT LTD.(RJ)", header: "Vendor", style: "my-classL"),
+                       grid1.Column("ALUMINUM SECTIONS", header: "Group", style: "my-classL"),
+                       grid1.Column("ALUMINIUM ANGLE (38X38X2.85)", header: "Item", style: "my-classL"),
+                       grid1.Column("KILOGRAM", header: "Unit", style: "my-classL"),
+                       grid1.Column("13.00", header: "Quantity", style: "my-classR"),
+                       grid1.Column("325.00", header: "Amount", style: "my-classR")
+                       ))
+
+
+
+}
+else
+{
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+</div>
+<div class="row">
+    <div class="col-md-12" style="text-align:right;">
+
+        @if (ViewBag.displyTotalSum != null)
+            {
+            <b>Total Amount : </b>     @ViewBag.displyTotalSum  <b>INR</b>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MMS.ViewModels.PendingPIGrid>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+    @if (Model.Count() > 0)
+    {
+        <table>
+            <tr>
+                @*<th style="text-align: left;" >S. No.</th>*@
+                <th style="text-align: left;">PI No.</th>
+                <th style="text-align: left;">PI Date </th>
+                <th style="text-align: center;">Pending Stage </th>
+                <th style="text-align: center;">Pending Status </th>
+                <th style="text-align: center;">Delivery Date </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @*<td style="text-align: center;">1</td>*@
+                    <td align="left">@item.PurRequisitionNo </td>
+                    <td style="text-align: left;">@item.Date</td>
+                    <td style="text-align: center;">@item.Stage</td>
+                    <td style="text-align: center;">@item.Status</td>
+                    <td style="text-align: left;">@item.DeliveryDate</td>
+                </tr>
+            }
+
+        </table>
+    }
+    else
+    {
+        <p style="color:red; font-size:large">No records found.</p>
+    }
+
+    
+</body>
+</html>
+
+
+

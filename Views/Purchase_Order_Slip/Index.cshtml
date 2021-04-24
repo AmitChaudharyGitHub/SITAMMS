@@ -1,0 +1,781 @@
+﻿@*@model IEnumerable<MMS.ViewModels.STC_ViewModel>*@
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+@* for toaster *@
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+
+
+<style>
+    .nav-tabs.nav-tabs-border > li.active > a {
+        border-top: 2px solid #4a89dc;
+        margin-top: -1px;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background: #ffffff none repeat scroll 0 0;
+        color: #555555;
+        cursor: default;
+    }
+
+    .nav-tabs-left > li > a {
+        border-left: 1px solid transparent;
+        border-right: 1px solid #ddd;
+    }
+
+    .nav-tabs > li > a {
+        border-left: 1px solid #ddd;
+        border-radius: 0;
+        color: #777;
+        font-size: 12px;
+        line-height: 18px;
+        padding: 10px 18px;
+    }
+
+    .tab-content .tab-pane {
+        padding: 20px 0;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+    $('.continue').click(function () {
+
+        $('.nav-tabs > .active').next('li').find('a').trigger('click');
+    });
+    $('.back').click(function () {
+        $('.nav-tabs > .active').prev('li').find('a').trigger('click');
+    });
+
+    });
+</script>
+
+@* Save Data Code Here *@
+<script>
+    //java script array;
+    var gridList = [];
+    $(document).ready(function () {
+
+        $("#Submit").click(function () {
+
+            var obj = new Object();
+           
+            obj.Statement_Header = $("#Title1").val();
+            obj.STC_Description = $("#description1").val();
+
+            
+            var STC_Description = $("#description1").val();
+            var Statement_Header = $("#Title1").val();
+
+            if (STC_Description.trim() == "" || Statement_Header.trim() == "") {
+                $('#description1').css('border-color', '#f0551b');
+                $('#Title1').css('border-color', '#f0551b');
+               
+                alert('Oops! This field is empty');
+                return false;
+            }
+            else {
+                $('#description1').css('border-color', '');
+                $('#Title1').css('border-color', '');
+                $('#prjtid1').css('border-color', '');
+            }
+
+
+            gridList.push(obj);
+
+
+            var url = '@Url.Action("SaveList", "Purchase_Order_Slip")';
+            $.ajax({
+                type: "Post", 		//GET or POST or PUT or DELETE verb
+                //url: "/IndentRequistion/SendList", 		// Location of the service
+                url: url,
+                data: JSON.stringify(gridList), 		//Data sent to server
+                contentType: "application/json; charset=utf-8",		// content type sent to server
+                dataType: "json", 	//Expected data format from server
+                processdata: true, 	//True or False
+                success: function (json) {//On Successful service call
+                    if (json == "1") {
+                        //$("#prjtid1").val('');
+                        $("#description1").val('');
+                        $("#STC_DatasLoad").load('@Url.Action("View_STCData", "Purchase_Order_Slip")');
+                        gridList = [];
+                        $("#grid").empty();
+
+                        alert('Submit Data Successfully');
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.success('Submit Data Successfully');
+                    }
+                    if (json == "3") {
+                       
+                        toastr.error('Project Id and Employee Id should be not empty', 'alert');
+                    }
+
+                },
+                error: function () {                    
+                    alert('Error in Submit Data');
+                }
+                // When Service call fails
+            });
+        })
+
+    })
+</script>
+
+<script>
+    function GetFloor() {
+
+        var url = '@Url.Action("ShowDetails_Of_STC", "Purchase_Order_Slip")';
+        $('#dvLoading').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { projectid: $("#prjtid1 option:selected").val() },
+            complete: function () {
+                $('#dvLoading').hide();
+            },
+            success: function (result) {
+
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+    GetFloor()
+</script>
+
+@* Specific Instructions data here *@
+
+<script>
+    //java script array;
+    var gridList2 = [];
+    $(document).ready(function () {
+
+        $("#Submit2").click(function () {
+
+            var obj = new Object();           
+            obj.Header_Title = $("#Title2").val();
+            obj.SI_Description = $("#description2").val();
+         
+            var SI_Description = $("#description2").val();
+            var Header_Title = $("#Title2").val();
+
+            if (SI_Description.trim() == "" || Header_Title.trim() == "") {
+                $('#description2').css('border-color', '#f0551b');
+                $('#Title2').css('border-color', '#f0551b');
+               
+                alert('Oops! This field is empty');
+                return false;
+            }
+            else {
+                $('#description2').css('border-color', '');
+                $('#Title2').css('border-color', '');
+                
+            }
+
+            gridList2.push(obj);
+
+            var url = '@Url.Action("SI_SaveList", "Purchase_Order_Slip")';
+            $.ajax({
+                type: "Post", 		//GET or POST or PUT or DELETE verb
+                //url: "/IndentRequistion/SendList", 		// Location of the service
+                url: url,
+                data: JSON.stringify(gridList2), 		//Data sent to server
+                contentType: "application/json; charset=utf-8",		// content type sent to server
+                dataType: "json", 	//Expected data format from server
+                processdata: true, 	//True or False
+                success: function (json) {//On Successful service call
+                    if (json == "SIOB") {
+                        //$("#prjtid1").val('');
+                        $("#description2").val('');
+                        $("#Si_DatasLoad").load('@Url.Action("View_SIData", "Purchase_Order_Slip")');
+                        gridList2 = [];
+                        $("#grid").empty();
+                        alert('Submit Data Successfully');
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.success('Submit Data Successfully');
+                    }
+                    if (json == "3") {
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Project Id and Employee Id should be not empty', 'alert');
+                    }
+
+                },
+                error: function () {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Error in Submit Data');
+                    alert('Error in Submit Data');
+                }
+                // When Service call fails
+            });
+        })
+
+    })
+</script>
+
+@* genral terms and conditions data here *@
+
+<script>
+    //java script array;
+    var gridList3 = [];
+    $(document).ready(function () {
+
+        $("#Submit3").click(function () {
+
+            var obj = new Object();           
+            obj.Header_Title = $("#Title3").val();
+            obj.GTC_Description = $("#description3").val();
+
+            
+            var GTC_Description = $("#description3").val();
+            var Header_Title = $("#Title3").val();
+
+            if (GTC_Description.trim() == "" || Header_Title.trim() == "") {
+                $('#description3').css('border-color', '#f0551b');
+                $('#Title3').css('border-color', '#f0551b');
+               
+                alert('Oops! This field is empty');
+                return false;
+            }
+            else {
+                $('#description3').css('border-color', '');
+                $('#Title3').css('border-color', '');
+                $('#prjtid3').css('border-color', '');
+            }
+
+            gridList3.push(obj);
+
+            var url = '@Url.Action("GTC_SaveList", "Purchase_Order_Slip")';
+            $.ajax({
+                type: "Post", 		//GET or POST or PUT or DELETE verb
+                //url: "/IndentRequistion/SendList", 		// Location of the service
+                url: url,
+                data: JSON.stringify(gridList3), 		//Data sent to server
+                contentType: "application/json; charset=utf-8",		// content type sent to server
+                dataType: "json", 	//Expected data format from server
+                processdata: true, 	//True or False
+                success: function (json) {//On Successful service call
+                    if (json == "GTCOB") {
+                        //$("#prjtid1").val('');
+                        $("#description3").val('');
+                        $("#Gtc_DatasLoad").load('@Url.Action("View_GTCData", "Purchase_Order_Slip")');
+                        gridList3 = [];
+                        $("#grid").empty();
+                        alert('Submit Data Successfully');
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+
+                        toastr.success('Submit Data Successfully');
+                    }
+                    if (json == "3") {
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Project Id and Employee Id should be not empty', 'alert');
+                    }
+
+                },
+                error: function () {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Error in Submit Data');
+                    alert('Error in Submit Data');
+                }
+                // When Service call fails
+            });
+        })
+
+    })
+</script>
+
+
+
+<script>
+    GetGTC();
+    function GetGTC()
+{
+     var url = '@Url.Action("View_GTCData", "Purchase_Order_Slip")';
+    $('#progress').show();
+        $.ajax({
+        url: url,
+        type: 'GET',
+        data: { },
+        complete: function () {
+          $('#progress').hide();
+        },
+        success: function (result) {
+
+            $('#Gtc_DatasLoad').html(result);
+        }
+        });
+        return false;
+        GetGTC();
+ }
+
+</script>
+
+
+<script>
+    GetSTC();
+    function GetSTC()
+{
+     var url = '@Url.Action("View_STCData", "Purchase_Order_Slip")';
+    $('#progress').show();
+        $.ajax({
+        url: url,
+        type: 'GET',
+        data: { },
+        complete: function () {
+          $('#progress').hide();
+        },
+        success: function (result) {
+
+            $('#STC_DatasLoad').html(result);
+        }
+        });
+        return false;
+        GetSTC();
+ }
+
+</script>
+
+<script>
+    GetSi();
+    function GetSi()
+{
+     var url = '@Url.Action("View_SIData", "Purchase_Order_Slip")';
+    $('#progress').show();
+        $.ajax({
+        url: url,
+        type: 'GET',
+        data: { },
+        complete: function () {
+          $('#progress').hide();
+        },
+        success: function (result) {
+
+            $('#Si_DatasLoad').html(result);
+        }
+        });
+        return false;
+        GetSi();
+ }
+
+</script>
+
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PURCHASE ORDER MASTER</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+
+
+                                        <div class="panel">
+                                            <div class="panel-heading">
+
+
+                                                <div class="container tabs-wrap">
+                                                    @*<div class="panel-heading"><span class="panel-title"><span class="glyphicon glyphicon-hand-down"></span>Well Tabs</span></div>*@
+                                                    <div class="container tabs-wrap">
+                                                        <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                                                            <li role="presentation" class="active">
+                                                                <a href="#billing" aria-controls="billing" role="tab" data-toggle="tab" aria-expanded="true">Specific Terms & Conditions</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#shipping" aria-controls="shipping" role="tab" data-toggle="tab" aria-expanded="false">Specific Instructions</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#review" aria-controls="review" role="tab" data-toggle="tab" aria-expanded="false">General Terms & Conditions</a>
+                                                            </li>
+                                                        </ul>
+
+                                                        <div class="panel-body">
+                                                            <div class="tab-content pn br-n">
+
+                                                                <div role="tabpanel" class="tab-pane active" id="billing">
+                                                                    
+                                                                    <div class="row">
+                                                                        <div class="col-md-11">
+
+                                                                            <div class="panel-body p25">
+
+                                                                                @*<div class="section">
+                                                                                    <label class="field-label" for="services">
+                                                                                        Select Project
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field select">
+                                                                                        @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control", @onchange = "javascript:GetFloor(this.value);", })
+                                                                                        <i class="arrow double"></i>
+                                                                                    </label>
+                                                                                </div>*@
+
+                                                                                <div class="section row">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="section">
+                                                                                            <label class="field-label" for="names">
+                                                                                                Title
+                                                                                                <em>*</em>
+                                                                                            </label>
+                                                                                            <label class="field prepend-icon" for="names">
+                                                                                                @Html.TextBox("STC_Title", null, new { id = "Title1", @class = "form-control gui-input", @required="required" })
+                                                                                                <label class="field-icon" for="names">
+                                                                                                    <i class="fa fa-ticket"></i>
+                                                                                                </label>
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <!-- end section -->
+
+                                                                                       
+                                                                                        <!-- end section -->
+
+                                                                                       
+                                                                                        <!-- end section -->
+
+                                                                                    </div>
+                                                                                    <!-- end .colm section -->
+
+                                                                                    
+
+                                                                                </div>
+                                                                                <!-- end .section row section -->
+                                                                                <!-- end  section -->
+
+                                                                                <div class="section">
+                                                                                    <label class="field-label" for="description">
+                                                                                        Specific Terms & Conditions Description
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field prepend-icon" for="description">
+                                                                                        @*<textarea placeholder="Write your project description..." name="description" id="description" class="gui-textarea"></textarea>*@
+                                                                                        @Html.TextBox("description", null, new { id = "description1", @class = "gui-textarea", @placeholder = "Write your project description..." })
+                                                                                        <label class="field-icon" for="description">
+                                                                                            <i class="fa fa-file-text"></i>
+                                                                                        </label>
+                                                                                        <span class="input-footer">
+                                                                                            <strong>Hint:</strong>Please be as detailed as possible.
+                                                                                        </span>
+                                                                                    </label>
+
+
+
+                                                                                    @*<div id="formbody">
+                                                                                       
+
+                                                                                    </div>*@
+
+                                                                                </div>
+                                                                                <!-- end section -->
+
+                                                                                @*<div id="dvLoading"></div>
+                                                                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>*@
+                                                                               
+
+                                                                            </div>
+                                                                           
+                                                                            <input type="button" id="Submit" class="btn btn-primary" value="Add More" />
+                                                                            <a class="btn btn-primary continue">Next >></a>
+                                                                            <!-- end .form-body section -->                                                                           
+                                                                            <div class="col-md-12" style="margin-left:-30px;">
+                                                                                <div class="" id="STC_DatasLoad">
+                                                                                    <div id="progress">
+                                                                                        <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:100px; height:100px" />
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                       
+                                                                    </div>
+                                                                    
+                                                                </div>
+
+                                                                <div role="tabpanel" class="tab-pane" id="shipping">
+                                                                    <div class="row">
+                                                                        <div class="col-md-11">
+
+                                                                            <div class="panel-body p25">
+
+                                                                                @*<div class="section">
+                                                                                    <label class="field-label" for="services">
+                                                                                        Select Project
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field select">
+                                                                                        @Html.DropDownList("prjtid2", null, "Select Project", htmlAttributes: new { @id = "prjtid2", @class = "form-control" })
+                                                                                        <i class="arrow double"></i>
+                                                                                    </label>
+                                                                                </div>*@
+
+                                                                                <div class="section row">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="section">
+                                                                                            <label class="field-label" for="names">
+                                                                                                Title
+                                                                                                <em>*</em>
+                                                                                            </label>
+                                                                                            <label class="field prepend-icon" for="names">
+                                                                                                @Html.TextBox("SI_Title", null, new { id = "Title2", @class = "form-control gui-input" })
+                                                                                                <label class="field-icon" for="names">
+                                                                                                    <i class="fa fa-ticket"></i>
+                                                                                                </label>
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <!-- end section -->
+                                                                                        <!-- end section -->
+                                                                                        <!-- end section -->
+
+                                                                                    </div>
+                                                                                    <!-- end .colm section -->
+
+
+
+                                                                                </div>
+                                                                                <!-- end .section row section -->
+                                                                                <!-- end  section -->
+
+                                                                                <div class="section">
+                                                                                    <label class="field-label" for="description">
+                                                                                        Specific Instructions
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field prepend-icon" for="description">
+                                                                                        @*<textarea placeholder="Write your project description..." name="description" id="description" class="gui-textarea"></textarea>*@
+                                                                                        @Html.TextBox("description", null, new { id = "description2", @class = "gui-textarea", @placeholder = "Write your project description..." })
+                                                                                        <label class="field-icon" for="description">
+                                                                                            <i class="fa fa-file-text"></i>
+                                                                                        </label>
+                                                                                        <span class="input-footer">
+                                                                                            <strong>Hint:</strong>Please be as detailed as possible.
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                                <!-- end section -->
+
+                                                                            </div>
+
+                                                                            <a class="btn btn-primary back">Go Back</a>
+                                                                            <input type="button" id="Submit2" class="btn btn-primary" value="Add More" />
+                                                                            <a class="btn btn-primary continue">Next >></a> 
+                                                                            <!-- end .form-body section -->
+                                                                            <div class="col-md-12" style="margin-left:-30px;">
+                                                                                <div class="" id="Si_DatasLoad">
+                                                                                    <div id="progress">
+                                                                                        <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:100px; height:100px" />
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>  
+                                                                                                                                                  
+
+                                                                        </div>
+
+                                                                    </div>
+                                                                    
+                                                                </div>
+
+                                                                <div role="tabpanel" class="tab-pane" id="review">
+                                                                    <div class="row">
+                                                                        <div class="col-md-11">
+                                                                            <div class="panel-body p25">
+
+                                                                                @*<div class="section">
+                                                                                    <label class="field-label" for="services">
+                                                                                        Select Project
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field select">
+                                                                                        @Html.DropDownList("prjtid3", null, "Select Project", htmlAttributes: new { @id = "prjtid3", @class = "form-control" })
+                                                                                        <i class="arrow double"></i>
+                                                                                    </label>
+                                                                                </div>*@
+
+                                                                                <div class="section row">
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="section">
+                                                                                            <label class="field-label" for="names">
+                                                                                                Title
+                                                                                                <em>*</em>
+                                                                                            </label>
+                                                                                            <label class="field prepend-icon" for="names">
+                                                                                                @Html.TextBox("GTC_Title", null, new { id = "Title3", @class = "form-control gui-input" })
+                                                                                                <label class="field-icon" for="names">
+                                                                                                    <i class="fa fa-ticket"></i>
+                                                                                                </label>
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <!-- end section -->
+                                                                                        <!-- end section -->
+                                                                                        <!-- end section -->
+
+                                                                                    </div>
+                                                                                    <!-- end .colm section -->
+
+
+
+                                                                                </div>
+                                                                                <!-- end .section row section -->
+                                                                                <!-- end  section -->
+
+                                                                                <div class="section">
+                                                                                    <label class="field-label" for="description">
+                                                                                        Genral Terms & Conditions
+                                                                                        <em>*</em>
+                                                                                    </label>
+                                                                                    <label class="field prepend-icon" for="description">
+                                                                                        @*<textarea placeholder="Write your project description..." name="description" id="description" class="gui-textarea"></textarea>*@
+                                                                                        @Html.TextBox("description", null, new { id = "description3", @class = "gui-textarea", @placeholder = "Write your project description..." })
+                                                                                        <label class="field-icon" for="description">
+                                                                                            <i class="fa fa-file-text"></i>
+                                                                                        </label>
+                                                                                        <span class="input-footer">
+                                                                                            <strong>Hint:</strong>Please be as detailed as possible.
+                                                                                        </span>
+                                                                                    </label>
+                                                                                </div>
+                                                                                <!-- end section -->
+
+                                                                            </div>
+                                                                            <a class="btn btn-primary back">Go Back</a>
+                                                                            <input type="button" id="Submit3" class="btn btn-primary" value="Add More" />
+                                                                            <!-- end .form-body section -->
+                                                                            <div class="col-md-12" style="margin-left:-30px;">
+                                                                                <div class="" id="Gtc_DatasLoad">
+                                                                                    <div id="progress">
+                                                                                        <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:100px; height:100px" />
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                                                                   
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+                                    }
+
+                                   
+                                    @* Dynamic Webgrid Design Here *@
+
+                                    
+
+
+                                </form>
+
+                                <div>
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                                    <h4 class="modal-title"><span class="text-danger">Confirmation</span></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Data Saved Successfully.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

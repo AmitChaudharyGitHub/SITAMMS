@@ -1,0 +1,241 @@
+﻿@{
+
+    ViewBag.Title = "SerachEquipmentMaster";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+
+var GetItemGroup = '@Url.Action("GetAllItemGroup", "ConversionMaster")';
+var GetItemDetail = '@Url.Action("GetAllItemGroupWise", "ConversionMaster")';
+
+
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(window).load(function () {
+            $.ajax({
+                type: 'Get',
+                url: GetItemGroup,
+                success: function (data) {
+
+
+                    $.each(data, function (i, itname) {
+                        $("#Category").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve ItemGroup.' + ex);
+                }
+            });
+
+
+
+
+
+        });
+
+
+        $("#Category").change(function () {
+            $("#SubCategory").empty();
+            $("#SubCategory").append($("<option></option").val("").html("Select Sub Category"));
+            if ($('#Category option:selected').val() != 0) {
+                $.ajax({
+
+                    type: 'POST',
+                    url: GetItemDetail,
+                    dataType: 'json',
+                    data: { GrpId: $("#Category").val() },
+                    success: function (data) {
+
+                        $.each(data, function (i, itname) {
+                            $("#SubCategory").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+
+
+                        });
+
+                    }
+
+                })
+            }
+        });
+
+
+        $('#btnEqip_search').click(function (e) {
+            $('#formbody').hide();
+            var CatgryId = $("#Category option:selected").val();
+            var SubCatId = $("#SubCategory option:selected").val();
+
+
+            if (CatgryId == "") {
+                alert('Kindly Select Category');
+                return false;
+            }
+
+            //if (SubCatId == "") {
+            //    alert('Kindly Select Sub Cayegory.');
+            //    return false;
+            //}
+
+
+            e.preventDefault();
+            var url = '@Url.Action("EquipmentGrid", "EquipmentMaster")';
+            $.get(url,
+                { GrpId: $('#Category option:selected').val(), ItemId: $('#SubCategory option:selected').val() },
+                function (result) {
+                    $('#formbody').show();
+                    $('#formbody').html(result);
+                    $("#loading").hide();
+                  });
+
+        });
+
+    });
+</script>
+
+
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label(" Equipment Master ", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+
+                                            @Html.DropDownList("Category", new SelectList(string.Empty, "Value", "Text"), "Select Category", htmlAttributes: new { @id = "Category", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("SubCategory", new SelectList(string.Empty, "Value", "Text"), "Select Sub Category", htmlAttributes: new { @id = "SubCategory", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                               
+
+
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        @*<input type="submit" value="Search" id="btnDateLast"  class="btn btn-success" />*@
+                                        <input type="button" id="btnEqip_search" class="btn btn-primary" value="Search" />
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
+
+
+
+                            <br />
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                            <div class="pager glyphicon-align-center" id="formbody" style="overflow-x:scroll">
+
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            <br />
+                            <div>
+                                @*@Html.ActionLink("Export to Excel", "GetExcel", "MovableStatus", new { @class = "btn btn-primary" })
+                                @Html.ActionLink("Print", "GETPdf", "MovableStatus", new { @class = "btn btn-primary", @target = "_blank" })*@
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>
+
+

@@ -1,0 +1,434 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Gate Entry </span>
+                                </div>
+
+                                <input  type="hidden" id="hdn_purchaseTypedata" />
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+
+                                        <div class="container tabs-wrap">
+
+                                            <div class="container tabs-wrap">
+                                                <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#pendingGRNdetail" aria-controls="pendingGRNdetail" role="tab" data-toggle="tab" aria-expanded="true">Pending GRN</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#partialGRNdetail" aria-controls="partialGRNdetail" role="tab" data-toggle="tab" aria-expanded="false">Partial GRN</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#updatedGRNdetail" aria-controls="updatedGRNdetail" role="tab" data-toggle="tab" aria-expanded="false">Updated GRN</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#disapprovedGRNdetail" aria-controls="disapprovedGRNdetail" role="tab" data-toggle="tab" aria-expanded="false">Disapproved GRN</a>
+                                                    </li>
+                                                </ul>
+
+
+                                                <div class="panel-body">
+                                                    <div class="tab-content pn br-n">
+                                                        <div role="tabpanel" class="tab-pane active" id="pendingGRNdetail">
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "PendingProject", @class = "form-control project" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlPendingPurchaseType", @class = "form-control ddlPurchaseType" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3" id="vndr_drp">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Vendor", new SelectList(string.Empty, "Value", "Text"), "Select Vendor Name", htmlAttributes: new { @id = "ddlPendingVendorlist", @class = "form-control ddlVendorlist" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" name="txt" value="" placeholder="P.O Number/Transfer Number" class="form-control" autocomplete="off" id="txtPendingPONumber" />
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnPendingSearch" />
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="row">
+
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <div class="form-horizontal">
+
+
+                                                                    <div class="row">
+
+                                                                        <div id="dvLoading"></div>
+                                                                        <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                                                        <div class="pager glyphicon-align-center" id="Pend">
+                                                                        <table id="tbl-pending-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+                                                                        
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="Pend_T">
+                                                                           
+                                                                            <table id="tbl-tranpending-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+                                                                        </div>
+
+                                                                        <div class="section-divider mt40 mb25" id="spy5">
+                                                                            <span></span>
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="partialGRNdetail">
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "PartialProject", @class = "form-control project" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlPartialPurchaseType", @class = "form-control ddlPurchaseType" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3" id="vndr_drp">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Vendor", new SelectList(string.Empty, "Value", "Text"), "Select Vendor Name", htmlAttributes: new { @id = "ddlPartialVendorlist", @class = "form-control ddlVendorlist" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" name="txt" value="" placeholder="P.O Number/Transfer Number" class="form-control" autocomplete="off" id="txtPartialPONumber" />
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnPartialSearch" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div id="dvLoading"></div>
+                                                                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="G_Pr">
+                                                                        <table id="tbl-partial-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+                                                                    
+                                                                        </div>
+                                                                        <div class="pager glyphicon-align-center" id="G_PrT">
+                                                                          
+                                                                            <table id="tbl-tranpartial-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="updatedGRNdetail">
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "UpdatedProject", @class = "form-control project" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlUpdatedPurchaseType", @class = "form-control ddlPurchaseType" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3" id="vndr_drp">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Vendor", new SelectList(string.Empty, "Value", "Text"), "Select Vendor Name", htmlAttributes: new { @id = "ddlUpdatedVendorlist", @class = "form-control ddlVendorlist" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" name="txt" value="" placeholder="P.O Number/Transfer Number" class="form-control" autocomplete="off" id="txtUpdatedPONumber" />
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnUpdatedSearch" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div id="dvLoading"></div>
+                                                                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="Up_G">
+                                                                        <table id="tbl-update-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+
+                                                                        </div>
+                                                                        <div class="pager glyphicon-align-center" id="Up_TG">
+                                                                            <table id="tbl-transfupdate-grn" class="table table-responsive table-striped primary" style="width:100%;"></table>
+
+                                                                        </div>
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div role="tabpanel" class="tab-pane" id="disapprovedGRNdetail" ng-app="myApp" ng-controller="myCtrl">
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "DisapprovedProject", @class = "form-control project" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlDisapprovedPurchaseType", @class = "form-control ddlPurchaseType" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3" id="vndr_drp">
+                                                                    <div class="section">
+                                                                        <label class="field select">
+                                                                            @Html.DropDownList("Vendor", new SelectList(string.Empty, "Value", "Text"), "Select Vendor Name", htmlAttributes: new { @id = "ddlDisapprovedVendorlist", @class = "form-control ddlVendorlist" })
+                                                                            <i class="arrow"></i>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="text" name="txt" value="" placeholder="P.O Number/Transfer Number" class="form-control" autocomplete="off" id="txtDisapprovedPONumber" />
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <input type="button" name="btn" value="Search" class="btn btn-primary" id="btnDisapprovedSearch" ng-click="GetDisapprovedData()" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row" >
+                                                                <div class="col-md-12" id="#disapprovedProgress" style="display:none">
+                                                                    <div id="dvLoading"></div>
+                                                                    <div><img src="~/Images/36.gif" /></div>
+                                                                </div>
+
+                                                                <table class="table table-bordered">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>S.No.</th>
+                                                                            <th>Gate Entry No.</th>
+                                                                            <th>Vendor Name</th>
+                                                                            <th>Purchase Order No.</th>
+                                                                            <th>Purchase Order Date</th>
+                                                                            <th>Purchase Indent Date</th>
+                                                                            <th>Purchase Indent No.</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr ng-repeat="item in Data">
+                                                                            <td>{{$index+1}}</td>
+                                                                            <td>{{item.GRN}}</td>
+                                                                            <td>{{item.VendorName}}</td>
+                                                                            <td>{{item.PurchaseOrderNo}}</td>
+                                                                            <td>{{item.PODate}}</td>
+                                                                            <td>{{item.PIDate}}</td>
+                                                                            <td>{{item.PurReqNo}}</td>
+                                                                            <td>
+                                                                                <a href="@Url.Action("EditGRN","GateEntries")?Uid={{item.Uid}}&GPType={{DGPType}}">Edit GRN</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var getVendorList = '@Url.Action("GetVendorListByprojectWise", "MRNListClassification")';
+    var getPurchaseTypeForLoggedEmployee = '@Url.Action("BindEmployeePurchaseType", "GateEntryListClassification")';
+    var getPendingGRN = '@Url.Action("PendingGRN", "GateEntryListClassification")';
+    var getPartialGRN = '@Url.Action("PartialGRN", "GateEntryListClassification")';
+    var getUpdatedGRN= '@Url.Action("UpdatedGRN", "GateEntryListClassification")';
+    var getDisapprovedGRN= '@Url.Action("DisapprovedGRN", "GateEntryListClassification")';
+    var GetPending_TransferGRN  ='@Url.Action("PendingGRN_GetOut", "GateEntryListClassification")';
+    var GetPartial_TransferGRN  ='@Url.Action("PartialGRN_GetOut", "GateEntryListClassification")';
+    var GetUpdated_TransferGRN = '@Url.Action("UpdatedGRN_GetOut", "GateEntryListClassification")';
+</script>
+
+@*<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+
+
+@section Scripts
+{
+ <script src="~/Script/jquery.dataTables.min.js"></script>
+ <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+  <script src="~/Script/GateEntryListClassification.js?v=1.5"></script>
+<script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+}

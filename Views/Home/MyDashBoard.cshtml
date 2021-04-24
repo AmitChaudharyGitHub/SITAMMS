@@ -1,0 +1,508 @@
+﻿@{
+    ViewBag.Title = "MyDashBoard";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<style>
+    .dvLoading {
+        background: url(../Images/MMSloader.gif) no-repeat center center;
+        
+    height: 100px;
+    width: 100px;
+    position: absolute;
+    left: 12%;
+    top: 20px;
+
+    }
+.th-bg{
+    background:#4a89dc !important;
+}
+.columnchart{
+    width:540px !important;
+}
+.highchart{
+    width:521px !important;
+}
+
+select {
+  min-width: 100px;
+  max-width: 100px;
+}
+select:focus {
+  width: auto;
+}
+
+@@media (min-width: 1100px)
+{
+#content {
+     padding: 25px 20px 50px 21px;
+}
+.linecharts{
+    width:550px !important;
+}
+}
+#content {
+     padding: 25px 0px 50px 0px;
+}
+</style>
+<link href="~/DashBoardCSS/DashboardStyle.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@*<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>*@
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "PurchaseRequisition")';
+    var GetPIPendingdetail = '@Url.Action("GetPendingPIGrid", "Home")';
+    var GEtPOPendingDetail = '@Url.Action("GetPendingPOHome", "Home")';
+    var GetMaterialRecvAndIssue = '@Url.Action("GetMaterialRecvAndIssue", "Home")';
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+    var GetPurchaseAndRecevgraphdetail = '@Url.Action("GetRecvAndIssurGrp", "Home")';
+    var GetSumOFallRecvAndIssueofAllAlocatedProject = '@Url.Action("GetSumOfAllIssueAndRecev_AllAllocatedProject", "Home")';
+    var GetAgingOnHome = '@Url.Action("GetAllMovingHome", "Home")';
+    var GetageingHomeGraph = '@Url.Action("GetAgeingPercentgHome", "Home")'; 
+</script>
+
+
+
+<section id="content_wrapper">
+    <section id="content">
+       
+        <div class="container">
+                   <div class="row">
+                       <div class="bdrA whiteBg padA mrgB2">
+                           <div class="radiusA bdrA size">
+                               <div class="col-md-6">
+                                   <div class="section">
+                                       <label class="field select">
+                                           @Html.DropDownList("ProjectHomeId", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "ProjectHomeId", @class = "form-control" })
+                                           <i class="arrow"></i>
+                                       </label>
+                                   </div>
+
+                               </div>
+
+                           </div>
+
+                               
+                           </div>
+                       </div>
+                   <div class="row">
+                    <div class="col-md-6">
+                     <div class="bdrA whiteBg padA mrgB2">
+                         <div class="radiusA bdrA size">
+                             <h3 align="center">Total Receive Till Date </h3>
+                             <a href="#"><h3 align="center">Rs. <label id="lbltxttotalRecvtilldate"></label></h3></a>
+                         </div>
+                     </div>
+
+                 </div>
+
+                 <div class="col-md-6">
+                     <div class="bdrA whiteBg padA mrgB2">
+                         <div class="radiusA bdrA size">
+                             <h3 align="center">Total Issue Till Date </h3>
+                             <a href="#"><h3 align="center">Rs. <label id="lbltxttotalIssueTillDate"></label></h3></a>
+                         </div>
+                     </div>
+
+                 </div>
+             </div>
+
+
+
+                    <div class="row">
+                    <div class="col-md-12">
+                    <div class="bdrA whiteBg padA mrgB2">
+                        <div class="table-container">
+                        <p>Purchase Indent Status<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="@Url.Action("IndexNew", "PurchaseRequisition")">View All</a></p>
+
+                            
+                       
+                            <div id="pipendingform" >
+
+                            </div>
+                            
+                            <div style="display:none;" id="dvLoading" class="dvLoading" ></div>
+
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+                
+          </div>
+
+                    <div class="row">
+
+                 <div class="col-lg-12">
+                     <div class="bdrA whiteBg padA mrgB2">
+                         <div>&nbsp;</div>
+                         <p>Purchase Order Status<a style="background-color: #4a89dc; color: white;" class="pull-right btn  btn-xs" href="@Url.Action("Index", "piorder")">View All</a></p>
+                         
+                         <div id="tblformPoTable"></div>
+
+                         <div class="clearfix"></div>
+                     </div>
+                     <div style="display:none;" id="dvLoading1" class="dvLoading"></div>
+                 </div>
+
+             </div>
+                    
+                    <div class="row">
+
+                        <div class="col-lg-6">
+                            <div class="bdrA whiteBg padA mrgB2">
+            <div class="col-md-12">
+                <p>Stock Availability<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="#">View All</a></p>
+                <div class="">
+                    <div class="container">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <select class="form-control" id="sel1" style="">
+                                    <option value="jan">All Project</option>
+                                    <option value="jan">Feb</option>
+                                    <option value="jan">Mar</option>
+                                    <option value="jan">Dec</option>
+                                </select>
+                                <select class="form-control" id="sel2" style="">
+                                    <option value="">All Group</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    ................
+                                    <option value="jan">12</option>
+                                </select>
+                                <select class="form-control" id="sel2">
+                                    <option value="">Year</option>
+                                    <option value="1992">1992</option>
+                                    <option value="1993">1993</option>
+                                    <option value="1994">1994</option>
+                                    ................
+                                    <option value="2015">2015</option>
+                                </select>
+                                <select class="form-control" id="sel2">
+                                    <option value="">Month</option>
+                                    <option value="1992">Jan</option>
+                                    <option value="1993">Feb</option>
+                                    <option value="1994">Mar</option>
+                                    <option value="2015">Dec</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="container">
+                        <div id="linechart" class="linecharts">  </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+                         </div>
+
+                         <div class="col-lg-6">
+        <div class="bdrA whiteBg padA mrgB2">
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <p>Purchase Vs Issue<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="#">View All</a></p>
+                <div class="row">
+                    <div class="form-inline">
+                        <div class="form-group col-lg-12">
+                            
+                            <div class="col-md-4">
+                                <div class="section">
+                                    <label class="field select">
+                                        @Html.DropDownList("ItemGroup2", null, "Select Group", htmlAttributes: new { @id = "ItemGroup2", @class = "form-control" })
+                                        <i class="arrow"></i>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="section">
+                                    <label class="field select">
+                                        @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item", new { @id = "ItemMaster", @class = "form-control" })
+                                        <i class="arrow"></i>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="columnchart" class="columnchart"></div>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+                    </div>
+            
+                    <div class="row">
+
+                  <div class="col-lg-6">
+               <div class="bdrA whiteBg padA mrgB2">
+               <div class="col-md-12 table-container">
+                <p>Material Receive Vs Issue<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="#">View All</a></p>
+                <div class="row">
+                    <div class="form-inline">
+                        <div class="form-group col-lg-12">
+                            <div class="section">
+                                <label class="field select">
+                                    @Html.DropDownList("ItemGroup", null, "Select Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+                                    <i class="arrow"></i>
+                                </label>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+              <div class="row">
+                  <table id="myTable"  class="table table-responsive table-striped primary">
+                      <thead>
+                          <tr>
+                              <th class="th-bg">Item Name</th>
+                              <th class="th-bg">Unit</th>
+                              <th class="th-bg">Total Recv. Qty</th>
+                              <th class="th-bg">Total Issue Qty</th>
+                              <th class="th-bg">Balance Qty</th>
+                              <th style="display:none">ItemGrp Code</th>
+                          </tr>
+                      </thead>
+                  </table>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+             </div>
+     </div>
+
+                          <div class="col-lg-6">
+        <div class="bdrA whiteBg padA mrgB2">
+            <div class="clearfix"></div>
+            <div class="col-md-12 table-container">
+                <p>Purchase Rate [ Lowest vs Highest Rate]<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="#">View All</a></p>
+                <div class="row">
+                    <div class="form-inline">
+                        <div class="form-group col-lg-12">
+                            
+                            <div class="col-md-3">
+                                <div class="section">
+                                    <label class="field select">
+                                        @Html.DropDownList("ItemGroup4", null, "Select Group", htmlAttributes: new { @id = "ItemGroup4", @class = "form-control" })
+                                        <i class="arrow"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table id="recvtbl" class="table table-responsive table-striped primary">
+                    <thead>
+                        <tr>
+                            <th class="th-bg">Item Name</th>
+                            <th class="th-bg">Unit</th>
+                            <th class="th-bg">Lowest Rate</th>
+                            <th class="th-bg">Highest Rate</th>
+                            <th class="th-bg">Last Receive Date</th>
+                            <th style="display:none">ItemGrp Code</th>
+                            <th style="display:none">Project Id</th>
+                        </tr>
+                    </thead>
+                </table>
+                
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+           </div>
+
+                    <div class="row">
+
+                        <div class="col-lg-12">
+                            <div class="bdrA whiteBg padA mrgB2">
+                                <div class="clearfix"></div>
+                                <div class="col-md-12">
+                                    <p>Material Ageing<a style="background-color: #4a89dc; color: white;" class="pull-right btn btn-xs" href="#">View All</a></p>
+                                </div>
+                                <div class="row">
+                                    <div class="form-inline">
+                                        <div class="form-group col-md-12">
+                                            
+                                            <div class="col-md-4">
+                                                <div class="section">
+                                                    <label class="field select">
+                                                        @Html.DropDownList("ItemGroup3", null, "Select Group", htmlAttributes: new { @id = "ItemGroup3", @class = "form-control" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="section">
+                                                    <label class="field select">
+                                                    
+                                                            @Html.DropDownList("Status", null, "Select Ageing Status", htmlAttributes: new
+                                                                           {
+                                                                             @id = "Status",
+                                                                             @class = "form-control"
+
+                                                                          })
+                                                      
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4"><div class="divwh" id="con"></div></div>
+                                <div class="col-md-8 table-container" id="agingdivId">
+                                    
+                                </div>
+
+                                <div style="display:none;" id="dvLoadingAging" class="dvLoading"></div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                   </div>
+
+
+         </div>
+        
+
+
+    </section>
+   
+</section>
+
+
+<script src="~/DashBoardJS/highcharts.js"></script>
+<script src="~/DashBoardJS/highcharts-3d.js"></script>
+<script src="~/DashBoardJS/data-chart.js"></script>
+@*<script src="~/DashBoardJS/charts.js"></script>*@
+@*<script src="~/DashBoardJS/column-chart.js"></script>*@
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+@section Scripts{
+<script src="~/Script/MyDashBoard.js"></script>
+@*<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>*@
+<script src="~/Script/jquery.dataTables.min.js"></script>
+<script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                //"paging": true,
+                //"serverSide": true, // for process on server side
+                //"bPaginate": false,
+                //"bLengthChange": false,
+                //"bFilter": true,
+                //"bInfo": false,
+                //"bAutoWidth": false,
+                "paging": true,
+                "bInfo": false,
+                "bLengthChange": false,
+                "processing": true, // for show processing bar
+                "serverSide": true, // for process on server side
+                "orderMulti": false, // for disable multi column order
+                "dom": '<"top"i>rt<"bottom"lp><"clear">', // for hide default global search box
+                "ajax": {
+                    "url": "/Home/GetMaterialRecvAndIssue",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                        { "data": "ItemName", "name": "Item Name", "autoWidth": true },
+                        { "data": "UnitCode", "name": "Unit Code", "autoWidth": true },
+                        { "data": "ReceiveQuantity", "name" : "Recv. Qty" , "autoWidth": true },
+                        { "data": "IssueQuantity", "name" : "Issue Qty" , "autoWidth": true },
+                        { "data": "BalanceQuantity", "name" : "Balance Qty" ,"autoWidth": true },
+                        { "data" : "ItemGroupId" , "name" : "Item Group" , "visible": false}
+                        //{ "data": "PostalCode", "autoWidth": true }
+                ]
+            });
+
+            oTable = $('#myTable').DataTable();
+            $("#ItemGroup").change(function () {
+
+                if($("#ItemGroup option:selected").val() !="0")
+                {
+                    oTable.columns(5).search($('#ItemGroup').val().trim());
+                    oTable.draw();
+                }
+
+
+            });
+
+
+
+
+            $('#recvtbl').DataTable({
+                "paging": true,
+                "bInfo": false,
+                "bLengthChange": false,
+                "processing": true, // for show processing bar
+                "serverSide": true, // for process on server side
+                "orderMulti": false, // for disable multi column order
+                "dom": '<"top"i>rt<"bottom"lp><"clear">', // for hide default global search box
+                "ajax": {
+                    "url": "/Home/GetMaxAndMinRateHome",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                        { "data": "ItemName", "name": "Item Name", "autoWidth": true },
+                        { "data": "UnitCode", "name": "Unit Code", "autoWidth": true },
+                        { "data": "LowestRate", "name" : "Lowest Rate" , "autoWidth": true },
+                        { "data": "HighestRate", "name" : "Highest Rate" , "autoWidth": true },
+                        { "data": "LastRecvDate", "name" : "Last Recv Date" ,"autoWidth": true },
+                        { "data" : "ItemGroupID" , "name" : "Itemgrp" , "visible": false},
+                        { "data" : "ProjectId" , "name" : "Projectid" , "visible": false}
+                        //{ "data": "PostalCode", "autoWidth": true }
+                ]
+            });
+
+            o1Table = $('#recvtbl').DataTable();
+            $("#ItemGroup4").change(function () {
+
+                if($("#ItemGroup4 option:selected").val() !="0")
+                {
+                    o1Table.columns(5).search($('#ItemGroup4').val().trim());
+                    o1Table.columns(6).search($('#ProjectHomeId').val().trim());
+                    o1Table.draw();
+                }
+
+
+            });
+
+
+
+        });
+
+
+
+
+</script>
+}

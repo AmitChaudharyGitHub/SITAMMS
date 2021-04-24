@@ -1,0 +1,352 @@
+﻿
+@{
+    ViewBag.Title = "Bill Upload";
+    string layout = "";
+    if (Session["EmailCheck"] == null)
+    {
+        Response.Redirect("~/MyAccount/Login");
+        return;
+    }
+
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+@if (TempData["Msg"] != null)
+{
+    <script type="text/javascript">
+        alert('@TempData["Msg"]');
+    </script>
+}
+
+<section id="content_wrapper" ng-app="app" ng-controller="ctrl">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">@ViewBag.Title</span>
+                                </div>
+
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Project</label>
+                                                    <select id="ddlProjects" class="form-control">
+                                                        <option value="">Select Project</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>Purchase Order</label>
+                                                    <select id="ddlPO" class="form-control">
+                                                        <option value="">Select Purchase Order</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label>MRN</label>
+                                                    <select id="ddlMRN" class="form-control">
+                                                        <option value="">Select MRN</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <br/>
+                                                <div class="form-group">
+                                                    <button id="btnSearch" class="btn btn-primary" ng-click="GetData()">Search</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel with-nav-tabs panel-default">
+                                            <div class="panel-heading">
+                                                <ul class="nav nav-tabs">
+                                                    <li class="active"><a href="#tab1" data-toggle="tab">Pending Bill Upload</a></li>
+                                                    <li><a href="#tab2" data-toggle="tab">Updated Bill Upload</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane fade in active" id="tab1">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No.</th>
+                                                                    <th>Purchase Order No.</th>
+                                                                    <th>MRN</th>
+                                                                    <th>Vendor Name</th>
+                                                                    <th>Bill No.</th>
+                                                                    <th>Bill Date</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-show="pendingData.length==0">
+                                                                    <td colspan="10">
+                                                                        <p class="alert alert-warning">No Data</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-repeat="item in pendingData">
+                                                                    <td>{{$index+1}}</td>
+                                                                    <td>{{item.StatusTypeNo}}</td>
+                                                                    <td>{{item.MRN_No_New}}</td>
+                                                                    <td>{{item.VendorName}}</td>
+                                                                    <td>{{item.ChallanNo}}</td>
+                                                                    <td>{{item.ChallanDate | jsonDate: 'dd-MM-yyyy'}}</td>
+                                                                    <td><a href="javascript:void(0);" ng-click="uploadFile($index);">Upload Bill</a></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="tab2">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No.</th>
+                                                                    <th>Purchase Order No.</th>
+                                                                    <th>MRN</th>
+                                                                    <th>Vendor Name</th>
+                                                                    <th>Bill No.</th>
+                                                                    <th>Bill Date</th>
+                                                                    <th>Remarks</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr ng-show="updatedData.length==0">
+                                                                    <td colspan="10">
+                                                                        <p class="alert alert-warning">No Data</p>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr ng-repeat="item in updatedData">
+                                                                    <td>{{$index+1}}</td>
+                                                                    <td>{{item.StatusTypeNo}}</td>
+                                                                    <td>{{item.MRN_No_New}}</td>
+                                                                    <td>{{item.VendorName}}</td>
+                                                                    <td>{{item.ChallanNo}}</td>
+                                                                    <td>{{item.ChallanDate | jsonDate: 'dd-MM-yyyy'}}</td>
+                                                                    <td>{{item.Remarks}}</td>
+                                                                    <td>
+                                                                        <a href="javascript:void(0);" ng-click="ViewBill(item.MRN_No_New)">View Bill</a>&nbsp; &nbsp;
+                                                                        <a href="javascript:void(0);" ng-click="UpdateBill($index)">Update Bill</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+                                <br />
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+
+    
+</section>
+
+
+@section scripts{
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script type="text/javascript">
+       
+        $(document).ready(function () {
+            $(document).ajaxStart(function () { $('.ajax-loader').show(); })
+            $(document).ajaxStop(function () { $('.ajax-loader').hide(); })
+            $(document).ajaxError(function () { $('.ajax-loader').hide(); })
+            BindDdl('#ddlProjects', GetProjects, {}, 'Project');
+            
+            
+            $('#ddlProjects').select2();
+            $('#ddlPO').select2();
+            $('#ddlMRN').select2();
+
+            $('#ddlProjects').change(function () {
+                if ($(this).val() != '') {
+                    BindDdl('#ddlPO','@Url.Action("GetPurchaseOrders")', {ProjectId:$(this).val()}, 'Purchase Order');
+                }
+                else {
+                    ClearDdl('#ddlPO','Purchase Order');
+                }
+            });
+
+            $('#ddlPO').change(function () {
+                if ($(this).val() != '') {
+                    BindDdl('#ddlMRN','@Url.Action("GetMRN")', { ProjectId:$('#ddlProjects').val(),PO:$('#ddlPO').val() }, 'MRN');
+                }
+                else {
+                    ClearDdl('#ddlMRN', 'MRN');
+                }
+            });
+
+            var app = angular.module('app', []);
+            app.filter('jsonDate', ['$filter', function ($filter) {
+                return function (input, format) {
+                    return (input) ? $filter('date')(parseInt(input.substr(6)), format) : '';
+                }
+            }]);
+            app.controller('ctrl', function ($scope,$filter) {
+                $scope.pendingData = [];
+                $scope.updatedData = [];
+
+                $scope.GetData = function () {
+                    if ($('#ddlProjects').val() == '') {
+                        alert('Please select Project.');
+                        return false;
+                    }
+                    $.get('@Url.Action("GetBillData")', {ProjectId:$('#ddlProjects').val(),PONo:$('#ddlPO').val(),MRN:$('#ddlMRN').val()}, function (response) {
+                        if (response.Status == 1) {
+
+                            $scope.pendingData = JSON.parse(response.PendingData);
+                            $scope.updatedData = JSON.parse(response.UpdatedData);
+                        }
+                        else {
+                            $scope.pendingData = [];
+                            $scope.updatedData = [];
+                        }
+                       
+                        $scope.$apply();
+                    });
+                }
+
+                $scope.uploadFile = function (index) {
+                    showUploadWindow();
+                    var d = $scope.pendingData[index];
+                    $('#spPurchaseOrderNo').text(d.StatusTypeNo);
+                    $('#spMRN').text(d.MRN_No_New);
+                    $('#hdn').val(d.UId);
+                };
+
+                $scope.ViewBill = function (MRN) {
+                    $.get('@Url.Action("GetAllUploadedBills")', { MRN: MRN }, function (response) {
+                        var data = JSON.parse(response);
+                       
+                        var t = '<table class="table table-bordered"><tr><td>S.No</td><td>File Name</td><td>Remarks</td><td>Created Date</td><td>Download</td></tr>';
+                        for (var i = 0; i < data.length; i++) {
+                            t= t + '<tr><td>' + (i + 1) + '</td>';
+                            t = t + '<td>' + data[i].Filename + '</td>';
+                            t = t + '<td>' + data[i].Remarks + '</td>';
+                            t = t + '<td>' + $filter('jsonDate')(data[i].CreatedDate, 'dd-MM-yyyy') + '</td>';
+                            t = t + '<td><a href="javascript:void(0);" val="'+data[i].Id+'" class="download">Download File</a></td></tr>';
+                        }
+                        t = t + '</table>';
+                        console.log(data);
+                        bootbox.alert({
+                            message: t,
+                            size: 'large'
+                        });
+                    });
+                }
+                $scope.UpdateBill = function (index) {
+                    showUploadWindow();
+                    var d = $scope.updatedData[index];
+                    $('#spPurchaseOrderNo').text(d.StatusTypeNo);
+                    $('#spMRN').text(d.MRN_No_New);
+                    $('#hdn').val(d.UId);
+                }
+            });
+
+            $(document).on('click', '.download', function () {
+                var fileId = $(this).attr('val');
+                location.href = "@Url.Action("GetUploadBillFile")?f=" + fileId;
+            });
+             
+
+            function showUploadWindow() {
+                var h = '<form id="frmUplaod" method="post" action="@Url.Action("UploadBillFile")" enctype="multipart/form-data"><table id = "tableUpload" class="table table-bordered" ><tr><td>Purchase Order No.</td><td>MRN</td><td>Select File</td><td>Remarks</td><td>Upload</td></tr><td id="spPurchaseOrderNo"></td><td id="spMRN"></td><td id="spFile"><input id="billFile" type="file" name="billFile" value="" /></td><td><textarea id="remarks" name="remarks" class="form-control"></textarea></td><td><input type="submit" id="btnUploadFile" value="Upload File" class="btn btn-default" /><input type="hidden" id="hdn" name="hdn" value=""/></td></tr></table></form>';
+                    bootbox.alert({
+                        message: h,
+                        size: 'large'
+                    });
+            }
+
+
+         
+            $(document).on('click', '#btnUploadFile', function (e) {
+                debugger;
+                var l = $('#billFile').prop('files').lenght;
+                if (l ==0) {
+                    alert('Select file to upload');
+                    e.preventDefault();
+                    return false;
+                }
+                if ($('#remarks').val() == '') {
+                    alert('Please enter remarks');
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $(document).on('change', '#billFile', function () {
+                var file = $(this).prop('files')[0];
+                var extension = file.name.substr((file.name.lastIndexOf('.') + 1));
+                switch (extension) {
+                    case 'jpg':
+                    case 'png':                      
+                    case 'pdf':
+                    case 'jpeg':
+                        break;
+                    default:
+                        alert('Please select a valid file Type');
+                        $(this).val('');
+                }
+                
+            });
+
+
+        });
+
+    </script>
+    <script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+}

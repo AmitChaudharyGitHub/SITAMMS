@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridTable td {
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        /*color: white;*/
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+<div id="myPager" style="margin-top:17px;" class="table table-hover">
+    @if (Model != null && TempData["IsEditable"] != null && Convert.ToBoolean(TempData["IsEditable"]) == true)
+    {
+        var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 15, ajaxUpdateContainerId: "grid1", canSort: false);
+
+
+        @grid.GetHtml(
+                        mode: WebGridPagerModes.All,
+                            htmlAttributes: new { id = "grid1" },
+                              tableStyle: "gridTable",
+                  headerStyle: "gridHead",
+                  footerStyle: "gridFooter",
+                  rowStyle: "gridRow",
+                  alternatingRowStyle: "gridAltRow",
+            fillEmptyRows: false,
+            columns: grid.Columns(
+                 grid.Column("ItemId", header: "Item Code", style: "text-align: center"),
+           grid.Column("ItemName", header: "Name", style: "text-align: center"),
+           grid.Column("GroupName", header: "Group Name"),
+                grid.Column("HSNCode", header: "HSN Code", style: "text-align: center"),
+                grid.Column("UnitName", header: "Unit Name", style: "text-align: center"),
+                grid.Column("Disable", header: "Status", style: "text-align: center"),
+                grid.Column(header: "Action", canSort: false, style: "action",format: @<text>
+                        <a data-modal='' href='@Url.Action("Details", "tblItemMasters", new { id = item.TransID })' id='@item.TransID' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>|
+                        <a data-modal='' href='@Url.Action("Edit", "tblItemMasters", new { id = item.TransID })' id='@item.TransID' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>|
+                        <a style="display:none" data-modal='' href='@Url.Action("Delete", "tblItemMasters", new { id = item.TransID })' id='@item.TransID' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>
+                        <a data-modal='' href='javascript:void();' onclick="EnableDisableItem(@item.TransID);" id='@item.TransID' title='Enable/Disable Item'>@(item.Disable== "Enabled"? "Disable" : "Enable")</a>
+                        <a style="display:none" data-modal='' href='@Url.Action("Delete", "tblItemMasters", new { id = item.TransID })' id='@item.TransID' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>
+
+                </text>)));
+    }
+    else if (Model != null && TempData["IsEditable"] != null && Convert.ToBoolean(TempData["IsEditable"]) == false)
+    {
+        var grid = new WebGrid(source: Model, canPage: true, rowsPerPage: 15, ajaxUpdateContainerId: "grid1", canSort: false);
+
+
+        @grid.GetHtml(
+                            mode: WebGridPagerModes.All,
+                                htmlAttributes: new { id = "grid1" },
+                                  tableStyle: "gridTable",
+                      headerStyle: "gridHead",
+                      footerStyle: "gridFooter",
+                      rowStyle: "gridRow",
+                      alternatingRowStyle: "gridAltRow",
+                fillEmptyRows: false,
+                columns: grid.Columns(
+                     grid.Column("ItemId", header: "Item Code", style: "text-align: center"),
+               grid.Column("ItemName", header: "Name", style: "text-align: center"),
+               grid.Column("GroupName", header: "Group Name"),
+                    grid.Column("HSNCode", header: "HSN Code", style: "text-align: center"),
+                    grid.Column("UnitName", header: "Unit Name", style: "text-align: center")));
+    }
+    else
+    {
+        <p style="color:red; font-size:large; text-align:center;">No records found !!!!</p>
+    }
+
+</div>
+
+
+

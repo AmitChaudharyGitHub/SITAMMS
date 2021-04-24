@@ -1,0 +1,199 @@
+﻿<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 5px;
+        text-align: left;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px;
+        margin: 5px;
+        color: #333;
+        text-align: left;
+        font-weight: normal;
+    }
+
+    .gridRow td {
+        padding: 10px;
+        color: #333;
+        text-align: left;
+        font-weight: normal;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .aaaa {
+        width: 60px;
+    }
+
+
+
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+</style>
+
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.min.js")" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+
+    $('#dvLoading').hide();
+
+    $(".IntrDialog").live("click", function (e) {
+        $('#dvLoading').show();
+        debugger;
+        var url = $(this).attr('href');
+
+        e.preventDefault();
+
+        $("#InterTrns-view").dialog({
+            title: 'Delivery Challan ',
+            autoOpen: false,
+            resizable: false,
+            height: 550,
+            width: 1000,
+            show: { effect: 'explode', direction: "up" },
+            modal: true,
+            draggable: true,
+            open: function (event, ui) {
+                $(this).load(url);
+
+            },
+            buttons: {
+                "Close": function () {
+                    // $("#Transfer-view").dialog('close');
+                    //window.location.href = '@Url.Action("Index", "IntraTransfer")';
+                    $('#dvLoading').hide();
+                    $(this).dialog('close');
+                   
+                }
+            },
+            close: function (event, ui) {
+                $('#dvLoading').hide();
+                 $(this).dialog('close');
+                // return false;
+               // window.location.href = '@Url.Action("Index", "IntraTransfer")';
+            }
+        });
+
+
+
+        $("#InterTrns-view").dialog('open');
+        return false;
+    });
+
+      $("#btncancel").live("click", function (e) {
+            $("#Transfer-view").dialog('close');
+
+        });
+
+
+</script>
+
+<div id="gridposition" class="table-responsive">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "positionGrid");
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+                    grid1.Column("Sno", header: "S.No."),
+                    grid1.Column("InterTransferNumber", header: "Inter Transfer No."),
+
+                      grid1.Column("TransferProjectname", header: "Transfer project Name"),
+                       grid1.Column("VehicleType", header: "Vehicle type"),
+                       grid1.Column("TranType", header: "Tran Type"),
+
+                   grid1.Column("VehicleNo", header: "Vehicle No"),
+                   grid1.Column("TransferDate", header: "Transfer Date"),
+                   grid1.Column("Status", header: "Status"),
+                   grid1.Column("IntraTransferNumber", header: "Print", format: @<text>@Html.ActionLink("Print", "InterTransfer_Print", new { TransferNo = ((string)item.InterTransferNumber).Replace("/", "#")}, new { @class = "IntrDialog", @id = "text2", @onchange = "javascript:GetDFloors(this.value);", @style = "color:#497bf9" })</text>)
+
+                       ))
+
+}
+else
+{
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+
+</div>
+
+
+<div id="dvLoading">
+
+</div>
+
+
+<div id="InterTrns-view" style="display: none">
+</div>

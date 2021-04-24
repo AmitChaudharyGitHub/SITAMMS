@@ -1,0 +1,1139 @@
+﻿@*@model MMS_P.ViewModels.PagedIndentAllRecordModel*@
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    //WebGrid grid = new WebGrid(source: Model, canPage: false);
+}
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+@*<script type="text/javascript" src="~/Scripts/jquery-1.8.2.min.js"></script>*@
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script>
+    var indentDate = '@ViewBag.IndentDate';
+    $(function () {
+        $("#startdate").datepicker({ maxDate: '0', dateFormat: 'dd-M-yy', }).datepicker();
+
+    });
+</script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<script>
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+
+        BindDdl('#ddlNatureOfWork', '@Url.Action("GetNatureOfWork")', {}, 'Nature Of Work');
+
+        $("#indent1").change(GetIssuedTo);
+
+
+
+        $('#btnAddBlock').click(function () {
+            $("#dialog-addBlock").dialog({
+                title: 'Add New Block',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                //open: function (event, ui) {
+                //    $(this).load(url);
+                //},
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-addBlock").dialog('open');
+        });
+
+        $('#btnAddMachine').click(function () {
+            $("#dialog-addMachine").dialog({
+                title: 'Add New Machine',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                //open: function (event, ui) {
+                //    $(this).load(url);
+                //},
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-addMachine").dialog('open');
+        });
+
+        $('#btnAddFloor').click(function () {
+            $("#dialog-addFloor").dialog({
+                title: 'Add New Floor',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+
+            $("#dialog-addFloor").dialog('open');
+        });
+
+        $(document).on('click', '#btnInsertBlock', function () {
+            if ($('#txtBlockName').val() == '') {
+                alert('Please enter block name');
+                return false;
+            }
+            if ($('#prjtid1 option:selected').val() == '') {
+                alert('Please select project');
+                return false;
+            }
+
+            $.post('/QuantityIssues/AddNewBlock', { projectId: $('#prjtid1 option:selected').val(), blockName: $('#txtBlockName').val() }, function (response) {
+                if (response.Status == 1) {
+                    alert("Block added successfully");
+                    GetBlocks();
+                    $("#dialog-addBlock").dialog('close');
+                }
+                else if (response.Status == 2)
+                    alert("Block not added");
+                else
+                    alert("Error occur");
+            });
+
+        });
+
+        $(document).on('click','#btnInsertFloor',function () {
+            if ($('#txtFloorName').val() == '') {
+                alert('Please enter floor name');
+                return false;
+            }
+            if ($('#prjtid1 option:selected').val() == '') {
+                alert('Please select project');
+                return false;
+            }
+            $.post('/QuantityIssues/AddNewFloor', { projectId: $('#prjtid1 option:selected').val(), floorName: $('#txtFloorName').val() }, function (response) {
+                if (response.Status == 1) {
+                    alert("Floor added successfully");
+                    GetFloors();
+                    $("#dialog-addFloor").dialog('close');
+                }
+                else if (response.Status == 2)
+                    alert("Floor not added");
+                else
+                    alert("Error occur");
+            });
+
+        });
+
+        $(document).on('click', '#btnInsertMachine', function () {
+            if ($('#txtMachineName').val() == '') {
+                alert('Please enter Machine name');
+                return false;
+            }
+            if ($('#prjtid1 option:selected').val() == '') {
+                alert('Please select project');
+                return false;
+            }
+            $.post('/QuantityIssues/AddNewMachine', { projectId: $('#prjtid1 option:selected').val(), machineName: $('#txtMachineName').val() }, function (response) {
+                if (response.Status == 1) {
+                    alert("Machine added successfully");
+                    GetMachines();
+                    $("#dialog-addMachine").dialog('close');
+                }
+                else if (response.Status == 2)
+                    alert("Machine not added");
+                else
+                    alert("Error occur");
+            });
+
+        });
+
+    });
+
+    function GetIssuedTo() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Getprojectempblokflorcodes")', // Calling json method
+            dataType: 'json',
+            data: { id: $("#indent1").val() },
+            // Get Selected Country ID.
+            success: function (obj) {
+                obj = $.parseJSON(obj)
+                //  var r = toArray(obj);
+                $("#prjtname1").val(obj.Pjtnames);
+                $("#empsname1").val(obj.empnames);
+                if (indentDate == '') {
+                    $.get('@Url.Action("GetIndentDate")', { IndentNo: $("#indent1").val() }, function (response) {
+                        if (response.IndentDate != "") {
+                            $('#startdate').val(response.IndentDate);
+                        }
+                    });
+                }
+                else
+                   $('#startdate').val(indentDate);
+                //$("#sttsname1").val(obj.statuss);
+                // $("#blocksssname1").val(obj.blockss);
+                //$("#florssname1").val(obj.floors);
+            },
+            error: function (ex) {
+                // alert('Failed to retrieve Project Code.' + ex);
+            }
+        });
+        return false;
+    }
+</script>
+
+
+
+<script type="text/javascript">
+    $('#lstcountry').change(function (e) {
+        e.preventDefault();
+        var url = '@Url.Action("Filter")';
+        $.get(url, { country: $(this).val() }, function (result) {
+            debugger;
+            $('#studentViewGrid').html(result);
+        });
+    });
+</script>
+
+
+
+
+<script>
+    function GetFloor() {
+        var url = '@Url.Action("Details", "QuantityIssues")';
+        $('#dvLoading').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { id: $("#indent1 option:selected").text() },
+            complete: function () {
+                $('#dvLoading').hide();
+            },
+            success: function (result) {
+
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+</script>
+
+
+@*<script>
+        function GetEmp1(data) {
+            var procemessage = "<option value='0'> Please wait...</option>";
+            $("#empName1").html(procemessage).show();
+            var markup = "<option value='0'>Select Employee</option>";
+            for (var x = 0; x < data.length; x++) {
+
+
+                //console.log(data[x].Value);
+
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+            }
+            $("#empName1").html(markup).show();
+
+        }
+    </script>*@
+
+@* for block name code by PROJECT ID *@
+
+
+@* FOR EMPLOYEE NAME BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#PC1').select2();
+        //Country Dropdown Selectedchange event
+        $("#prjtid1").change(function () {
+            $('#empsname1').val('').prop("placeholder", "Issued To");
+            $("#indent1").empty();
+            //$("#indent1").append($("<option></option").val("").html("Select Indent"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetIndentno")', // Calling json method
+
+                dataType: 'json',
+                async:false,
+                data: { id: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#indent1").html(procemessage).show();
+                    var markup = "<option value='0'>Select Indent</option>";
+                    $("#indent1").html(markup).show();
+
+                    $.each(names, function (i, itname) {
+                        $("#indent1").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Indent Number' + ex);
+                }
+            });
+            // binding Pc/Vendor
+            @*$.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetPCVendorByProjectId")', // Calling json method
+
+                dataType: 'json',
+
+                data: { ProjectId: $("#prjtid1 option:selected").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+                    debugger;
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#PC1").html(procemessage).show();
+                    var markup = "<option value='0'>Select Issue To / PC </option>";
+                    $("#PC1").html(markup).show();
+                    names = $.parseJSON(names);
+                    debugger;
+                    $.each(names, function (i, itname) {
+                        $("#PC1").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Issue To / PC ' + ex);
+                }
+            });*@
+
+            GetBlocks();
+            GetFloors();
+            GetMachines();
+
+            return false;
+        });
+
+        $("#ddlDivType").change(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetPCVendorByProjectId")' + '?DivType=' + $('#ddlDivType').val(), // Calling json method
+
+                dataType: 'json',
+
+                data: { ProjectId: $("#prjtid1 option:selected").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+                    debugger;
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#PC1").html(procemessage).show();
+                    var markup = "<option value='0'>Select Issue To / PC </option>";
+                    $("#PC1").html(markup).show();
+                     names = $.parseJSON(names);
+                 //   debugger;
+                    $.each(names, function (i, itname) {
+                        $("#PC1").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Issue To / PC ' + ex);
+                }
+            });
+        });
+
+    });
+
+    function GetMachines() {
+        BindDdl('#ddlMachine', '@Url.Action("GetMachines")', {PId:$('#prjtid1').val()}, 'Machine Name');
+
+    }
+
+    function GetFloors() {
+        $("#FloorMaster").empty();
+        $("#FloorMaster").append($("<option></option").val("").html("Select Floor"));
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetFloorName", "IndentRequistion")', // Calling json method
+
+            dataType: 'json',
+
+            data: { fid: $("#prjtid1").val() },
+            // Get Selected Country ID.
+
+            success: function (namesf) {
+
+                $.each(namesf, function (i, fitname) {
+                    $("#FloorMaster").append('<option value="' + fitname.Value + '">' +
+                         fitname.Text + '</option>');
+
+                });
+            },
+            error: function (ex) {
+                toastr.options.positionClass = "toast-bottom-right";
+                toastr.options.closeButton = true;
+                toastr.options.progressBar = true;
+                toastr.error('Failed to retrieve Floor.');
+                alert('Failed to retrieve Floor.' + ex);
+            }
+        });
+        return false;
+    }
+
+   
+
+    function GetBlocks() {
+        $("#BlockMaster").empty();
+        $("#BlockMaster").append($("<option></option").val("").html("Select Block/Tower/Location"));
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetBlocknames","IndentRequistion")', // Calling json method
+
+            dataType: 'json',
+
+            data: { fid: $("#prjtid1").val() },
+            // Get Selected Country ID.
+
+            success: function (namesfs) {
+
+                $.each(namesfs, function (i, fitnames) {
+                    $("#BlockMaster").append('<option value="' + fitnames.Value + '">' +
+                         fitnames.Text + '</option>');
+
+                });
+            },
+            error: function (ex) {
+                toastr.options.positionClass = "toast-bottom-right";
+                toastr.options.closeButton = true;
+                toastr.options.progressBar = true;
+                toastr.error('Failed to retrieve BLOCK NAME.');
+                alert('Failed to retrieve BLOCK NAME.' + ex);
+            }
+        });
+    }
+</script>
+
+@* For Approved items *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#Stats").change(function () {
+            $("#prjtid1").empty();
+            $("#prjtid1").append($("<option></option").val("").html("Select Project"));
+
+            //$("#indent1").append($("<option></option").val("").html("Select Indent"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetIndentnocheck")', // Calling json method
+
+                dataType: 'json',
+                async:false,
+                data: { id: $("#Stats").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#prjtid1").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+
+                error: function (ex) {
+                    alert('Failed to retrieve Indent Number' + ex);
+                }
+            });
+            return false;
+        })
+
+
+        var Indent = '@TempData["indent"]';
+        //    console.log(Indent);
+        if (Indent != null && Indent != '') {
+            $('#Stats').val('Approved');
+            $('#Stats').trigger('change');
+            $('#prjtid1').val($('#prjtid1 option').eq(1).val());
+            $('#prjtid1').trigger('change');
+           // $('#indent1 option:selected').text(Indent);
+            $("#indent1 option:contains('"+Indent+"')").attr('selected', true);
+            // $('#indent1').trigger('change');
+            GetIssuedTo();
+            $('#indent1').trigger('change');
+        }
+    });
+</script>
+
+
+@* Here Jquery code for block and floor details and selection *@
+
+<script>
+    $(document).ready(function () {
+        $("body").on("keyup", 'input[type="number"]', function () {
+            var valid = true;
+            $('input[type="number"]').each(function () {
+
+                if ($(this).is(':invalid')) {
+                    console.log("not valid");
+
+                    valid = false;
+                }
+            })
+            if(valid==false)
+            {
+                $("#Submit").attr("disabled", "disabled");
+            }
+            else
+            {
+                $("#Submit").removeAttr("disabled");
+            }
+
+        });
+
+
+
+
+        $("#Submit").click(function (e) {
+
+            var valid = true;
+            $('input[type="number"]').each(function () {
+
+                if ($(this).is(':invalid')) {
+                    console.log("not valid");
+                    valid = false;
+
+                }
+            });
+
+
+            if ($('#prjtid1').val() == '') {
+                alert('Please select project.');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+            if ($('#empsname1').val() == '') {
+                alert('Please select approved by.');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+            if ($('#startdate').val() == '') {
+                alert('Please select date');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+
+            if ($('#PC1').val() == 0) {
+                alert('Please select Issue to.');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+            if ($('#txtname').val() == '') {
+                alert('Please enter name');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+            if ($('#ddlType').val() == '') {
+                alert('Please select Type');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+
+            if ($('#ddlNatureOfWork').val() == '') {
+                alert('Please select nature of work');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+
+            if ($("#Issue_BillNo").val().trim() == '') {
+                alert('Please enter bill no.');
+                $("#Submit").removeAttr("disabled");
+                return false;
+            }
+            //if ($("#Indenttype option:selected").val() == 'Block Wise' && $("#BlockMaster option:selected").val()=='') {
+            //    alert('Please select Block');
+            //    return false;
+            //}
+            //if ($("#BlockMaster option:selected").val() != '' && $("#FloorMaster option:selected").val() == '')
+            //{
+            //    alert('Please select floor');
+            //    return false;
+            //}
+
+            //check
+
+            var data = [];
+
+            //for (r = 0; r < $('#grid tbody tr').length; i++) {
+            //    var aprqty = parseFloat($('#grid tbody tr').eq(r).find('td').eq(11).find('input').val());
+            //    var issueqty = parseFloat($('#grid tbody tr').eq(r).find('td').eq(11).find('input').attr('issueqty'));
+            //    if (aprqty != issueqty) {
+            //        alert('All item issue qty same as approve qty');
+            //        $("#Submit").removeAttr("disabled");
+            //        return false;
+            //    }
+            //}
+
+            $('#grid tbody tr').each(function () {
+                data.push({ ItemId: $(this).find('td').eq(3).text(), Qty: $(this).find('td').eq(11).find('input').val() });
+            });
+
+            if (data.length > 0) {
+                $.post('@Url.Action("QtyVerification")', { ProjectId: $('#prjtid1').val(), data: data, Date: $('#startdate').val() }, function (response) {
+                    if (response.Status == 1) {
+                       $("#Submit").attr("disabled", "disabled");
+
+            if (valid) {
+                debugger;
+
+                var json = JSON.parse(gridTojson());
+                if (jQuery.isEmptyObject(json)) {
+                    alert('Project and Indent no should not be empty');
+                    return false;
+                }
+                var _griddata = gridTojson();
+                var div_typ = $('#ddlDivType').val();
+                var url = '@Url.Action("UpdateGridData")';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { griddata: _griddata, DivType: div_typ }
+                }).done(function (data) {
+
+                    if (data != "" && data != "1") {
+                        $('#message').html(data);
+                        var indentno = $('#indent1 option:selected').text();
+                        $('#ReqIndentNo').text(indentno);
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.success('Issue Quantity Sent Successfully', 'Confirmation');
+                        $("#myModal").modal('show');
+                    }
+                    if (data == "1") {
+                        //$('#message').html(data);
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Issue Qty Can not be greater than Balance Qty ', 'Confirmation');
+                       // $("#myModal").modal('show');
+                    } else if (data == "2") {
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Issue Qty Can not be greater than Aval. Qty ', 'Confirmation');
+                    }
+                    else {
+                        //toastr.error("Error");
+                    }
+                });
+            }
+                    }
+                    else if (response.Status == 2) {
+                        alert(response.Msg);
+                    }
+                    else {
+                        alert('Some error occured.');
+                    }
+                });
+            }
+        });
+
+        function gridTojson() {
+            debugger;
+            var json = '{';
+            var otArr = [];
+            debugger;
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                debugger;
+                if ($(this)[0].rowIndex != 0) {
+                    x = $(this).children();
+                    var itArr = [];
+                    x.each(function (b) {
+                        debugger;
+                        if ($(this).children('input').length > 0) {
+                            itArr.push('"' + $(this).children('input').val().replace('"', '').replace('"','_') + '"');
+                        }
+                        else {
+                            debugger;
+                            if (b != 4)
+                            { var x = $(this).text(); } else { var x = "--"; }
+
+                            itArr.push('"' + x.replace('"', "").replace('"', '_') + '"');
+                        }
+                    });
+
+                    itArr.push('"' + $("#prjtid1 option:selected").val() + '"');
+                    itArr.push('"' + $("#prjtid1 option:selected").text() + '"');
+                    itArr.push('"' + $("#indent1 option:selected").text() + '"');
+                    itArr.push('"' + $("#empsname1").val() + '"');
+                    itArr.push('"' + $("#startdate").val() + '"');
+                    itArr.push('"' + $("#Stats option:selected").text() + '"');
+                    itArr.push('"' + $("#PC1 option:selected").val() + '"');
+                    itArr.push('"' + $("#txtname").val() + '"');
+                    itArr.push('"' + $("#ddlType option:selected").val() + '"');
+                    itArr.push('"' + $("#BlockMaster option:selected").val() + '"');
+                    itArr.push('"' + $("#BlockMaster option:selected").text() + '"');
+                    itArr.push('"' + $("#FloorMaster option:selected").val() + '"');
+                    itArr.push('"' + $("#FloorMaster option:selected").text() + '"');
+                    itArr.push('"' + $("#Indenttype option:selected").val() + '"');
+                    itArr.push('"' + $("#indenttext1").val() + '"');
+                    itArr.push('"' + $("#ddlNatureOfWork").val() + '"');
+                    itArr.push('"' + $("#ddlMachine").val() + '"');
+                    itArr.push('"' + $("#Issue_BillNo").val() + '"');
+                    otArr.push('"' + i + '": [' + itArr.join(',') + ']');
+                }
+            })
+            json += otArr.join(",") + '}'
+            //debugger;
+            //alert(json)
+            return json;
+        }
+
+        //function getAddress() {
+        //    var addrs = $("#txt1").val();
+        //}
+    })
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Other_id").hide();
+        $("#closebtn").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+            $("#Stats").val('');
+        })
+
+        $(".close").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+            $("#Stats").val('');
+        })
+
+
+        //$('#ddlSelectType').on('change', function () {
+        //    if (this.value == '0')
+        //    {
+        //        $("#dPc").hide();
+        //        $("#Other_id").show();
+        //    }
+        //    else {
+        //        $("#dPc").show();
+        //        $("#Other_id").hide();
+        //    }
+        //});
+    })
+
+    function putdisable() {
+        document.getElementById('Submit').setAttribute("disabled", "disabled");
+    }
+
+</script>
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">QUANTITY ISSUE</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="col-md-12">
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Stats", new[] { new SelectListItem() { Text = "Approved", Value = "Approved" } }, "Select Item Status", new { htmlAttributes = new { @class = "form-control gui-input" } })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @*@Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })*@
+                                                            @Html.DropDownList("prjtid", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select ">
+                                                            @Html.DropDownList("indentno", new SelectList(string.Empty, "Value", "Text"), "Select Indent", htmlAttributes: new { @id = "indent1", @class = "form-control", @onchange = "javascript:GetFloor(this.value);", })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 hide">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("empsname", null, "Forword To", new { id = "empsname1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-user"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Issue_BillNo", null, "Forword To", new { id = "Issue_BillNo", @class = "form-control gui-input", @placeholder="Enter Issue Slip No." })
+                                                            <label for="Issue_BillNo" class="field-icon">
+                                                                <i class="fa fa-tag"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12">
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <div class="form-group">
+
+                                                            <div class="col-md-3">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "Enter Date", @id = "startdate" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        @Html.DropDownList("NatureOfWork", new SelectList(string.Empty, "Value", "Text"), "Select Nature of Work", new { @class = "form-control gui-input", @id = "ddlNatureOfWork" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-3">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        <select class="form-control" id="ddlDivType">
+                                                                            <option value="">---Select Division Type---</option>
+                                                                            <option value="WTP0000001">Civil</option>
+                                                                            <option value="WTP0000002">Electrical</option>
+                                                                            <option value="WTP0000003">Plumbing</option>
+                                                                            <option value="WTP0000004">MECHANICAL</option>
+                                                                            <option value="WTP0000005">LES</option>
+                                                                        </select>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="col-md-3">
+                                                                @*<div class="section">
+                                                                                     <label class="field select">
+                                                                    @Html.DropDownList("ddlSelectType", (IEnumerable<SelectListItem>)ViewBag.SelectPCType, htmlAttributes: new { @id = "ddlSelectType", @class = "form-control" })
+                                                                                         <i class="arrow"></i>
+                                                                                     </label>
+                                                                                 </div>*@
+
+                                                                <div class="section">
+                                                                    <label class="field select select2 select2-container select2-container">
+                                                                        @*@Html.DropDownList("pettycontractor", null, "Select Issue To / PC", htmlAttributes: new { @id = "PC1", @class = "form-control" })*@
+
+                                                                        @Html.DropDownList("pettycontractor", new SelectList(string.Empty, "Value", "Text"), "Select Issue To / PC", htmlAttributes: new { @id = "PC1", @class = "form-control" })
+                                                                      
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="col-md-3">
+
+
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("Name", null, new { @class = "form-control gui-input", @placeholder = "Enter Name", @id = "txtname" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-user"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select select2 select2-container select2-container">
+                                                            @Html.DropDownList("SelectType", null, "Select Type", htmlAttributes: new { @id = "ddlType", @class = "form-control" })
+                                                            <i class="arrow"></i>
+
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            <select id="ddlMachine" class="form-control">
+                                                                <option value="">Select Machine Name</option>
+                                                            </select>
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                        <p class="text-right">
+                                                            <input type="button" name="btn1" value="Add New Machine" id="btnAddMachine" class="btn btn-xs btn-primary" />
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                               
+                                                <div class="col-md-3" id="blockdiv">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("BlockMaster", new SelectList(string.Empty, "Value", "Text"), "Select Block/Tower/Location", new { @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                        <p class="text-right"><input type="button" name="btn" value="Add New Block" id="btnAddBlock" class="btn btn-xs btn-primary" /></p>
+                                                    </div>
+                                                    
+                                                </div>
+                                                
+
+                                                <div class="col-md-3" id="floordiv">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("FloorMaster", new SelectList(string.Empty, "Value", "Text"), "Select Floor", new { @class = "form-control gui-input" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                        <p class="text-right">
+                                                            <input type="button" name="btn1" value="Add New Floor" id="btnAddFloor" class="btn btn-xs btn-primary" />
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                        <br />
+
+                                    }
+
+
+
+                                </form>
+
+
+
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+
+                                <br />
+                                <div>
+                                    <input type="button" id="Submit" class="btn btn-sm btn-info" value="Quantity Issue" onclick="putdisable()" />
+                                    @*@Html.ActionLink("Go To View", "View_To_Quantity_Issues", "QuantityIssues", null, new { @class = "btn btn-system" })*@
+                                    @*@Html.ActionLink("Sent To Purchase", "#", null, new { @class = "btn btn-system" })*@
+                                </div>
+
+
+
+                                <div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger"><small>Issue Quantity Sent Successfully.</small>Indent No. <span id="ReqIndentNo"></span></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div id="dialog-addMachine" style="display: none">
+    <table class="table mt15">
+        <tr>
+            <td>Machine Name</td>
+            <td>
+                <input type="text" id="txtMachineName" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="button" name="btn" value="Add" id="btnInsertMachine" class="btn btn-sm btn-primary" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="dialog-addBlock" style="display: none">
+    <table class="table mt15">
+        <tr>
+            <td>Block Name</td>
+            <td>
+                <input type="text" id="txtBlockName" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="button" name="btn" value="Add" id="btnInsertBlock" class="btn btn-sm btn-primary" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="dialog-addFloor" style="display: none">
+    <table class="table mt15">
+        <tr>
+            <td>Floor Name</td>
+            <td>
+                <input type="text" id="txtFloorName" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="right">
+                <input type="button" name="btn" value="Add" id="btnInsertFloor" class="btn btn-sm btn-primary" />
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,635 @@
+﻿@model MMS_P.ViewModels.GridIndentRequisitions
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+
+}
+
+@*<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }
+    input[id="Date"] {
+        width: 400px;
+        font-weight: bold;
+    }
+
+
+</style>*@
+
+@*<script>
+        $(document).ready(function () {
+            $("#SubTotal").prop("readonly", true);
+        });
+    </script>*@
+
+
+@*<script>
+            $(document).ready(function () {
+                $(".txtMult input").keyup(multInputs);
+
+                function multInputs() {
+                    var mult = 0;
+                    // for each row:
+                    $("tr.txtMult").each(function () {
+                        // get the values from this row:
+                        var $val1 = $('.Amount_', this).val();
+                        var $val2 = $('.val2', this).val();
+                        var $total = ($val1 * 1) * ($val2 * 1)
+                        $('.multTotal', this).text($total);
+                        mult += $total;
+                    });
+                    $("#grandTotal").text(mult);
+                }
+            });
+    </script>*@
+
+<style type="text/css">
+    #webgrid td{vertical-align:middle;font-size:12px;color:#808080;}
+    #webgrid table.inner td{vertical-align:middle;font-size:12px;padding:4px;color:#333;}
+    #webgrid table.inner tr.hdng td{font-size:11px;}
+    #webgrid input{max-width:73px;font-size:12px;border-color:#666;border-width:1px;height:26px;}
+    .affix { top: 60px;}
+    .fxm.affix{width: 100%; max-width:1135px; min-width:965px; z-index:1}
+    .affix + .panel {padding-top: 114px;}
+    body{position:relative!important;}
+    #webgrid textarea{font-size:12px;resize:none;border-color:#666;}
+    #webgrid select{min-width:90px;height:26px;padding:2px 0;border-color:#666;font-size:12px;}
+</style>
+<script type="text/javascript">
+    
+    $(document).ready(function () {      
+
+        $(".editDialog").on("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-edit").dialog({
+                title: 'Forword Price Cap Detail',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            //$("#dialog-edit").dialog('open');
+            $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-edit").dialog('close');
+
+        });
+    });
+</script>
+<div class="list-group" id="webgrid">
+    <div class="list-group-item fxm" style="background-color:#caddf5;color:#333" data-spy="affix" data-offset-top="200">
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <td><strong>Item Name</strong></td>
+                    <td width="110"><strong>Unit</strong></td>
+                    <td width="110"><strong>Rem/Appr Qty</strong></td>
+                    <td width="110"><strong>Total</strong></td>
+                    <td width="110"><strong>Sub Total 1</strong></td>
+                    <td width="110"><strong>Sub Total 2</strong></td>
+                    <td width="110"><strong>Grand Total</strong></td>
+                    <td width="110"><strong>Last Purchase Rate</strong></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+@foreach (var item in Model.Child)
+{
+    var ReminingQty = (@item.ApprovedQty ?? 0) - (@item.OrderedQty ?? 0);
+    <input type="hidden" value="@item.UId" id="hdn_pur_req_id" /> <input type="hidden" id="hdn_item_approv_qty_@item.UId" value="@item.ApprovedQty" />
+
+<div class="panel list-group-item single" data-parent="@item.UId" style="background-color:#f8f8f8">
+
+    <a data-toggle="collapse" data-parent="#webgrid" href="#SrNo_@item.UId" id="aid_@item.UId">
+        <div class="table-responsive">
+            <table class="table" id="tbl_topnm">
+                <tr class="mahajet" data-trautoincrm="@item.UId">
+                    <td>
+                        @*@Html.ActionLink(item.ItemName, "ViewPriceCaps", new { id = ((string)item.ItemNo) }, new { @class = "editDialog", @id = "text1", @style = "color:#497bf9" })*@
+                    @Html.DisplayFor(modelitem=>item.ItemName)  <input type="hidden" value="@item.ItemNo" id="hdn_itemnoto_@item.UId" />
+                    </td>
+                    <td width="110" class="getcrval">@Html.DisplayFor(modelItem => item.Unit)</td>
+                    <td width="110">@ReminingQty  <input type="hidden" id="hdn_remaing_qty_@item.UId" value="@ReminingQty" /> </td>
+                    <td width="110"><input type="text" id="Ctotal_amount_@item.UId" readonly disabled /></td>
+                    <td width="110"><input type="text" id="total_SubTotal_Amount1_@item.UId"  readonly disabled/></td>
+                    <td width="110"><input type="text" id="total_SubTotal_Amount2_@item.UId" readonly disabled /></td>
+                    <td width="110"><input type="text" id="total_GrandTotal_Amount_@item.UId" readonly disabled/></td>
+                    <td width="110">
+                    @*@if (ViewBag.ViewlastPurchaseRateValue != null)
+                    {
+                        var d_LastPurchaseRate = ((List<MMS.ViewModels.LastPurchaseRate>)ViewBag.ViewlastPurchaseRateValue).FirstOrDefault(x => x.ItemId == item.ItemNo);
+
+                        if (d_LastPurchaseRate != null)
+                        {
+                            
+                            <input type="text" id="last_purchaserate_@item.UId" value="@d_LastPurchaseRate.LastPurchase_Rate" readonly />
+                        }
+                        else
+                        {
+                            <input type="text" id="last_purchaserate_@item.UId" value="0" readonly />
+
+                        }
+
+
+                    }*@
+
+                    0.00
+
+                    
+                    <input type="hidden" id="hdn_indent_uid_@item.UId" value="@item.UId" /> </td>
+                </tr>
+            </table>
+        </div>
+    </a>
+
+
+    <div id="SrNo_@item.UId" class="second panel-collapse collapse" data-dhdn="@item.UId" style="background-color:#fff;margin-bottom:6px;">
+   <div class="panel-body">
+          
+        
+
+<div class="table-responsive" id="inner_div_input_id">
+
+         <table class="table inner" id="kghdd">
+   
+         <tr class="hdng">
+        <td>Description</td>
+        <td>Current Qty</td>
+        <td>Rate</td>
+        <td>Discount</td>
+        <td>Packing Charges</td>
+        <td>Is Excise</td>
+        <td>Excise Duty Type</td>
+        <td>Excise Duty</td>
+        <td>Excise Amt</td>
+        <td>Is Insurance 1</td>
+        <td>Insurance Type 1(%)</td>
+        <td>Insurance Rate 1</td>
+        <td>InSurance Amt</td>
+        <td>Is Cartage</td>
+        <td>Cartage Type 1</td>
+        <td>Cartage Rate 1</td>
+        <td>Cartage Amount 1</td>
+    </tr>
+
+        <tr class="getItems-1" id=@item.UId>
+
+           
+            <td class="SrNo_@item.UId">
+             
+                
+
+                 @if (ViewBag.ViewAdd_Desc != null)
+                 {
+                     var dta = ((List<MMS.ViewModels.ItemDescriptionData>)ViewBag.ViewAdd_Desc).FirstOrDefault(x => x.ItemId == item.ItemNo);
+
+                     if (dta != null)
+                     {
+                         
+                           @Html.TextArea("IDesc", @dta.ItemDescription, new { Style = "width:190px;" })
+
+                     }
+                     else
+                     {
+                        <span>Description</span>
+                           @Html.TextArea("IDesc", @dta.ItemDescription, new { Style = "width:190px;"})
+                     }
+
+
+                 }
+            </td>
+         
+            
+           
+            <td class=CQty_@item.UId>
+                
+                @Html.Editor("Qty")
+            </td>
+
+            <td class=CRate_@item.UId>
+              
+                @if (ViewBag.ViewAdd_Rate != null)
+                {
+                    var dta = ((List<MMS.ViewModels.Rate>)ViewBag.ViewAdd_Rate).FirstOrDefault(x => x.ItemId == item.ItemNo);
+
+                    if (dta != null)
+                    {
+                             
+                            <input id="Rate" type="text" value="@dta.Rates" />
+                       
+                            @Html.Hidden("RatingsCompares", dta.Rates)
+                    }
+                    else
+                    {
+                       
+                        <input id="Rate" type="text" />
+                    }
+
+
+                }
+
+        </td>
+
+
+
+        <td class=CDiscount_@item.UId>
+            
+            @Html.Editor("Discount")
+        </td>
+
+   
+
+            <td class=Packingcharge_@item.UId>
+                
+                <input id="txtpackingCharge" type="text" />
+            </td>
+
+            <td class=IsExcise_@item.UId>
+                
+                <select id="Isexcisedd-@item.UId" data-rederpo="@item.UId" name="CheckExciseddl" class="render-po form-control">
+                    <option value="-1">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </td>
+
+
+            <td class=Exciseduty_@item.UId>
+
+
+                @Html.DropDownList("ExciseDutyType", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "ExciseDutyType_" +@item.UId, @class = "exx-type form-control" ,@data_redo =@item.UId })
+
+                   
+              </td>
+
+
+            <td class=ExciseDutyValue_@item.UId>
+         
+                <input id="ExciseDutyValue_@item.UId" type="text"  readonly />
+            </td>
+
+
+            <td class=ExciseAmtUpto_@item.UId>
+
+                <input id="ExciseDutyAmtUptoValue_@item.UId" type="text" readonly />
+            </td>
+            
+            <td class=Insurance1_@item.UId>
+
+              @Html.DropDownList("Insurancedd1", (IEnumerable<SelectListItem>)ViewBag.ExistStatus, htmlAttributes: new { @id = "Insuranceddl1_" + @item.UId, @class = "Insi-1-IsType form-control" , @data_insio =@item.UId })
+
+            </td>
+
+            <td class="newval1 InsuranceTypeSel1_@item.UId">
+
+                @Html.DropDownList("InsuranceType_1", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "Insurance_Type_1_" + @item.UId, @class = "Insi-Type-1-L form-control", @data_insi1w = @item.UId })
+            </td>
+
+            <td class=InsuranceValue1_@item.UId>
+
+                <input id="Insurancerate1_@item.UId" type="text" readonly />
+            </td>
+            <td class=InsuranceAmtUpto1_@item.UId>
+
+                <input id="InsuranceAmtUptoValue1_@item.UId" type="text" readonly />
+            </td>
+
+
+
+
+
+
+            <td class=IsCartageType_@item.UId>
+
+                <select id="IsCar_tageddl_@item.UId" name="CheckIsCar_tageddl" data-redcartge="@item.UId" class="carstat-usge form-control">
+                    <option value="-1">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </td>
+
+
+            <td class=CartageType_@item.UId>
+                @Html.DropDownList("CartageTypeddl", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "CartageTypeddl_"+ @item.UId, @class = " car1-type1 form-control" ,@data_cartage1=@item.UId })
+
+                   
+          </td>
+
+
+            <td class=CartagerateValue_@item.UId>
+
+                <input id="CartageRate1_@item.UId" type="text" class="cartage1-Inputrate" data-itval="@item.UId" />
+            </td>
+
+            <td class="adnd Cartageamt_@item.UId">
+
+                <input id="CartageAmount1" type="text"  class="car1amttkval caramt_@item.UId" data-cart1amtvalsum="@item.UId" />
+            </td>
+
+
+
+</tr>
+
+
+
+       </table>
+         <table class="table inner" id="kghddu"  style="border-top:1px dashed #999">
+        <tr class="hdng">
+            <td>Is Insurance 2</td>
+            <td>Insurance Type 2(%)</td>
+            <td>Insurance Rate 2</td>
+            <td>InSurance 2 Amt</td>
+            <td>Is Tax</td>
+            <td>Tax Type</td>
+            <td>Tax(%)</td>
+            <td>Tax Amt</td>
+            <td>Is Insurance 3</td>
+            <td>Insurance Type 3(%)</td>
+            <td>Insurance Rate 3</td>
+            <td>InSurance 3 Amt</td>
+            <td>Is Cartage</td>
+            <td>Cartage Type 2</td>
+            <td>Cartage Rate 2</td>
+            <td>Cartage Amount 2</td>
+            <td>Is Insurance 4</td>
+            <td>Insurance Type 4(%)</td>
+            <td>Insurance Rate 4</td>
+            <td>Insurance Amt 4</td>
+
+           
+        </tr>
+        <tr class="getItems" id=@item.UId>
+
+            
+            <td class=Insurance2_@item.UId>
+
+               
+
+                 @Html.DropDownList("Insuranceddl2", (IEnumerable<SelectListItem>)ViewBag.ExistStatus, htmlAttributes: new { @id = "Insuranceddl2_" + @item.UId, @data_insio2 = @item.UId, @class = "Insi-2-IsType form-control" })
+
+            </td>
+
+            <td class="newval2 InsuranceTypeSel2_@item.UId">
+                
+                @Html.DropDownList("InsuranceType_2", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "Insurance_Type_2_" +@item.UId, @class = "Insi-Type-2-L form-control" ,@data_insi2w=@item.UId })
+            </td>
+
+            <td class=InsuranceValue2_@item.UId>
+               
+                <input id="Insurancerate2_@item.UId" type="text" readonly />
+            </td>
+            <td class=InsuranceAmtUpto2_@item.UId>
+
+                <input id="InsuranceAmtUptoValue2_@item.UId" type="text" readonly />
+            </td>
+
+            <td class=IsTax_@item.UId>
+                
+                @Html.DropDownList("Isexciseddl", (IEnumerable<SelectListItem>)ViewBag.ExistStatus, htmlAttributes: new { @id = "Isexciseddl_" + @item.UId, @data_istax = @item.UId, @class = "tax-is-type form-control" })
+
+
+            </td>
+
+
+            <td class=Tax_@item.UId>
+                
+             @Html.DropDownList("SelTax", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "ddl_tax" +@item.UId, @class = "tax-ddl-bind form-control" ,@data_mytaxv=@item.UId })
+               </td>
+
+
+            <td class=taxValue_@item.UId>
+               
+                <input id="txtamtval_@item.UId" type="text" readonly />
+            </td>
+
+            <td class=taxAmtUptoValue_@item.UId>
+
+                <input id="txtamtvalupto_@item.UId" type="text" readonly />
+            </td>
+
+
+            <td class=Insurance3_@item.UId>
+
+               
+
+                 @Html.DropDownList("Insuranceddl3", (IEnumerable<SelectListItem>)ViewBag.ExistStatus, htmlAttributes: new { @id = "Insuranceddl3_" + @item.UId, @data_insio3 = @item.UId, @class = "Insi-3-IsType form-control" })
+
+
+
+            </td>
+
+            <td class="newval3 InsuranceTypeSel3_@item.UId">
+
+                @Html.DropDownList("InsuranceType_3", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "Insurance_Type_3_" + @item.UId, @class = "Insi-Type-3-L form-control", @data_insi3w = @item.UId })
+            </td>
+
+            <td class=InsuranceValue3_@item.UId>
+
+                <input id="Insurancerate3_@item.UId" type="text" readonly />
+            </td>
+            <td class=InsuranceAmtUpto3_@item.UId>
+
+                <input id="InsuranceAmtUptoValue3_@item.UId" type="text" readonly />
+            </td>
+
+
+
+
+
+            <td class=IsCartageType2_@item.UId>
+
+                <select id="IsCar_tageddl2_@item.UId" name="CheckIsCar_tageddl2" data-redcartgetwo="@item.UId" class="carstat-usge2 form-control">
+                    <option value="-1">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </td>
+
+
+            <td class=CartageType2_@item.UId>
+               @Html.DropDownList("CartageTypeddl2", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "CartageTypeddl2_"+ @item.UId, @class = " car2-type2 form-control" ,@data_cartage2=@item.UId })
+
+            </td>
+
+
+            <td class=CartagerateValue2_@item.UId>
+               
+                <input id="CartageRate2_@item.UId" type="text" class="cartage2-Inputrate" data-itvaltwo="@item.UId" />
+            </td>
+            <td class=Cartageamt2_@item.UId>
+
+                <input id="CartageAmount2_@item.UId" type="text" class="car2itemvalsumd caramt2_@item.UId" data-bssdo="@item.UId" />
+            </td>
+
+
+
+            <td class=Insurance4_@item.UId>
+
+                
+
+                 @Html.DropDownList("Insuranceddl4", (IEnumerable<SelectListItem>)ViewBag.ExistStatus, htmlAttributes: new { @id = "Insuranceddl4_" + @item.UId, @data_insio4 = @item.UId, @class = "Insi-4-IsType form-control" })
+
+
+            </td>
+
+            <td class=InsuranceSelect4_@item.UId>
+
+                @Html.DropDownList("InsuranceType_4", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select", htmlAttributes: new { @id = "Insurance_Type_4_" + @item.UId, @class = "Insi-Type-4-L form-control", @data_insi4w = @item.UId })
+            </td>
+
+            <td class=InsuranceTypeSel4_@item.UId>
+                <input id="Insurancerate4_@item.UId" type="text" readonly />
+                
+           </td>
+
+            <td class=InsuranceAmtUptoTypeSel4_@item.UId>
+                <input id="Insurancerate4amtUptoVal_@item.UId" type="text" readonly />
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="13">
+
+            @*<a id="CalculateEachRowAllValue_@item.UId" href="javascript void(0);" class="btn btn-info btn-block btn-sm">Calculate</a>*@
+
+                <input type="button" value="Calculate" class="itemwise_cal  btn btn-info btn-block btn-sm" id="btn_cal_itemwise_@item.UId" data-btnautoidbind="@item.UId" />
+            
+            </td>
+        </tr>
+
+    </table>
+
+
+    </div>
+     </div>
+    </div>
+</div>
+}
+</div>
+
+
+<div id="dialog-edit" style="display: none">
+</div>
+<script>
+$(function() {
+    $('.navbar-fixed-top').height($("#nav").height());
+
+    $('.fxm').affix({
+        offset: { top: $('.fxm').offset().top }
+    });
+    //$('.fxm').width($("#webgrid").width());
+    
+});
+</script>

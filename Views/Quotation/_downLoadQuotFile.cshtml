@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MMS.ViewModels.File.DownLoadFileInformation>
+
+
+
+
+
+
+<table class="table">
+    <tr>
+        <th>
+            @*@Html.DisplayNameFor(model => model.FileId)*@
+          S.No.
+        </th>
+        <th>
+         File Name
+        </th>
+        
+        <th>Download</th>
+    </tr>
+    @{int i = 0;}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @(++i)
+                @Html.HiddenFor(modelItem => item.FileId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            
+            <td>
+                @Html.ActionLink("Download", "Download", new { FileID = item.FileId }) 
+               
+            </td>
+        </tr>
+    }
+
+</table>
+

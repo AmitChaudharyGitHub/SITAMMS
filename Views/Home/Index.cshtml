@@ -1,0 +1,372 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<style>
+     #dvLoading {
+        background: #000 url(../../Images/Loading.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        }
+</style>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+    var Grid = '@Url.Action("GetAllPendingPurIndentDetails", "Home")';
+</script>
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        $("#tblEmployee1 tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllPendingPurIndentDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading1").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Site Name</th><th align='left' class='EmployeeTableTH'>Indent Date</th><th align='left' class='EmployeeTableTH'>Indent No.</th>"
+                    + "</tr>";
+                $('#tblEmployee1 tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    debugger;
+                    var rows = "<tr class='system'>"
+                   + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.SiteName + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.CreatedDate + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>  " + item.IndentNo + "</td>"
+                   
+                    + "</tr>";
+                    $('#tblEmployee1 tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>*@
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dvLoading').show();
+      $.ajax({
+             type:  'GET',
+             url: Grid, // Calling json method
+            data: {},
+             // Get Selected Country ID.
+            complete: function () {
+              $('#dvLoading').hide();
+             },
+             success: function (result) {
+                 
+                 $('#formbody').html(result);
+                 
+             },
+             error: function (ex) {
+                 alert('Failed to retrieve Project Code.' + ex);
+             }
+         });
+
+        return false;
+
+
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblEmployee2 tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllPendingOrderDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading2").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Site Name</th><th align='left' class='EmployeeTableTH'>Order Date</th><th align='left' class='EmployeeTableTH'>Order No.</th>"
+                    + "</tr>";
+                $('#tblEmployee2 tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    var rows = "<tr class='system'>"
+                   + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.PName + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.OrderDate + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.OrderNo + "</td>"
+                    + "</tr>";
+                    $('#tblEmployee2 tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblEmployee3 tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllPendingIndentDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading3").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Site Name</th><th align='left' class='EmployeeTableTH'>Indent Date</th><th align='left' class='EmployeeTableTH'>Indent No.</th>"
+                    + "</tr>";
+                $('#tblEmployee3 tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    var rows = "<tr class='system'>"
+                   + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.PrName + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.IDate + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.InNo + "</td>"
+                    + "</tr>";
+                    $('#tblEmployee3 tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#tblEmployee4 tbody tr").remove();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetAllStockDetails")',
+            dataType: 'json',
+            data: {},
+            success: function (data) {
+                $("#imgLoading4").hide();
+                var items = '';
+                var rows = "<tr class='primary'>"
+                    + "<th align='left' class='EmployeeTableTH'>Site Name</th><th align='left' class='EmployeeTableTH'>Material Name</th><th align='left' class='EmployeeTableTH'>Unit</th><th align='left' class='EmployeeTableTH'>Stock Qty.</th>"
+                    + "</tr>";
+                $('#tblEmployee4 tbody').append(rows);
+
+                $.each(data, function (i, item) {
+                    var rows = "<tr class='system'>"
+                   + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.ProjectName + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.ItemName + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px;'>" + item.Unit + "</td>"
+                    + "<td class='EmployeeTableTD' style='font-size: 10px; text-align: right;'>" + item.Quantity + "</td>"
+                    + "</tr>";
+                    $('#tblEmployee4 tbody').append(rows);
+                });
+            },
+            error: function (ex) {
+                var r = jQuery.parseJSON(response.responseText);
+                alert("Message: " + r.Message);
+            }
+        });
+        return false;
+    });
+</script>
+<!-- Begin: Content -->
+<section id="content_wrapper">
+    <section id="content" class="animated fadeIn">
+        @*<h3 style="visibility:hidden;">Welcome @(Request.IsAuthenticated ? HttpContext.Current.User.Identity.Name : "Guest") - This is for Authorized user </h3>*@
+        <!-- Dashboard Tiles -->
+        <div class="row mb10">
+            <div class="col-sm-6 col-md-12">
+                <div class="panel bg-alert light of-h mb10">
+                    <div class="pn pl20 p5" ">
+                        <div class="icon-bg">
+                            <i class="fa fa-pagelines"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b>Welcome</b>
+                        </h2>
+                        <h5 class="text-muted">@(Request.IsAuthenticated ? HttpContext.Current.User.Identity.Name : "Guest")</h5>
+                    </div>
+                </div>
+            </div>
+            @*<div class="col-sm-6 col-md-3">
+                <div class="panel bg-info light of-h mb10">
+                    <div class="pn pl20 p5" style="height:650px;">
+                        <div class="icon-bg">
+                            <i class="fa fa-magnet"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b></b>
+                        </h2>
+                        <h5 class="text-muted"></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel bg-danger light of-h mb10">
+                    <div class="pn pl20 p5" style="height:650px;">
+                        <div class="icon-bg">
+                            <i class="fa fa-bar-chart-o"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b></b>
+                        </h2>
+                        <h5 class="text-muted"></h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="panel bg-warning light of-h mb10">
+                    <div class="pn pl20 p5" style="height:650px;">
+                        <div class="icon-bg">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <h2 class="mt15 lh15">
+                            <b></b>
+                        </h2>
+                        <h5 class="text-muted"></h5>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+
+                <!-- Chart Column -->
+
+                <div class="col-md-12 admin-grid" id="grid-3">
+
+                    <div id="p0" class="panel">
+                        @*<div class="panel-heading">
+                            <span class="panel-title">Management Dashboard</span>
+                            <span class="panel-controls"><a class="panel-control-loader" href="#"></a><a class="panel-control-remove" href="#"></a><a class="panel-control-title" href="#"></a><a class="panel-control-color" href="#"></a><a class="panel-control-collapse" href="#"></a><a class="panel-control-fullscreen" href="#"></a></span>
+                        </div>*@
+                        <div class="panel-body">
+                            <div class="row" style="display:none">
+                                <div class="col-md-6" style="display:none">
+                                    <div class="panel" >
+                                        <div class="panel-heading">
+                                            <span class="panel-title">Pending Purchase Indent </span>
+                                            <span class="panel-tile" style="float:right">
+                                                <a data-modal="" href="@Url.Action("IndexApproval","PurchaseRequisition" )">
+                                                    View Detail
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="panel-body pn">
+                                            @*<table id="tblEmployee1" class="table">
+                                                <thead>
+                                                    <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:100px; height:100px" />
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>*@
+                                            <div id="dvLoading" class="Load"></div>
+                                            <div id="#progress" style="display:none"></div>
+                                            <div  id="formbody">
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" style="display:none">
+                                    <div class="panel">
+                                        <div class="panel-heading">
+                                            <span class="panel-title">Pending Purchase Order </span>
+                                            <span class="panel-tile" style="float:right">
+                                                <a data-modal="" href="@Url.Action("Index","Print_Slip_For_Approval" )">
+                                                    View Detail
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="panel-body pn">
+                                            <table id="tblEmployee2" class="table">
+                                                <thead>
+                                                    <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading2" class="Load" style="width:100px; height:100px" />
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+
+                                            
+                                           
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="display:none">
+                                <div class="col-md-6" style="display:none">
+                                    <div class="panel">
+                                        <div class="panel-heading">
+                                            <span class="panel-title">Pending Issue Requisition </span>
+                                            <span class="panel-tile" style="float:right">
+                                                <a data-modal="" href="@Url.Action("Index","ApprovedIssueQuantity" )">
+                                                    View Detail
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="panel-body pn">
+                                            <table id="tblEmployee3" class="table">
+                                                <thead>
+                                                    <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading3" class="Load" style="width:100px; height:100px" />
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" style="display:none">
+                                    <div class="panel">
+                                        <div class="panel-heading">
+                                            <span class="panel-title">Stock Availability </span>
+                                        </div>
+                                        <div class="panel-body pn">
+                                            <table id="tblEmployee4" class="table">
+                                                <thead>
+                                                    <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading4" class="Load" style="width:100px; height:100px" />
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Admin-panels -->
+</section>
+    <!-- End: Content -->
+    </section>
+

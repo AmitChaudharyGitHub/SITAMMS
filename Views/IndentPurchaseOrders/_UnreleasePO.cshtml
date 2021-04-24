@@ -1,0 +1,294 @@
+﻿<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 5px;
+        text-align: left;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px;
+        margin: 5px;
+        color: #333;
+        text-align: left;
+        font-weight: normal;
+    }
+
+    .gridRow td {
+        padding: 10px;
+        color: #333;
+        text-align: left;
+        font-weight: normal;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .aaaa {
+        width: 60px;
+    }
+
+
+
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(".editporemarksDialog").on("click", function (e) {
+            debugger;
+            var url = $(this).attr('href');
+            $("#dialog-Poremarks").dialog({
+                title: 'Remarks Details',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-Poremarks").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-Poremarks").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-Poremarks").dialog('close');
+
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+
+        $(".viewPOofDialog").on("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-POViewDetail").dialog({
+                title: 'PO Details',
+                autoOpen: false,
+                resizable: false,
+                height: 550,
+                width: 1000,
+                show: { effect: 'explode', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "X": function () {
+                        $('#dialog-view').dialog('close');
+
+                    }
+                },
+                close: function (event, ui) {
+
+                    $(this).dialog('close');
+                 
+                }
+            });
+
+            $("#dialog-POViewDetail").dialog('open');
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-POViewDetail").dialog('close');
+
+        });
+    });
+</script>
+
+
+
+<script>
+    function GetPoremarksdetail() {
+    var url = '@Url.Action("GetPoRemarks", "IndentPurchaseOrders")';
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { Status: $('#textPO1').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+</script>
+
+<div id="gridposition" class="table-responsive">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 20, ajaxUpdateContainerId: "positionGrid");
+
+        if (Session["Dept"].ToString() == "PURCHASE")
+        {
+            @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+                    grid1.Column("S_No", header: "S.No."),
+                    grid1.Column("PurchaseOrderNo", header: "PO Number"),
+                    grid1.Column("PurchaseOrderDate", header: "PO Date"),
+
+                   grid1.Column("CreatedDate", header: "System Date"),
+                   grid1.Column("GrandTotal", header: "PO Value"),
+                   grid1.Column("Name", header: "Vendor Name"),
+                   grid1.Column("FullName", header: "Created By"),
+                   grid1.Column("ApprovedBY", header: "Approved By"),
+                   grid1.Column("ModifiedDate", header: "Approved Date"),
+                  // grid1.Column("Remark", header: "Remarks"),
+                  grid1.Column("UId", header: "Remark", canSort: false, format: @<text> @Html.ActionLink("View", "GetPoRemarks", new { Uid = ((string)item.PurchaseOrderNo).Replace("/", "#") }, new { @class = "editporemarksDialog", @id = "textPO1", @onchange = "javascript:GetPoremarksdetail(this.value);", @style = "color:#497bf9" })</text>),
+// grid1.Column("UId", header: "PO Release To Vendor", canSort: false, format: @<text> @Html.ActionLink("Click To Print and Release", "DoRelease", "IndentPurchaseOrders", new { UID = item.UId } , new { @style = "color:#497bf9" }) </text>)
+grid1.Column("UId", header: "PO Release To Vendor", canSort: false, format: @<text>@Html.ActionLink("Click To Print and Release", "GetPO_details_with_Indent", new { id = ((string)item.PurchaseOrderNo).Replace("/", "#") }, new { @class = "viewPOofDialog", @id = "text1", @onchange = "javascript:GetFloors(this.value);", @style = "color:#497bf9" })</text>)
+                       // grid1.Column("FullName", header: "Created By")
+                       //grid1.Column("SendToName", header: "Forward To"),
+                       // grid1.Column("MasterPICStatus", header: "PIC Status"),
+                       // grid1.Column("MasterMangStatus", header: "Mangement Status")
+                       //  grid1.Column("UId", header: "Action", style: "aaaa", canSort: false, format: @<text> @Html.Raw("<img src='/Images/file_edit.png' height='16' width='16' style='cursor:pointer' title='P.I Approval' onclick = 'EditProduct(" + @item.UId + ")'/> ") @Html.Raw("<img src='/Images/file-detail.png' height='16' width='16' title='P.I Approval Status Detail' style='cursor:pointer' onclick ='DeleteProduct(" + @item.UId + ")'/> ") </text>)
+
+                       //format: @<text>@Html.ActionLink(item.PurRequisitionNo != null ? (string)item.PurRequisitionNo : "A", "DetailsAPI", new { id = item.UId }, new { @class = "viewDialog", @id = "text1", @style = "color:#497bf9" })</text>
+
+
+                       ))
+        }
+        else
+        {
+            @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+                    grid1.Column("S_No", header: "S.No."),
+                    grid1.Column("PurchaseOrderNo", header: "PO Number"),
+                    grid1.Column("PurchaseOrderDate", header: "PO Date"),
+
+                   grid1.Column("CreatedDate", header: "System Date"),
+                   grid1.Column("GrandTotal", header: "PO Value"),
+                   grid1.Column("Name", header: "Vendor Name"),
+                   grid1.Column("FullName", header: "Created By"),
+                   grid1.Column("ApprovedBY", header: "Approved By"),
+                   grid1.Column("ModifiedDate", header: "Approved Date"),
+                  // grid1.Column("Remark", header: "Remarks"),
+                  grid1.Column("UId", header: "Remark", canSort: false, format: @<text> @Html.ActionLink("View", "GetPoRemarks", new { Uid = ((string)item.PurchaseOrderNo).Replace("/", "#") }, new { @class = "editporemarksDialog", @id = "textPO1", @onchange = "javascript:GetPoremarksdetail(this.value);", @style = "color:#497bf9" })</text>)
+// grid1.Column("UId", header: "PO Release To Vendor", canSort: false, format: @<text> @Html.ActionLink("Click To Print and Release", "DoRelease", "IndentPurchaseOrders", new { UID = item.UId } , new { @style = "color:#497bf9" }) </text>)
+                       // grid1.Column("FullName", header: "Created By")
+                       //grid1.Column("SendToName", header: "Forward To"),
+                       // grid1.Column("MasterPICStatus", header: "PIC Status"),
+                       // grid1.Column("MasterMangStatus", header: "Mangement Status")
+                       //  grid1.Column("UId", header: "Action", style: "aaaa", canSort: false, format: @<text> @Html.Raw("<img src='/Images/file_edit.png' height='16' width='16' style='cursor:pointer' title='P.I Approval' onclick = 'EditProduct(" + @item.UId + ")'/> ") @Html.Raw("<img src='/Images/file-detail.png' height='16' width='16' title='P.I Approval Status Detail' style='cursor:pointer' onclick ='DeleteProduct(" + @item.UId + ")'/> ") </text>)
+
+                       //format: @<text>@Html.ActionLink(item.PurRequisitionNo != null ? (string)item.PurRequisitionNo : "A", "DetailsAPI", new { id = item.UId }, new { @class = "viewDialog", @id = "text1", @style = "color:#497bf9" })</text>
+
+
+                       ))
+    }
+
+}
+else
+{
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+
+</div>
+
+<div id="dialog-Poremarks" style="display: none">
+</div>
+
+<div id="dialog-POViewDetail" style="display: none">
+</div>

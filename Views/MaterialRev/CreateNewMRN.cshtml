@@ -1,0 +1,1398 @@
+﻿@{
+    ViewBag.Title = "CreateNewMRN";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+    var Date = (DateTime)ViewBag.Date;
+}
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<style type="text/css">
+    #loading {
+        background: #fafafa url(../../Images/Loading.gif) no-repeat center center;
+        height: 64px;
+        width: 64px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -16px 0 0 -16px;
+    }
+
+    @@media screen and (min-width: 768px) {
+        .modal-dialog {
+            width: 700px; /* New width for default modal */
+        }
+
+        .modal-sm {
+            width: 350px; /* New width for small modal */
+        }
+    }
+
+    @@media screen and (min-width: 992px) {
+        .modal-lg {
+            width: 1100px; /* New width for large modal */
+        }
+    }
+
+    .table th, tr {
+        font-size: 12px;
+    }
+</style>
+
+
+
+@section scripts{
+    <script>
+        $(function () {
+
+            $(document).on('click', '#btnDisapprove', function () {
+                if ($('#txtGRN').val() != '') {
+                    $.post('@Url.Action("DisapproveGRN")', { GRNNo: $('#txtGRN').val() }, function (response) {
+                        if (response.Status == 1) {
+                            alert("GRN Disapproved Successfully.");
+                            location.href = '@Url.Action("Index", "MRNListClassification")';
+                        }
+                        else if (response.Status == 2) {
+                            alert("GRN not disapproved.");
+                        }
+                        else if (response.Status == 3) {
+                            alert("Some error occured.");
+                        }
+                    });
+                }
+            });
+
+
+            $("#Date, #txtDMRDate").datepicker(
+                {
+                    dateFormat: 'dd M yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    value: "",
+                    maxDate:new Date()
+                });
+            $("#txtChallanDate").datepicker(
+                {
+                    dateFormat: 'dd M yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    value: "",
+                    maxDate: new Date()
+                });
+        });
+
+        var MaterialDetail = '@Url.Action("GetDetailOnMRNByGRN", "MaterialRev")';
+        var MaterialTRNDetail = '@Url.Action("GetDetailOnMRNByGRNTRN", "MaterialRev")';
+        var GetGRNGrid = '@Url.Action("GetGrid", "MaterialRev")';
+        var GetGRNGridTrN = '@Url.Action("GetGridTRans", "MaterialRev")';
+        var SaveMRN = '@Url.Action("InsertMRN", "MaterialRev")';
+        var SaveMRNTRN = '@Url.Action("InsertMRNTRN", "MaterialRev")';
+        var RedUrl = '@Url.Action("Index", "MRNListClassification")';
+        var MRNNOBYdateWise = '@Url.Action("GetMRNNoByDateWise", "MaterialRev")';
+        var Status = '';
+    </script>
+
+    <script type="text/javascript">
+
+        function putmrndisable() {
+            document.getElementById('receivebtn').setAttribute("disabled", "disabled");
+        }
+
+        $(document).ready(function () {
+
+            $("#Date").val('');
+
+            $(document).on('click', '#txtPONumber1', function () {
+                var poNo = $(this).text();
+                $('#loading').show();
+                $('#modalBody').html('');
+                $.ajax({
+                    url: '@Url.Action("GetPO_details", "View_Print_Slip_Approval")',
+                    data: { Id: poNo },
+                    success: function (response) {
+                        $('#modalBody').html(response);
+                        $('#myModal1').modal();
+                        $('#loading').hide();
+                    }
+                });
+            });
+
+            $('#btnCheckRSTDetail').click(function () {
+                var rstNo = $('#txtRSTNo').val();
+               
+                if (rstNo != '') {
+                    if (isNaN(rstNo)) {
+                        alert('Please enter a valid RST Number.');
+                        return false;
+                    }
+                    else {
+                        GetRSTData();
+                    }
+                }
+            });
+
+            var timer;
+            $(function () {
+                $('#dateTime').html(getDateTime());
+
+                // Do a $.ajax call and update start time in your database
+
+                timer = setTimeout(function () {
+                    update();
+                }, 1000);
+            });
+
+            function update() {
+                $('#dateTime').html(getDateTime());
+
+                timer = setTimeout(function () {
+                    update();
+                }, 1000);
+            }
+
+            function getDateTime() {
+                var currentdate = new Date();
+                var datetime = "Current Time: "
+                    + currentdate.getHours() + ":"
+                    + currentdate.getMinutes() + ":"
+                    + currentdate.getSeconds();
+                return datetime;
+            }
+
+            function GetRSTData() {
+                $('#rstDetails').html('');
+                var rstNo = $("#txtRSTNo").val();
+                $.ajax({
+                    url: '@Url.Action("GetRSTDataByRSTNo","NewDMR_Report")',
+                    data: { RSTNo: rstNo },
+                    success: function (response) {
+                        if (response != '') {
+                            $('#rstDetails').html(response);
+                        }
+                    }
+                })
+            }
+
+
+            $("#Date").change(function () {
+                debugger;
+                var ThisMrnDate = $(this).val();
+                var G_RNDATE = $("#txtGateEntryDate").val()
+
+                if (new Date(ThisMrnDate) >= new Date(G_RNDATE)) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: MRNNOBYdateWise, // Calling json method
+                        dataType: 'json',
+
+                        data: { ProjectId: $("#hdn_GRN_PRJID").val(), MRNDate: $("#Date").val() },
+
+
+                        success: function (obj) {
+                            obj = $.parseJSON(obj)
+
+                            $("#txtmrnNumber_New").val(obj.MRN_No);
+
+                        },
+                        complete: function () {
+                            // $('#loading').hide();
+                        },
+                        error: function (ex) {
+                            alert('Failed to retrieve Material Receive Number.' + ex);
+                        }
+                    });
+
+                }
+                else {
+                    alert("MRN Date will be greater than Or equal to GRN Date.")
+                    $("#txtmrnNumber_New").val('');
+                    $("#Date").val('');
+                    return false;
+                }
+
+            });
+
+            $(document).on('keyup', "td[class^='Receive_'] input", function () {
+                debugger;
+                //var current = $(this).find('input').val();
+                //var str = $(this).attr('class');
+                //var a = str.substring(8);
+                ////var Qty = $("#POQty_" + a).find('input').val();
+                //var Qty = $("#exitmqty_" + a).find('input').val();
+                //var gateReceive = $("#POGateRecv_" + a).find('input').val();
+                //commented on 23_07_20
+
+                //alert(+gateReceive);
+
+                //if ((+current <= +Qty) && (+current <= +gateReceive)) {
+
+                //}
+                //else {
+                //    alert("Qty greater than P.O Qty OR less than GateEntry Recv. Qty can not received.");
+                //    $(this).find('input').val('');
+                //}
+                var transQty = $(this).closest('tr').find('[id^="POQty_"] input').val();
+                var gateEntryRecvQty = $(this).closest('tr').find('[id^="POGateRecv_"] input').val();
+                var itemRecevQty = $(this).closest('tr').find('[id^="PReceive_"] input').val();
+
+                //console.log(transQty);
+                //console.log(gateEntryRecvQty);
+                //console.log(itemRecevQty);
+
+
+                if (parseFloat(($(this).val())) > parseFloat(gateEntryRecvQty)) {
+                    alert("Qty greater than P.O Qty OR less than GateEntry Recv. Qty can not received.");
+                    $(this).val('');
+                }
+                else {
+
+
+                }
+
+
+
+            });
+            $('#loading').show();
+
+
+
+
+            if ($("#hdn_purType").val() == "6" || $("#hdn_purType").val() == "5") {
+                debugger;
+                $.ajax({
+                    type: 'POST',
+                    url: MaterialTRNDetail, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { GRN: $("#hdn_GRN_No").val(), Purchase_Type: $("#hdn_purType").val() },
+
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+
+
+
+                        $("#txtProject").val(obj.ProJname);
+                        $("#txtmrnNumber_New").val(obj.MRnno);
+                        $("#txtStatus").val(obj.PurchaseStatus);
+                        $("#txtGRN").val(obj.GRnNoval);
+                        $("#txtmrnNumber").val(obj.MRNData);
+                        $("#GateEntry_Date").val(obj.GRNDate);
+
+                        GetLoadMRNChildTRN(obj.GRnNoval, $("#hdn_purType").val());
+                    },
+                    complete: function () {
+                        $('#loading').hide();
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve.' + ex);
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: MaterialDetail, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { GRN: $("#hdn_GRN_No").val() },
+
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+
+
+
+                        $("#txtProject").val(obj.ProJname);
+                        //  $("#txtmrnNumber_New").val(obj.MRnno);
+                        $("#GateEntry_Date").val(obj.GRN_Date);
+                        $("#txtStatus").val(obj.PurchaseStatus);
+                        $("#txtGRN").val(obj.GRnNoval);
+                        $("#txtmrnNumber").val(obj.MRNData);
+
+                        //for mannual tranfer
+                        Status = $("#txtStatus").val();
+
+                        GetLoadMRNChild(obj.GRnNoval);
+
+                    },
+                    complete: function () {
+                        $('#loading').hide();
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve.' + ex);
+                    }
+                });
+
+            }
+
+
+
+            $('#receivebtn').click(function (e) {
+                debugger;
+                var RSTNo = $('#txtRSTNo').val();
+                if (RSTNo != '' && isNaN(RSTNo)) {
+                    alert('Please enter Valid RST Number.');
+                    return false;
+                }
+
+                var Valid = ValidMaster();
+                if (Valid == false)
+                    return;
+
+                @*if (Valid != false) {
+                    $.get('@Url.Action("IsBillNoDuplicate")', { BillNo: $('#txtChallanNo').val() }, function (response) {
+                        if (response.Status != "1") {
+                            alert("Bill Number/Challan Number already exists.");
+                            return false;
+                        }
+                        else {*@
+                            var otArr = [];
+                            var url = SaveMRN;
+
+                            if ($("#txtStatus").val() == "HO Purchase Gate In" || $("#txtStatus").val() == "RO Purchase Gate In") {
+                                debugger;
+                                var values = IPOToArray();
+                                Valid = values[0];
+                                if (Valid == false)
+                                    return;
+                                otArr = values[1];
+                            }
+                            if ($("#txtStatus").val() == "FOC Gate In" || $("#txtStatus").val() == "CASH Gate In") {
+                                debugger;
+                                var values = IPOToArray();
+                                Valid = values[0];
+                                if (Valid == false)
+                                    return;
+                                otArr = values[1];
+                            }
+
+                            if ($("#txtStatus").val() == "Manual Transfer Receive Gate In") {
+                                debugger;
+                                var values = IPOToArray1();
+                                Valid = values[0];
+                                if (Valid == false)
+                                    return;
+                                otArr = values[1];
+                            }
+
+                            else if ($("#txtStatus").val() == "Site Purchase Gate In" || $("#txtStatus").val() == "Mechanical Purchase Gate In" || $("#txtStatus").val() == "Plumbing Purchase Gate In" || $("#txtStatus").val() == "Electrical Purchase Gate In") {
+                                var values = LPToArray();
+
+                                Valid = values[0];
+                                if (Valid == false)
+                                    return;
+                                otArr = values[1];
+
+                            } else if ($("#txtStatus").val() == "Intra Transfer (Within State) Gate In" || $("#txtStatus").val() == "Inter Transfer (Other State) Gate In") {
+                                var url = SaveMRNTRN;
+                                var values = OSTRNToArray();
+
+                                Valid = values[0];
+                                if (Valid == false)
+                                    return;
+                                otArr = values[1];
+                            }
+                            ChallanNo = $("#txtChallanNo").val().trim();
+                            ChallanDate = $("#txtChallanDate").val();
+                            VehicalNo = $('#txtVehicalNo').val().trim();
+                            EwayBill = $('#txtEWayBillNo').val().trim();
+                            DMRDate = $('#txtDMRDate').val();
+                            var obj1 = getMaster();
+                            var data = {
+                                'Child': otArr,
+                                'Master': obj1,
+                                'ChallanNo': ChallanNo,
+                                'ChallanDate': ChallanDate,
+                                'VehicalNo': VehicalNo,
+                                'RSTNo': RSTNo,
+                                EwayBillNo: EwayBill,
+                                DMRDate: DMRDate
+                            };
+                            //console.log(data);
+
+                            $('#dvLoading').show();
+                            $.ajax({
+                                type: 'POST',
+                                url: url,
+                                data: JSON.stringify(data),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                processdata: true,
+
+                                success: function (json) {
+                                    if (json == "2")
+                                        alert("Something went wrong!");
+                                    else if (json == "-1")
+                                        alert("MRN already created of selected GRN No.");
+                                    else {
+                                        alert("Item Quantity has Successfully Receive. " + "Your Transaction No. Is " + json.TransNo)
+                                        $('#formbody').html('');
+                                        window.location.href = RedUrl;
+                                    }
+                                },
+
+
+                                complete: function () {
+                                    $('#dvLoading').hide();
+                                },
+
+                                error: function () {
+                                    alert('Error in Submit Data');
+                                }
+                            });
+                       // }
+                //    });
+
+                //}
+            });
+
+
+                function IPOToArray() {
+                   // debugger;
+                    var otArr = [];
+                    var ValidChild = false;
+                    var tbl2 = $('#gridM tbody tr').each(function (i) {
+                       // debugger;
+                        var obj = new Object();
+                        if ($(this)[0].rowIndex != 0) {
+                           // debugger;
+
+                          //  debugger;
+                            x = $(this).children();
+                            obj.ReceiveQty = $(this).children().eq(11).find('input').val();
+
+                            var gateEntryQty = $(this).children().eq(9).find('input').val();
+
+                            if (obj.ReceiveQty != null && obj.ReceiveQty != 0 && (gateEntryQty >= obj.ReceiveQty)) {
+                                ValidChild = true;
+
+
+
+
+                                obj.GateEntryNo = $("#txtmrnNumber").val();
+
+                                var st = $("#txtStatus").val();
+                                if (st == "Site Purchase Gate In") {
+                                    obj.Status = 'LP';
+                                } else if (st == "HO Purchase Gate In") {
+                                    obj.Status = 'IPO';
+                                } else if (st == "RO Purchase Gate In") {
+                                    obj.Status = 'RO';
+                                } else if (st == "FOC Gate In") {
+                                    obj.Status = 'FC';
+                                }
+                                else if (st == "CASH Gate In") {
+                                    obj.Status = 'CH';
+                                }
+                                else if (st == "Manual Transfer Receive Gate In") {
+                                    obj.Status = 'MTR';
+                                }
+                                else {
+                                    obj.Status = null;
+                                }
+
+                                //   obj.Status = $("#Status option:selected").val();
+
+
+
+                                obj.StatusTypeId = $(this).children().eq(0).attr('POID');
+
+                                obj.ItemNo = $(this).children().eq(0).attr('itemno');
+                                obj.Item = $(this).children().eq(2).text().trim();
+                                obj.ItemGroup = $(this).children().eq(1).text().trim();
+                                obj.Unit = $(this).children().eq(3).text().trim();
+
+                                obj.StatusChildId = $(this).children().eq(0).attr('pochildId');
+                                obj.CartageTypeId = $(this).children().eq(0).attr('cartageId');
+                                obj.CartageAmount = $(this).children().last().find('input').val();
+                                if (obj.CartageAmount == '') {
+                                    obj.CartageAmount = 0.00;
+                                }
+                              //  debugger;
+                                obj.Rate = $(this).children().eq(0).attr('rate');
+
+                                obj.GateEntry_Mid_Id = $("#hdn_GRN_UID").val();
+                                obj.GateEntryChild_Mid_Id = $(this).children().eq(0).attr('gateentrychildid');
+
+
+
+                                otArr.push(obj);
+                            }
+
+
+                        }
+                    })
+                    return [ValidChild, otArr];
+                }
+
+
+                function IPOToArray1() {
+                  //  debugger;
+                    var otArr = [];
+                    var ValidChild = false;
+                    var tbl2 = $('#gridM tbody tr').each(function (i) {
+                      //  debugger;
+                        var obj = new Object();
+                        if ($(this)[0].rowIndex != 0) {
+                         //   debugger;
+
+                         //   debugger;
+                            x = $(this).children();
+                            obj.ReceiveQty = $(this).children().eq(9).find('input').val();
+
+                            var gateEntryQty = $(this).children().eq(7).find('input').val();
+
+                            if (obj.ReceiveQty != null && obj.ReceiveQty != 0 && (gateEntryQty >= obj.ReceiveQty)) {
+                                ValidChild = true;
+
+
+
+
+                                obj.GateEntryNo = $("#txtmrnNumber").val();
+
+                                var st = $("#txtStatus").val();
+                                if (st == "Site Purchase Gate In") {
+                                    obj.Status = 'LP';
+                                } else if (st == "HO Purchase Gate In") {
+                                    obj.Status = 'IPO';
+                                } else if (st == "RO Purchase Gate In") {
+                                    obj.Status = 'RO';
+                                } else if (st == "FOC Gate In") {
+                                    obj.Status = 'FC';
+                                }
+                                else if (st == "CASH Gate In") {
+                                    obj.Status = 'CH';
+                                }
+                                else if (st == "Manual Transfer Receive Gate In") {
+                                    obj.Status = 'MTR';
+                                }
+                                else {
+                                    obj.Status = null;
+                                }
+
+                                //   obj.Status = $("#Status option:selected").val();
+
+
+
+                                obj.StatusTypeId = $(this).children().eq(0).attr('POID');
+
+                                obj.ItemNo = $(this).children().eq(0).attr('itemno');
+                                obj.Item = $(this).children().eq(2).text().trim();
+                                obj.ItemGroup = $(this).children().eq(1).text().trim();
+                                obj.Unit = $(this).children().eq(3).text().trim();
+
+                                obj.StatusChildId = $(this).children().eq(0).attr('pochildId');
+                                obj.CartageTypeId = $(this).children().eq(0).attr('cartageId');
+                                obj.CartageAmount = $(this).children().last().find('input').val();
+                                if (obj.CartageAmount == '') {
+                                    obj.CartageAmount = 0.00;
+                                }
+                             //   debugger;
+                                obj.Rate = $(this).children().eq(0).attr('rate');
+
+                                obj.GateEntry_Mid_Id = $("#hdn_GRN_UID").val();
+                                obj.GateEntryChild_Mid_Id = $(this).children().eq(0).attr('gateentrychildid');
+
+
+
+                                otArr.push(obj);
+                            }
+
+
+                        }
+                    })
+                    return [ValidChild, otArr];
+                }
+
+                function LPToArray() {
+                    debugger;
+                    var otArr = [];
+                    var ValidChild = false;
+                    var tbl2 = $('#gridM tbody tr').each(function (i) {
+                        debugger;
+                        var obj = new Object();
+
+                        x = $(this).children();
+                        obj.ReceiveQty = $(this).children().eq(11).find('input').val();
+                        if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                            ValidChild = true;
+
+                            obj.GateEntryNo = $("#txtmrnNumber").val();
+
+                            //  obj.Status = $("#Status option:selected").val();
+
+
+                            var st = $("#txtStatus").val();
+                            if (st == "Site Purchase Gate In") {
+                                obj.Status = 'LP';
+                            }
+                            else if (st == "Electrical Purchase Gate In") {
+                                obj.Status = 'EP';
+                            }
+                            else if (st == "Plumbing Purchase Gate In") {
+                                obj.Status = 'PP';
+                            }
+                            else if (st == "Mechanical Purchase Gate In") {
+                                obj.Status = 'MP';
+                            }
+                            else if (st == "HO Purchase Gate In") {
+                                obj.Status = 'IPO';
+                            }
+                            else if (st == "FOC Gate In") {
+                                obj.Status = 'FC';
+                            }
+                            else if (st == "CASH Gate In") {
+                                obj.Status = 'CH';
+                            }
+                            else if (st == "Manual Transfer Receive Gate In") {
+                                obj.Status = 'MTR';
+                            }
+                            else {
+                                obj.Status = null;
+                            }
+
+
+
+
+                            obj.StatusTypeId = $(this).children().eq(0).attr('POID');
+
+                            obj.ItemNo = $(this).children().eq(0).attr('itemno');
+                            obj.Item = $(this).children().eq(2).text().trim();
+                            obj.ItemGroup = $(this).children().eq(1).text().trim();
+                            obj.Unit = $(this).children().eq(3).text().trim();
+
+                            obj.StatusChildId = $(this).children().eq(0).attr('pochildId');
+                            obj.CartageTypeId = $(this).children().eq(0).attr('cartageId');
+                            obj.CartageAmount = $(this).children().last().find('input').val();
+                            if (obj.CartageAmount == '') {
+                                obj.CartageAmount = 0.00;
+                            }
+                            debugger;
+                            obj.Rate = $(this).children().eq(0).attr('rate');
+
+                            obj.GateEntry_Mid_Id = $("#hdn_GRN_UID").val();
+                            obj.GateEntryChild_Mid_Id = $(this).children().eq(0).attr('gateentrychildid');
+
+
+
+                            otArr.push(obj);
+                        }
+
+                    })
+                    return [ValidChild, otArr];
+
+                }
+
+
+                function getMaster() {
+
+
+
+                    var obj1 = new Object();
+
+
+                    //   ----------------------------------------------------------------------------------
+                    obj1.Date = $("#Date").val();
+                    obj1.Time = $("#Time").val();
+
+                    obj1.ProjectNo = $("#hdn_GRN_PRJID").val();
+                    obj1.ProjectName = $("#txtProject").val();
+
+                    obj1.GateEntryNo = $("#txtmrnNumber").val();
+
+                    obj1.MRN_No_New = $("#txtmrnNumber_New").val();
+                   
+                    var st = $("#txtStatus").val();
+                    if (st == "Site Purchase Gate In") {
+                        obj1.Status = 'LP';
+                    }
+                    else if (st == "Mechanical Purchase Gate In") {
+                        obj1.Status = 'MP';
+                    }
+                    else if (st == "Plumbing Purchase Gate In") {
+                        obj1.Status = 'PP';
+                    }
+                    else if (st == "Electrical Purchase Gate In") {
+                        obj1.Status = 'EP';
+                    }
+                    else if (st == "HO Purchase Gate In") {
+                        obj1.Status = 'IPO';
+                    }
+                    else if (st == "RO Purchase Gate In") {
+                        obj1.Status = 'RO';
+                    } else if (st == "FOC Gate In") {
+                        obj1.Status = 'FC';
+                    }
+                    else if (st == "CASH Gate In") {
+                        obj1.Status = 'CH';
+                    } else if (st == "Intra Transfer (Within State) Gate In") {
+                        obj1.Status = 'ISP';
+                    } else if (st == "Inter Transfer (Other State) Gate In") {
+                        obj1.Status = 'OSP';
+                    }
+                    else if (st == 'Manual Transfer Receive Gate In') {
+                        obj1.Status = 'MTR';
+                    }
+                    else {
+                        obj1.Status = null;
+                    }
+
+
+                    obj1.GateEntry_Mid_No = $("#txtGRN").val();
+
+
+                    return obj1;
+                }
+                function ValidMaster() {
+                    var Projects = $("#txtProject").val();
+                    var MRnNo = $("#txtmrnNumber_New").val();
+
+                    var StatusType = $("#txtStatus").val();
+                    var GateEntryId = $("#txtGRN").val();
+                    var Date = $("#Date").val();
+                    var challanNo = $('#txtChallanNo').val();
+                    var challanDate = $('#txtChallanDate').val();
+                    var vehicalNo = $('#txtVehicalNo').val();
+
+                    var rr = true;
+                    if (Projects == "0") {
+                        $('#Projects').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#Projects').css('border-color', '');
+
+                    }
+
+                    if (MRnNo == "") {
+                        $('#txtmrnNumber_New').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#txtmrnNumber_New').css('border-color', '');
+                    }
+
+                    if (StatusType == "") {
+                        $('#Status').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#Status').css('border-color', '');
+                    }
+
+                    if (GateEntryId == "") {
+                        $('#ddlGrn').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#ddlGrn').css('border-color', '');
+                    }
+
+                    if (Date == "") {
+                        $('#Date').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#Date').css('border-color', '');
+                    }
+
+                    if (challanNo == "") {
+                        $('#txtChallanNo').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#txtChallanNo').css('border-color', '');
+                    }
+
+                    if (challanDate == "") {
+                        $('#txtChallanDate').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#txtChallanDate').css('border-color', '');
+                    }
+
+                    if (vehicalNo == "") {
+                        $('#txtVehicalNo').css('border-color', '#f0551b');
+                        rr = false;
+                    }
+                    else {
+                        $('#txtVehicalNo').css('border-color', '');
+                    }
+
+                    return rr;
+
+                }
+
+
+                function OSTRNToArray() {
+                    debugger;
+                    var otArr = [];
+                    var ValidChild = false;
+                    var tbl2 = $('#gridM tbody tr').each(function (i) {
+                        debugger;
+                        var obj = new Object();
+
+                        x = $(this).children();
+                        obj.ReceiveQty = $(this).children().eq(8).find('input').val();
+                        if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                            ValidChild = true;
+
+                            obj.GateEntryNo = $("#txtmrnNumber").val();
+
+                            //  obj.Status = $("#Status option:selected").val();
+
+
+                            var st = $("#txtStatus").val();
+                            if (st == "Site Purchase Gate In") {
+                                obj.Status = 'LP';
+                            } else if (st == "HO Purchase Gate In") {
+                                obj.Status = 'IPO';
+                            } else if (st == "FOC Gate In") {
+                                obj.Status = 'FC';
+                            }
+                            else if (st == "CASH Gate In") {
+                                obj.Status = 'CH';
+                            } else if (st == "Intra Transfer (Within State) Gate In") {
+                                obj.Status = 'ISP';
+                            } else if (st == "Inter Transfer (Other State) Gate In") {
+                                obj.Status = 'OSP';
+                            }
+                            else {
+                                obj.Status = null;
+                            }
+
+
+
+
+                            obj.StatusTypeId = $(this).children().eq(0).attr('POID');
+                            obj.SNo = $(this).attr('id');
+                            obj.ItemNo = $(this).children().eq(0).attr('itemno');
+                            obj.Item = $(this).children().eq(2).text().trim();
+                            obj.ItemGroup = $(this).children().eq(1).text().trim();
+                            obj.Unit = $(this).children().eq(3).text().trim();
+
+                            obj.StatusChildId = $(this).children().eq(0).attr('pochildId');
+
+                            debugger;
+                            obj.Rate = $(this).children().eq(0).attr('rate');
+
+                            obj.GateEntry_Mid_Id = $("#hdn_GRN_UID").val();
+                            obj.GateEntryChild_Mid_Id = $(this).children().eq(0).attr('gateentrychildid');
+
+
+
+                            otArr.push(obj);
+                        }
+
+                    })
+                    return [ValidChild, otArr];
+                }
+
+
+            // code on 19/02/2020 by pramod
+
+                $('#previewBtn').click(function (e) {
+                    // debugger;
+                    var RSTNo = $('#txtRSTNo').val();
+                    var vendor = $("#vendorName").text();
+                    var vAddres = $("#vendorAddr").text();
+                    if (RSTNo != '' && isNaN(RSTNo)) {
+                        alert('Please enter Valid RST Number.');
+                        return false;
+                    }
+
+                    for (var i = 0; i < $("#gridM tbody tr:not(.primary)").length ; i++) {
+                        if ($("#gridM tbody tr:not(.primary)").find("input[name='Receive']").val() == '') {
+                            alert("Enter Item Qty!");
+                            return;
+                        }
+                        else if (isNaN($("#gridM tbody tr:not(.primary)").find("input[name='Receive']").val())) {
+                            alert("Enter valid item Qty not valid!");
+                            return;
+                        }
+                    }
+
+                    if ($("#Date").val() == '') {
+                        alert("Date field required!");
+                        return false;
+                    }
+
+                    var Valid = ValidMaster();
+                    if (Valid == false)
+                        return;
+
+            @*if (Valid != false) {
+                $.get('@Url.Action("IsBillNoDuplicate")', { BillNo: $('#txtChallanNo').val() }, function (response) {
+                    if (response.Status != "1") {
+                        alert("Bill Number/Challan Number already exists.");
+                        return false;
+                    }
+                    else {*@
+                        var otArr = [];
+                        var url = SaveMRN;
+
+                        if ($("#txtStatus").val() == "HO Purchase Gate In" || $("#txtStatus").val() == "RO Purchase Gate In") {
+                          //  debugger;
+                            var values = IPOToArray();
+                            Valid = values[0];
+                            if (Valid == false)
+                                return;
+                            otArr = values[1];
+                        }
+                        if ($("#txtStatus").val() == "FOC Gate In" || $("#txtStatus").val() == "CASH Gate In") {
+                          //  debugger;
+                            var values = IPOToArray();
+                            Valid = values[0];
+                            if (Valid == false)
+                                return;
+                            otArr = values[1];
+                        }
+
+                        if ($("#txtStatus").val() == "Manual Transfer Receive Gate In") {
+                           // debugger;
+                            var values = IPOToArray1();
+                            Valid = values[0];
+                            if (Valid == false)
+                                return;
+                            otArr = values[1];
+                        }
+
+                        else if ($("#txtStatus").val() == "Site Purchase Gate In" || $("#txtStatus").val() == "Mechanical Purchase Gate In" || $("#txtStatus").val() == "Plumbing Purchase Gate In" || $("#txtStatus").val() == "Electrical Purchase Gate In") {
+                            var values = LPToArray();
+
+                            Valid = values[0];
+                            if (Valid == false)
+                                return;
+                            otArr = values[1];
+
+                        } else if ($("#txtStatus").val() == "Intra Transfer (Within State) Gate In" || $("#txtStatus").val() == "Inter Transfer (Other State) Gate In") {
+                            var url = SaveMRNTRN;
+                            var values = OSTRNToArray();
+
+                            Valid = values[0];
+                            if (Valid == false)
+                                return;
+                            otArr = values[1];
+                        }
+                        ChallanNo = $("#txtChallanNo").val();
+                        ChallanDate = $("#txtChallanDate").val();
+                    VehicalNo = $('#txtVehicalNo').val();
+                    EwayBill = $('#txtEWayBillNo').val().trim();
+                    DMRDate = $('#txtDMRDate').val(); 
+                        var obj1 = getMaster();
+                    var data = {
+                        'Child': otArr,
+                        'Master': obj1,
+                        'ChallanNo': ChallanNo,
+                        'ChallanDate': ChallanDate,
+                        'VehicalNo': VehicalNo,
+                        'RSTNo': RSTNo,
+                        EwayBillNo: EwayBill,
+                        DMRDate: DMRDate
+                    };
+                        //console.log(data);
+
+                        // $('#dvLoading').show();
+
+                        $.post("NewMRNPreview", { Grid: data, Vendor:vendor, Address:vAddres }, function (response) {
+                            $(".previewbody").html(response);
+                            $("#PreviewModal").modal('show');
+                        });
+
+                        //$.ajax({
+                        //    type: 'POST',
+                        //    url: "NewMRNPreview",
+                        //    data: JSON.stringify(data),
+                        //    contentType: "application/json; charset=utf-8",
+                        //    dataType: "json",
+                        //    processdata: true,
+
+                        //    success: function (json) {
+                        //        if (json == "1") {
+
+                        //            alert("Item Quantity has Successfully Receive.")
+                        //            $('#formbody').html('');
+                        //            window.location.href = RedUrl;
+                        //        }
+                        //    },
+
+
+                        //    complete: function () {
+                        //        $('#dvLoading').hide();
+                        //    },
+
+                        //    error: function () {
+                        //        alert('Error in Submit Data');
+                        //    }
+                        //});
+                        // }
+                        //    });
+
+                        //}
+                    });
+
+                    //end
+
+            });
+
+            function GetLoadMRNChild(Grnno) {
+
+                if ($('#txtStatus').val() == "Manual Transfer Receive Gate In") {
+                    Type = 'ManualReceive';
+                }
+                else {
+                    Type = '';
+                }
+
+                $.get(GetGRNGrid,
+                    { GRNID: Grnno, Type: Type },
+                    function (result) {
+                        $('#formbody').show();
+                        $('#formbody').html(result);
+                        $("#loading").hide();
+                    });
+            }
+
+            function GetLoadMRNChildTRN(Grnno, type) {
+                $.get(GetGRNGridTrN,
+                    { GRNID: Grnno, PType: type },
+                    function (result) {
+                        $('#formbody').show();
+                        $('#formbody').html(result);
+                        $("#loading").hide();
+                    });
+            }
+
+
+    </script>
+
+}
+
+
+
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+
+                            <div class="section-divider mb40" id="spy1">
+                                <span>Material Receive</span>
+                                <input type="hidden" value="@ViewBag.GRN_No" id="hdn_GRN_No" />
+                                <input type="hidden" value="@ViewBag.GRN_No_UID" id="hdn_GRN_UID" />
+                                <input type="hidden" value="@ViewBag.GRN_PRoJID" id="hdn_GRN_PRJID" />
+                                <input type="hidden" value="@ViewBag.PurchaseType" id="hdn_purType" />
+                                <input type="hidden" value="" id="GateEntry_Date" />
+                            </div>
+
+
+
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("Date", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "Date", @placeholder = "MRN Date", autocomplete = "off" })
+                                                <label for="RefNo" class="field-icon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                <span style="font:bold" id="dateTime"></span>
+
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("Project", null, new { id = "txtProject", @class = "form-control gui-input required", @readonly = "readonly", @PlaceHolder = "Project Name" })
+
+                                                <label for="firstname" class="field-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("MRN", null, new { id = "txtmrnNumber", @class = "form-control gui-input required", @readonly = "readonly", @PlaceHolder = "MRN", @style = "display:none" })
+                                                @Html.TextBox("MRN", null, new { id = "txtmrnNumber_New", @class = "form-control gui-input required", @readonly = "readonly", @PlaceHolder = "MRN" })
+                                                <label for="firstname" class="field-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group form-control">
+                                            <label>
+                                                P.I Number :<strong>@ViewBag.PINo</strong>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("Status", null, new { id = "txtStatus", @class = "form-control gui-input required", @readonly = "readonly", @PlaceHolder = "Purchase Status" })
+
+                                                <label for="firstname" class="field-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="section">
+                                            <label class="field prepend-icon">
+                                                @Html.TextBox("GRN", null, new { id = "txtGRN", @class = "form-control gui-input required", @readonly = "readonly", @PlaceHolder = "GRN No." })
+                                                <label for="firstname" class="field-icon">
+                                                    <i class="fa fa-building"></i>
+                                                </label>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-control">
+                                            <label>
+                                                P.O Number: <a href="javascript:void(0);" id="txtPONumber1" style="color:blue;">@ViewBag.PONo</a>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                @if (ViewBag.IsShowVendor)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <strong>Vendor Name: </strong>
+                                            <span class="form-control" id="vendorName">@ViewBag.VendorName</span>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <strong>  Vendor Address: </strong>
+                                            <span class="form-control" id="vendorAddr">@ViewBag.VendorAddress</span>
+                                        </div>
+                                    </div>
+                                }
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <lable><strong>RST Number: </strong></lable>
+                                            <input type="text" name="txt" class="form-control" id="txtRSTNo" autocomplete="off" style="width:100%" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <br/>
+                                        <input type="button" name="btn" value="Check Details" class="btn btn-sm btn-primary" id="btnCheckRSTDetail" />
+                                    </div>
+                                </div>
+
+                                <div id="rstDetails"></div>
+                                
+                                <br />
+                                <div class="row">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Gate Entry Details</div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="section">
+                                                        <label>Gate Entry Date</label>
+                                                        <input type="text" name="txt" id="txtGateEntryDate" value="@ViewBag.GateEntryDate" class="form-control gui-input col-md-12" readonly="readonly" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label>Gate Entry Number</label>
+                                                        <input type="text" name="txt" id="txtGateEntryNumber" value="@ViewBag.GRN_No" class="form-control gui-input col-md-12" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="section">
+                                                        <label>Challan Number</label>
+                                                        <input type="text" name="txt" id="txtChallanNo" value="@ViewBag.ChallanNo" class="form-control gui-input col-md-12" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="section">
+                                                        <label>Challan Date</label>
+                                                        <input type="text" name="txt" id="txtChallanDate" value="@ViewBag.ChallanDate" class="form-control gui-input col-md-12 DatePicker" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="section">
+                                                        <label>Vehical No.</label>
+                                                        <input type="text" name="txt" id="txtVehicalNo" value="@ViewBag.VehicalNo" class="form-control gui-input col-md-12 DatePicker" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <lable><strong>E-Way  Bill No.: </strong></lable>
+                                                        <input type="text" name="txt" class="form-control" maxlength="50" id="txtEWayBillNo" autocomplete="off" style="width:100%" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <lable><strong>Date Of E-Way Bill: </strong></lable>
+                                                        <input type="text" name="txt" class="form-control" id="txtDMRDate" autocomplete="off" style="width:100%" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+
+
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4"><div style="display:none;" id="loading" class="loading"> <img src="~/Images/Loading.gif" style="width:64px;height:64px" /></div></div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+                                </div>
+
+
+                            </div>
+
+                            <br />
+
+                            <div class="col-md-12">
+                                <div class="col-md-6">
+                                    <div class="section" style="float:left">
+                                       
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="section" style="float:right">
+                                        <input type="button" value="Preview" id="previewBtn" class="btn btn-warning" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+
+<div id="myModal1" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Purchase Order Details</h4>
+            </div>
+            <div class="modal-body" id="modalBody">
+
+            </div>
+            <div class="modal-footer">
+              
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!--------------------Receive Confirm Preview----------------------->
+<!------------------------------------------------------------------->
+
+
+<div class="modal fade" id="PreviewModal" role="dialog">
+    <div class="modal-dialog  modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Material Recieve Preview</h4>
+            </div>
+            <div class="modal-body previewbody">
+
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Disapprove" id="btnDisapprove" class="btn btn-danger" onclick="putmrndisable()" />
+                <input type="button" value="Receive" id="receivebtn" class="btn btn-success" onclick="putmrndisable()" />
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+<!------------------------------------------------------------------>

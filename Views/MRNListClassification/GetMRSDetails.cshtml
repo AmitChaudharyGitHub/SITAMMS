@@ -1,0 +1,360 @@
+﻿
+
+@{
+    ViewBag.Title = "GetMRSDetails";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<style type="text/css">
+
+
+    .div1 {
+	border: 1px solid black; 
+	
+}
+.div2{
+	background-color: #fff;
+}
+h2 {
+	text-align: center;
+	font-size: 20px;
+}
+h4, h6{
+	text-align: center;
+}
+p {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 0px;
+   
+}
+th {
+ background-color: #dddddd;
+}
+</style>
+
+
+<style type="text/css">
+    @@media print {
+        table, p, div {
+            font-family: 'Arial Narrow', Arial, sans-serif;
+            font-size: 5px;
+          ;
+        }
+
+       
+    table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 0px;
+   
+}
+th {
+ background-color: #dddddd;
+}     .breakpage {
+            page-break-after: always;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+    }
+</style>
+
+
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var GETMRS = '@Url.Action("GetMRS", "MRNListClassification")';
+    var GEtItemDetails = '@Url.Action("GetItemdetailGrid", "MRNListClassification")';
+    var GETMRSTRN = '@Url.Action("GetMRSatTRANS", "MRNListClassification")';
+    debugger;
+    $(document).ready(function()
+    {
+        if ($("#hdn_transPurtype").val() == '5' || $("#hdn_transPurtype").val() == '6') {
+            $.getJSON(GETMRSTRN, { MRN_NO: $("#hdn_mrnno").val(), PurTypeId: $("#hdn_transPurtype").val() }, function (data) {
+                debugger;
+                data = $.parseJSON(data);
+
+                debugger;
+
+                $.each(data, function (i, item) {
+                    $('#lblGetEnteryDate').text(item.GateEntryMidDate);
+                    $('#lblProjectName').text(item.ProjectName);
+                    $('#lblgateRegistraionNo').text(item.GateEntryMidNo);
+                    $('#lblSupplierName').text(item.VendorName);
+                    $('#lblSupplierChalanNo').text(item.ChallanNo);
+                    $('#lblTruckNo').text(item.VehicleNo);
+                    $('#lblGateEntryTimeIn').text(item.TimeIn);
+                    $('#hdn_Uid').val(item.UId)
+                    debugger;
+
+                });
+                BindItemrecord($('#hdn_Uid').val());
+
+
+            });
+        }
+        else {
+
+            $.getJSON(GETMRS, { MRN_NO: $("#hdn_mrnno").val() }, function (data) {
+                debugger;
+                data = $.parseJSON(data);
+
+                debugger;
+
+                $.each(data, function (i, item) {
+                    $('#lblGetEnteryDate').text(item.GateEntryMidDate);
+                    $('#lblProjectName').text(item.ProjectName);
+                    $('#lblgateRegistraionNo').text(item.GateEntryMidNo);
+                    $('#lblSupplierName').text(item.VendorName);
+                    $('#lblSupplierChalanNo').text(item.ChallanNo);
+                    $('#lblTruckNo').text(item.VehicleNo);
+                    $('#lblGateEntryTimeIn').text(item.TimeIn);
+                    $('#hdn_Uid').val(item.UId)
+                    debugger;
+
+                });
+                BindItemrecord($('#hdn_Uid').val());
+
+
+            });
+        }
+
+
+   
+
+    });
+
+
+
+    function BindItemrecord(Uid)
+    {
+        $.get(GEtItemDetails,
+                   {
+                       Uid: Uid
+                       
+                   },
+                   function (result) {
+                       $('#formitemdetail').show();
+                       $('#formitemdetail').html(result);
+                      
+                   });
+    }
+
+</script>
+
+<script>
+        function PrintContent()
+        {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+</script>
+
+<style type="text/css">
+
+
+ .no-border{
+     border:none;
+ }
+
+ .admin-form label{
+     font-size:10px;
+ }
+    </style>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table table-bordered" style="width:100%; font-size:12px;" cellpadding="4" cellspacing="0" border="1">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">MRN Entry </span>
+                                </div>
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+                                        <div class="panel-body bg-light">
+                                            <div class="row">
+                                                <div class="col-lg-12" style="padding-right: 300px; padding-left: 300px; padding-top:35px;" id="divtoprint">
+                                                    <div class="col-sm-12 div1">
+                                                        <div class="row text-center">
+                                                            <center>
+                                                                <div class="col-sm-12">
+                                                                    <table class="" style="width:100%; font-size:12px;" cellpadding="0" cellspacing="0" border="0">
+                                                                        <tbody class="no-border">
+                                                                            <tr class="no-border">
+                                                                                <td class="no-border" style="width: 16%;"></td>
+                                                                                <td class="no-border"><span><img src="~/Images/logo.png"></span></td>
+                                                                                <td class="no-border" style="line-height:0px;">
+                                                                                    <h2 class="text-center"> Ahluwalia Contracts (India) Ltd.</h2>
+                                                                                    <h6 class="text-center"> A-177, Okhla Industrial Area, Phase-I, New Delhi - 110020</h6>
+                                                                                    <h4 class="text-center">FORMAT No. F-05/QMSP - 08</h4>
+                                                                                    <input type="hidden" value="@ViewBag.MRNNO" id="hdn_mrnno" />
+                                                                                    <input type="hidden" id="hdn_Uid" />
+                                                                                    <input type="hidden" id="hdn_transPurtype" value="@ViewBag.PurchType" />
+
+                                                                                </td>
+                                                                                <td class="no-border" style="width: 10%;"></td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </center>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <h2 style="text-decoration: underline black; text-align:center; font-size:12px">MATERIAL RECEIPT SLIP</h2>
+                                                    </div>
+
+                                                    <div class="col-sm-6"><p>No. </p></div>
+                                                    <div class="col-sm-6"><p>Date : <label id="lblGetEnteryDate"></label>   </p></div>
+                                                    <div class="col-sm-12"><p> @Html.DisplayName("Project Name:")  <label id="lblProjectName"></label> </p></div>
+                                                    <div class="col-sm-12"><p>Gate Register No.:  <label id="lblgateRegistraionNo"></label> </p></div>
+                                                    <div class="col-sm-12"><p>Supplier Name . :  <label id="lblSupplierName"></label></p></div>
+                                                    <div class="col-sm-12"><p>Material . :</p></div>
+
+                                                    <div class="col-sm-12" id="formitemdetail">
+                                                        
+                                                    </div>
+                                                    <div class="">
+                                                        <div class="col-sm-12">
+                                                            <p>Supplier Challan No  : <label id="lblSupplierChalanNo"></label> </p>
+                                                        </div>
+
+                                                        <div class="col-sm-12">
+
+                                                            <p>Deduction(if any) : </p>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <p>Truck No  :   <label id="lblTruckNo"></label></p>
+                                                        </div>
+                                                  
+                                                     <div class="col-sm-6">
+                                                            <p>Time in :  <label id="lblGateEntryTimeIn"></label> </p>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p>Truck Out : </p>
+                                                        </div>
+                                                    </div>
+                                                    <div>&nbsp;</div>
+                                                    <div>&nbsp;</div>
+
+
+
+
+                                                    <div class="">
+                                                        <table class="text-center">
+                                                            <tbody>
+                                                                <tr>
+                                                    <td class="no-border" style="width:40%"><p style="font-style: italic;"><strong>Sig.of Receiver </strong></p>
+                                                        </td>
+                                                    <td class="no-border" style="width:40%"><p style="font-style: italic;"><strong> Storekeeper </strong></p></td>
+                                                     <td class="no-border" style="width:20%"><p style="font-style: italic;"><strong>Project Incharge</strong></p></td> 
+                                                                </tr>
+                                                        </tbody>
+                                                           </table>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="col-mg-12">
+                                                    <input type="button" id="btnPrint" class="btn btn-primary" style="float:right" value="Print" onclick="PrintContent();" />
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <div class="row">
+
+                                            <div id="dvLoading"></div>
+                                            <div id="#progress" style="display:none"><img src="~/Images/MMSloader.gif" /></div>
+                                            <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                            </div>
+
+                                            <div class="section-divider mt40 mb25" id="spy5">
+                                                <span></span>
+                                            </div>
+
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

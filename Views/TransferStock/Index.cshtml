@@ -1,0 +1,442 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+    var GetItemByGroup='@Url.Action("GetItemByGroupStock", "tblItemMasters")';
+    var GetSiteTransferName = '@Url.Action("BindTransferName", "TransferStock")';
+    var GetSiteTransferNumber = '@Url.Action("BindTransferNo", "TransferStock")';
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+        $("#Projects").change(function ()
+        {
+
+            if($("#Projects option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+                $("#TransferSites").empty();
+             
+                $.ajax({
+                    type: 'POST',
+                    url: GetSiteTransferName, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+
+
+
+                        // console.log(obj)
+                        GetTransferSitelist(obj);
+
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+             
+
+
+                return false;
+            }else
+            { var markup = "<option value='0'>Transferred Site Name</option>";
+
+          $("#TransferSites").html(markup).show();
+          
+            }
+        });
+
+        $("#Projects").change(function ()
+        {
+            if($("#Projects option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+               
+                $("#TransferNos").empty();
+               
+                $.ajax({
+                    type: 'POST',
+                    url: GetSiteTransferNumber, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (obj1) {
+                        objf = $.parseJSON(obj1)
+
+
+
+                        // console.log(obj)
+                        GetTransferSiteNolist(objf);
+
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+
+
+                return false;
+            }else
+            { 
+
+                var markup1 = "<option value='0'>Transfer No.</option>";
+               
+                $("#TransferNos").html(markup).show();
+            }
+        });
+
+        //Country Dropdown Selectedchange event
+        $("#ItemGroups").change(function () {
+            $("#Items").empty();
+
+            //$("#grid").empty();
+            $("#Items").append($("<option></option").val("").html("Select Item "));
+            if ($('#ItemGroups option:selected').val() != 0) {
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemByGroup, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { Pid: $("#Projects option:selected").val(), Gid: $("#ItemGroups").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        names = $.parseJSON(names)
+
+
+                        $.each(names, function (i, itname) {
+                            $("#Items").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+
+
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        });
+    });
+
+    function GetTransferSitelist(data)
+    {
+        
+            var procemessage = "<option value='0'> Please wait...</option>";
+            $("#TransferSites").html(procemessage).show();
+            var markup = "<option value='0'>Transfer Site Name</option>";
+            for (var x = 0; x < data.length; x++) {
+
+
+                //console.log(data[x].Value);
+                if (data[x].Value != null)
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+            }
+            $("#TransferSites").html(markup).show();
+
+        
+    }
+
+
+    function GetTransferSiteNolist(data)
+    {
+        
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#TransferNos").html(procemessage).show();
+        var markup = "<option value='0'>Transfer No.</option>";
+        for (var x = 0; x < data.length; x++) {
+
+
+            //console.log(data[x].Value);
+            if (data[x].Value != null)
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#TransferNos").html(markup).show();
+
+        
+    }
+
+</script>
+
+<script>
+    $(function () {
+        $("#fromdate").datepicker();
+        $("#todate").datepicker();
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $('#div_filter').hide();
+        $('#formbody').hide();
+
+        $('#btn_Search').click(function (e) {
+            //debugger;
+            $("#loading").show();
+            //alert($('#HdnPrjId').val())
+            e.preventDefault();
+            var url = '@Url.Action("GetAllDatas", "TransferStock")';
+            $.get(url,
+                { PID: $("#Projects option:selected").val(), fromdate: $('#fromdate').val(), todate: $('#todate').val(), ItemGroups: $('#ItemGroups option:selected').val(), Items: $('#Items option:selected').val(), TransferSites: $('#TransferSites option:selected').val(), TransferNos: $('#TransferNos option:selected').val() },
+                function (result) {
+                    debugger;
+                    $('#formbody').show();
+                    $('#formbody').html(result);
+                    $('#div_filter').show();
+                    $("#loading").hide();
+                });
+        })
+    });
+</script>
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">MATERIAL TRANSFER REPORT</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                        
+
+                                            <div class="row">
+
+                                                
+
+
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-2">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "From Date", @id = "fromdate" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="section">
+                                                            <label class="field prepend-icon">
+                                                                @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "To Date", @id = "todate" })
+                                                                <label for="firstname" class="field-icon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </label>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("ItemGroups", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroups", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Items", new SelectList(string.Empty, "Value", "Text"), "Select Item", htmlAttributes: new { @id = "Items", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                
+                                                                @Html.DropDownList("TransferSites", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Transferred Site Name", htmlAttributes: new { @id = "TransferSites", @class = "form-control" })
+
+
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                      @Html.DropDownList("TransferNos", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Transfer No.", htmlAttributes: new { @id = "TransferNos", @class = "form-control" })
+
+
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+                                                    </div>
+                                                    </div>
+
+                                                </div>
+
+
+
+
+                                        </div>
+
+                                    }
+
+
+
+                                </form>
+
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+                                <br />
+                                <div>
+                                    @Html.ActionLink("Export to Excel", "GetExcel", "CurrentStock", new { @class = "btn btn-primary" })
+                                    @Html.ActionLink("Print", "TransferStockPdf", "CurrentStock_Report", new { @class = "btn btn-primary", @target = "_blank" })
+                                </div>
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

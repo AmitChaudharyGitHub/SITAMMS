@@ -1,0 +1,173 @@
+﻿@model BusinessObjects.Entity.tblEmployeeMaster
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<section id="content">
+
+    @*<div class="row">
+        <div class="col-md-12">
+            <h3 class="text-center text-danger">Site is under maintenance between 1:30 PM to 2:30 PM</h3>
+        </div>
+    </div>*@
+
+    <div class="admin-form theme-info" id="login1" style="max-width: 520px;">
+      
+        <div class="row table-layout">
+
+   
+
+          
+
+
+            <div class="col-xs-6 va-m pln">
+                <a href="#" title="Return to Dashboard">
+                    @*<img src="~/Content/admindesigns.com/demos/admin/theme/assets/img/logos/logo_white.png" title="AdminDesigns Logo" class="img-responsive w250">*@
+                    @*<h1 class="img-responsive w250" style="color:white;">ADMIN LOGIN</h1>*@
+                </a>
+            </div>
+
+            @*<div class="col-xs-6 text-right va-b pr5">
+                <div class="login-links">
+                    <a class="active">
+                        @Html.ActionLink("Sign In", "Login", "MyAccount", null, new { @class = " active", @style = "font-size:15px" })
+                    </a>
+                    <span class="text-white"> | </span>
+                    <a href="#" class="" title="Register">Register</a>
+                </div>
+
+            </div>*@
+           
+        </div>
+
+       
+
+        <div class="panel panel-info br-n" style="margin-bottom:0">
+
+            <div class="panel-heading heading-border- bg-whie- text-center" style="border-top:6px solid #404041;background-color:#5d9cec;padding:10px 10px 5px;font-size:24px;font-weight:normal;color:#fff">
+                   <span class="text-uppercase">
+                        Material Management System
+                    </span>
+                    <div class="section row mn hide">
+                        @*<div class="col-sm-4">
+                            <a href="#" class="button btn-social facebook span-left mr5 btn-block">
+                                <span>
+                                    <i class="fa fa-facebook"></i>
+                                </span>Facebook
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="#" class="button btn-social twitter span-left mr5 btn-block">
+                                <span>
+                                    <i class="fa fa-twitter"></i>
+                                </span>Twitter
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a href="#" class="button btn-social googleplus span-left btn-block">
+                                <span>
+                                    <i class="fa fa-google-plus"></i>
+                                </span>Google+
+                            </a>
+                        </div>*@
+                    </div>
+                </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(true)
+                @Html.AntiForgeryToken()
+
+                <div class="panel-body bg-light" style="background-color:#fff">
+                                        <div class="row">  
+                        <div class="col-sm-6 text-center" style="padding-top:0px;position:relative"><img alt="" src="~/Images/project_0001.jpg" class="img-responsive" /></div>
+                        <div class="col-sm-6">
+                            <div class="row-">
+                                <div class="section row hidden">
+                                    <div class="col-md-4">
+                                        <a href="#" class="button btn-social facebook span-left mr5 btn-block">
+                                            <span>
+                                                <i class="fa fa-facebook"></i>
+                                            </span>Facebook
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="#" class="button btn-social twitter span-left mr5 btn-block">
+                                            <span>
+                                                <i class="fa fa-twitter"></i>
+                                            </span>Twitter
+                                        </a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="#" class="button btn-social googleplus span-left btn-block">
+                                            <span>
+                                                <i class="fa fa-google-plus"></i>
+                                            </span>Google+
+                                        </a>
+                                    </div>
+                                </div>
+
+                            
+                                <div class="section" style="margin-bottom:10px;padding-top:5px">
+                                    <label for="username" class="field-label text-muted fs18 mb10 hide">Username</label>
+                                    <label for="username" class="field prepend-icon">
+                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control gui-input", @placeholder = "User Name" } })
+                                        @Html.ValidationMessageFor(model => model.Email, null, new { @class = "text-danger" })
+                                        <label for="username" class="field-icon">
+                                            <i class="fa fa-user"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <!-- end section -->
+
+                                <div class="section" style="margin-bottom:0;padding-top:5px">
+                                    <label for="username" class="field-label text-muted fs18 mb10 hide">Password</label>
+                                    <label for="password" class="field prepend-icon">
+                                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control gui-input", @placeholder = "Password" } })
+                                        @Html.ValidationMessageFor(model => model.Password, null, new { @class = "text-danger" })
+                                        <label for="password" class="field-icon">
+                                            <i class="fa fa-lock"></i>
+                                        </label>
+                                    </label>
+                                </div>
+                                <!-- end section -->
+                                </div>
+                            </div>
+                        <div class="col-sm-5 br-l br-grey pl30 hide">
+                            <div style="text-align:center;"><img alt="" src="~/Images/logo1.png" /></div>
+                        </div>
+                    </div>
+                </div>
+                            <!-- end .form-body section -->
+                <div class="panel-footer clearfix p10 ph15">
+                    <p>
+                        <input type="submit" value="Sign in" class="button btn-primary  pull-right" />
+                    </p>
+                    <label class="switch ib switch-primary pull-left input-align hidden">
+                        <input type="checkbox" name="remember" id="remember" checked>
+                        <label for="remember" data-on="YES" data-off="NO"></label>
+                        <span>Remember me</span>
+                    </label>
+                </div>
+
+              <div class="panel-footer clearfix p10 ph15">
+                    <p style="color:red">
+
+                       <b>To access old data. Kindly </b>   	<a href="http://192.169.244.173/ACILMMS/" target="_blank">Click Here</a>
+                    </p>
+                </div>
+                            <!-- end .form-footer section -->
+
+            }
+
+        </div>
+    </div>
+
+</section>
+

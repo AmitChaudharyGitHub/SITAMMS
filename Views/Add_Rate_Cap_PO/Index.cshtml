@@ -1,0 +1,250 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+
+@* Here Jquery code for block and floor details and selection *@
+@* FOR ITEM NAME BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#itemgroupname1").change(function () {
+            $("#tblItemMaster").empty();
+            $("#tblItemMaster").append($("<option></option").val("").html("Select Item Name"));
+            $("#unit1").val('');           
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetGroupitem")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#itemgroupname1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#tblItemMaster").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Item Name.');
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+@* FOR UNIT NAME BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#tblItemMaster").change(function () {
+            $("#make1").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getitemnunit")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#tblItemMaster").val() },
+                // Get Selected Country ID.
+
+                success: function (units) {
+
+                    //    $.each(states, function (i, state) {
+                    //alert(state.Value)
+                    $("#unit1").val(units);
+                    // });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Unit Code.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">ADD RATE CAPTION</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("itemgroupname", null, "Select Item Group", htmlAttributes: new { @id = "itemgroupname1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("tblItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item Name", new { @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("unit", null, new { id = "unit1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                                                                              
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                            </div>
+
+
+                                            <div id="IG_DatasLoad">
+
+                                            </div>
+
+                                        </div>
+                                        <br />
+
+                                    }
+
+
+
+                                </form>
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+
+                                <br />
+                                <div>
+                                    <input type="button" id="Submit" class="btn btn-danger" value="Save" />
+                                    @*@Html.ActionLink("Go To View", "ViewApprovedStock_Indent", "ApprovedIssueQuantity", null, new { @class = "btn btn-system" })*@
+                                </div>
+
+
+
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger">Issue Quantity Approved Successfully</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

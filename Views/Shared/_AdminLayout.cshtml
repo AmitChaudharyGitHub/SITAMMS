@@ -1,0 +1,1703 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+
+    <title>@ViewBag.Title</title>
+
+    <meta name="keywords" content="HTML5 Bootstrap 3 Admin Template UI Theme" />
+    <meta name="description" content="AdminDesigns - A Responsive HTML5 Admin UI Framework">
+    <meta name="author" content="AdminDesigns">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="~/Content/Respons_Form.css" rel="stylesheet" type="text/css" />
+    <!-- Font CSS (Via CDN) -->
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600'>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" href="~/Content/admindesigns.com/demos/admin/theme/assets/skin/default_skin/css/theme.css">
+
+    <!-- Admin Forms CSS -->
+    <link rel="stylesheet" type="text/css" href="~/Content/admindesigns.com/demos/admin/theme/assets/admin-tools/admin-forms/css/admin-forms.css">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/Content/admindesigns.com/demos/admin/theme/assets/img/favicon.ico">
+
+
+
+
+    <style>
+
+        .loading {
+            position: fixed;
+            z-index: 999;
+            height: 2em;
+            width: 2em;
+            overflow: show;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+            /* Transparent Overlay */
+            .loading:before {
+                content: '';
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0, .8));
+                background: -webkit-radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0,.8));
+            }
+
+            /* :not(:required) hides these rules from IE9 and below */
+            .loading:not(:required) {
+                /* hide "loading..." text */
+                font: 0/0 a;
+                color: transparent;
+                text-shadow: none;
+                background-color: transparent;
+                border: 0;
+            }
+
+                .loading:not(:required):after {
+                    content: '';
+                    display: block;
+                    font-size: 10px;
+                    width: 1em;
+                    height: 1em;
+                    margin-top: -0.5em;
+                    -webkit-animation: spinner 150ms infinite linear;
+                    -moz-animation: spinner 150ms infinite linear;
+                    -ms-animation: spinner 150ms infinite linear;
+                    -o-animation: spinner 150ms infinite linear;
+                    animation: spinner 150ms infinite linear;
+                    border-radius: 0.5em;
+                    -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+                    box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+                }
+
+        /* Animation */
+
+        @@-webkit-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-moz-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@-o-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+</head>
+<body class="dashboard-page sb-l-o sb-r-c">
+
+    <!-----------------loader------------------->
+
+    <div id="page_loader" class="loading" style="display:none">Loading&#8230;</div>
+
+    <!-------------------------------------------------------------+
+      <body> Helper Classes:
+    ---------------------------------------------------------------+
+      '.sb-l-o' - Sets Left Sidebar to "open"
+      '.sb-l-m' - Sets Left Sidebar to "minified"
+      '.sb-l-c' - Sets Left Sidebar to "closed"
+
+      '.sb-r-o' - Sets Right Sidebar to "open"
+      '.sb-r-c' - Sets Right Sidebar to "closed"
+    ---------------------------------------------------------------+
+     Example: <body class="example-page sb-l-o sb-r-c">
+     Results: Sidebar left Open, Sidebar right Closed
+    --------------------------------------------------------------->
+    <!-- For Demo Purposes - Theme Settings Pane -->
+    <div id="skin-toolbox">
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-icon">
+                    <i class="fa fa-gear text-primary"></i>
+                </span>
+                <span class="panel-title"> Theme Options</span>
+            </div>
+            <div class="panel-body pn">
+                <ul class="nav nav-list nav-list-sm pl15 pt10" role="tablist">
+                    <li class="active">
+                        <a href="#toolbox-header" role="tab" data-toggle="tab">Navbar</a>
+                    </li>
+                    @*<li>
+                            <a href="#toolbox-sidebar" role="tab" data-toggle="tab">Sidebar</a>
+                        </li>
+                        <li>
+                            <a href="#toolbox-settings" role="tab" data-toggle="tab">Misc</a>
+                        </li>*@
+                </ul>
+                <div class="tab-content p20 ptn pb15">
+                    <div role="tabpanel" class="tab-pane active" id="toolbox-header">
+                        <form id="toolbox-header-skin">
+                            <h4 class="mv20">Header Skins</h4>
+                            <div class="skin-toolbox-swatches">
+                                <div class="checkbox-custom checkbox-disabled fill mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin8" checked value="">
+                                    <label for="headerSkin8">Light</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-primary mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin1" value="bg-primary">
+                                    <label for="headerSkin1">Primary</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-info mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin3" value="bg-info">
+                                    <label for="headerSkin3">Info</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-warning mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin4" value="bg-warning">
+                                    <label for="headerSkin4">Warning</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-danger mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin5" value="bg-danger">
+                                    <label for="headerSkin5">Danger</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-alert mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin6" value="bg-alert">
+                                    <label for="headerSkin6">Alert</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-system mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin7" value="bg-system">
+                                    <label for="headerSkin7">System</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-success mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin2" value="bg-success">
+                                    <label for="headerSkin2">Success</label>
+                                </div>
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="radio" name="headerSkin" id="headerSkin9" value="bg-dark">
+                                    <label for="headerSkin9">Dark</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="toolbox-sidebar">
+                        <form id="toolbox-sidebar-skin">
+                            <h4 class="mv20">Sidebar Skins</h4>
+                            <div class="skin-toolbox-swatches">
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="radio" name="sidebarSkin" checked id="sidebarSkin3" value="">
+                                    <label for="sidebarSkin3">Dark</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-disabled mb5">
+                                    <input type="radio" name="sidebarSkin" id="sidebarSkin1" value="sidebar-light">
+                                    <label for="sidebarSkin1">Light</label>
+                                </div>
+                                <div class="checkbox-custom fill checkbox-light mb5">
+                                    <input type="radio" name="sidebarSkin" id="sidebarSkin2" value="sidebar-light light">
+                                    <label for="sidebarSkin2">Lighter</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="toolbox-settings">
+                        <form id="toolbox-settings-misc">
+                            <h4 class="mv20 mtn">Layout Options</h4>
+                            <div class="form-group">
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="checkbox" checked="" id="header-option">
+                                    <label for="header-option">Fixed Header</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="checkbox" checked="" id="sidebar-option">
+                                    <label for="sidebar-option">Fixed Sidebar</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="checkbox" id="breadcrumb-option">
+                                    <label for="breadcrumb-option">Fixed Breadcrumbs</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-custom fill mb5">
+                                    <input type="checkbox" id="breadcrumb-hidden">
+                                    <label for="breadcrumb-hidden">Hide Breadcrumbs</label>
+                                </div>
+                            </div>
+                            <h4 class="mv20">Layout Options</h4>
+                            <div class="form-group">
+                                <div class="radio-custom mb5">
+                                    <input type="radio" id="fullwidth-option" checked name="layout-option">
+                                    <label for="fullwidth-option">Fullwidth Layout</label>
+                                </div>
+                            </div>
+                            <div class="form-group mb20">
+                                <div class="radio-custom radio-disabled mb5">
+                                    <input type="radio" id="boxed-option" name="layout-option" disabled>
+                                    <label for="boxed-option">
+                                        Boxed Layout
+                                        <b class="text-muted">(Coming Soon)</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="form-group mn br-t p15">
+                    @*<a href="#" id="clearLocalStorage" class="btn btn-primary btn-block pb10 pt10">Clear LocalStorage</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End: Theme Settings Pane -->
+    <!-- Start: Main -->
+    <div id="main">
+
+        <!-----------------------------------------------------------------+
+           ".navbar" Helper Classes:
+        -------------------------------------------------------------------+
+           * Positioning Classes:
+            '.navbar-static-top' - Static top positioned navbar
+            '.navbar-static-top' - Fixed top positioned navbar
+
+           * Available Skin Classes:
+             .bg-dark    .bg-primary   .bg-success
+             .bg-info    .bg-warning   .bg-danger
+             .bg-alert   .bg-system
+        -------------------------------------------------------------------+
+          Example: <header class="navbar navbar-fixed-top bg-primary">
+          Results: Fixed top navbar with blue background
+        ------------------------------------------------------------------->
+        <!-- Start: Header -->
+        <header class="navbar navbar-fixed-top">
+            <div class="navbar-branding">
+                <a class="navbar-brand" href="@Url.Action("Index", "AdminHome")">
+                    <b>ACIL</b>Dashboard
+                </a>
+                <span id="toggle_sidemenu_l" class="ad ad-lines"></span>
+            </div>
+            @*<ul class="nav navbar-nav navbar-left">
+                    <li>
+                        <a class="sidebar-menu-toggle" href="#">
+                            <span class="ad ad-ruby fs18"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="topbar-menu-toggle" href="#">
+                            <span class="ad ad-wand fs16"></span>
+                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a class="request-fullscreen toggle-active" href="#">
+                            <span class="ad ad-screen-full fs18"></span>
+                        </a>
+                    </li>
+                </ul>*@
+            <form class="navbar-form navbar-left navbar-search" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search..." value="Search..." style="display:none">
+                </div>
+            </form>
+
+            @* INDENT REQUESITION NOTIFICATIONS *@
+            @*<ul class="nav navbar-nav navbar-left">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="ad ad-radio-tower fs18"></span>
+                            <span class="badge badge-danger badge-hero" id="span1">
+                                @{
+                                    if (ViewBag.message == null)
+                                    {
+                                        @Html.Label("span1", new { style = "display: none;" })
+
+                                    }
+                                    else
+                                    {
+                                        @ViewBag.message
+                                    }
+                                }
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu media-list w350 animated animated-shorter fadeIn" role="menu">
+                            <li class="dropdown-header">
+                                <span class="dropdown-title"><a class="text-primary" href="#" style="cursor:default;"> Indent Notifications </a></span>
+                            </li>
+                            <li class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        Indent Requisition
+                                        <small class="text-muted">- @ViewBag.Date1</small>
+                                    </h5> Sent By
+                                    <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        &nbsp; <span class="fa fa-user"></span>
+                                        @ViewBag.Emplyeename1
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading mv5">
+                                        Indent Requisition
+                                        <small class="text-muted"> - @ViewBag.Date2</small>
+                                    </h5>
+                                    Sent By
+                                    <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename2
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        Indent Requisition
+                                        <small class="text-muted">- @ViewBag.Date3</small>
+                                    </h5> Sent By
+                                    <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename3
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading mv5">
+                                        Indent Requisition
+                                        <small class="text-muted">- @ViewBag.Date4</small>
+                                    </h5> Sent By
+                                    <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename4
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-body">
+                                    <h5 class="media-heading mv5">
+                                        Indent Requisition
+                                        <small class="text-muted">- @ViewBag.Date5</small>
+                                    </h5> Sent By
+                                    <a class="text-system-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        &nbsp; <span class="fa fa-user"></span> @ViewBag.Emplyeename5
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="dropdown-header">
+                                <span class="dropdown-title">
+                                    <a class="text-primary-dark" href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        View All
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>*@
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="dropdown">
+                    <a style="display:none" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="flag-xs flag-in"></span> India
+                    </a>
+                    <ul class="dropdown-menu pv5 animated animated-short flipInX" role="menu">
+                        <li>
+                            <a href="javascript:void(0);">
+                                <span class="flag-xs flag-in mr10"></span> India
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                @*<li class="menu-divider hidden-xs">
+                        <i class="fa fa-circle"></i>
+                    </li>*@
+                @{
+                    string user = "";
+                    if (Session["EmailCheck"] != null)
+                    {
+                        user = Session["EmailCheck"].ToString();
+                    }
+                }
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
+                        <img src="~/Content/admindesigns.com/demos/admin/theme/assets/img/avatars/profile.jpg" alt="avatar" class="mw30 br64 mr15"> @*@HttpContext.Current.Session["Emp_Name"].ToString()*@
+                        <span class="hidden-xs">@(user)</span>
+                    </a>
+                    <ul class="dropdown-menu list-group dropdown-persist w250" role="menu">
+
+
+                        <li class="list-group-item" style="padding:12px">
+                            @{
+                                if (Request.IsAuthenticated)
+                                {
+                                    using (Html.BeginForm("Logout", "MyAccount", FormMethod.Post, new { id = "logoutForm", @class = "animated animated-short fadeInUp" }))
+                                    {
+                                        <a href="javascript:document.getElementById('logoutForm').submit()"><span class="fa fa-power-off pr5"></span> Logout </a>
+                                    }
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Login", "Login", "MyAccount")
+                                }
+                            }
+                            @*<a href="#" class="animated animated-short fadeInUp">
+                                    <span class="fa fa-power-off pr5"></span> Logout
+                                </a>*@
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+        </header>
+        <!-- End: Header -->
+        <!-----------------------------------------------------------------+
+           "#sidebar_left" Helper Classes:
+        -------------------------------------------------------------------+
+           * Positioning Classes:
+            '.affix' - Sets Sidebar Left to the fixed position
+
+           * Available Skin Classes:
+             .sidebar-dark (default no class needed)
+             .sidebar-light
+             .sidebar-light.light
+        -------------------------------------------------------------------+
+           Example: <aside id="sidebar_left" class="affix sidebar-light">
+           Results: Fixed Left Sidebar with light/white background
+        ------------------------------------------------------------------->
+        <!-- Start: Sidebar Left -->
+        <aside id="sidebar_left" class="nano nano-primary affix">
+
+            <!-- Start: Sidebar Left Content -->
+            <div class="sidebar-left-content nano-content">
+
+                <!-- Start: Sidebar Header -->
+                <header class="sidebar-header">
+
+                    <!-- Sidebar Widget - Menu (Slidedown) -->
+                    <div class="sidebar-widget menu-widget">
+                        <div class="row text-center mbn">
+                            <div class="col-xs-4">
+                                <a href="@Url.Action("Index", "AdminHome")" class="text-primary" data-toggle="tooltip" data-placement="top" title="Dashboard">
+                                    <span class="glyphicon glyphicon-home"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-info" data-toggle="tooltip" data-placement="top" title="Messages">
+                                    <span class="glyphicon glyphicon-inbox"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-alert" data-toggle="tooltip" data-placement="top" title="Tasks">
+                                    <span class="glyphicon glyphicon-bell"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-system" data-toggle="tooltip" data-placement="top" title="Activity">
+                                    <span class="fa fa-desktop"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-danger" data-toggle="tooltip" data-placement="top" title="Settings">
+                                    <span class="fa fa-gears"></span>
+                                </a>
+                            </div>
+                            <div class="col-xs-4">
+                                <a href="#" class="text-warning" data-toggle="tooltip" data-placement="top" title="Cron Jobs">
+                                    <span class="fa fa-flask"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Widget - Author (hidden)  -->
+                    <div class="sidebar-widget author-widget hidden">
+                        <div class="media">
+                            <a class="media-left" href="#">
+                                <img src="assets/img/avatars/3.jpg" class="img-responsive">
+                            </a>
+                            <div class="media-body">
+                                <div class="media-links">
+                                    <a href="#" class="sidebar-menu-toggle">User Menu -</a> <a href="pages_login(alt).html">Logout</a>
+                                </div>
+                                <div class="media-author">Michael Richards</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Widget - Search (hidden) -->
+                    <div class="sidebar-widget search-widget hidden">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </span>
+                            <input type="text" id="sidebar-search" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+
+                </header>
+                <!-- End: Sidebar Header -->
+                <!-- Start: Sidebar Left Menu -->
+                <ul class="nav sidebar-menu">
+                    <li class="sidebar-label pt20">Menu</li>
+
+                    <li class="active">
+                        <a href="@Url.Action("Index", "AdminHome")">
+                            <span class="glyphicon glyphicon-home"></span>
+                            <span class="sidebar-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <!-- starting Menu here -->
+                    <li class="sidebar-label pt15">Masters</li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Project Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+                            <li>
+                                <a href="@Url.Action("Index", "AddProject")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Add Project
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" style="display:none">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Update Project
+                                </a>
+
+
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">User Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+                            <li>
+                                <a href="@Url.Action("UserList", "AddProject")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Add User
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" style="display:none">
+
+                                    <span class="glyphicon glyphicon-bookmark"></span> Update User
+                                </a>
+
+
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">User Permission Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "Permission")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Add User Permission
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="#" style="display:none">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Update User Permission
+                                </a>
+
+
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">PO Management</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "POManagement")">
+                                    <span class="glyphicon glyphicon-user"></span> Disapprove P.O
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Global Masters</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "tblUnitMasters")">
+                                    <span class="glyphicon glyphicon-user"></span> Units
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "tblItemGroupMasters")">
+                                    <span class="fa fa-money"></span> Item Group
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "tblItemMasters")">
+                                    <span class="fa fa-money"></span> Global Items
+                                </a>
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Vendor Masters</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "tblRegistrationTypes")">
+                                    <span class="fa fa-viacoin"></span> Vendor Groups
+                                </a>
+                            </li>
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "tblVendorMasters")">
+                                    <span class="fa fa-sellsy"></span> Vendor Master
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Sub Contractor Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "PcContractor")">
+                                    <span class="fa fa-sellsy"></span> Add Sub/PC
+                                </a>
+                            </li>
+
+
+                            <li>
+                                <a href="#" style="display:none">
+                                    <span class="fa fa-sellsy"></span> Update Sub/PC
+                                </a>
+                            </li>
+
+
+
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span class="sidebar-title">Purchase Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "Purchase_Order_Slip")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> PO T&C
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "tax")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Tax Type
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "GST")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> GST Slab Master
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("AddGST_master", "GST")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> GST  Master
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "ExciseDuty")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Excise Duty
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "CartageType")">
+
+                                    <span class="glyphicon glyphicon-bookmark"></span> Cartage Type
+                                </a>
+
+
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "InsuranceMaster")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Insurance Type
+                                </a>
+
+
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Approval Limit Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+                            <li>
+                                <a href="@Url.Action("Index", "PurchaseRequisitionLimit")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Purchase Indent Approval
+                                </a>
+                            </li>
+
+
+                            <li>
+                                <a href="@Url.Action("Index", "PurchaseOrderLimit")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Purchase Order Approval
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "PurchaseTypeProjectLimit")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Purchase Type Limit
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Conversion Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+                            <li>
+                                <a href="@Url.Action("SoureceLocationMaster", "ConversionMaster")">
+                                    <span class="glyphicon glyphicon-download"></span> Source Location
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "ConversionMaster")">
+                                    <span class="glyphicon glyphicon-download"></span> Unit Conversion Master
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("CreateMapping", "ConversionMaster")">
+                                    <span class="glyphicon glyphicon-download"></span> Conversion Mapping
+                                </a>
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Equipment Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+                            <li>
+                                <a href="@Url.Action("Create", "EquipmentMaster")">
+                                    <span class="glyphicon glyphicon-bookmark"></span> Equipment Master
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("SerachEquipmentMaster", "EquipmentMaster")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>View Equipment
+                                </a>
+                            </li>
+
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">General Master</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+                            <li>
+                                <a href="@Url.Action("Create", "AddPriceCap")">
+                                    <span class="glyphicon glyphicon-download"></span> Add Price Cap
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "MovableStatus")">
+                                    <span class="glyphicon glyphicon-download"></span> Ageing Status Master
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "ProjectOpeningAndClosing")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>Project Opening Date
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "AddRegionMaster")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>Region Master
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "ManagePIPurchaseType")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>Update PI Status
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Index", "RemoveOpening")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>Remove Opening Item Detail
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("Index", "set_up")">
+                                    <span class="glyphicon glyphicon-bookmark"></span>Acceptable Qty. Variation
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </li>
+
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Project Budget</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+                            <li>
+                                <a href="@Url.Action("YearBudget", "ProjectBudget")">
+                                    <span class="glyphicon glyphicon-download"></span>Year Budget Entry
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("MonthBudget", "ProjectBudget")">
+                                    <span class="glyphicon glyphicon-download"></span>Month Budget Entry
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("YearBudgetReport", "ProjectBudget")">
+                                    <span class="glyphicon glyphicon-download"></span> Year Budget Report
+                                </a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("MonthBudgetReport", "ProjectBudget")">
+                                    <span class="glyphicon glyphicon-download"></span> Month Budget Report
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+
+                    @*<li>
+                            <a href="@Url.Action("Index", "BlockMasters")">
+                                <span class="fa fa-bars"></span> Block Master
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "FloorMasters")">
+                                <span class="fa fa-building"></span> Floor Master
+                            </a>
+                        </li>*@
+
+
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                <span class="sidebar-title">Requisition</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+                                <li>
+                                    <a href="@Url.Action("Index", "IndentRequistion")">
+                                        <span class="glyphicon glyphicon-folder-close"></span> Indent Requisition
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a href="@Url.Action("Index", "ApprovedIssueQuantity")">
+                                        <span class="glyphicon glyphicon-check"></span> Approved Indent
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a href="@Url.Action("Index", "ViewSendingIndentRequisition")">
+                                        <span class="glyphicon glyphicon-grain"></span> View Indent Requisition
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a href="@Url.Action("Index", "PurchaseRequisition")">
+                                        <span class="glyphicon glyphicon-envelope"></span> Purchase Indent
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("IndexApproval", "PurchaseRequisition")">
+                                        <span class="glyphicon glyphicon-folder-close"></span> Purchase Indent Approval
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+
+
+
+
+
+
+
+                    @* For Material Purchase Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-expand"></span>
+                                <span class="sidebar-title">Material Purchase</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+                                <li>
+                                    <a href="@Url.Action("Index2", "CashPurchaseChilds")">
+                                        <span class="glyphicon glyphicon-user"></span> Local Purchase
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a href="@Url.Action("Index", "IndentPurchaseOrders")">
+                                        <span class="glyphicon glyphicon-folder-close"></span> Purchase Orders
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+                    @* For Material Issue Here *@
+                    @* For Material Issue Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-expand"></span>
+                                <span class="sidebar-title">Material Receive</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+                                <li>
+                                    <a href="@Url.Action("Index", "GateEntries")">
+                                        <span class="glyphicon glyphicon-user"></span> Material Receipt
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("DMR", "GateEntries")">
+                                        <span class="glyphicon glyphicon-tags"></span> View Material Receipt
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+                    @* For Material Issue Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                                <span class="sidebar-title">Material Issue</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+                                <li>
+                                    <a href="@Url.Action("Index", "QuantityIssues")">
+                                        <span class="glyphicon glyphicon-random"></span>  Material Issue
+                                    </a>
+                                </li>
+
+
+                            </ul>
+                        </li>*@
+
+                    @* For Shhuttering Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-expand"></span>
+                                <span class="sidebar-title">Material Site Transfer</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+                                <li>
+                                    <a href="@Url.Action("Index", "OST")">
+                                        <span class="glyphicon glyphicon-user"></span> Transfer Documents
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="@Url.Action("IndexT", "GateEntries")">
+                                        <span class="glyphicon glyphicon-tags"></span> Site Dispatch & Receive
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("DMR", "GateEntries")">
+                                        <span class="glyphicon glyphicon-tags"></span> View Material Dispatch & Receive
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("DebitCredit", "OST")">
+                                        <span class="glyphicon glyphicon-user"></span> Debit Credit Report for Site
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+                    @* For Shhuttering Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-repeat"></span>
+                                <span class="sidebar-title">Shuttering Material</span>
+                                <span class="caret"></span>
+                            </a>
+
+                        </li>*@
+
+                    @* For Equipments Here *@
+                    @*<li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-equalizer"></span>
+                                <span class="sidebar-title">Equipments</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+
+                                <li>
+                                    <a href="@Url.Action("SerachEquipmentMaster", "EquipmentMaster")">
+                                        <span class="glyphicon glyphicon-bookmark"></span>View Equipment
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+
+
+                    @*<li class="sidebar-label pt15">Employee Controls</li>
+
+                        <li>
+                            <a class="accordion-toggle" href="#">
+                                <span class="glyphicon glyphicon-record"></span>
+                                <span class="sidebar-title">Report</span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="nav sub-nav">
+
+                                <li>
+                                    <a href="@Url.Action("Index", "MSPReport")">
+                                        <span class="glyphicon glyphicon-record"></span>  MSP Report
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>*@
+                    @*<li>
+                            <a href="@Url.Action("DMR", "GateEntries")">
+                                <span class="glyphicon glyphicon-record"></span>  Receive Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("Index", "Report_Quantity_Issue")">
+                                <span class="glyphicon glyphicon-random"></span> Issue Report
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("ItemStock", "tblItemMasters")">
+                                <span class="glyphicon glyphicon-envelope"></span>  Stock Availability
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="@Url.Action("DMR", "GateEntries")">
+                                <span class="glyphicon glyphicon-magnet"></span>  Material Transfer
+                            </a>
+                        </li>
+                        <li style="display:none;">
+                            <a href="@Url.Action("DebitCredit", "OST")">
+                                <span class="glyphicon glyphicon-user"></span> Debit Credit Report for Site
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Receipt_Reports_")">
+                                <span class="glyphicon glyphicon-record"></span> Receipt Report
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "DMR_Report")">
+                                <span class="glyphicon glyphicon-file"></span>  DMR Report
+                            </a>
+                        </li>*@
+                    @*<li>
+                            <a href="@Url.Action("Index", "Non_Moveing_")">
+                                <span class="glyphicon glyphicon-move"></span>  Non Moving Report
+                            </a>
+                        </li>*@
+                    @*<li>
+                            <a href="@Url.Action("Index", "Datewise_Item_")">
+                                <span class="glyphicon glyphicon-expand"></span>  Vendor Wise Receipt
+                            </a>
+                        </li>*@
+
+                    @*</ul>
+                        </li>*@
+
+                    <li class="sidebar-label pt15">User Controls</li>
+
+                    <li>
+                        <a class="accordion-toggle" href="#">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="sidebar-title">Utilities</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+
+
+                            @*<li>
+                                    <a href="#">
+                                        <span class="glyphicon glyphicon-user"></span> User Mapping
+                                    </a>
+                                </li>*@
+
+                            <li>
+                                <a href="@Url.Action("ChangePassword","MyAccount")">
+                                    <span class="glyphicon glyphicon-tags"></span> Change Password
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+                <!-- End: Sidebar Menu -->
+                <!-- Start: Sidebar Collapse Button -->
+                <div class="sidebar-toggle-mini">
+                    <a href="#">
+                        <span class="fa fa-sign-out"></span>
+                    </a>
+                </div>
+                <!-- End: Sidebar Collapse Button -->
+
+            </div>
+            <!-- End: Sidebar Left Content -->
+
+        </aside>
+        <!-- End: Sidebar Left -->
+        <!-- Start: Content-Wrapper -->
+        <section id="content_wrapper">
+
+            <!-- Start: Topbar-Dropdown -->
+            <div id="topbar-dropmenu">
+                <div class="topbar-menu row">
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-inbox"></span>
+                            <span class="metro-title">Messages</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="metro-title">Users</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-headphones"></span>
+                            <span class="metro-title">Support</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="fa fa-gears"></span>
+                            <span class="metro-title">Settings</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-facetime-video"></span>
+                            <span class="metro-title">Videos</span>
+                        </a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2">
+                        <a href="#" class="metro-tile">
+                            <span class="glyphicon glyphicon-picture"></span>
+                            <span class="metro-title">Pictures</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- End: Topbar-Dropdown -->
+            <!-- Start: Topbar -->
+            @*<header id="topbar">
+                    <div class="topbar-left">
+                        <ol class="breadcrumb">
+                            <li class="crumb-active">
+                                <a href="@Url.Action("Index", "AdminHome")">Dashboard</a>
+                            </li>
+                            <li class="crumb-icon">
+                                <a href="@Url.Action("Index", "AdminHome")">
+                                    <span class="glyphicon glyphicon-home"></span>
+                                </a>
+                            </li>
+                            <li class="crumb-link">
+                                <a href="@Url.Action("Index", "AdminHome")">Home</a>
+                            </li>
+                            <li class="crumb-trail">Dashboard</li>
+                        </ol>
+                    </div>
+
+                </header>*@
+            <!-- End: Topbar -->
+
+
+        </section>
+        <!-- End: Content-Wrapper -->
+        <div>
+            @RenderBody()
+
+            @Scripts.Render("~/bundles/jquery")
+
+
+
+        </div>
+
+
+    </div>
+    <!-- End: Main -->
+    <!-- BEGIN: PAGE SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery_ui/jquery-ui.min.js"></script>
+
+    <!-- HighCharts Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/highcharts/highcharts.js"></script>
+
+    <!-- Sparklines Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Simple Circles Plugin -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/circles/circles.js"></script>
+
+    <!-- JvectorMap Plugin + US Map (more maps in plugin/assets folder) -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/jvectormap/jquery.jvectormap.min.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/vendor/plugins/jvectormap/assets/jquery-jvectormap-us-lcc-en.js"></script>
+
+    <!-- Theme Javascript -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/utility/utility.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/demo/demo.js"></script>
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/main.js"></script>
+
+    <!-- Widget Javascript -->
+    <script src="~/Content/admindesigns.com/demos/admin/theme/assets/js/demo/widgets.js"></script>
+    @*<script type="text/javascript">
+            jQuery(document).ready(function () {
+
+                "use strict";
+
+                // Init Theme Core
+                Core.init();
+
+                // Init Demo JS
+                Demo.init();
+
+                // Init Widget Demo JS
+                // demoHighCharts.init();
+
+                // Because we are using Admin Panels we use the OnFinish
+                // callback to activate the demoWidgets. It's smoother if
+                // we let the panels be moved and organized before
+                // filling them with content from various plugins
+
+                // Init plugins used on this page
+                // HighCharts, JvectorMap, Admin Panels
+
+                // Init Admin Panels on widgets inside the ".admin-panels" container
+                $('.admin-panels').adminpanel({
+                    grid: '.admin-grid',
+                    draggable: true,
+                    preserveGrid: true,
+                    mobile: false,
+                    onStart: function () {
+                        // Do something before AdminPanels runs
+                    },
+                    onFinish: function () {
+                        $('.admin-panels').addClass('animated fadeIn').removeClass('fade-onload');
+
+                        // Init the rest of the plugins now that the panels
+                        // have had a chance to be moved and organized.
+                        // It's less taxing to organize empty panels
+                        demoHighCharts.init();
+                        runVectorMaps(); // function below
+                    },
+                    onSave: function () {
+                        $(window).trigger('resize');
+                    }
+                });
+
+                // Widget VectorMap
+                function runVectorMaps() {
+
+                    // Jvector Map Plugin
+                    var runJvectorMap = function () {
+                        // Data set
+                        var mapData = [900, 700, 350, 500];
+                        // Init Jvector Map
+                        $('#WidgetMap').vectorMap({
+                            map: 'us_lcc_en',
+                            //regionsSelectable: true,
+                            backgroundColor: 'transparent',
+                            series: {
+                                markers: [{
+                                    attribute: 'r',
+                                    scale: [3, 7],
+                                    values: mapData
+                                }]
+                            },
+                            regionStyle: {
+                                initial: {
+                                    fill: '#E5E5E5'
+                                },
+                                hover: {
+                                    "fill-opacity": 0.3
+                                }
+                            },
+                            markers: [{
+                                latLng: [37.78, -122.41],
+                                name: 'San Francisco,CA'
+                            }, {
+                                latLng: [36.73, -103.98],
+                                name: 'Texas,TX'
+                            }, {
+                                latLng: [38.62, -90.19],
+                                name: 'St. Louis,MO'
+                            }, {
+                                latLng: [40.67, -73.94],
+                                name: 'New York City,NY'
+                            }],
+                            markerStyle: {
+                                initial: {
+                                    fill: '#a288d5',
+                                    stroke: '#b49ae0',
+                                    "fill-opacity": 1,
+                                    "stroke-width": 10,
+                                    "stroke-opacity": 0.3,
+                                    r: 3
+                                },
+                                hover: {
+                                    stroke: 'black',
+                                    "stroke-width": 2
+                                },
+                                selected: {
+                                    fill: 'blue'
+                                },
+                                selectedHover: {}
+                            },
+                        });
+                        // Manual code to alter the Vector map plugin to
+                        // allow for individual coloring of countries
+                        var states = ['US-CA', 'US-TX', 'US-MO',
+                          'US-NY'
+                        ];
+                        var colors = [bgWarningLr, bgPrimaryLr, bgInfoLr, bgAlertLr];
+                        var colors2 = [bgWarning, bgPrimary, bgInfo, bgAlert];
+                        $.each(states, function (i, e) {
+                            $("#WidgetMap path[data-code=" + e + "]").css({
+                                fill: colors[i]
+                            });
+                        });
+                        $('#WidgetMap').find('.jvectormap-marker')
+                          .each(function (i, e) {
+                              $(e).css({
+                                  fill: colors2[i],
+                                  stroke: colors2[i]
+                              });
+                          });
+                    }
+
+                    if ($('#WidgetMap').length) {
+                        runJvectorMap();
+                    }
+                }
+
+
+
+            });
+        </script>*@
+    <!-- END: PAGE SCRIPTS -->
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            "use strict";
+
+            // Init Theme Core
+            Core.init();
+
+            // Init Demo JS
+            Demo.init();
+
+
+            // Form Switcher
+            $('#form-switcher > button').on('click', function () {
+                var btnData = $(this).data('form-layout');
+                var btnActive = $('#form-elements-pane .admin-form.active');
+
+                // Remove any existing animations and then fade current form out
+                btnActive.removeClass('slideInUp').addClass('animated fadeOutRight animated-shorter');
+                // When above exit animation ends remove leftover classes and animate the new form in
+                btnActive.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                    btnActive.removeClass('active fadeOutRight animated-shorter');
+                    $('#' + btnData).addClass('active animated slideInUp animated-shorter')
+                });
+            });
+
+            // Cache several DOM elements
+            var pageHeader = $('.content-header').find('b');
+            var adminForm = $('.admin-form');
+            var options = adminForm.find('.option');
+            var switches = adminForm.find('.switch');
+            var buttons = adminForm.find('.button');
+            var Panel = adminForm.find('.panel');
+
+            // Form Skin Switcher
+            $('#skin-switcher a').on('click', function () {
+                var btnData = $(this).data('form-skin');
+
+                $('#skin-switcher a').removeClass('item-active');
+                $(this).addClass('item-active')
+
+                adminForm.each(function (i, e) {
+                    var skins = 'theme-primary theme-info theme-success theme-warning theme-danger theme-alert theme-system theme-dark';
+                    var panelSkins = 'panel-primary panel-info panel-success panel-warning panel-danger panel-alert panel-system panel-dark';
+                    $(e).removeClass(skins).addClass('theme-' + btnData);
+                    Panel.removeClass(panelSkins).addClass('panel-' + btnData);
+                    pageHeader.removeClass().addClass('text-' + btnData);
+                });
+
+                $(options).each(function (i, e) {
+                    if ($(e).hasClass('block')) {
+                        $(e).removeClass().addClass('block mt15 option option-' + btnData);
+                    } else {
+                        $(e).removeClass().addClass('option option-' + btnData);
+                    }
+                });
+                $(switches).each(function (i, ele) {
+                    if ($(ele).hasClass('switch-round')) {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-round switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-round switch-' + btnData);
+                        }
+                    } else {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-' + btnData);
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-' + btnData);
+                        }
+                    }
+
+                });
+                buttons.removeClass().addClass('button btn-' + btnData);
+            });
+
+            setTimeout(function () {
+                adminForm.addClass('theme-primary');
+                Panel.addClass('panel-primary');
+                pageHeader.addClass('text-primary');
+
+                $(options).each(function (i, e) {
+                    if ($(e).hasClass('block')) {
+                        $(e).removeClass().addClass('block mt15 option option-primary');
+                    } else {
+                        $(e).removeClass().addClass('option option-primary');
+                    }
+                });
+                $(switches).each(function (i, ele) {
+
+                    if ($(ele).hasClass('switch-round')) {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-round switch-primary');
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-round switch-primary');
+                        }
+                    } else {
+                        if ($(ele).hasClass('block')) {
+                            $(ele).removeClass().addClass('block mt15 switch switch-primary');
+                        } else {
+                            $(ele).removeClass().addClass('switch switch-primary');
+                        }
+                    }
+                });
+                buttons.removeClass().addClass('button btn-primary');
+            }, 800);
+
+        });
+
+
+        $(function () {
+            $(document).ajaxStart(function () {
+                $("#page_loader").css('display', 'block');
+            });
+
+            $(document).ajaxStop(function () {
+                $("#page_loader").css('display', 'none');
+            });
+
+            $(document).ajaxError(function () {
+                $("#page_loader").css('display', 'none');
+            });
+        });
+
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

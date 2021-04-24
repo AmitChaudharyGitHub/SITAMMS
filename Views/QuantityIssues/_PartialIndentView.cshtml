@@ -1,0 +1,343 @@
+﻿@model MMS.ViewModels.VMIndentRequisionses
+
+@{
+    Layout = null;
+}
+
+
+
+
+<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+            text-align:center;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    /*input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }*/
+
+    .hidecol {
+        visibility: hidden;
+    }
+
+    .passeee {
+        width:100px;
+    }
+    input#LastName {
+        width:77px;
+        height:23px;
+    }
+</style>
+
+
+<script>
+
+    if ('@TempData["dataexist"]' != "") {
+
+        toastr.options.positionClass = "toast-bottom-right";
+        toastr.options.closeButton = true;
+        toastr.options.showDuration = "100000";
+        toastr.options.progressBar = true;
+        toastr.warning('Already 1 Time Qunatity Issued For This Indent', 'Alert');
+    }
+    else {
+    }
+</script>
+
+<script>
+
+    if ('@TempData["Check_Avl_Quantity"]' != "") {
+
+        toastr.options.positionClass = "toast-bottom-right";
+        toastr.options.closeButton = true;
+        toastr.options.showDuration = "100000";
+        toastr.options.progressBar = true;
+        toastr.danger('Available Qunatity Should Be Greater Than Zero (0)', 'Alert');
+    }
+    else {
+    }
+</script>
+
+<script>
+
+    if ('@TempData["errorUpdatingCurrentstock"]' != "") {
+
+        toastr.options.positionClass = "toast-bottom-right";
+        toastr.options.closeButton = true;
+        toastr.options.showDuration = "100000";
+        toastr.options.progressBar = true;
+        toastr.danger('Oops! Something went wrong.', 'Alert');
+    }
+    else {
+    }
+</script>
+
+@*<script>
+
+    if ('@TempData["BalanceDataCheck"]' != "") {
+
+        alert('Oops! Something went wrong');
+    }
+    else {
+    }
+</script>*@
+
+
+
+
+
+<script>
+    // JQUERY ".Class" SELECTOR.
+    $(document).ready(function () {
+        //'input[type="text"]'
+        $('input#LastName').keypress(function (event) {
+
+            return isNumber(event, this)
+
+        });
+
+    });
+    // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
+    function isNumber(evt, element) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if (
+            (charCode != 45 || $(element).val().indexOf('-') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
+            (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+            (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(
+      function () {
+          // 'input[type="text"]'
+          $('input#LastName').keyup(
+             
+          function () { 
+              var a = $('#LastName').val();
+              var b = $('td.passeee1').html();
+              var c = $('td.app1').html();
+           
+
+              if (+c >= +a && +b >= +a) {
+                  //alert("u Can Apply")
+                  $("#myModal1").modal('hide');
+              }
+
+              else {
+                 
+                  toastr.options.positionClass = "toast-bottom-right";
+                  toastr.options.closeButton = true;
+                  toastr.options.progressBar = true;
+                  toastr.error('Issue Quantity Can not Greater than Balance Quantity Or Avl Quantity', 'Error');
+                  $("#myModal1").modal('show');
+                  $('#LastName').val('');
+              }
+
+          });
+      })
+</script>
+
+
+
+@*<script type="text/javascript">
+    $(document).ready(function () {
+        $("#closebtn").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+           // $("td.passeee").val('');
+            //$("#grid").empty();
+        })
+
+        $(".close").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            //$("#grid").empty();
+            //$("td.passeee").val('');
+        })
+    })
+</script>*@
+
+<script>
+    $(document).ready(function () {
+        $('.webgrid-table td:nth-child(1),th:nth-child(1)').hide();
+        $('.webgrid-table td:nth-child(2),th:nth-child(2)').hide();
+        $('.webgrid-table td:nth-child(3),th:nth-child(3)').hide();
+        $('.webgrid-table td:nth-child(4),th:nth-child(4)').hide();
+    });
+</script>
+
+@*<script>
+    $(document).ready(function () {
+        $('._checkBox').click(function () {        
+            if( $(this).prop('checked')==true)
+            $(this).parent('td').parent('tr').remove();
+            else{}
+            // $('#row').fadeOut('slow');
+        });
+        $('#checksbox1').change();
+    });
+</script>*@
+
+
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.Indents, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+              headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                              columns: grid.Columns(
+                                                                grid.Column("Id", header: "", canSort: false, style: "hidecol"),
+                                                                          grid.Column("ItemGroupID", header: "Group ID", canSort: false),
+                                                                  grid.Column("ItemGroupName", header: "Group Name", canSort: false),
+                                                                            grid.Column("ItemID", header: "Item ID", canSort: false),
+                                                                  grid.Column("ItemName", header: "Item Name", canSort: false),
+                                                                  grid.Column("UnitID", header: "Unit", canSort: false),
+                                                                  grid.Column("Make", header: "Make", canSort: false),
+                                                                  grid.Column("PartNo", header: "PartNo", canSort: false),
+                                                                  grid.Column("Approved_Quantity", header: "Appr Qty", canSort: false, style: ""),
+                                                                  grid.Column("BalanceApprovedQty_After_Issue_Qty", header: "Bal Qty", canSort: false, style: "app1"),
+                                                                  grid.Column("Available_Quantity", header: "Avl Stock", style: "passeee1", canSort: false),
+                                                                  grid.Column(header: "Issue Qty", format: (item) => Html.TextBox("LastName", (object)item.Approved_Quantity, new { type = "number",@class="issueQty", step="any", min="0.0", max = (object)item.Available_Quantity, issueqty = (object)item.Approved_Quantity }), style: "passeee")
+                                                                     //,
+                                                                     //grid.Column(header: "Condition", format: (item) => Html.DropDownList("Condition", new List<SelectListItem> { new SelectListItem { Text = "Debited", Value = "1", Selected = true }, new SelectListItem { Text = "Non Debited", Value = "2" }, new SelectListItem { Text = "Returnable", Value = "3" } }))
+
+                                                                     ));
+    }
+
+
+</div>
+@* data-keyboard="false" data-backdrop="static" *@
+<div class="row">
+    <div id="myModal1" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                    <h3 class="modal-title">Confirmation</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger"><small>Issue Quantity Can not Greater than Balance Quantity Or Avl Quantity</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

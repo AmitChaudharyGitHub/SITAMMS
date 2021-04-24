@@ -1,0 +1,636 @@
+﻿@{
+    ViewBag.Title = "DMR";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+    var BindGrnAndMrn = '@Url.Action("GetMRN", "NewDMR_Report")';
+    var GetDetailONDMR = '@Url.Action("GetDetailOnDMR", "NewDMR_Report")';
+    var GetGrid = '@Url.Action("GetAllDatas", "NewDMR_Report")';
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#Projects').select2();
+        $('#TypeDiff').select2();
+        $('#ddlGRNAndMRN').select2();
+
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                  //  $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+      
+        $("#TypeDiff").change(function ()
+        {
+
+            if($("#TypeDiff option:selected").val()!="0")
+            {
+                $('#loading').show();
+                $("#ddlGRNAndMRN").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: BindGrnAndMrn, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val() , TypeId:$("#TypeDiff option:selected").val() },
+                    
+                    complete: function () {
+                        $('#loading').hide();
+                    },
+                    success: function (objlst) {
+                        objlst = $.parseJSON(objlst)
+
+
+
+                        // console.log(obj)
+                        GetMRNAndGRNList(objlst);
+
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve.' + ex);
+                    }
+                });
+                return false;
+            }else
+            { var markup = "<option value='-1'>Select MRN</option>";
+
+                $("#ddlGRNAndMRN").html(markup).show();
+            }
+        });
+
+    
+        $('#formbody').hide();
+        $('#mrk_drdetail').hide();
+
+        $('#btn_Search').click(function (e) {
+            debugger;
+            $("#dvLoading").show();
+
+            e.preventDefault();
+
+
+            if($("#Projects option:selected").val()==''){
+                alert('Please select project');
+                return false;
+            }
+            if($("#ddlGRNAndMRN option:selected").val()==''){
+                alert('Please select MRN Number');
+                return false;
+            }
+            if($("#TypeDiff option:selected").val()==''){
+                alert('Please select MRN Type');
+                return false;
+            }
+
+            $.getJSON(GetDetailONDMR, { ProjectId: $("#Projects option:selected").val(), MRNNo : $("#ddlGRNAndMRN option:selected").val()}, function (data) {
+
+                data = $.parseJSON(data);
+
+                $.each(data, function(i, item) {
+                    debugger;
+                    $('#lbl_MRNNO').text(item.MRN);
+                    $('#lbl_mrnDate').text(item.MRNCreatedDAte);
+                    $('#lbl_grnNo').text(item.GateEntryNo);
+                    $('#lbl_grnDateAndTime').text(item.GateEntryCreatedDate);
+                    $('#lbl_billNo').text(item.BillNo);
+                    $('#lbl_billdate').text(item.BillDate);
+                    $('#lbl_PONo').text(item.PONO);
+                    $('#lbl_poNoDate').text(item.PODate);
+                    $('#lbl_vendorName').text(item.Vendor);
+                    $('#lbl_VehicleNo').text(item.VehicleNo);
+                    $('#lbl_EWayNo').text(item.EWayBill);
+                    $('#lbl_EWayDate').text(item.EWayDate);
+                    $('#lbl_Address').text(item.Address);
+                    
+
+                });
+               BindDMRGrid($("#Projects option:selected").val(),$("#ddlGRNAndMRN option:selected").val());
+
+               
+               GetRSTData();
+
+            });
+
+
+           
+        })
+
+    });
+
+    function GetRSTData(){
+        $('#rstData').html('');
+        var mrn= $("#ddlGRNAndMRN option:selected").val();
+        $.ajax({
+            url:'@Url.Action("GetRSTData")',
+            data:{MRNNo:mrn},
+            success:function(response){
+                if(response!=''){
+                    $('#rstData').html(response);
+                }
+            }
+        })
+    }
+
+    function GetMRNAndGRNList(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlGRNAndMRN").html(procemessage).show();
+        var markup = "<option value=''>Select MRN</option>";
+        for (var x = 0; x < data.length; x++) {
+            if (data[x].Value != null)
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#ddlGRNAndMRN").html(markup).show();
+
+    }
+
+    function BindDMRGrid(ProjID, MRNno)
+    {
+        debugger
+        $.get(GetGrid,
+            { PID: ProjID, MRN : MRNno,MRNType:$('#TypeDiff option:selected').val() },
+            function (result) {
+                debugger;
+                $('#mrk_drdetail').show();
+                $('#formbody').show();
+                $('#formbody').html(result);
+                debugger;
+                $("#dvLoading").hide();
+            });
+    }
+
+</script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Daily Material Received</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("TypeDiff", null, null, htmlAttributes: new { @id = "TypeDiff", @class = "form-control" })
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("GRNAndMRN", new SelectList(string.Empty, "Value", "Text"), "Select MRN", htmlAttributes: new { @id = "ddlGRNAndMRN", @class = "form-control" })
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <br /> <br />
+                                                   <div class="row" id="mrk_drdetail">
+                                                       <div class="col-md-12">
+
+
+
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">MRN No.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_MRNNO"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Date.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_mrnDate"></label>
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                       <div class="col-md-12">
+
+
+
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">GRN No.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_grnNo"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Date</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_grnDateAndTime"></label>
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                       <div class="col-md-12">
+
+
+
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Bill No.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_billNo"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Date.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_billdate"></label>
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                       <div class="col-md-12">
+
+
+
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">PO No.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_PONo"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Date.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_poNoDate"></label>
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                       <div class="col-md-12">
+
+
+
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">E-Way Bill No.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_EWayNo"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Date.</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_EWayDate"></label>
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>                                                <div class="col-md-12" style="font:bold">
+                                                           <div class="col-md-3">
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Name Of Supplier</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_vendorName"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">VehicleNo</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_VehicleNo"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+
+                                                       </div>
+
+
+                                                       <div class="col-md-12" style="font:bold">
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold">Address</label>
+
+                                                               </div>
+
+                                                           </div>
+
+                                                           <div class="col-md-3">
+
+                                                               <div class="section">
+
+                                                                   <label style="font:bold" id="lbl_Address"></label>
+
+                                                               </div>
+
+                                                           </div>
+
+
+                                                       </div>
+
+                                                   </div>
+
+
+                                        </div>
+
+                                    }
+
+
+
+                                </form>
+
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div id="rstData">
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+                                
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

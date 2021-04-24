@@ -1,0 +1,373 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+
+}
+
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var GSTCode = '@Url.Action("GetGSTCode", "GST")';
+    var SaveGst = '@Url.Action("AddGST", "GST")';
+    var redurl = '@Url.Action("Index", "GST")';
+    var GetMMSGSTMaster = '@Url.Action("GetMMSGST", "GST")';
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+
+
+        $.ajax({
+            type: 'POST',
+            url: GSTCode,
+
+            dataType: 'json',
+
+            data: {},
+            // Get Selected Country ID.
+            complete: function () {
+                $('#dvLoading').hide();
+            },
+            success: function (obj) {
+                obj = $.parseJSON(obj)
+
+                $("#txttaxSlabCode").val(obj.Code);
+
+
+            },
+            error: function (ex) {
+                alert('Failed to retrieve Project Code.' + ex);
+            }
+        });
+       // return false;
+
+        $.get(GetMMSGSTMaster,
+
+           function (result) {
+               $('#formbody').show();
+               $('#formbody').html(result);
+
+               $("#dvLoading").hide();
+           });
+
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveGst;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+                        window.location.href = redurl;
+
+                    }
+                    else if (json.Status == "2") {
+                        alert("GST code already exist.");
+                    }
+
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            var obj = new Object();
+
+            obj.TaxType = $("#txttype").val();
+            obj.TaxSlabCode = $("#txttaxSlabCode").val();
+            obj.TaxSlab = $("#txttaxSlab").val();
+            obj.TaxSlabPercentage = $("#txtTaxSlabPercentageValue").val();
+            obj.Description = $("#txtDescription").val();
+
+            
+
+            return obj;
+
+        }
+
+
+        function Valid() {
+
+
+            var TaxType = $("#txttype").val();
+            var TaxSlabCode = $("#txttaxSlabCode").val();
+            var TaxSlab = $("#txttaxSlab").val();
+            var TaxSlabPercentage = $("#txtTaxSlabPercentageValue").val();
+            
+            var rr = true;
+
+
+            if (TaxType == "") {
+                alert('Enter the GST.');
+                $('#txttype').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txttype').css('border-color', '');
+            }
+
+            if (TaxSlabCode == "") {
+                alert('Enter the Tax Slab Code.');
+                $('#txttaxSlabCode').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txttaxSlabCode').css('border-color', '');
+            }
+
+
+            if (TaxSlab == "") {
+                alert('Enter the Tax Slab.');
+                $('#txttaxSlab').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txttaxSlab').css('border-color', '');
+            }
+
+
+            if (TaxSlabPercentage == "") {
+
+                alert('Enter Tax Slab Percentages.');
+                $('#txtTaxSlabPercentageValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtTaxSlabPercentageValue').css('border-color', '');
+            }
+
+
+
+
+         
+
+
+
+            if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+
+
+    });
+
+ 
+
+
+  
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">GST Tax Slab Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @*@Html.TextBox("TaxCode", null, new { id = "txttaxCode", @class = "form-control gui-input", @placeholder = "Tax Code" })*@
+                                                            @Html.TextBox("TaxType", "GST", new { id = "txttype", @class = "form-control gui-input", @placeholder = "GST" ,@readonly="readonly"  })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TaxSlabCode", null, new { id = "txttaxSlabCode", @class = "form-control gui-input", @placeholder = "Tax Slab Code" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TaxSlab", null, new { id = "txttaxSlab", @class = "form-control gui-input", @placeholder = "Tax Slab" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TaxSlabPercentageValue", null, new { id = "txtTaxSlabPercentageValue", @class = "form-control gui-input", @placeholder = "Tax Slab Percentage Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextArea("Description", null, new { id = "txtDescription", @class = "form-control gui-input", @placeholder = "Description" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+

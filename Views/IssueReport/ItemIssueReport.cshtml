@@ -1,0 +1,186 @@
+﻿
+
+@{
+
+    ViewBag.Title = "ItemIssueReport";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+
+    var GetItemByGroup='@Url.Action("GetItemByGroupStock", "tblItemMasters")';
+    var GetItemGroup='@Url.Action("GetItemGroupStock", "tblItemMasters")';
+
+    var ItemIssueGrid = '@Url.Action("itemIssueGrid", "IssueReport")';
+
+</script>
+<script src="~/Script/ItemIssueReport.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script>
+    $(function () {
+        $("#fromdate").datepicker();
+        $("#todate").datepicker();
+    });
+</script>
+
+
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label(" Item Issue  Report ", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-5">
+                                        <div class="section">
+                                            <div class="form-group">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "From Date", @id = "fromdate" })
+                                                    <label for="firstname" class="field-icon">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "To Date", @id = "todate" })
+                                            <label for="firstname" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field select">
+
+                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("ItemGroups", new SelectList(string.Empty, "Value", "Text"), "Select Item Group", htmlAttributes: new { @id = "ItemGroups", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("Items", new SelectList(string.Empty, "Value", "Text"), "Select Item", htmlAttributes: new { @id = "Items", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <input type="submit" value="Search" id="btnDateLast" onclick="javascript:GetItemIssueData()" class="btn btn-success" />
+                                        @*<input type="submit" value="Search" id="btnDateLast" class="btn btn-success" />*@
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                            <div class="pager glyphicon-align-center" id="formbody">
+
+                            </div>
+
+
+
+
+
+                            <br />
+                            <div>
+                                @Html.ActionLink("Export to Excel", "GetExcelIssueReport", "ItemIssueReport", new { @class = "btn btn-primary" })
+                                @Html.ActionLink("Print", "GETPdfIssueReport", "ItemIssueReport", new { @class = "btn btn-primary", @target = "_blank" })
+                            </div>
+
+                            <br />
+                            <div id="dvLoading"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

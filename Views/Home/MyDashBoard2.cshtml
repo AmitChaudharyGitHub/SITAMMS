@@ -1,0 +1,586 @@
+﻿@{
+    ViewBag.Title = "MyDashBoard";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<style>
+    .dvLoading {
+        background: url(../Images/MMSloader.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        left: 12%;
+        top: 20px;
+    }
+
+    .th-bg {
+        background: #4a89dc !important;
+    }
+
+    .columnchart {
+        width: 540px !important;
+    }
+
+    .highchart {
+        width: 521px !important;
+    }
+
+
+    select:focus {
+        width: auto;
+    }
+
+    @@media (min-width: 1100px) {
+        #content {
+            padding: 25px 20px 50px 21px;
+        }
+
+        .linecharts {
+            width: 550px !important;
+        }
+    }
+
+    #content {
+        padding: 25px 0px 50px 0px;
+    }
+
+    .panel-body{
+        padding-top:1px !important;
+        margin-top:1px !important;
+    }
+
+    .grd{
+        min-height:200px;
+        max-height:200px;
+        overflow-y:auto;
+        overflow-x:auto;
+    }
+
+</style>
+<link href="~/DashBoardCSS/DashboardStyle.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@*<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>*@
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "PurchaseRequisition")';
+    var GetPIPendingdetail = '@Url.Action("GetPendingPIGrid", "Home")';
+    var GEtPOPendingDetail = '@Url.Action("GetPendingPOHome", "Home")';
+    var GetMaterialRecvAndIssue = '@Url.Action("GetMaterialRecvAndIssue", "Home")';
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+    var GetPurchaseAndRecevgraphdetail = '@Url.Action("GetRecvAndIssurGrp", "Home")';
+    var GetSumOFallRecvAndIssueofAllAlocatedProject = '@Url.Action("GetSumOfAllIssueAndRecev_AllAllocatedProject", "Home")';
+    var GetAgingOnHome = '@Url.Action("GetAllMovingHome", "Home")';
+    var GetageingHomeGraph = '@Url.Action("GetAgeingPercentgHome", "Home")';
+</script>
+
+
+
+<section id="content_wrapper" ng-app="myApp" ng-controller="myCtrl">
+    <section id="content">
+
+        <div class="container">
+            @*<div class="row">
+                <div class="bdrA whiteBg padA mrgB2">
+                    <div class="radiusA bdrA size">
+                        <div class="col-md-6">
+                            <div class="section">
+                                <label class="field select">
+                                    @Html.DropDownList("ProjectHomeId", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "ProjectHomeId", @class = "form-control" })
+                                    <i class="arrow"></i>
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>*@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="bdrA whiteBg padA mrgB2">
+                        <div class="radiusA bdrA size">
+                            <h3 align="center">Total Receive Till Date </h3>
+                            <a href="#"><h3 align="center">Rs. <label id="lbltxttotalRecvtilldate"></label></h3></a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+                    <div class="bdrA whiteBg padA mrgB2">
+                        <div class="radiusA bdrA size">
+                            <h3 align="center">Total Issue Till Date </h3>
+                            <a href="#"><h3 align="center">Rs. <label id="lbltxttotalIssueTillDate"></label></h3></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Purchase Indent Pending at PIC</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        <th>Pending At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPIAtPIC.length==0" ng-hide="PendingPIAtPIC.length>0 || Progress1">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress1">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                     <tr ng-repeat="item in PendingPIAtPIC">
+                                         <td>{{$index+1}}</td>
+                                         <td><a href="@Url.Action("IndexNew","PurchaseRequisition")">{{item.Project}}</a></td>
+                                         <td>{{item.Pending}}</td>
+                                         <td>{{item.PendingAt}}</td>
+                                     </tr> 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Purchase Indent Pending at Cluster Head</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        <th>Pending At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPIAtCluster.length==0" ng-hide="PendingPIAtCluster.length>0 || Progress2">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress2">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingPIAtCluster">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("IndexNew","PurchaseRequisition")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        <td>{{item.PendingAt}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Pending Purchase Order at HO</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        @*<th>Pending At</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPOAtHO.length==0" ng-hide="PendingPOAtHO.length>0 || Progress9">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress9">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingPOAtHO">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("Index","piorder")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        @*<td>{{item.PendingAt}}</td>*@
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Pending Purchase Order at Site</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        @*<th>Pending At</th>*@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPOAtSite.length==0" ng-hide="PendingPOAtSite.length>0 || Progress10">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress10">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingPOAtSite">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("Index","piorder")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        @*<td>{{item.PendingAt}}</td>*@
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Purchase Order Pending at PIC</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        <th>Pending At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPOAtPIC.length==0" ng-hide="PendingPOAtPIC.length>0 || Progress3">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress3">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingPOAtPIC">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("Index","View_Print_Slip_Approval")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        <td>{{item.PendingAt}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Purchase Order Pending at Cluster Head</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        <th>Pending At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingPOAtCluster.length==0" ng-hide="PendingPOAtCluster.length>0 || Progress4">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress4">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingPOAtCluster">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("Index","View_Print_Slip_Approval")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        <td>{{item.PendingAt}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Purchase Order Pending at PMC</div>
+                            <div class="panel-body grd">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Project Name</th>
+                                            <th>Pending</th>
+                                            <th>Pending At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="PendingPOAtPMC.length==0" ng-hide="PendingPOAtPMC.length>0 || Progress5">
+                                            <td colspan="4">No Data</td>
+                                        </tr>
+                                        <tr ng-show="Progress5">
+                                            <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                        </tr>
+                                        <tr ng-repeat="item in PendingPOAtPMC">
+                                            <td>{{$index+1}}</td>
+                                            <td><a href="@Url.Action("Index","View_Print_Slip_Approval")">{{item.Project}}</a></td>
+                                            <td>{{item.Pending}}</td>
+                                            <td>{{item.PendingAt}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Disapproved Purchase Order at Purchaser</div>
+                            <div class="panel-body grd">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Project Name</th>
+                                            <th>Pending</th>
+                                            <th>Pending At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="DisapprovedPOAtPurchaser.length==0" ng-hide="DisapprovedPOAtPurchaser.length>0 || Progress6">
+                                            <td colspan="4">No Data</td>
+                                        </tr>
+                                        <tr ng-show="Progress6">
+                                            <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                        </tr>
+                                        <tr ng-repeat="item in DisapprovedPOAtPurchaser">
+                                            <td>{{$index+1}}</td>
+                                            <td><a href="@Url.Action("Index","View_Print_Slip_Approval")">{{item.Project}}</a></td>
+                                            <td>{{item.Pending}}</td>
+                                            <td>{{item.PendingAt}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Purchase Order Approved but Pending for Release</div>
+                            <div class="panel-body grd">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Project Name</th>
+                                            <th>Pending</th>
+                                            <th>Pending At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-show="PendingReleasePO.length==0" ng-hide="PendingReleasePO.length>0 || Progress7">
+                                            <td colspan="4">No Data</td>
+                                        </tr>
+                                        <tr ng-show="Progress7">
+                                            <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                        </tr>
+                                        <tr ng-repeat="item in PendingReleasePO">
+                                            <td>{{$index+1}}</td>
+                                            <td><a href="@Url.Action("RelesedPO","IndentPurchaseOrders")">{{item.Project}}</a></td>
+                                            <td>{{item.Pending}}</td>
+                                            <td>{{item.PendingAt}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Material Transfer Pending at PIC</div>
+                        <div class="panel-body grd">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Project Name</th>
+                                        <th>Pending</th>
+                                        <th>Pending At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-show="PendingTransferAtPIC.length==0" ng-hide="PendingTransferAtPIC.length>0 || Progress8">
+                                        <td colspan="4">No Data</td>
+                                    </tr>
+                                    <tr ng-show="Progress8">
+                                        <td colspan="4"><img src="~/Images/Loading.gif" /></td>
+                                    </tr>
+                                    <tr ng-repeat="item in PendingTransferAtPIC">
+                                        <td>{{$index+1}}</td>
+                                        <td><a href="@Url.Action("Index","IntraTransfer")">{{item.Project}}</a></td>
+                                        <td>{{item.Pending}}</td>
+                                        <td>{{item.PendingAt}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+    </section>
+
+</section>
+@*<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>*@
+
+
+@section Scripts{
+<script src="~/Script/MyDashBoard.js"></script>
+    <script src="~/Script/MyDashBoard1.js?v=1.2"></script>
+    @*<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>*@
+    <script src="~/Script/jquery.dataTables.min.js"></script>
+    <script>
+        var GetPI='@Url.Action("GetPI")';
+        var GetPO='@Url.Action("GetData")';
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                //"paging": true,
+                //"serverSide": true, // for process on server side
+                //"bPaginate": false,
+                //"bLengthChange": false,
+                //"bFilter": true,
+                //"bInfo": false,
+                //"bAutoWidth": false,
+                "paging": true,
+                "bInfo": false,
+                "bLengthChange": false,
+                "processing": true, // for show processing bar
+                "serverSide": true, // for process on server side
+                "orderMulti": false, // for disable multi column order
+                "dom": '<"top"i>rt<"bottom"lp><"clear">', // for hide default global search box
+                "ajax": {
+                    "url": "/Home/GetMaterialRecvAndIssue",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                        { "data": "ItemName", "name": "Item Name", "autoWidth": true },
+                        { "data": "UnitCode", "name": "Unit Code", "autoWidth": true },
+                        { "data": "ReceiveQuantity", "name" : "Recv. Qty" , "autoWidth": true },
+                        { "data": "IssueQuantity", "name" : "Issue Qty" , "autoWidth": true },
+                        { "data": "BalanceQuantity", "name" : "Balance Qty" ,"autoWidth": true },
+                        { "data" : "ItemGroupId" , "name" : "Item Group" , "visible": false}
+                        //{ "data": "PostalCode", "autoWidth": true }
+                ]
+            });
+
+            oTable = $('#myTable').DataTable();
+            $("#ItemGroup").change(function () {
+
+                if($("#ItemGroup option:selected").val() !="0")
+                {
+                    oTable.columns(5).search($('#ItemGroup').val().trim());
+                    oTable.draw();
+                }
+
+
+            });
+
+
+
+
+            $('#recvtbl').DataTable({
+                "paging": true,
+                "bInfo": false,
+                "bLengthChange": false,
+                "processing": true, // for show processing bar
+                "serverSide": true, // for process on server side
+                "orderMulti": false, // for disable multi column order
+                "dom": '<"top"i>rt<"bottom"lp><"clear">', // for hide default global search box
+                "ajax": {
+                    "url": "/Home/GetMaxAndMinRateHome",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columns": [
+                        { "data": "ItemName", "name": "Item Name", "autoWidth": true },
+                        { "data": "UnitCode", "name": "Unit Code", "autoWidth": true },
+                        { "data": "LowestRate", "name" : "Lowest Rate" , "autoWidth": true },
+                        { "data": "HighestRate", "name" : "Highest Rate" , "autoWidth": true },
+                        { "data": "LastRecvDate", "name" : "Last Recv Date" ,"autoWidth": true },
+                        { "data" : "ItemGroupID" , "name" : "Itemgrp" , "visible": false},
+                        { "data" : "ProjectId" , "name" : "Projectid" , "visible": false}
+                        //{ "data": "PostalCode", "autoWidth": true }
+                ]
+            });
+
+            o1Table = $('#recvtbl').DataTable();
+            $("#ItemGroup4").change(function () {
+
+                if($("#ItemGroup4 option:selected").val() !="0")
+                {
+                    o1Table.columns(5).search($('#ItemGroup4').val().trim());
+                    o1Table.columns(6).search($('#ProjectHomeId').val().trim());
+                    o1Table.draw();
+                }
+
+
+            });
+
+
+
+        });
+
+
+
+
+    </script>
+<script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+}

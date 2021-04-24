@@ -1,0 +1,279 @@
+﻿@model MMS_P.ViewModels.IndentPurchaserOrderDetails
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+    ViewBag.Title = "Details";
+
+    //Layout = null;
+}
+
+ 
+ 
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Indent Purchase Order Created By @Model.Master.CreatedName  </span>
+                                    <span>  for @Model.Master.SendToName  and Date is @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.PurchaseOrderDate2)</span>
+                                </div>
+                            <table><tr><td>
+                                           <dl class="dl-horizontal">
+                                               <dt>
+                                                   @Html.DisplayName("Project Name ")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.ProjectName)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayName("Project Address ")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.ProjectAddress)
+                                               </dd>
+
+                                              
+                                               <dt>
+                                                   @Html.DisplayName("Vendor Name ")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.SupplierName)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayName("Vendor Address ")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.SupplierAddress)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayName("Vendor Tin No. ")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.SupplierTinNo)
+                                               </dd>
+                                           </dl>
+
+                                </td>><td>
+                                          <dl class="dl-horizontal">
+                                             
+                                              <dt>
+                                                  @Html.DisplayName("No.")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.PurchaseOrderNo)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayName("PO Date")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.PurchaseOrderDate2)
+                                              </dd>
+
+
+                                              <dt>
+                                                  @Html.DisplayName("Indent Ref No")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.IndentRefNo)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayName("Indent Ref Date")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.IndentRefNoDate2)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayName("Acil Tin No")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.AcilTinNo)
+                                              </dd>
+                                          </dl>
+
+                                </td></tr></table>
+                            @if(Model.Child.Count!=0)
+                            { 
+                            <div id="myPager" style="margin-top:17px;">
+                                @{
+                                    var grid = new WebGrid(
+                                                    canPage: false,
+                                                
+                                                    canSort: false,
+                                                    ajaxUpdateContainerId: "grid");
+
+                                    grid.Bind(Model.Child,  autoSortAndPage: false);
+                                    //grid.Pager(WebGridPagerModes.All);
+
+                                    @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                                     grid.Column("TbIndentPurchaseOrderChild.SrNo",
+                             header: "Sr No."),
+                 grid.Column("ItemName",
+                                      header: "Item Name"
+
+         ), grid.Column("Unit",
+                                                                 header: "Unit"
+
+                                    ),
+                   grid.Column("TbIndentPurchaseOrderChild.Qty",
+                                                         header: "Qty"
+
+                           ),
+                   grid.Column("TbIndentPurchaseOrderChild.Rate",
+                                                                           header: "Rate"
+
+                            ), grid.Column("TbIndentPurchaseOrderChild.Discount",
+                                                                                             header: "Discount"
+
+                                     ), grid.Column("TbIndentPurchaseOrderChild.Amount",
+                                                                                                               header: "Amount"
+
+                                             )
+
+                                            
+                                    
+                                                                                                                                         ));
+                                }
+
+
+                            </div>
+
+                            }
+                          
+                        </div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                          
+                                        </dt>
+
+                                        <dd>
+                                            
+                                        </dd>
+                                        <dt>
+                                           @Html.DisplayName("VAT%")
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.Vat)
+                                        </dd>
+                                        <dt>
+                                          
+                                        </dt>
+                                        <dd>
+                                           
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("SurCharge On Vat%")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.SurCharge)
+                                        </dd>
+                                        <dt>
+
+                                        </dt>
+                                        <dd>
+
+                                        </dd>
+                                    </dl>
+
+                                </td>>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayName("Total")
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.Total)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("VAT Amount")
+                                        </dt>
+                                         
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.VatAmount)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("Sub Total")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.SubTotal)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("Cartage")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.Cartage)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("Grand Total")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.TbIndentPurchaseOrderMaster.GrandTotal)
+                                        </dd>
+                                    </dl>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+                        <p>
+                       
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                        </p>
+
+                      
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

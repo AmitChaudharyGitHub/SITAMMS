@@ -1,0 +1,346 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+
+}
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var SaveInsurance = '@Url.Action("AddInsurance", "InsuranceMaster")';
+    var GetInsurance = '@Url.Action("GetInsurance", "InsuranceMaster")';
+    var RedUrl = '@Url.Action("Index", "InsuranceMaster")';
+</script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.get(GetInsurance,
+
+             function (result) {
+                 $('#formbody').show();
+                 $('#formbody').html(result);
+
+                 $("#loading").hide();
+             });
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveInsurance;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+                        window.location.href = RedUrl;
+
+                    }
+                    else if (json.Status == "2")
+                    {
+                        alert("Tax code already exist.");
+                    }
+
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            var obj = new Object();
+
+            obj.InsuranceCode = $("#txtInsuranceCode").val();
+            obj.InsuranceType = $("#txtInsuranceType").val();
+            obj.InsuranceExistanceType = $("#ddlInsuranceStatus option:selected").val();
+
+            if ($("#ddlInsuranceStatus option:selected").val() == 1) {
+                obj.InsuranceValue = $("#txtInsuranceValue").val();
+            } else {
+                obj.InsuranceTextValue = $("#txtInsuranceValue").val();
+            }
+
+            obj.InsuranceDescription = $("#txtInsuranceDescription").val();
+
+            return obj;
+
+        }
+
+
+        function Valid() {
+
+
+            var InsuranceCode = $("#txtInsuranceCode").val();
+            var InsuranceType = $("#txtInsuranceType").val();
+            var InsuranceExistanceType = $("#ddlInsuranceStatus option:selected").val();
+            var InsuranceValue = $("#txtInsuranceValue").val();
+            var InsuranceDescription = $("#txtInsuranceDescription").val();
+            var rr = true;
+
+
+            if (InsuranceCode == "") {
+                alert('Enter the Insurance Code.');
+                $('#txtInsuranceCode').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtInsuranceCode').css('border-color', '');
+            }
+
+            if (InsuranceType == "") {
+                alert('Enter the Insurance Type.');
+                $('#txtInsuranceType').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtInsuranceType').css('border-color', '');
+            }
+
+
+            if (InsuranceValue == "") {
+                alert('Enter the Insurance Value.');
+                $('#txtInsuranceValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtInsuranceValue').css('border-color', '');
+            }
+
+
+            if (InsuranceExistanceType == "") {
+
+                alert('Select Insurance Status.');
+                $('#ddlInsuranceStatus').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlInsuranceStatus').css('border-color', '');
+            }
+
+
+
+
+            if (InsuranceDescription == "") {
+                alert('Enter the Description.');
+                $('#txtInsuranceDescription').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtInsuranceDescription').css('border-color', '');
+            }
+
+
+
+
+        if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+
+
+
+
+    });
+</script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Insurance Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("InsuranceCode", null, new { id = "txtInsuranceCode", @class = "form-control gui-input", @placeholder = "Insurance Code" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Insurance Type", null, new { id = "txtInsuranceType", @class = "form-control gui-input", @placeholder = "Insurance Type" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("InsuranceStatus", (IEnumerable<SelectListItem>)ViewBag.TaxStatus, htmlAttributes: new { @id = "ddlInsuranceStatus", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("InsuranceValue", null, new { id = "txtInsuranceValue", @class = "form-control gui-input", @placeholder = "Insurance Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextArea("Description", null, new { id = "txtInsuranceDescription", @class = "form-control gui-input", @placeholder = "Insurance Description" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

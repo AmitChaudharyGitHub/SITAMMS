@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MMS.DAL.tblSourceLocation>
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;" class="table table-hover">
+    <tr class="primary">
+        <td style="width: 70px; text-align: center; border: 1px solid black; ">
+            Sr.No.
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Project Name
+        </td>
+        <td style="width: 300px; text-align: center; border: 1px solid black;
+                                                                        ">
+          Source Location
+        </td>
+        
+
+        <td style="width: 200px; text-align: center; border: 1px solid black;">
+            Created Date
+        </td>
+
+
+
+
+
+
+
+
+        @foreach (var item in Model)
+        {
+        <tr>
+
+            <td style="width: 70px; text-align: center; border: 1px solid black; ">
+                @Html.DisplayFor(x => item.TransId)
+            </td>
+
+            <td style="width: 150px; text-align: Left; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td style="width: 300px; text-align: Left; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+
+           
+
+            <td style="width: 200px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+
+
+        </tr>
+        }
+    </table>

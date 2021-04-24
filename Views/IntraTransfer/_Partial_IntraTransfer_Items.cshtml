@@ -1,0 +1,108 @@
+﻿
+@model MMS_P.ViewModels.GetDetailOnPrint
+@{
+    Layout = null;
+}
+
+
+@{int rowNo = 1;}
+
+@*<script>
+    window.onload = function () {
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+        var tab_text = document.getElementById('tbl_Data').outerHTML;
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html","replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus(); 
+            txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+        }  
+        else                 //other browser not tested on IE 11
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+    }
+</script>*@
+
+<table id="tbl_Data" width="100%" style="font-size:10px;" cellpadding="4" cellspacing="0" border="1">
+
+
+    <tr>
+        <th style="text-align:center" rowspan="2">S.No.</th>
+        <th colspan="16" style="text-align:center">Description</th>
+        <th style="text-align:center">HSN Code</th>
+        <th style="text-align:center">Item Code</th>
+        <th style="text-align:center">Unit</th>
+    </tr>
+    <tr>
+        <th style="text-align:center">Qty</th>
+        <th style="text-align:center">Rate (Rs.) </th>
+        <th style="text-align:center">Discount (%) </th>
+        <th style="text-align:center">Amount(After Discount)</th>
+        <th style="text-align:center">P&F Chrg. %</th>
+        <th style="text-align:center">P&F Amt</th>
+        <th style="text-align:center">Cartage Type</th>
+        <th style="text-align:center">Cartage Type Rate</th>
+        <th style="text-align:center">Cartage Amt.</th>
+        <th style="text-align:center">Insurance (%)</th>
+        <th style="text-align:center">Ins. Amt.</th>
+        <th style="text-align:center">Taxable Amount</th>
+        <th style="text-align:center">CGST (%)</th>
+        <th style="text-align:center">SGST/UTGST (%) </th>
+        <th style="text-align:center">IGST (%) </th>
+        <th style="text-align:center">CGST Amt.(Rs.)</th>
+        <th style="text-align:center">SGST/UTGST Amt.(Rs.)</th>
+        <th style="text-align:center">IGST Amt.(Rs.)</th>
+        <th style="text-align:center">Amt(Rs.)</th>
+    </tr>
+
+
+
+    @foreach (var c in Model.ItemData)
+    {
+
+
+        <tr>
+            <td style="text-align:center" rowspan="2">@rowNo  @{ rowNo++; }</td>
+            <td style="text-align:center" colspan="16">
+                @c.ItemName
+                @if (c.Item_Description == null)
+                {
+                }
+                else
+                {
+
+                    @c.Item_Description.ToString()
+                }
+            </td>
+            <td style="text-align:center">@c.HSNCode</td>
+            <td style="text-align:center">@c.GIETMCode</td>
+            <td style="text-align:center">@c.UnitCode</td>
+        </tr>
+                    <tr>
+                        <td style="text-align:center">@c.Qty</td>
+                        <td style="text-align:center">@c.Rate</td>
+                        <td style="text-align:center">@c.Discount</td>
+                        <td style="text-align:center">@c.Total</td>
+                        <td style="text-align:center">@c.PackingChargesPercentage</td>
+                        <td style="text-align:center">@c.PackingChargesAmount</td>
+                        <td style="text-align:center">@c.CartageTypeName</td>
+                        <td style="text-align:center">@c.Cartage_rate</td>
+                        <td style="text-align:center">@c.CartageAmount</td>
+                        <td style="text-align:center">@c.InsuranceAmount</td>
+                        <td style="text-align:center">@c.InsuranceAmount</td>
+                        <td style="text-align:center">@c.SubTotal2</td>
+                        <td style="text-align:center">@c.CGSTPercentage</td>
+                        <td style="text-align:center">@c.SGSTPercentage</td>
+                        <td style="text-align:center">@c.IGSTPercentage</td>
+                        <td style="text-align:center">@c.CGSTAmount </td>
+                        <td style="text-align:center">@c.SGSTAmount</td>
+                        <td style="text-align:center">@c.IGSTAmount</td>
+                        <td style="text-align:center">@c.GrossAmount</td>
+                    </tr>
+
+                }
+
+</table>

@@ -1,0 +1,185 @@
+﻿
+
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+
+
+<div id="gridposition" style="width: 100%; overflow:scroll">
+    @if (Model.Count > 0)
+    {
+        <table class="table table-bordered table-condensed">
+            <tr>
+                <th>Action</th>
+                <th>S.No.</th>
+                <th>Item Group</th>
+                <th>Item Code</th>
+                <th>Item Description</th>
+                <th>Unit</th>
+                <th>Qty.</th>
+                <th>Rate</th>
+                <th>Discount(%)</th>
+                <th>Amount(After Discount)</th>
+                <th>P&F</th>
+                <th>Cartage Type</th>
+                <th>Cartage</th>
+                <th id="THremark" class="hide">Remark</th>
+                <th>Insurance</th>
+                <th>CGST(%)</th>
+                <th>SGST/UTGST(%)</th>
+                <th>IGST(%)</th>
+                <th>CGST Amt.</th>
+                <th>SGST/UTGST Amt.</th>
+                <th>IGST Amt.</th>
+                <th>Grand Total</th>
+            </tr>
+            @{int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <a href="javascript:void(0);" data-val="@item.Uid" class="edit" id="btnEdit_@item.Uid">Edit</a>
+                        <a href="javascript:void(0);" data-val="@item.Uid" class="update hide" id="btnUpdate_@item.Uid">Update</a>
+                    </td>
+                    <td>@(++i)</td>
+                    <td>@item.GroupName</td>
+                    <td>@item.ItemNo</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.UnitCode</td>
+                    <td>@item.QTy</td>
+                    <td>@item.Rate</td>
+                    <td>@item.DiscountPercentage</td>
+                    <td>@item.Discount</td>
+                    <td>@item.PandF</td>
+                    <td id="cartageType_@item.Uid" data-val="@item.CartageTypeId">@item.CartageType</td>
+                    <td>
+                        <label id="lbl_@item.Uid">@item.CartageAmt</label>
+                        <input type="text" name="txt" value="@item.CartageAmt" style="width:100px !important;" class="form-control decimalNumber cartage hide" id="txt_@item.Uid"/>
+                    </td>
+                    <td id="remark_@item.Uid" class="hide">
+                        <textarea id="lblRemark_@item.Uid" class="form-control" style="width:150px !important;" rows="2" cols="5">@item.CartageRemark</textarea>
+                    </td>
+                    <td>@item.InsuranceAmt</td>
+                    <td>@item.CGSTPer</td>
+                    <td>@item.SGSTAndUTGSTPer</td>
+                    <td>@item.IGSTPer</td>
+                    <td>@item.CGSTAmt</td>
+                    <td>@item.SGSTAndUTGSTAmt</td>
+                    <td>@item.IGSTAmt</td>
+                    <td>@item.GrandTotal</td>
+                    
+                </tr>
+            }
+        </table>
+       
+    }
+    else
+    {
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+</div>
+<div class="row">
+    <div class="col-md-12" style="text-align:right;">
+
+        @if (ViewBag.displyTotalSum != null)
+            {
+            <b>Total Amount : </b>     @ViewBag.displyTotalSum  <b>INR</b>
+        }
+
+    </div>
+</div>

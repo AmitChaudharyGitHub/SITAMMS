@@ -1,0 +1,138 @@
+﻿@model MMS.ViewModels.IG_rate_Caption_WebGrids
+
+@{
+    Layout = null;
+}
+
+
+
+
+
+<style type="text/css">
+    .edit-mode {
+    }
+
+    .edit-user_Stc {
+    }
+
+        .edit-user_Stc display-mode {
+        }
+
+    .save-user_Stc edit-mode {
+    }
+
+    .display-mode {
+    }
+
+    .cancel-user_Stc {
+    }
+
+    .webgrid-table {
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 14px;
+        font-weight: normal;
+        width: 100%;
+        display: table;
+        border-collapse: collapse;
+        border: solid px #C5C5C5;
+        background-color: white;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #C5C5C5;
+            padding: 3px 7px 2px;
+        }
+
+    .webgrid-header, .webgrid-header a {
+        background-color: #0094ff;
+        color: #ffffff;
+        text-align: left;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: azure;
+        padding: 3px 7px 2px;
+    }
+
+    .hidecol {
+        visibility: hidden;
+    }
+
+    .col3Width {
+        width: 150px;
+    }
+
+    .hidecol {
+        visibility: hidden;
+        width: 0px;
+    }
+
+    .srnwid {
+        width: 20px;
+    }
+</style>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('.webgrid-table td:nth-child(3),th:nth-child(3)').hide();
+
+    });
+</script>
+
+
+
+
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.IG_DATAS, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+              headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                              columns: grid.Columns(
+
+
+         grid.Column(format:@<text><input id="checkbox_Stc1" type="checkbox" checked="checked" c="1" name="ids" value="@item.TransID" /></text>, header: "", style: "srnwid"),
+
+          grid.Column(header: "Sr No.", format: @<text><div style="width:80px;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text> , style: "srnwid"),
+
+          grid.Column("ItemGroupID", "", format: @<text><span class="display-mode" style="display:none;">
+                                        <label id="lbl_Group_Id" style="display:none;">@item.ItemGroupID</label>
+                                    </span>
+        </text>, style: "hidecol"),
+
+         grid.Column("GroupName", "Group Name", format: @<text> <span class="display-mode">
+                                        <label id="lbl_Group_Name">@item.GroupName</label>
+                                    </span></text>, style: "col2Width")
+               ));
+    }
+
+
+</div>
+
+
+

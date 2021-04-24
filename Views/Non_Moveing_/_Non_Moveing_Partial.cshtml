@@ -1,0 +1,149 @@
+﻿
+
+
+
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px;
+        margin: 5px;
+        color: #333;
+        text-align: left;
+    }
+
+    .gridRow td {
+        padding: 10px;
+        color: #333;
+        text-align: left;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        /*font-weight: bold;
+        color: blue;
+        border: 2px #f00 solid;*/
+        text-decoration: none;
+  padding: 6px 11px;
+  margin-right: 6px;
+  border-radius: 3px;
+  color: #fff;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+  border: 1px solid #43505e;
+  background: #556270;
+  background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+  background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+  background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+  background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+  background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+  -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+  -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+  box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="text-align:right;">
+            @if (ViewBag.displySumqty != null)
+            {
+                <b>Total Quantity</b>   @ViewBag.displySumqty
+            }
+        </div>
+        <div class="col-md-3" style="text-align:left;">
+
+            @if (ViewBag.displySumamt != null)
+            {
+                <b>Total Amount</b>     @ViewBag.displySumamt
+            }
+
+        </div>
+    </div>
+</div>
+
+<div id="gridposition" style="width: 100%;">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "positionGrid");
+        //int rowVal = 0;
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                      tableStyle: "gridTable",
+                      headerStyle: "gridHead",
+                      footerStyle: "gridFooter",
+                      rowStyle: "gridRow",
+                      alternatingRowStyle: "gridAltRow",
+                      htmlAttributes: new { id = "positionGrid" },
+                      fillEmptyRows: false,
+                      columns: grid1.Columns(
+                      //grid1.Column("GateEntryNo", header: "GRN No."),
+                      //grid1.Column("Vendor", header: "Name of Vendor"),
+                      ////grid1.Column("BillNo", header: "Bill No."),
+                      //grid1.Column("StatusTypeNo", header: "PO No. "),
+                      
+                      // grid1.Column("Sr.No.", format: item => rowVal = rowVal + 1),
+                      grid1.Column(header: "Sr.No.", format: @<text><div>@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>),
+                      grid1.Column("ItemGroup", header: "Item Group Name"),
+                       grid1.Column("Item", header: "Item Name"),
+                       grid1.Column("Unit", header: "Unit"),
+                       grid1.Column("ReceiveQty", header: "Quantity"),
+                       grid1.Column("Rate", header: "Rate"),
+                       grid1.Column("Amount", header: "Amount"),
+                       grid1.Column("CreatedDate", header: "Date", format: @<text>@item.CreatedDate.ToString("dd/MM/yy")</text>, canSort: false)
+                       ))
+}
+else
+{
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+</div>

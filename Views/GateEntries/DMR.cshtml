@@ -1,0 +1,241 @@
+﻿@model MMS_P.ViewModels.PagedGateEntryMasterModel
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+    var fromDate = (DateTime)ViewBag.fromDate;
+    var toDate = (DateTime)ViewBag.toDate;
+}
+<style type="text/css">
+    .user {
+        font-size: 10px;
+    }
+
+    .user1 {
+        font-size: 10px;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">GetVendorByGate
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId= '@Url.Action("GetProjectByEmpId", "GateEntries")';
+    var GetItemByGroup= '@Url.Action("GetItemByGroup1", "GateEntries")';
+    var GetVendorByGroup = '@Url.Action("GetVendorByGroup", "GateEntries")';
+    var Grid= '@Url.Action("DMRGrid", "GateEntries")';
+    var GetVendorByGate = '@Url.Action("GetVendorItemByGateEntry", "GateEntries")';
+    
+
+
+</script>
+<script src="~/Script/GEDMR.js"></script>
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label("Daily  Material  Receive Report Item Wise ", new { id = "L1" })</span>
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    Purchase Receive:  <input type="radio" name="P" id="P" value="Purchase" checked="checked" />
+                                </div>
+                                <div class="col-md-2">
+                                    Dispatch To Other:  <input type="radio" name="P" id="P" value="Dispatch" />
+                                </div>
+                                <div class="col-md-2">
+                                    Receive By Other:  <input type="radio" name="P" id="P" value="Receive" />
+                                </div>
+                                <div class="col-md-2">
+                                    All:  <input type="radio" name="P" id="P" value="All" />
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.ActionLink(" Purchase Receive", "Index", "GateEntries", null, new { @class = "btn btn-primary", @style = "font-size: 8px;font-weight:bold; " })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.ActionLink(" Transfer Receive", "IndexT", "GateEntries", null, new { @class = "btn btn-primary", @style = "font-size: 8px;font-weight:bold; " })
+                                </div>
+                                </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field select">
+                                          
+                                                @Html.DropDownList("empName", null, "For All Employee ", htmlAttributes: new { @id = "empName1", @class = "form-control",@Disabled="Disabled" })
+                                         
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                
+
+
+                                @*</div>
+
+
+                            <div class="row">*@
+
+                                    <div class="col-md-9">
+                                        <div class="section">
+                                            <label class="field select">
+                                                @Html.DropDownList("Prj", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Prj", @class = "form-control" })
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>                             
+
+                                  
+
+                                </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("fromDate", string.Format("{0:dd MMM yyy}", fromDate), new { @class = "DatePicker form-control", @id = "fromDate", @placeholder = "Enter From Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("toDate", string.Format("{0:dd MMM yyy}", toDate), new { @class = "DatePicker form-control", @id = "toDate", @placeholder = "Enter To Date" })
+                                            <label for="RefNo" class="field-icon">
+                                                <i class="fa fa-calendar"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("ItemGroup", new SelectList(string.Empty, "Value", "Text"), "For All Item Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("ItemName", new SelectList(string.Empty, "Value", "Text"), "For All Item Name", new { @id = "ItemName", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                           
+                                        </label>
+                                    </div>
+                                </div>
+                            @*</div>
+
+                            <div class="row">*@
+                                @*<div class="col-md-3">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                          @Html.DropDownList("VGId", null, "Select Vendor Group", htmlAttributes: new { @id = "VGID", @class = "form-control" })
+
+                                        <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>*@
+
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("VNAME", null, "For All Vendors", htmlAttributes: new { @id = "VNAME", @class = "form-control" })
+                                            <i class="arrow"></i>
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                                <br />
+                            <div id="dvLoading"></div>
+                            <div class="col-md-2">
+                                    <div class="section">
+                                        <input type="submit" value="Search" id="btnDate" onclick="javascript:getblock()" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+                       
+
+
+
+
+                          <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "CashPurchaseChilds");}*@
+                                </div>
+
+
+
+                            </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

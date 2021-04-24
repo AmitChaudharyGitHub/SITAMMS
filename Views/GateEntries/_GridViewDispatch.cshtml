@@ -1,0 +1,204 @@
+﻿@model MMS_P.ViewModels.GridOSTChild
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+   
+}
+
+<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table th, a {
+            color: white;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }
+    input[id="Date"] {
+        width: 400px;
+        font-weight: bold;
+    }
+     input[id="ChallanDate"] {
+        width: 300px;
+        font-weight: bold;
+    }
+      
+</style>
+
+                            <div class="Challan" challanno=@Model.ChallanNo challandate=@Model.ChallanDate vehicleno=@Model.VehicleNo></div>
+                            <table class="table table-hover" id="grid">
+                                <tr   ><td class="DVen" colspan="10" dispatchno=@Model.DispatchingSiteNo> Dispatching From   @Model.DispatchingSite</td>   </tr>
+                                <tr><td class="RVen" colspan="10" receiveno=@Model.ReceivingSiteNo receivename=@Model.ReceivingSite> and will receive by  @Model.ReceivingSite</td>   </tr>
+                                <tr class="primary">
+
+
+                                    <th>
+                                        @Html.DisplayName("SrNo.")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Group Name")
+                                    </th>
+                                    <th>
+                                       @Html.DisplayName("Item Name")
+                                    </th>
+                                    <th>
+                                      @Html.DisplayName("Unit")
+                                    </th>                                 
+                                  
+                                    <th>
+                                       @Html.DisplayName("Qty")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Dispatch")
+                                    </th>                                  
+                                    <th>
+                                       @Html.DisplayName("Receive")
+                                      </th>
+                                    <th>
+                                        @Html.DisplayName("Current-Dispatch")
+                                    </th>
+                                  
+                                </tr>
+
+                                @foreach (var item in Model.Child)
+                                {
+                                    var a = @item.TbOSTTransferChild.UId;
+                                    var It = @item.TbOSTTransferChild.ItemNo;
+                                    var Ig = @item.TbOSTTransferChild.ItemGroupNo;
+                                    var Rate = @item.TbOSTTransferChild.Rate;
+                                    var UnitNo = @item.TbOSTTransferChild.UnitNo;
+                                    var TaxPer = @item.TbOSTTransferChild.Vat;
+                                    var DPerUnit = @item.TbOSTTransferChild.DeliveryCharges;
+                                    <tr id=@a>
+
+                                        <td class=SrNo_@a ostuid=@a ig=@Ig it=@It unitno=@UnitNo  rate=@Rate  taxper=@TaxPer dperunit=@DPerUnit>
+                                            @Html.DisplayFor(modelItem => item.TbOSTTransferChild.SrNo)
+                                        </td>
+                                        <td class=Group_@a>
+                                            @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                        </td>
+                                        <td class=Item_@a>
+                                            @Html.DisplayFor(modelItem => item.ItemName)
+                                        </td>
+                                        <td class=Unit_@a>
+                                            @Html.DisplayFor(modelItem => item.UnitName)
+                                        </td>                                     
+                                                                           
+                                        <td>
+                                            <span class="checkVal" id=Qty_@a>
+                                                @Html.TextBoxFor(modelItem => item.TbOSTTransferChild.Qty, new { disabled = "disabled", @readonly = "readonly" })
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="checkVal" id=Dispatch_@a>
+                                                @Html.TextBoxFor(modelItem => item.TbOSTTransferChild.Dispatch, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="checkVal" id=Receive_@a>
+                                                @Html.TextBoxFor(modelItem => item.TbOSTTransferChild.Receive, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+                                            </span>
+                                        </td>
+                                        <td class=CDispatch_@a>
+                                            @Html.Editor("Current-Dispatch")
+                                        </td>
+                                       
+                                      
+                                    </tr>
+                                }
+
+                            </table>
+
+
+
+                          
+                       
+
+
+  

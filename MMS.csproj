@@ -1,0 +1,2532 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{56A8E95A-D370-4D4F-89FD-166B811DA988}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MMS</RootNamespace>
+    <AssemblyName>MMS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BusinessLogicLayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dll\BusinessLogicLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="BusinessObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\AMIT\Desktop\BusinessObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ClosedXML.0.94.2\lib\net40\ClosedXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DataAccessLayer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\AMIT\Desktop\DataAccessLayer.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Elmah, Version=1.2.13605.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Elmah.Mvc.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.10\lib\itextsharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.10.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\itextsharp.xmlworker.5.5.10\lib\itextsharp.xmlworker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoder">
+      <HintPath>..\..\LES_New\LES_New\bin\QRCoder.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AddProjectController.cs" />
+    <Compile Include="Controllers\AddRegionMasterController.cs" />
+    <Compile Include="Controllers\Add_Rate_Cap_POController.cs" />
+    <Compile Include="Controllers\AdminHomeController.cs" />
+    <Compile Include="Controllers\API\GRNDataController.cs" />
+    <Compile Include="Controllers\ApprovedIssueQuantityController.cs" />
+    <Compile Include="Controllers\BillUploadController.cs" />
+    <Compile Include="Controllers\BlockMastersController.cs" />
+    <Compile Include="Controllers\CartageCalculationController.cs" />
+    <Compile Include="Controllers\CartageTypeController.cs" />
+    <Compile Include="Controllers\CashPurchaseChildsController.cs" />
+    <Compile Include="Controllers\ConversionMasterController.cs" />
+    <Compile Include="Controllers\Date_WiseController.cs" />
+    <Compile Include="Controllers\DesignDemoController.cs" />
+    <Compile Include="Controllers\EquipmentCategoryController.cs" />
+    <Compile Include="Controllers\EquipmentMasterController.cs" />
+    <Compile Include="Controllers\FloorMastersController.cs" />
+    <Compile Include="Controllers\GateEntriesController.cs" />
+    <Compile Include="Controllers\GateEntrydocumentUploadController.cs" />
+    <Compile Include="Controllers\GateEntryListClassificationController.cs" />
+    <Compile Include="Controllers\GetOutController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IndentPurchaseOrdersController.cs" />
+    <Compile Include="Controllers\IndentRequistionController.cs" />
+    <Compile Include="Controllers\IndentWise_Search_ReportController.cs" />
+    <Compile Include="Controllers\IntraTransferController.cs" />
+    <Compile Include="Controllers\IssueReturnController.cs" />
+    <Compile Include="Controllers\ItemBudgetController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ManagePIPurchaseTypeController.cs" />
+    <Compile Include="Controllers\MannualTransferController.cs" />
+    <Compile Include="Controllers\MaterialRevController.cs" />
+    <Compile Include="Controllers\MovableStatusController.cs" />
+    <Compile Include="Controllers\MRNFileUploadController.cs" />
+    <Compile Include="Controllers\MRNListClassificationController.cs" />
+    <Compile Include="Controllers\Multiple_Quantity_wise_SearchController.cs" />
+    <Compile Include="Controllers\MyAccountController.cs" />
+    <Compile Include="Controllers\MySiteController.cs" />
+    <Compile Include="Controllers\OSTController.cs" />
+    <Compile Include="Controllers\OutProPurchaseIndentController.cs" />
+    <Compile Include="Controllers\PcContractorController.cs" />
+    <Compile Include="Controllers\PermissionController.cs" />
+    <Compile Include="Controllers\PIOrderController.cs" />
+    <Compile Include="Controllers\PIOrderOutPITypeController.cs" />
+    <Compile Include="Controllers\POCalculationController.cs" />
+    <Compile Include="Controllers\POCloserController.cs" />
+    <Compile Include="Controllers\PoCloserReportController.cs" />
+    <Compile Include="Controllers\POManagementController.cs" />
+    <Compile Include="Controllers\Price_Cap\AddPriceCapController.cs" />
+    <Compile Include="Controllers\Price_Cap_For_Item_GroupController.cs" />
+    <Compile Include="Controllers\Print_Slip_For_ApprovalController.cs" />
+    <Compile Include="Controllers\ProjectBudgetController.cs" />
+    <Compile Include="Controllers\ProjectOpeningAndClosingController.cs" />
+    <Compile Include="Controllers\PurchaseOrderController.cs" />
+    <Compile Include="Controllers\PurchaseOrderLimitController.cs" />
+    <Compile Include="Controllers\PurchaseRequisitionController.cs" />
+    <Compile Include="Controllers\PurchaseRequisitionLimitController.cs" />
+    <Compile Include="Controllers\PurchaseTypeProjectLimitController.cs" />
+    <Compile Include="Controllers\Purchase_Order_SlipController.cs" />
+    <Compile Include="Controllers\QuantityIssuesController.cs" />
+    <Compile Include="Controllers\QuotationController.cs" />
+    <Compile Include="Controllers\ReceiptVsPOController.cs" />
+    <Compile Include="Controllers\RemoveOpening\RemoveOpeningController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\Reports\CurrentStockController.cs" />
+    <Compile Include="Controllers\Reports\Datewise_Item_Controller.cs" />
+    <Compile Include="Controllers\Reports\DMR_ReportController.cs" />
+    <Compile Include="Controllers\Reports\FormattedReportController.cs" />
+    <Compile Include="Controllers\Reports\GateReceiptVsStoreReceiptController.cs" />
+    <Compile Include="Controllers\Reports\IssueReportController.cs" />
+    <Compile Include="Controllers\Reports\IssueStockController.cs" />
+    <Compile Include="Controllers\Reports\ItemWiseRateController.cs" />
+    <Compile Include="Controllers\Reports\MSPReportController.cs" />
+    <Compile Include="Controllers\Reports\MSPSummaryController.cs" />
+    <Compile Include="Controllers\Reports\NewDMR_ReportController.cs" />
+    <Compile Include="Controllers\Reports\Non_Moveing_Controller.cs" />
+    <Compile Include="Controllers\Reports\PuchaseOrder_ReceiptReportController.cs" />
+    <Compile Include="Controllers\Reports\Receipt_Reports_Controller.cs" />
+    <Compile Include="Controllers\Reports\ReceivedStockController.cs" />
+    <Compile Include="Controllers\Reports\TransferReportController.cs" />
+    <Compile Include="Controllers\Reports\TransferStockController.cs" />
+    <Compile Include="Controllers\Reports\VendorWiseReportController.cs" />
+    <Compile Include="Controllers\Report_Quantity_IssueController.cs" />
+    <Compile Include="Controllers\Set_UpController.cs" />
+    <Compile Include="Controllers\SourceLocationController.cs" />
+    <Compile Include="Controllers\TAX\ExciseDutyController.cs" />
+    <Compile Include="Controllers\TAX\GSTController.cs" />
+    <Compile Include="Controllers\TAX\InsuranceMasterController.cs" />
+    <Compile Include="Controllers\TAX\TaxController.cs" />
+    <Compile Include="Controllers\tblItemGroupMastersController.cs" />
+    <Compile Include="Controllers\tblItemMastersController.cs" />
+    <Compile Include="Controllers\tblRegistrationTypesController.cs" />
+    <Compile Include="Controllers\tblUnitMastersController.cs" />
+    <Compile Include="Controllers\tblVendorMastersController.cs" />
+    <Compile Include="Controllers\To_Rest_Indent_Item_Re_IssueController.cs" />
+    <Compile Include="Controllers\UserPermissionController.cs" />
+    <Compile Include="Controllers\VendorDebitNoteController.cs" />
+    <Compile Include="Controllers\VendorManageController.cs" />
+    <Compile Include="Controllers\ViewSendingIndentRequisitionController.cs" />
+    <Compile Include="Controllers\View_PO_Details_ByUser_CreatedController.cs" />
+    <Compile Include="Controllers\View_PO_Details_ByUser_Created_GSTController.cs" />
+    <Compile Include="Controllers\View_Print_Slip_ApprovalController.cs" />
+    <Compile Include="DAL\BlockMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Class1.cs" />
+    <Compile Include="DAL\Distinct_Indent.cs" />
+    <Compile Include="DAL\DownloadFiles.cs" />
+    <Compile Include="DAL\FloorMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntry.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntryChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntryChild_Mid.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntryChild_Mid_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntry_Mid.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GateEntry_Mid_history.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\GenericRepositiory.cs" />
+    <Compile Include="DAL\HeaderFooter.cs" />
+    <Compile Include="DAL\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\nstblStockDEMO.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\ns_AddPriceCap.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\ns_Price_Cap_Enable_Item_Group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\ns_RateNotification.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\ns_tbl_ApprovedItemQuantity.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\ns_tbl_IssueQuantity.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\PurchaseRequisitionChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\PurchaseRequisitionMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\SessionMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbCashPurchaseChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbCashPurchaseMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbDelivery_Details_PO.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbDelivery_Details_PO_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbDraftDelivery_Details_PO.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbDraftIndentPurchaseOrderChild_GST.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbDraftIndentPurchaseOrder_GST.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrderChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrderChild_GST.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrderChild_GST_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrderMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrder_Approval_For_Print.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrder_GST.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\TbIndentPurchaseOrder_GST_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblAccountType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblALLRemark.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblApprovalStatu.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblApproval_AccountType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblBillingAddress.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblCityList.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblCityList_old.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblClosedPurchaseOrder.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblCountry.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDepartment.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDesignation.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDivisionMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDraftGenral_Terms_Conditions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDraftSpecificTermsAndConditions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblDraftSpecific_Instructions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblEmployeeMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblEquipmentCategory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblEquipmentSubCategory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblFinancialSelectionType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblGenral_Terms_Conditions.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblGenral_Terms_Conditions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblGenral_Terms_Conditions_Child_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblGetOutTransfer.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblGST_SplitTaxMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblIndentRequisition.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblInterStateTransferChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblInterStateTransferMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblIntraStateTransferChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblIntraStateTransferMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblIntraStateTransferTaxableChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblIntraTransferTaxableMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemBudget.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemCurrentStock.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemExcessPercentageHistory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemGroupMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemMasterFirstOpening.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemMasterStock.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblItemOpeningDeletedHistory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblLogInformation.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMachineMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMainHeader.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMakeMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMang_PI_Approval_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSCartageType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSEquipmentMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSExciseDuty.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSGateEntryFileDirectory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSGSTTaxType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSInsuranceMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSMRNEntryFileDirectory.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSPCDebitNote.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSQuotation.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSQuotation_Document.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSTaxValue.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMMSUserPermission.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMovableStatusMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblMovingDescription.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblOutProApprovalLimit.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblOutPurchaseType.cs" />
+    <Compile Include="DAL\tblPcContractorMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPC_RegistrationType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPIC_PI_Approval_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPIPurchasedecisionType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPI_PurchaseType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectCode.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectGSTNo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectOpeningAndClosingDate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectParticularsDetailA.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblProjectTINNo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPurchaseLimitValueByProjectWise.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPurchaseOrderApprovalLimitValue.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblPurchaseRequisitionApprovalLimitValue.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblReasonCloserMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblReceiveData.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblRegion.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblRegistrationType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblReturnQtyChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblReturnQtyMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblReturnReasonMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblRolemaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSourceLocation.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecificTermsAndCondition.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecificTermsAndConditions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecificTermsAndConditions_Child_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecific_Instructions.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecific_Instructions_Child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSpecific_Instructions_Child_History.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblState.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblSubHeader.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblTaxPayableOnReverseCharge.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblTransfertypeselection.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblTransportationModeNew.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblUnitConversionMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblUniteConversionMapped.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblUnitMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblUploadedBill.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblUserDivision.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblVehicleType.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblVendorDebitNoteChild.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblVendorDebitNoteMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblVendorMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tblVendorTypeMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_beforPIdecesionPurchase.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_ContactPersonMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_OfficeAddress.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_ProjectMonthBudget.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_ProjectYearBudget.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_PurchaseOrderAttachFiles.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_PurchaseRequistionAttachFiles.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_TCSTaxMaster.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\tbl_wmntdata.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\UnitOfWork.cs" />
+    <Compile Include="DAL\UserRole.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\WordToText.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AdminCheck.cs" />
+    <Compile Include="Helpers\HelperMethods.cs" />
+    <Compile Include="JClass.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Bind_Work_Type-Master.cs" />
+    <Compile Include="Models\daily.cs" />
+    <Compile Include="Models\Datewise_Item_Model.cs" />
+    <Compile Include="Models\DMR_Report_Model.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EquipmentCategory.cs" />
+    <Compile Include="Models\For_PO_Edit_Model.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IndentsendDetail.cs" />
+    <Compile Include="Models\IssueReport.cs" />
+    <Compile Include="Models\MakeInfo.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MMSOperationService.cs" />
+    <Compile Include="Models\ModelServices.cs" />
+    <Compile Include="Models\MRNEntryPreview.cs" />
+    <Compile Include="Models\MSP_Model.cs" />
+    <Compile Include="Models\Non_Moveing_Models.cs" />
+    <Compile Include="Models\PIAttachmentFile.cs" />
+    <Compile Include="Models\Procedure.cs" />
+    <Compile Include="Models\PurchaseOrder_ReceiprtReport.cs" />
+    <Compile Include="Models\Receipt_Report_Model.cs" />
+    <Compile Include="Models\SessionExpireFilterAttribute .cs" />
+    <Compile Include="Models\SourceLocation.cs" />
+    <Compile Include="Models\StockDetail.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AddAndApprovQuotation.cs" />
+    <Compile Include="ViewModels\AllItemDetail.cs" />
+    <Compile Include="ViewModels\AllItems_Record.cs" />
+    <Compile Include="ViewModels\AllowPermissionViewModel.cs" />
+    <Compile Include="ViewModels\Approval_PO.cs" />
+    <Compile Include="ViewModels\CartageTypeViewModel.cs" />
+    <Compile Include="ViewModels\ConversationMappingViewModel.cs" />
+    <Compile Include="ViewModels\ConversionViewModel.cs" />
+    <Compile Include="ViewModels\EquipmentMasterViewModel.cs" />
+    <Compile Include="ViewModels\ExciseViewModel.cs" />
+    <Compile Include="ViewModels\File\DownLoadFileInformation.cs" />
+    <Compile Include="ViewModels\File\GetQuotRemarks.cs" />
+    <Compile Include="ViewModels\File\QuotDetail.cs" />
+    <Compile Include="ViewModels\GateEntryDetailOnMRNViewModel.cs" />
+    <Compile Include="ViewModels\GateEntryReceiptVsStoreEntryReceipt.cs" />
+    <Compile Include="ViewModels\GetAllVendorList.cs" />
+    <Compile Include="ViewModels\GetDetailOnNewDMR.cs" />
+    <Compile Include="ViewModels\GetExcess_Item.cs" />
+    <Compile Include="ViewModels\GetGridDMR.cs" />
+    <Compile Include="ViewModels\GetIntraStateTransferTaxableList.cs" />
+    <Compile Include="ViewModels\GetMSRItemDetail.cs" />
+    <Compile Include="ViewModels\GetOutItemDetailViewModel.cs" />
+    <Compile Include="ViewModels\GetPOVettingReport.cs" />
+    <Compile Include="ViewModels\GetProjectOpeningDateGrid.cs" />
+    <Compile Include="ViewModels\GRNViewModel.cs" />
+    <Compile Include="ViewModels\GSTSplit_TaxMasterViewModel.cs" />
+    <Compile Include="ViewModels\IG_rate_Caption.cs" />
+    <Compile Include="ViewModels\InsuranceViewModel.cs" />
+    <Compile Include="ViewModels\InterStateTransferChildPrintViewModel.cs" />
+    <Compile Include="ViewModels\InterStateTransferChildViewModel.cs" />
+    <Compile Include="ViewModels\InterStateTransferMasterDetailOnGetOut.cs" />
+    <Compile Include="ViewModels\InterStateTransferMasterViewModel.cs" />
+    <Compile Include="ViewModels\IntraStateTransferChildViewModel.cs" />
+    <Compile Include="ViewModels\IntraStateTransferMasterViewModel.cs" />
+    <Compile Include="ViewModels\IntraStateTransferTaxableChildViewModel.cs" />
+    <Compile Include="ViewModels\IntraTransferMasterDetail.cs" />
+    <Compile Include="ViewModels\IntraTransferTaxableMasterViewModel.cs" />
+    <Compile Include="ViewModels\IssueQuantityInsert_ViewModel.cs" />
+    <Compile Include="ViewModels\ItemDescriptionData.cs" />
+    <Compile Include="ViewModels\ItemIssueReport.cs" />
+    <Compile Include="ViewModels\ItemOpeningDeleteDetail.cs" />
+    <Compile Include="ViewModels\ItemUnitDetail.cs" />
+    <Compile Include="ViewModels\ItemWiseMaxMinRateViewModel.cs" />
+    <Compile Include="ViewModels\LastPurchaseRate.cs" />
+    <Compile Include="ViewModels\MatreialRecvAndIssuViewModelHome.cs" />
+    <Compile Include="ViewModels\MMSGSTView.cs" />
+    <Compile Include="ViewModels\MovableStatus.cs" />
+    <Compile Include="ViewModels\MovingStatusPercentageViewModel.cs" />
+    <Compile Include="ViewModels\MRS.cs" />
+    <Compile Include="ViewModels\Multiple_Searching_VM.cs" />
+    <Compile Include="ViewModels\Page.cs" />
+    <Compile Include="ViewModels\Page2.cs" />
+    <Compile Include="ViewModels\Page3.cs" />
+    <Compile Include="ViewModels\PendingAndPartialGRN.cs" />
+    <Compile Include="ViewModels\PendingInterSiteTransfer.cs" />
+    <Compile Include="ViewModels\PendingIntraStateTransfer.cs" />
+    <Compile Include="ViewModels\PendingMRN.cs" />
+    <Compile Include="ViewModels\PendingPIGrid.cs" />
+    <Compile Include="ViewModels\PendingTRansferGRN.cs" />
+    <Compile Include="ViewModels\PendingTransferMRN.cs" />
+    <Compile Include="ViewModels\PermissionGrid.cs" />
+    <Compile Include="ViewModels\PermissionViewModel.cs" />
+    <Compile Include="ViewModels\PIDetail.cs" />
+    <Compile Include="ViewModels\PIdetailOnPOCreation.cs" />
+    <Compile Include="ViewModels\PI_Master_Reamrks.cs" />
+    <Compile Include="ViewModels\POAllRemarks.cs" />
+    <Compile Include="ViewModels\POAndPIDetailOnPOEdit.cs" />
+    <Compile Include="ViewModels\POApprovalwithRemarks.cs" />
+    <Compile Include="ViewModels\PODetailHome.cs" />
+    <Compile Include="ViewModels\PoDetails.cs" />
+    <Compile Include="ViewModels\POPMCDetail.cs" />
+    <Compile Include="ViewModels\POQtyDetails.cs" />
+    <Compile Include="ViewModels\PORemarks.cs" />
+    <Compile Include="ViewModels\PriceCap.cs" />
+    <Compile Include="ViewModels\ProjectBudgetModel.cs" />
+    <Compile Include="ViewModels\ProjectGrid.cs" />
+    <Compile Include="ViewModels\ProjectViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseIndentMasterViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseWiseProjectLimitViewModel.cs" />
+    <Compile Include="ViewModels\Purchase_Order_Slip_VM.cs" />
+    <Compile Include="ViewModels\QuantityIssueViewModel.cs" />
+    <Compile Include="ViewModels\Quot_PIDetail.cs" />
+    <Compile Include="ViewModels\Rate.cs" />
+    <Compile Include="ViewModels\ReceiveAndIssueDetail.cs" />
+    <Compile Include="ViewModels\RegionMaster.cs" />
+    <Compile Include="ViewModels\ReleasePOViewModel.cs" />
+    <Compile Include="ViewModels\SourceLocationMaster.cs" />
+    <Compile Include="ViewModels\STC_ViewModel.cs" />
+    <Compile Include="ViewModels\StockLedgerDetail.cs" />
+    <Compile Include="ViewModels\SupplierReportViewModel.cs" />
+    <Compile Include="ViewModels\TaxViewModel.cs" />
+    <Compile Include="ViewModels\TbIndentPurchaseOrderChild_GST_ViewModel.cs" />
+    <Compile Include="ViewModels\TbIndentPurchaseOrder_GST_ViewModel.cs" />
+    <Compile Include="ViewModels\TotalSumAndIssuOfAllProject.cs" />
+    <Compile Include="ViewModels\TransferEWayBill.cs" />
+    <Compile Include="ViewModels\TransferItemDetailGRN.cs" />
+    <Compile Include="ViewModels\UpdatedGRN.cs" />
+    <Compile Include="ViewModels\UpdatedMRN.cs" />
+    <Compile Include="ViewModels\UpdateMRNTRN.cs" />
+    <Compile Include="ViewModels\UserGrid.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\ViewM.cs" />
+    <Compile Include="ViewModels\VMTbIndentPurchaseOrderChildViewModel.cs" />
+    <Compile Include="ViewModels\VMTbIndentPurchaseOrderMasterChild.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\MaterialDB.mdf" />
+    <Content Include="App_Data\MaterialDB_log.ldf">
+      <DependentUpon>MaterialDB.mdf</DependentUpon>
+    </Content>
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\Antlr3.Runtime.pdb" />
+    <Content Include="bin\BusinessLogicLayer.dll" />
+    <Content Include="bin\BusinessObjects.dll" />
+    <Content Include="bin\DataAccessLayer.dll" />
+    <Content Include="bin\DocumentFormat.OpenXml.dll" />
+    <Content Include="bin\EntityFramework.dll" />
+    <Content Include="bin\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\EntityFramework.SqlServer.xml" />
+    <Content Include="bin\EntityFramework.xml" />
+    <Content Include="bin\itextsharp.dll" />
+    <Content Include="bin\itextsharp.xml" />
+    <Content Include="bin\itextsharp.xmlworker.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
+    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
+    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
+    <Content Include="bin\Microsoft.Owin.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Facebook.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Facebook.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.Google.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Google.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.Twitter.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.Twitter.xml" />
+    <Content Include="bin\Microsoft.Owin.Security.xml" />
+    <Content Include="bin\Microsoft.Owin.xml" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\MMS.dll" />
+    <Content Include="bin\MMS.pdb" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Newtonsoft.Json.xml" />
+    <Content Include="bin\Owin.dll" />
+    <Content Include="bin\PagedList.dll" />
+    <Content Include="bin\PagedList.Mvc.dll" />
+    <Content Include="bin\PagedList.Mvc.xml" />
+    <Content Include="bin\PagedList.xml" />
+    <Content Include="bin\System.Linq.Dynamic.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Helpers.xml" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Mvc.xml" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Optimization.xml" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.xml" />
+    <Content Include="bin\WebGrease.dll" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\css\admin-forms.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\css\admin-forms.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\additional-methods.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery-ui-datepicker.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery-ui-monthpicker.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery.spectrum.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery.stepper.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery.steps.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\admin-tools\admin-forms\js\jquery.validate.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfonte0a5.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-pro.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regular.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoon.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\iconsweets.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\octicons\octicons.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\zocial\zocial.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\3.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\4.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\5.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\6.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\profile.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\avatars\profile_avatar.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\favicon.ico" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\logos\logo.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\logos\logo_grey.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\logos\logo_white.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\patterns\backgrounds\1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\patterns\noise.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\patterns\topbar-bg.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\patterns\topbar-bg2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\patterns\topbar-bg3.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\admindock-sprite.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\arrow_left_12x12.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\arrow_right_12x12.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\details_close.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\details_open.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\plugins\grippy_large.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\sprites\favicons.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\sprites\flag-sm.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\sprites\flag-xs.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\sprites\news-logo_sprite.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\3.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\4.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\5.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_3.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_4.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_5.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_6.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\img\stock\products\thumb_7.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\demo\charts\d3.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\demo\charts\flot.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\demo\charts\highcharts.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\demo\demo.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\demo\widgets.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\main.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\js\utility\utility.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\skin\default_skin\css\theme.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\skin\default_skin\img\plugins\slider-knob.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\logo.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\social-fb.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\social-feed.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\social-twitter.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\step-1.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\step-2.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\step-3.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\img\survey-star.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\invite.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\invoice.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\ping.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\progress.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\reignite.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\shipped.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\survey.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\upsell.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\email-templates\welcome.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\css\theme.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\about\1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\about\2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\about\3.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\about\4.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\external\1.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\external\2.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\external\3.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\external\4.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\external\5.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\favicon.ico" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\features\feature1.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\features\flat_feature1.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\features\flat_feature2.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\hero_low-res.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\1-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\2-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\3-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\4-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\5-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\icons\6-lg.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\patterns\polygon\6.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\dreams-preview.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\dreams.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\escape-preview.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\escape.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\golden-preview.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\golden.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\roundicons-free.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\roundicons.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\startup-framework-preview.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\startup-framework.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\treehouse-preview.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\portfolio\treehouse.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\team\1.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\team\2.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\img\team\3.jpg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\index.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\js\contact_me.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\js\main.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\landing-page\landing1\js\vendor\jqBootstrapValidation.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\Trident\index.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\jquery\jquery-1.11.1.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\jquery\jquery_ui\jquery-ui.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\animate\animate.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\bstimeout\bs-timeout.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\bstour\bootstrap-tour.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\bstour\bootstrap-tour.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\c3charts\c3.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\c3charts\c3.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\c3charts\d3.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\canvasbg\canvasbg.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\circles\circles.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\ckeditor\ckeditor.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\css\bootstrap-colorpicker.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\img\bootstrap-colorpicker\alpha-horizontal.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\img\bootstrap-colorpicker\alpha.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\img\bootstrap-colorpicker\hue-horizontal.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\img\bootstrap-colorpicker\hue.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\img\bootstrap-colorpicker\saturation.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\colorpicker\js\bootstrap-colorpicker.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\countdown\jquery.countdown.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\countdown\jquery.plugin.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\cropper\cropper.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\extensions\ColReorder\js\dataTables.colReorder.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\extensions\Editor\js\dataTables.editor.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\extensions\Editor\js\editor.bootstrap.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\extensions\TableTools\js\dataTables.tableTools.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\css\dataTables.bootstrap.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\css\dataTables.plugins.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\images\sort_asc.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\images\sort_asc_disabled.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\images\sort_both.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\images\sort_desc.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\images\sort_desc_disabled.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\js\dataTables.bootstrap.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datatables\media\js\jquery.dataTables.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datepicker\css\bootstrap-datetimepicker.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\datepicker\js\bootstrap-datetimepicker.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\daterange\daterangepicker.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\daterange\daterangepicker.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\dropzone\css\dropzone.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\dropzone\dropzone.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\dropzone\images\spritemap%402x.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\dropzone\images\spritemap.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\duallistbox\jquery.bootstrap-duallistbox.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\extensions\jquery.fancytree.childcounter.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\extensions\jquery.fancytree.columnview.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\extensions\jquery.fancytree.dnd.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\extensions\jquery.fancytree.edit.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\extensions\jquery.fancytree.filter.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\jquery.fancytree-all.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\skin-win8\icons.gif" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fancytree\skin-win8\ui.fancytree.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fileupload\fileupload.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\footable.core.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\js\footable.all.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\js\footable.filter.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fullcalendar\fullcalendar.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\fullcalendar\lib\moment.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\globalize\globalize.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\gmap\jquery.ui.map.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\gmap\ui\jquery.ui.map.extensions.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\highcharts\highcharts.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\highlight\highlight.pack.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\highlight\styles\github.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\highlight\styles\googlecode.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\holder\holder.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\imagezoom\jquery.elevatezoom.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jqueryflot\jquery.flot.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jqueryflot\jquery.flot.pie.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jqueryflot\jquery.flot.resize.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jqueryflot\jquery.flot.tooltip.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jquerymask\jquery.maskedinput.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jvectormap\assets\jquery-jvectormap-us-lcc-en.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jvectormap\assets\jquery-jvectormap-world-mill-en.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\jvectormap\jquery.jvectormap.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\ladda\ladda.min.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\ladda\ladda.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\lazyline\jquery.lazylinepainter-1.5.0.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\magnific\jquery.magnific-popup.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\magnific\magnific-popup.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\js\hammer.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\js\jquery.easing.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\js\jquery.mousewheel.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\arrow-down.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\arrow-up.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\closedhand.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\cross.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\fullscreen-exit.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\fullscreen.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\loader.gif" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\openhand.html" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\pin-blue.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\pin-green.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\pin-orange.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\pin-purple.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\pin-red.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\target.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\tooltip-triangle.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\images\viewer.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\mapplic.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mapplic\mapplic\mapplic.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\map\gmaps.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\markdown\bootstrap-markdown.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\markdown\markdown.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\markdown\to-markdown.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\maxlength\bootstrap-maxlength.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\mixitup\jquery.mixitup.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\moment\moment.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\nestable\jquery.nestable.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\nestable\nestable.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\nprogress\nprogress.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\pnotify\pnotify.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\select2\css\core.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\select2\select2.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\ajax-loader.gif" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\slick.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\slick.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\sparkline\jquery.sparkline.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\summernote\summernote.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\summernote\summernote.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\tagmanager\tagmanager.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\tagmanager\tagmanager.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\tagsinput\tagsinput.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\typeahead\typeahead.bundle.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\waypoints\jquery.waypoints.min.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\css\bootstrap-editable.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\img\clear.png" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\img\loading.gif" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\inputs\address\address.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\inputs\address\address.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\inputs\typeaheadjs\lib\typeahead.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\inputs\typeaheadjs\lib\typeahead.js-bootstrap.css" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\inputs\typeaheadjs\typeaheadjs.js" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\xeditable\js\bootstrap-editable.min.js" />
+    <Content Include="Content\ajax.googleapis.com\ajax\libs\jquery\2.1.3\jquery.min.js" />
+    <Content Include="Content\bootstrap-responsive.css" />
+    <Content Include="Content\bootstrap-responsive.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cdnjs.cloudflare.com\ajax\libs\jquery-easing\1.3\jquery.easing.min.js" />
+    <Content Include="Content\Contacts.html" />
+    <Content Include="Content\CookBook.html" />
+    <Content Include="Content\css\base-admin-3-responsive.css" />
+    <Content Include="Content\css\base-admin-3.css" />
+    <Content Include="Content\css\bootstrap-responsive.min.css" />
+    <Content Include="Content\css\bootstrap-theme.css" />
+    <Content Include="Content\css\bootstrap-theme.min.css" />
+    <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\bootstrap.min.css" />
+    <Content Include="Content\css\css.css" />
+    <Content Include="Content\css\custom.css" />
+    <Content Include="Content\css\dashboard.css" />
+    <Content Include="Content\css\font-awesome.min.css" />
+    <Content Include="Content\css\jquery-ui-1.10.0.custom.min.css" />
+    <Content Include="Content\css\layout.css" />
+    <Content Include="Content\css\modal_mdl.css" />
+    <Content Include="Content\css\printscss.css" />
+    <Content Include="Content\css\reset.css" />
+    <Content Include="Content\css\signin.css" />
+    <Content Include="Content\css\Site.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\Cuisine.html" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap.css" />
+    <Content Include="Content\DataTables\css\autoFill.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.dataTables.css" />
+    <Content Include="Content\DataTables\css\autoFill.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.foundation.css" />
+    <Content Include="Content\DataTables\css\autoFill.foundation.min.css" />
+    <Content Include="Content\DataTables\css\autoFill.jqueryui.css" />
+    <Content Include="Content\DataTables\css\autoFill.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap.css" />
+    <Content Include="Content\DataTables\css\buttons.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\buttons.dataTables.css" />
+    <Content Include="Content\DataTables\css\buttons.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\buttons.foundation.css" />
+    <Content Include="Content\DataTables\css\buttons.foundation.min.css" />
+    <Content Include="Content\DataTables\css\buttons.jqueryui.css" />
+    <Content Include="Content\DataTables\css\buttons.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap.css" />
+    <Content Include="Content\DataTables\css\colReorder.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.dataTables.css" />
+    <Content Include="Content\DataTables\css\colReorder.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.foundation.css" />
+    <Content Include="Content\DataTables\css\colReorder.foundation.min.css" />
+    <Content Include="Content\DataTables\css\colReorder.jqueryui.css" />
+    <Content Include="Content\DataTables\css\colReorder.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap.css" />
+    <Content Include="Content\DataTables\css\dataTables.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.foundation.css" />
+    <Content Include="Content\DataTables\css\dataTables.foundation.min.css" />
+    <Content Include="Content\DataTables\css\dataTables.jqueryui.css" />
+    <Content Include="Content\DataTables\css\dataTables.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.dataTables.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.foundation.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.foundation.min.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.jqueryui.css" />
+    <Content Include="Content\DataTables\css\fixedColumns.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.dataTables.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.foundation.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.foundation.min.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.jqueryui.css" />
+    <Content Include="Content\DataTables\css\fixedHeader.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\jquery.dataTables_themeroller.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap.css" />
+    <Content Include="Content\DataTables\css\keyTable.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.dataTables.css" />
+    <Content Include="Content\DataTables\css\keyTable.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.foundation.css" />
+    <Content Include="Content\DataTables\css\keyTable.foundation.min.css" />
+    <Content Include="Content\DataTables\css\keyTable.jqueryui.css" />
+    <Content Include="Content\DataTables\css\keyTable.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap.css" />
+    <Content Include="Content\DataTables\css\responsive.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\responsive.dataTables.css" />
+    <Content Include="Content\DataTables\css\responsive.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\responsive.foundation.css" />
+    <Content Include="Content\DataTables\css\responsive.foundation.min.css" />
+    <Content Include="Content\DataTables\css\responsive.jqueryui.css" />
+    <Content Include="Content\DataTables\css\responsive.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap.css" />
+    <Content Include="Content\DataTables\css\rowReorder.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.dataTables.css" />
+    <Content Include="Content\DataTables\css\rowReorder.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.foundation.css" />
+    <Content Include="Content\DataTables\css\rowReorder.foundation.min.css" />
+    <Content Include="Content\DataTables\css\rowReorder.jqueryui.css" />
+    <Content Include="Content\DataTables\css\rowReorder.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap.css" />
+    <Content Include="Content\DataTables\css\scroller.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\scroller.dataTables.css" />
+    <Content Include="Content\DataTables\css\scroller.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\scroller.foundation.css" />
+    <Content Include="Content\DataTables\css\scroller.foundation.min.css" />
+    <Content Include="Content\DataTables\css\scroller.jqueryui.css" />
+    <Content Include="Content\DataTables\css\scroller.jqueryui.min.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap.css" />
+    <Content Include="Content\DataTables\css\select.bootstrap.min.css" />
+    <Content Include="Content\DataTables\css\select.dataTables.css" />
+    <Content Include="Content\DataTables\css\select.dataTables.min.css" />
+    <Content Include="Content\DataTables\css\select.foundation.css" />
+    <Content Include="Content\DataTables\css\select.foundation.min.css" />
+    <Content Include="Content\DataTables\css\select.jqueryui.css" />
+    <Content Include="Content\DataTables\css\select.jqueryui.min.css" />
+    <Content Include="Content\DataTables\images\details_close.png" />
+    <Content Include="Content\DataTables\images\details_open.png" />
+    <Content Include="Content\DataTables\images\sort_asc.png" />
+    <Content Include="Content\DataTables\images\sort_asc_disabled.png" />
+    <Content Include="Content\DataTables\images\sort_both.png" />
+    <Content Include="Content\DataTables\images\sort_desc.png" />
+    <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
+    <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\Error.html" />
+    <Content Include="Content\farm9.staticflickr.com\8242\8558295633_f34a55c1c6_b.jpg" />
+    <Content Include="Content\fonts\invetory.htaccess.txt" />
+    <Content Include="Content\gallery.html" />
+    <Content Include="Content\Gallery_Final.html" />
+    <Content Include="Content\Gridmvc.css" />
+    <Content Include="Content\Index.htm" />
+    <Content Include="Content\index.html" />
+    <Content Include="Content\js\atooltip.jquery.js" />
+    <Content Include="Content\js\cufon-replace.js" />
+    <Content Include="Content\js\cufon-yui.js" />
+    <Content Include="Content\js\Forum_400.font.js" />
+    <Content Include="Content\js\html5.js" />
+    <Content Include="Content\js\jquery-1.6.js" />
+    <Content Include="Content\js\jquery.easing.1.3.js" />
+    <Content Include="Content\js\PIE.htc" />
+    <Content Include="Content\js\script.js" />
+    <Content Include="Content\js\tms-0.3.js" />
+    <Content Include="Content\js\tms_presets.js" />
+    <Content Include="Content\KAPSFINAL_Fotor.jpg" />
+    <Content Include="Content\load.gif" />
+    <Content Include="Content\maxcdn.bootstrapcdn.com\bootstrap\3.3.2\css\bootstrap.min.css" />
+    <Content Include="Content\maxcdn.bootstrapcdn.com\bootstrap\3.3.2\js\bootstrap.min.js" />
+    <Content Include="Content\maxcdn.bootstrapcdn.com\font-awesome\4.2.0\css\font-awesome.min.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\Respons_Form.css" />
+    <Content Include="Content\select2\select2.min.css" />
+    <Content Include="Content\select2\select2.min.js" />
+    <Content Include="Content\Themes\base\images\animated-overlay.gif" />
+    <Content Include="Content\Themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\Themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\Themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\Themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\Themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\Themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\Themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\Themes\base\jquery-ui.css" />
+    <Content Include="Content\Themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\Themes\base\jquery.ui.all.css" />
+    <Content Include="Content\Themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\Themes\base\jquery.ui.base.css" />
+    <Content Include="Content\Themes\base\jquery.ui.button.css" />
+    <Content Include="Content\Themes\base\jquery.ui.core.css" />
+    <Content Include="Content\Themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\Themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\Themes\base\jquery.ui.menu.css" />
+    <Content Include="Content\Themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\Themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\Themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\Themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\Themes\base\jquery.ui.spinner.css" />
+    <Content Include="Content\Themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\Themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\Themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\Themes\base\minified\images\animated-overlay.gif" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\Themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\Themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.menu.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.spinner.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\Themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
+    <Content Include="Content\ui-bootstrap-csp.css" />
+    <Content Include="Content\who we are.html" />
+    <Content Include="Content\Wine.html" />
+    <Content Include="DAL\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DAL\Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
+    <Content Include="DashBoardCSS\DashboardStyle.css" />
+    <Content Include="DashBoardJS\charts.js" />
+    <Content Include="DashBoardJS\column-chart.js" />
+    <Content Include="DashBoardJS\data-chart.js" />
+    <Content Include="DashBoardJS\exporting-chart.js" />
+    <Content Include="DashBoardJS\exporting.js" />
+    <Content Include="DashBoardJS\highcharts-3d-chart.js" />
+    <Content Include="DashBoardJS\highcharts-3d.js" />
+    <Content Include="DashBoardJS\highcharts-chart.js" />
+    <Content Include="DashBoardJS\highcharts.js" />
+    <Content Include="Dll\BusinessLogicLayer.dll" />
+    <Content Include="Dll\BusinessObjects.dll" />
+    <Content Include="Dll\DataAccessLayer.dll" />
+    <Content Include="ErrorPage\404.html" />
+    <Content Include="ErrorPage\css\main.css" />
+    <Content Include="ErrorPage\css\tipsy.css" />
+    <Content Include="ErrorPage\font\sing-webfont.svg" />
+    <Content Include="ErrorPage\images\404.png" />
+    <Content Include="ErrorPage\images\background.html" />
+    <Content Include="ErrorPage\images\bubble.png" />
+    <Content Include="ErrorPage\images\cat.png" />
+    <Content Include="ErrorPage\images\cookie.png" />
+    <Content Include="ErrorPage\images\dog1.png" />
+    <Content Include="ErrorPage\images\planet.png" />
+    <Content Include="ErrorPage\images\search.png" />
+    <Content Include="ErrorPage\images\sky-background.png" />
+    <Content Include="ErrorPage\images\sky-shine.jpg" />
+    <Content Include="ErrorPage\images\tipsy.gif" />
+    <Content Include="ErrorPage\images\universal-preloader.gif" />
+    <Content Include="ErrorPage\scripts\custom-scripts.js" />
+    <Content Include="ErrorPage\scripts\jquery-1.7.2.min.js" />
+    <Content Include="ErrorPage\scripts\jquery.tipsy.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Images\36.gif" />
+    <Content Include="Images\accent.png" />
+    <Content Include="Images\addmore.png" />
+    <Content Include="Images\bullet.png" />
+    <Content Include="Images\details_open.png" />
+    <Content Include="Images\file-detail.png" />
+    <Content Include="Images\file_add.png" />
+    <Content Include="Images\file_delete.png" />
+    <Content Include="Images\file_edit.png" />
+    <Content Include="Images\heroAccent.png" />
+    <Content Include="Images\loader.gif" />
+    <Content Include="Images\Loading.gif" />
+    <Content Include="Images\Loading1.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\logo1.png" />
+    <Content Include="Images\orderedList0.png" />
+    <Content Include="Images\orderedList1.png" />
+    <Content Include="Images\orderedList2.png" />
+    <Content Include="Images\orderedList3.png" />
+    <Content Include="Images\orderedList4.png" />
+    <Content Include="Images\orderedList5.png" />
+    <Content Include="Images\orderedList6.png" />
+    <Content Include="Images\orderedList7.png" />
+    <Content Include="Images\orderedList8.png" />
+    <Content Include="Images\orderedList9.png" />
+    <Content Include="Images\pm.png" />
+    <Content Include="Images\project_0001.jpg" />
+    <Content Include="img\glyphicons-halflings-white.png" />
+    <Content Include="img\glyphicons-halflings.png" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.min.js" />
+    <Content Include="Scripts\Appjs\Vendor.js" />
+    <Content Include="Scripts\Appjs\ItemGroup.js" />
+    <Content Include="Scripts\Appjs\phones.js" />
+    <Content Include="Scripts\Application.js" />
+    <Content Include="Scripts\area.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap\alerts.less" />
+    <Content Include="Content\bootstrap\badges.less" />
+    <Content Include="Content\bootstrap\bootstrap.less" />
+    <Content Include="Content\bootstrap\breadcrumbs.less" />
+    <Content Include="Content\bootstrap\button-groups.less" />
+    <Content Include="Content\bootstrap\buttons.less" />
+    <Content Include="Content\bootstrap\carousel.less" />
+    <Content Include="Content\bootstrap\close.less" />
+    <Content Include="Content\bootstrap\code.less" />
+    <Content Include="Content\bootstrap\component-animations.less" />
+    <Content Include="Content\bootstrap\dropdowns.less" />
+    <Content Include="Content\bootstrap\forms.less" />
+    <Content Include="Content\bootstrap\glyphicons.less" />
+    <Content Include="Content\bootstrap\grid.less" />
+    <Content Include="Content\bootstrap\input-groups.less" />
+    <Content Include="Content\bootstrap\jumbotron.less" />
+    <Content Include="Content\bootstrap\labels.less" />
+    <Content Include="Content\bootstrap\list-group.less" />
+    <Content Include="Content\bootstrap\media.less" />
+    <Content Include="Content\bootstrap\mixins.less" />
+    <Content Include="Content\bootstrap\modals.less" />
+    <Content Include="Content\bootstrap\navbar.less" />
+    <Content Include="Content\bootstrap\navs.less" />
+    <Content Include="Content\bootstrap\normalize.less" />
+    <Content Include="Content\bootstrap\pager.less" />
+    <Content Include="Content\bootstrap\pagination.less" />
+    <Content Include="Content\bootstrap\panels.less" />
+    <Content Include="Content\bootstrap\popovers.less" />
+    <Content Include="Content\bootstrap\print.less" />
+    <Content Include="Content\bootstrap\progress-bars.less" />
+    <Content Include="Content\bootstrap\responsive-utilities.less" />
+    <Content Include="Content\bootstrap\scaffolding.less" />
+    <Content Include="Content\bootstrap\tables.less" />
+    <Content Include="Content\bootstrap\theme.less" />
+    <Content Include="Content\bootstrap\thumbnails.less" />
+    <Content Include="Content\bootstrap\tooltip.less" />
+    <Content Include="Content\bootstrap\type.less" />
+    <Content Include="Content\bootstrap\utilities.less" />
+    <Content Include="Content\bootstrap\variables.less" />
+    <Content Include="Content\bootstrap\wells.less" />
+    <Content Include="Content\css\bootstrap-theme.css.map" />
+    <Content Include="Content\css\bootstrap.css.map" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\js\PIE.php" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\admindesigns\admindesigns.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\admindesigns\admindesigns.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\admindesigns\admindesigns.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\admindesigns\admindesigns.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\admindesigns\admindesignsd41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfontd41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfonte0a5.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfonte0a5.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfonte0a5.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\font-awesome\fontawesome-webfonte0a5.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-regular.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-regular.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-regular.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-regular.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons-pro\glyphicons-regulard41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\glyphicons\glyphicons-halflings-regulard41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoon.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoon.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoon.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoon.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\icomoon\icomoond41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\IconSweets-Deluxe.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\IconSweets-Deluxe.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\IconSweets-Deluxe.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\IconSweets-Deluxe.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\iconsweets\IconSweets-Deluxed41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\octicons\octicons.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\octicons\octicons.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\octicons\octicons.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\octicons\octiconsd41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface-regular-webfont.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface-regular-webfont.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface-regular-webfont.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface-regular-webfont.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\stateface\stateface-regular-webfontd41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\zocial\zocial-regular-webfont.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\zocial\zocial-regular-webfont.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\assets\fonts\zocial\zocial-regular-webfont.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\fonts\footable.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\fonts\footable.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\fonts\footable.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\fonts\footable.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\footable\css\fonts\footabled41d.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\fonts\slick.eot" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\fonts\slick.svg" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\fonts\slick.ttf" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\fonts\slick.woff" />
+    <Content Include="Content\admindesigns.com\demos\admin\theme\vendor\plugins\slick\fonts\slickd41d.eot" />
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
+    <Content Include="ErrorPage\font\sing-webfont.eot" />
+    <Content Include="ErrorPage\font\sing-webfont.ttf" />
+    <Content Include="ErrorPage\font\sing-webfont.woff" />
+    <Content Include="ErrorPage\font\sing-webfontd41d.eot" />
+    <Content Include="Content\DataTables\css\mixins.scss" />
+    <Content Include="Content\DataTables\css\common.scss" />
+    <Content Include="jquery.dataTables.min.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="bin\MMS.dll.config" />
+    <Content Include="MRNFileUpload\Requirement and updation in PO.doc" />
+    <Content Include="CurrentStock\Index.cshtml" />
+    <Content Include="CurrentStock\_PartialView_CurrentStock.cshtml" />
+    <Content Include="IssueStock\Index.cshtml" />
+    <Content Include="IssueStock\_PartialView_IssuedStock.cshtml" />
+    <EntityDeploy Include="DAL\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="DAL\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\MMSNew.pubxml" />
+    <None Include="Properties\PublishProfiles\MMSPublish.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\autoFill.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.foundation.js" />
+    <Content Include="Scripts\DataTables\autoFill.foundation.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.jqueryui.js" />
+    <Content Include="Scripts\DataTables\autoFill.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\autoFill.semanticui.js" />
+    <Content Include="Scripts\DataTables\autoFill.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\buttons.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\buttons.colVis.js" />
+    <Content Include="Scripts\DataTables\buttons.colVis.min.js" />
+    <Content Include="Scripts\DataTables\buttons.flash.js" />
+    <Content Include="Scripts\DataTables\buttons.flash.min.js" />
+    <Content Include="Scripts\DataTables\buttons.foundation.js" />
+    <Content Include="Scripts\DataTables\buttons.foundation.min.js" />
+    <Content Include="Scripts\DataTables\buttons.html5.js" />
+    <Content Include="Scripts\DataTables\buttons.html5.min.js" />
+    <Content Include="Scripts\DataTables\buttons.jqueryui.js" />
+    <Content Include="Scripts\DataTables\buttons.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\buttons.print.js" />
+    <Content Include="Scripts\DataTables\buttons.print.min.js" />
+    <Content Include="Scripts\DataTables\buttons.semanticui.js" />
+    <Content Include="Scripts\DataTables\buttons.semanticui.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.autoFill.js" />
+    <Content Include="Scripts\DataTables\dataTables.autoFill.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.buttons.js" />
+    <Content Include="Scripts\DataTables\dataTables.buttons.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.colReorder.js" />
+    <Content Include="Scripts\DataTables\dataTables.colReorder.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedColumns.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedColumns.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedHeader.js" />
+    <Content Include="Scripts\DataTables\dataTables.fixedHeader.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.foundation.js" />
+    <Content Include="Scripts\DataTables\dataTables.foundation.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.jqueryui.js" />
+    <Content Include="Scripts\DataTables\dataTables.jqueryui.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.keyTable.js" />
+    <Content Include="Scripts\DataTables\dataTables.keyTable.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.material.js" />
+    <Content Include="Scripts\DataTables\dataTables.material.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.responsive.js" />
+    <Content Include="Scripts\DataTables\dataTables.responsive.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowReorder.js" />
+    <Content Include="Scripts\DataTables\dataTables.rowReorder.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.scroller.js" />
+    <Content Include="Scripts\DataTables\dataTables.scroller.min.js" />
+    <Content Include="Scripts\DataTables\dataTables.select.js" />
+    <Content Include="Scripts\DataTables\dataTables.select.min.js" />
+    <Content Include="Scripts\DataTables\jquery.dataTables.js" />
+    <Content Include="Scripts\DataTables\jquery.dataTables.min.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap.min.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap4.js" />
+    <Content Include="Scripts\DataTables\responsive.bootstrap4.min.js" />
+    <Content Include="Scripts\DataTables\responsive.foundation.js" />
+    <Content Include="Scripts\DataTables\responsive.foundation.min.js" />
+    <Content Include="Scripts\DataTables\responsive.jqueryui.js" />
+    <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
+    <Content Include="Scripts\donut.js" />
+    <Content Include="Scripts\gridmvc.js" />
+    <Content Include="Scripts\gridmvc.lang.ru.js" />
+    <Content Include="Scripts\gridmvc.min.js" />
+    <Content Include="Scripts\Helpers\AngularJs_1.7.7.js" />
+    <Content Include="Scripts\Helpers\CommonFunctions.js" />
+    <Content Include="Scripts\Helpers\dirPagination.js" />
+    <Content Include="Scripts\Helpers\DropDownBinding.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <None Include="Scripts\jquery-2.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-2.1.1.js" />
+    <Content Include="Scripts\jquery-2.1.1.min.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.0.custom.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery-ui.unobtrusive-2.2.0.js" />
+    <Content Include="Scripts\jquery-ui.unobtrusive-2.2.0.min.js" />
+    <Content Include="Scripts\jquery.flot.js" />
+    <Content Include="Scripts\jquery.flot.pie.js" />
+    <Content Include="Scripts\jquery.flot.resize.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\Appjs\Item.js" />
+    <Content Include="Script\AddInterState.js" />
+    <Content Include="Script\AddMannualTransfer.js" />
+    <Content Include="Script\Conversation.js" />
+    <Content Include="Script\ConversationMapping.js" />
+    <Content Include="Script\ConvertNumberToWord.js" />
+    <Content Include="Script\CreateGetoutInterTransferDetail.js" />
+    <Content Include="Script\CreateGetoutIntraTransferDetail.js" />
+    <Content Include="Script\CreateGRNForTransfer.js" />
+    <Content Include="Script\CreateIntraSiteDocument.js" />
+    <Content Include="Script\CreateIntraTaxInvoiceDocument.js" />
+    <Content Include="Script\CreateItemBudget.js" />
+    <Content Include="Script\CreatePOforMannualTransfer.js" />
+    <Content Include="Script\CreatePOForOutPro.js" />
+    <Content Include="Script\CreatePOGST.js" />
+    <Content Include="Script\EditPOGST.js" />
+    <Content Include="Script\EquipmentMaster.js" />
+    <Content Include="Script\GateEntryListClassification.js" />
+    <Content Include="Script\GECreate.js" />
+    <Content Include="Script\GECreate.min.js" />
+    <Content Include="Script\GEDMR.js" />
+    <Content Include="Script\GEDMR.min.js" />
+    <Content Include="Script\GEEdit.min.js" />
+    <Content Include="Script\GEIndex.min.js" />
+    <Content Include="Script\GetOutTransferList.js" />
+    <Content Include="Script\Get_All_itemsDetails_Rate_Wise_Serach_AdminDash.js" />
+    <Content Include="Script\InterTransfer.js" />
+    <Content Include="Script\InterTransferDetail.js" />
+    <Content Include="Script\IntraInvoiceDocumentList.js" />
+    <Content Include="Script\IntraStateTaxableList.js" />
+    <Content Include="Script\IPOCreate.js" />
+    <Content Include="Script\IPOCreate.min.js" />
+    <Content Include="Script\IPOCreateNew.js" />
+    <Content Include="Script\IPOEdit.min.js" />
+    <Content Include="Script\IPOIndex.min.js" />
+    <Content Include="Script\ItemBudget.js" />
+    <Content Include="Script\ItemIssueReport.js" />
+    <Content Include="Script\ItemOpening.js" />
+    <Content Include="Script\ItemOpening.min.js" />
+    <Content Include="Script\ItemOpeningFirst.js" />
+    <Content Include="Script\ItemOpeningFirst.min.js" />
+    <Content Include="Script\ItemStock.js" />
+    <Content Include="Script\ItemStock.min.js" />
+    <Content Include="Script\JavaScript.js" />
+    <Content Include="Script\jquery.dataTables.min.js" />
+    <Content Include="Script\LPCreate.js" />
+    <Content Include="Script\LPCreate.min.js" />
+    <Content Include="Script\LPEdit.min.js" />
+    <Content Include="Script\LPIndex.min.js" />
+    <Content Include="Script\MonthlyReport.js" />
+    <Content Include="Script\MonthlyReport.min.js" />
+    <Content Include="Script\MovableStatus.js" />
+    <Content Include="Script\MRNList.js" />
+    <Content Include="Script\MyDashBoard1.js" />
+    <Content Include="Script\MyDashBoard2.js" />
+    <Content Include="Script\MyDashBoard.js" />
+    <Content Include="Script\NumberConversion.js" />
+    <Content Include="Script\OSTCreate.js" />
+    <Content Include="Script\OSTCreate.min.js" />
+    <Content Include="Script\OSTDebitCredit.min.js" />
+    <Content Include="Script\OSTEdit.min.js" />
+    <Content Include="Script\OSTIndex1.min.js" />
+    <Content Include="Script\OutProPICreate.js" />
+    <Content Include="Script\POCalculation.js" />
+    <Content Include="Script\POCloser.js" />
+    <Content Include="Script\POCloserRrport.js" />
+    <Content Include="Script\PurchaseIRCreate.js" />
+    <Content Include="Script\PurchaseIRCreate.min.js" />
+    <Content Include="Script\PurchaseIRDetailsA.js" />
+    <Content Include="Script\PurchaseIRDetailsA.min.js" />
+    <Content Include="Script\PurchaseIREdit.min.js" />
+    <Content Include="Script\PurchaseIRIndex.js" />
+    <Content Include="Script\PurchaseIRIndex.min.js" />
+    <Content Include="Script\PurchaseTypeProjectLimit.js" />
+    <Content Include="Script\Quotation.js" />
+    <Content Include="Script\ReceiptVsPO.js" />
+    <Content Include="Script\Search_Items_Details_for_Admin.js" />
+    <Content Include="Script\shetUp\ItemExcessPercentile.js" />
+    <Content Include="Script\SourceLocation.js" />
+    <Content Include="Script\test.js" />
+    <Content Include="Script\VendorDebitNote.js" />
+    <Content Include="Script\VendorMaster.js" />
+    <Content Include="Script\ViewVendorDebitNotes.js" />
+    <Content Include="SqlScripts\alter_table_ns_tbl_IssueQuantity.sql" />
+    <Content Include="SqlScripts\GetIssueStockGetOutTransfer1.sql" />
+    <Content Include="SqlScripts\usp_GetPreviewGridNewDMR.sql" />
+    <Content Include="Views\Purchase_Order_Slip\POSlip.html" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_MyLayoutPage.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Shared\_EmptyView.cshtml" />
+    <Content Include="Views\BlockMasters\Create.cshtml" />
+    <Content Include="Views\BlockMasters\Delete.cshtml" />
+    <Content Include="Views\BlockMasters\Details.cshtml" />
+    <Content Include="Views\BlockMasters\Edit.cshtml" />
+    <Content Include="Views\BlockMasters\Index.cshtml" />
+    <Content Include="Views\BlockMasters\Index2.cshtml" />
+    <Content Include="Views\BlockMasters\_GridView.cshtml" />
+    <Content Include="Views\BlockMasters\_GridViewTable.cshtml" />
+    <Content Include="Views\FloorMasters\Create.cshtml" />
+    <Content Include="Views\FloorMasters\Delete.cshtml" />
+    <Content Include="Views\FloorMasters\Details.cshtml" />
+    <Content Include="Views\FloorMasters\Edit.cshtml" />
+    <Content Include="Views\FloorMasters\Index -Pre Copy.cshtml" />
+    <Content Include="Views\FloorMasters\Index.cshtml" />
+    <Content Include="Views\FloorMasters\_GridView.cshtml" />
+    <Content Include="Views\MyAccount\Login.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\IndentRequistion\Index.cshtml" />
+    <Content Include="Views\tblItemGroupMasters\Create.cshtml" />
+    <Content Include="Views\tblItemGroupMasters\Delete.cshtml" />
+    <Content Include="Views\tblItemGroupMasters\Details.cshtml" />
+    <Content Include="Views\tblItemGroupMasters\Edit.cshtml" />
+    <Content Include="Views\tblItemGroupMasters\Index.cshtml" />
+    <Content Include="Views\tblItemMasters\Create.cshtml" />
+    <Content Include="Views\tblItemMasters\Delete.cshtml" />
+    <Content Include="Views\tblItemMasters\Details.cshtml" />
+    <Content Include="Views\tblItemMasters\Edit.cshtml" />
+    <Content Include="Views\tblItemMasters\Index.cshtml" />
+    <Content Include="Views\tblItemMasters\_GridView.cshtml" />
+    <Content Include="Views\tblRegistrationTypes\Create.cshtml" />
+    <Content Include="Views\tblRegistrationTypes\Delete.cshtml" />
+    <Content Include="Views\tblRegistrationTypes\Details.cshtml" />
+    <Content Include="Views\tblRegistrationTypes\Edit.cshtml" />
+    <Content Include="Views\tblRegistrationTypes\Index.cshtml" />
+    <Content Include="Views\tblUnitMasters\Create.cshtml" />
+    <Content Include="Views\tblUnitMasters\Delete.cshtml" />
+    <Content Include="Views\tblUnitMasters\Details.cshtml" />
+    <Content Include="Views\tblUnitMasters\Edit.cshtml" />
+    <Content Include="Views\tblUnitMasters\Index.cshtml" />
+    <Content Include="Views\tblVendorMasters\CreateOld.cshtml" />
+    <Content Include="Views\tblVendorMasters\Delete.cshtml" />
+    <Content Include="Views\tblVendorMasters\Details.cshtml" />
+    <Content Include="Views\tblVendorMasters\Editold.cshtml" />
+    <Content Include="Views\tblVendorMasters\Index.cshtml" />
+    <Content Include="Views\tblVendorMasters\_GridView.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\Details.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\GetAllIndentDetails.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\GetAllSendedIndentRequest.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\Grid.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\Index.cshtml" />
+    <Content Include="Views\ViewSendingIndentRequisition\_ProductPartial.cshtml" />
+    <Content Include="Views\tblItemMasters\ItemOpening.cshtml" />
+    <Content Include="Views\QuantityIssues\Index.cshtml" />
+    <Content Include="Views\QuantityIssues\_PartialIndentView.cshtml" />
+    <Content Include="Views\ApprovedIssueQuantity\Index.cshtml" />
+    <Content Include="Views\ApprovedIssueQuantity\ViewApprovedStock_Indent.cshtml" />
+    <Content Include="Views\ApprovedIssueQuantity\_PartialGridApprovedStocks_View.cshtml" />
+    <Content Include="Views\ApprovedIssueQuantity\_PartialGridView_For_Approved_Indents.cshtml" />
+    <Content Include="Views\tblItemMasters\ItemStock.cshtml" />
+    <Content Include="Views\tblItemMasters\_StockView.cshtml" />
+    <Content Include="Views\QuantityIssues\_PartialView_For_View_Quantity_Issue.cshtml" />
+    <Content Include="Views\QuantityIssues\View_To_Quantity_Issues.cshtml" />
+    <Content Include="Views\tblItemMasters\_StockView2.cshtml" />
+    <Content Include="Views\ApprovedIssueQuantity\_PartialGrid_Un_ApprovedStocks_View.cshtml" />
+    <Content Include="Views\To_Rest_Indent_Item_Re_Issue\Index.cshtml" />
+    <Content Include="Views\To_Rest_Indent_Item_Re_Issue\_PartialIndentView_Re_Issue.cshtml" />
+    <Content Include="Views\Report_Quantity_Issue\Index.cshtml" />
+    <Content Include="Views\Report_Quantity_Issue\_DateWiseSearch_Partial.cshtml" />
+    <Content Include="Views\IndentWise_Search_Report\Index.cshtml" />
+    <Content Include="Views\CashPurchaseChilds\Create.cshtml" />
+    <Content Include="Views\CashPurchaseChilds\Details.cshtml" />
+    <Content Include="Views\CashPurchaseChilds\Edit.cshtml" />
+    <Content Include="Views\CashPurchaseChilds\Index2.cshtml" />
+    <Content Include="Views\CashPurchaseChilds\_GridView.cshtml" />
+    <Content Include="Views\GateEntries\Create.cshtml" />
+    <Content Include="Views\GateEntries\Details.cshtml" />
+    <Content Include="Views\GateEntries\DetailsDispatch.cshtml" />
+    <Content Include="Views\GateEntries\DetailsReceive.cshtml" />
+    <Content Include="Views\GateEntries\DMR.cshtml" />
+    <Content Include="Views\GateEntries\Edit.cshtml" />
+    <Content Include="Views\GateEntries\Index.cshtml" />
+    <Content Include="Views\GateEntries\_DMRAllView.cshtml" />
+    <Content Include="Views\GateEntries\_DMRDispatchView.cshtml" />
+    <Content Include="Views\GateEntries\_DMRPurchaseView.cshtml" />
+    <Content Include="Views\GateEntries\_DMRReceiveView.cshtml" />
+    <Content Include="Views\GateEntries\_GridView.cshtml" />
+    <Content Include="Views\GateEntries\_GridViewDispatch.cshtml" />
+    <Content Include="Views\GateEntries\_GridViewIPO.cshtml" />
+    <Content Include="Views\GateEntries\_GridViewLP.cshtml" />
+    <Content Include="Views\GateEntries\_GridViewReceive.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\Create.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\Details.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\Edit.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\Index.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridView.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridViewLP.cshtml" />
+    <Content Include="Views\OST\Create.cshtml" />
+    <Content Include="Views\OST\DebitCredit.cshtml" />
+    <Content Include="Views\OST\Details.cshtml" />
+    <Content Include="Views\OST\Edit.cshtml" />
+    <Content Include="Views\OST\Index.cshtml" />
+    <Content Include="Views\OST\_GridView.cshtml" />
+    <Content Include="Views\OST\_GridViewDC.cshtml" />
+    <Content Include="Views\OST\_PGridView.cshtml" />
+    <Content Include="Views\GateEntries\IndexT.cshtml" />
+    <Content Include="Views\GateEntries\CreateT.cshtml" />
+    <Content Include="Views\tblItemMasters\MonthlyReport.cshtml" />
+    <Content Include="Views\GateEntries\_GridViewT.cshtml" />
+    <Content Include="Views\PurchaseRequisition\Create.cshtml" />
+    <Content Include="Views\PurchaseRequisition\Details.cshtml" />
+    <Content Include="Views\PurchaseRequisition\DetailsA.cshtml" />
+    <Content Include="Views\PurchaseRequisition\Edit.cshtml" />
+    <Content Include="Views\PurchaseRequisition\Index.cshtml" />
+    <Content Include="Views\PurchaseRequisition\IndexApproval.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_GridView.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_GridViewA.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_GridViewA1.cshtml" />
+    <Content Include="Views\tblItemMasters\ItemOpeningFirst.cshtml" />
+    <Content Include="Views\AdminHome\Index.cshtml" />
+    <Content Include="Views\AdminHome\_AdminPartial_Show_Qty_by_project.cshtml" />
+    <Content Include="Views\AdminHome\_AllDetailsOfitems.cshtml" />
+    <Content Include="Views\AdminHome\_ShowItemDetails.cshtml" />
+    <Content Include="Views\AdminHome\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\tblVendorMasters\Create.cshtml" />
+    <Content Include="Views\tblVendorMasters\Edit.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\Index.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approval.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_Show_PO_Deatils.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_Partial_Add_remark_Approval.cshtml" />
+    <Content Include="Views\Purchase_Order_Slip\Index.cshtml" />
+    <Content Include="Views\Purchase_Order_Slip\_Partial_View_For_STC.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialView_GTC.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialView_SI.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialView_STC.cshtml" />
+    <Content Include="Views\Purchase_Order_Slip\_PartialView_Show_All_Data_STC.cshtml" />
+    <Content Include="Views\Purchase_Order_Slip\_PartialView_Show_All_Data_SI.cshtml" />
+    <Content Include="Views\Purchase_Order_Slip\_PartialView_Show_All_Data_GTC.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\Index.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_PartialView_Show_PO_Slip_Approval.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_PartialView_for_Approved_Print_Slip_User.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created\Index.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created\_PartialView_Show_PO.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created\_PartialView_POPrint_Preview_User.cshtml" />
+    <Content Include="Views\Multiple_Quantity_wise_Search\Index.cshtml" />
+    <Content Include="Views\Multiple_Quantity_wise_Search\_Partial_VIew_All_Quantity_Details.cshtml" />
+    <Content Include="Views\Multiple_Quantity_wise_Search\_PartialView_AllQuantity_Details_Final.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approval_Approved.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip_Ulti.cshtml" />
+    <Content Include="Views\Price_Cap_For_Item_Group\Index.cshtml" />
+    <Content Include="Views\Price_Cap_For_Item_Group\_PartialView_forEnable_IG.cshtml" />
+    <Content Include="Views\Add_Rate_Cap_PO\Index.cshtml" />
+    <Content Include="Views\Receipt_Reports_\Index.cshtml" />
+    <Content Include="Views\Receipt_Reports_\_Receipt_Report_Partial.cshtml" />
+    <Content Include="Views\DMR_Report\Index.cshtml" />
+    <Content Include="Views\DMR_Report\_Dmr_Report_Partial.cshtml" />
+    <Content Include="Views\Datewise_Item_\Index.cshtml" />
+    <Content Include="Views\Datewise_Item_\_Datewise_Item_Partial.cshtml" />
+    <Content Include="Views\Non_Moveing_\Index.cshtml" />
+    <Content Include="Views\Non_Moveing_\_Non_Moveing_Partial.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\Not_Approved_PO_Edit.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_PartialView_Show_Not_Approved_In_PO.cshtml" />
+    <Content Include="Views\AddPriceCap\Index.cshtml" />
+    <Content Include="Views\AddPriceCap\Create.cshtml" />
+    <Content Include="Views\AddPriceCap\_Partial_For_Edit.cshtml" />
+    <Content Include="Views\AddPriceCap\_EditPriceCap.cshtml" />
+    <Content Include="Views\MSPReport\_PartialView_MSP.cshtml" />
+    <Content Include="Views\MSPReport\Index.cshtml" />
+    <Content Include="Views\AddPriceCap\demo.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_Partial_View_For_Rate_Status.cshtml" />
+    <Content Include="Views\PuchaseOrder_ReceiptReport\Index.cshtml" />
+    <Content Include="Views\PuchaseOrder_ReceiptReport\PurchaseOrder_ReceiprtReport.cshtml" />
+    <Content Include="Views\PcContractor\Create.cshtml" />
+    <Content Include="Views\PcContractor\CreatePcContractor.cshtml" />
+    <Content Include="Views\PcContractor\Delete.cshtml" />
+    <Content Include="Views\PcContractor\Details.cshtml" />
+    <Content Include="Views\PcContractor\Edit.cshtml" />
+    <Content Include="Views\PcContractor\Index.cshtml" />
+    <Content Include="Views\PcContractor\SubmitForm.cshtml" />
+    <Content Include="Views\PcContractor\_GridView.cshtml" />
+    <Content Include="Views\IssueReport\Index.cshtml" />
+    <Content Include="Views\IssueReport\IssueReport.cshtml" />
+    <Content Include="Views\MovableStatus\Index.cshtml" />
+    <Content Include="Views\MovableStatus\MovableReport.cshtml" />
+    <Content Include="Views\MovableStatus\_MovableDiscription.cshtml" />
+    <Content Include="Views\MovableStatus\_PartialView_MovableStatus.cshtml" />
+    <Content Include="Views\SourceLocation\Create.cshtml" />
+    <Content Include="Views\SourceLocation\Index.cshtml" />
+    <Content Include="Views\ConversionMaster\ConversationGrid.cshtml" />
+    <Content Include="Views\ConversionMaster\Index.cshtml" />
+    <Content Include="Views\ConversionMaster\SoureceLocationMaster.cshtml" />
+    <Content Include="Views\ConversionMaster\_SourceLocationGrid.cshtml" />
+    <Content Include="Views\IssueReport\ItemIssueGrid.cshtml" />
+    <Content Include="Views\IssueReport\ItemIssueReport.cshtml" />
+    <Content Include="Views\MovableStatus\_MovableReportGrid.cshtml" />
+    <Content Include="Views\EquipmentMaster\Index.cshtml" />
+    <Content Include="Views\EquipmentCategory\Index.cshtml" />
+    <Content Include="Views\EquipmentCategory\_EquipmentCategoryGrid.cshtml" />
+    <Content Include="Views\ConversionMaster\_MappedConversionGrid.cshtml" />
+    <Content Include="Views\ConversionMaster\ConversionUnitMapping.cshtml" />
+    <Content Include="Views\ConversionMaster\CreateMapping.cshtml" />
+    <Content Include="Views\EquipmentMaster\Create.cshtml" />
+    <Content Include="Views\EquipmentMaster\SerachEquipmentMaster.cshtml" />
+    <Content Include="Views\EquipmentMaster\_EquipmentGrid.cshtml" />
+    <Content Include="Views\EquipmentMaster\EuipGrid.cshtml" />
+    <Content Include="Views\UserPermission\Index.cshtml" />
+    <Content Include="Views\ProjectOpeningAndClosing\Index.cshtml" />
+    <Content Include="Views\CurrentStock\Index.cshtml" />
+    <Content Include="Views\CurrentStock\_PartialView_CurrentStock.cshtml" />
+    <Content Include="Views\ReceivedStock\Index.cshtml" />
+    <Content Include="Views\ReceivedStock\_PartialView_ReceiveStock.cshtml" />
+    <Content Include="Views\IssueStock\Index.cshtml" />
+    <Content Include="Views\IssueStock\_PartialView_IssuedStock.cshtml" />
+    <Content Include="Views\VendorWiseReport\Index.cshtml" />
+    <Content Include="Views\VendorWiseReport\_PartialView_VendorWise.cshtml" />
+    <Content Include="Views\TransferStock\Index.cshtml" />
+    <Content Include="Views\TransferStock\_PartialView_TransferredStock.cshtml" />
+    <Content Include="Views\PurchaseRequisition\CreatePI.cshtml" />
+    <Content Include="Views\PurchaseRequisitionLimit\Index.cshtml" />
+    <Content Include="Views\PurchaseRequisitionLimit\_PartialView_PurchaseLimit.cshtml" />
+    <Content Include="Views\PurchaseRequisition\DetailsAPI.cshtml" />
+    <Content Include="Views\Permission\Index.cshtml" />
+    <Content Include="Views\Permission\_PermissionGrid.cshtml" />
+    <Content Include="Views\AddProject\AddUser.cshtml" />
+    <Content Include="Views\AddProject\Create.cshtml" />
+    <Content Include="Views\AddProject\Index.cshtml" />
+    <Content Include="Views\AddProject\UserList.cshtml" />
+    <Content Include="Views\AddProject\_ProjectGrid.cshtml" />
+    <Content Include="Views\AddProject\_UserGrid.cshtml" />
+    <Content Include="Views\PurchaseRequisition\IndexNew.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_Pending_PI.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_Approved_PI.cshtml" />
+    <Content Include="Views\PurchaseOrderLimit\Index.cshtml" />
+    <Content Include="Views\PurchaseOrderLimit\_PartialView_POLimit.cshtml" />
+    <Content Include="Views\PIOrder\Index.cshtml" />
+    <Content Include="Views\PIOrder\_Partial_PI.cshtml" />
+    <Content Include="Views\PIOrder\Create.cshtml" />
+    <Content Include="Views\ExciseDuty\Index.cshtml" />
+    <Content Include="Views\ExciseDuty\_ExciseDuties.cshtml" />
+    <Content Include="Views\Home\_PendingPurchasePIDetail.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_Purchase_Master_Remarks_Detail.cshtml" />
+    <Content Include="Views\Quotation\AddQuotation.cshtml" />
+    <Content Include="Views\Quotation\Index.cshtml" />
+    <Content Include="Views\Quotation\_PendingQuotation.cshtml" />
+    <Content Include="Views\Quotation\_PIReamrksOnQuotation.cshtml" />
+    <Content Include="Views\Quotation\_Quot_Remarks.cshtml" />
+    <Content Include="Views\Quotation\_UploadQuotation.cshtml" />
+    <Content Include="Views\Tax\Index.cshtml" />
+    <Content Include="Views\Tax\_Taxdetail.cshtml" />
+    <Content Include="Views\Quotation\_downLoadQuotFile.cshtml" />
+    <Content Include="Views\CartageType\Index.cshtml" />
+    <Content Include="Views\CartageType\_CartageType.cshtml" />
+    <Content Include="Views\GateEntrydocumentUpload\Index.cshtml" />
+    <Content Include="Views\GateEntrydocumentUpload\UploadFile.cshtml" />
+    <Content Include="Views\GateEntrydocumentUpload\_GrnList.cshtml" />
+    <Content Include="Views\GateEntrydocumentUpload\_GrnTest.cshtml" />
+    <Content Include="Views\GateReceiptVsStoreReceipt\Index.cshtml" />
+    <Content Include="Views\GateReceiptVsStoreReceipt\_GetGrid.cshtml" />
+    <Content Include="Views\InsuranceMaster\Index.cshtml" />
+    <Content Include="Views\InsuranceMaster\_Insurance.cshtml" />
+    <Content Include="Views\MaterialRev\Create.cshtml" />
+    <Content Include="Views\MaterialRev\_GrnGrid.cshtml" />
+    <Content Include="Views\MRNFileUpload\UploadFile.cshtml" />
+    <Content Include="Views\MRNFileUpload\_MRNGrid.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_ApprovedPOdetailOnIndentSection.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_Partial_POAllRemarks.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PORemarks.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PurRequsionDetailOnPO.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_ReleasePOList.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_UnreleasePO.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\RelesedPO.cshtml" />
+    <Content Include="Views\PIOrder\_Partial_PO.cshtml" />
+    <Content Include="Views\PIOrder\_Updated_PO.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_Partial_POAllRemarks.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_SlipTest.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip_UltiTest.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_For_DisApproval.cshtml" />
+    <Content Include="Views\PurchaseRequisition\PurchaseReqViewDetail.cshtml" />
+    <Content Include="Views\Quotation\ViewQuotDetail.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_disapprovedGridPOview.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_Partial_POAllRemarks.cshtml" />
+    <Content Include="Views\GateEntries\_DMRView.cshtml" />
+    <Content Include="Views\GateEntries\_GridLPTest.cshtml" />
+    <Content Include="Views\AddRegionMaster\Index.cshtml" />
+    <Content Include="Views\AddRegionMaster\_RegionGrid.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridEditPO.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\EditNew.cshtml" />
+    <Content Include="Views\FormattedReport\PIdetail.cshtml" />
+    <Content Include="Views\FormattedReport\POdetail.cshtml" />
+    <Content Include="Views\FormattedReport\POPMCdetail.cshtml" />
+    <Content Include="Views\FormattedReport\POQtyDetail.cshtml" />
+    <Content Include="Views\FormattedReport\StockLedgerDetail.cshtml" />
+    <Content Include="Views\DesignDemo\PIdetail.cshtml" />
+    <Content Include="Views\DesignDemo\POdetail.cshtml" />
+    <Content Include="Views\DesignDemo\POPMCdetail.cshtml" />
+    <Content Include="Views\DesignDemo\POQtyDetail.cshtml" />
+    <Content Include="Views\DesignDemo\StockLedgerDetail.cshtml" />
+    <Content Include="Views\DesignDemo\_DemoGrid.cshtml" />
+    <Content Include="Views\DesignDemo\_PIdetailWithPO.cshtml" />
+    <Content Include="Views\DesignDemo\_PODetailGrid.cshtml" />
+    <Content Include="Views\DesignDemo\_POPMCDetail.cshtml" />
+    <Content Include="Views\DesignDemo\_POQtyDetails.cshtml" />
+    <Content Include="Views\DesignDemo\_StockLedgerDetail.cshtml" />
+    <Content Include="Views\ManagePIPurchaseType\Index.cshtml" />
+    <Content Include="Views\ManagePIPurchaseType\_PIDetails.cshtml" />
+    <Content Include="Views\RemoveOpening\Index.cshtml" />
+    <Content Include="Views\RemoveOpening\_ItemDetailGrid.cshtml" />
+    <Content Include="Views\OutProPurchaseIndent\Index.cshtml" />
+    <Content Include="Views\OutProPurchaseIndent\Create.cshtml" />
+    <Content Include="Views\OutProPurchaseIndent\_GetOutPiTypeGridDetail.cshtml" />
+    <Content Include="Views\OutProPurchaseIndent\PurchaseReqViewDetail.cshtml" />
+    <Content Include="Views\PIOrderOutPIType\Index.cshtml" />
+    <Content Include="Views\PIOrderOutPIType\_Partial_PI.cshtml" />
+    <Content Include="Views\PIOrderOutPIType\_Partial_PO.cshtml" />
+    <Content Include="Views\PIOrderOutPIType\_Updated_PO.cshtml" />
+    <Content Include="Views\GateEntryListClassification\Index.cshtml" />
+    <Content Include="Views\GateEntryListClassification\_PendingGRN.cshtml" />
+    <Content Include="Views\GateEntryListClassification\_PartialGRN.cshtml" />
+    <Content Include="Views\GateEntryListClassification\_UpdatedGRN.cshtml" />
+    <Content Include="Views\MRNListClassification\Index.cshtml" />
+    <Content Include="Views\MRNListClassification\_PartialMRN.cshtml" />
+    <Content Include="Views\MRNListClassification\_UpdatedMRN.cshtml" />
+    <Content Include="Views\GateEntries\CreateNew.cshtml" />
+    <Content Include="Views\MaterialRev\CreateNewMRN.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridEdit_PO.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialViewPOWise_GTC.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialViewPOWise_SI.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_PartialViewPOWise_STC.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\DisApprovealPOList.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\CreateOutPro.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_SlipTest_ForOutPro.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip_UltiTestForOutPro.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_PartialView_for_Approved_Print_Slip_User_ForOutPro.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created\_PartialView_POPrint_Preview_User_ForOutPro.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_ApprovedPOdetailOnIndentSection_ForOutPro.cshtml" />
+    <Content Include="Views\GST\Index.cshtml" />
+    <Content Include="Views\GST\AddGST_master.cshtml" />
+    <Content Include="Views\GST\_SplitGSTViewGrid.cshtml" />
+    <Content Include="Views\GST\_MMSGSTMasterGrid.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\CreatePO_GST.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridViewLPGST.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created\_PartialView_POPrint_Preview_User_GST.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\Index.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\_PartialView_Show_PO.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\_PartialView_POPrint_Preview_User_GST12.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\_PartialDetailGrid.cshtml" />
+    <Content Include="Views\PurchaseOrder\Index.cshtml" />
+    <Content Include="Views\PurchaseOrder\CreatePO_GST.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialView_GTC.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialView_SI.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialView_STC.cshtml" />
+    <Content Include="Views\PurchaseOrder\_GridViewLPGST.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\_PartialView_POPrint_Preview_User_GST-_.cshtml" />
+    <Content Include="Views\View_PO_Details_ByUser_Created_GST\_PartialView_POPrint_Preview_User_GST.cshtml" />
+    <Content Include="Views\NewDMR_Report\Index.cshtml" />
+    <Content Include="Views\NewDMR_Report\_DMRGrid.cshtml" />
+    <Content Include="Views\PurchaseTypeProjectLimit\Index.cshtml" />
+    <Content Include="Views\PurchaseTypeProjectLimit\_GetGridDetail.cshtml" />
+    <Content Include="Views\CurrentStock\DailyMaterialIssueReport.cshtml" />
+    <Content Include="Views\CurrentStock\_DailyMasterial_IssueGrid.cshtml" />
+    <Content Include="Views\Home\_GridAgingHome.cshtml" />
+    <Content Include="Views\Home\_MasterialRecvAndIssue.cshtml" />
+    <Content Include="Views\Home\_PendingPIGridHome.cshtml" />
+    <Content Include="Views\Home\_POGridHome.cshtml" />
+    <Content Include="Views\Home\MyDashBoard.cshtml" />
+    <Content Include="Views\VendorWiseReport\_GetSupplierGrid.cshtml" />
+    <Content Include="Views\VendorWiseReport\SupplierReport.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_GridViewPOapprovdByPMCOnly.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_GetapprovedByPMC.cshtml" />
+    <Content Include="Views\GetOut\CreateGetOutInterTransfer.cshtml" />
+    <Content Include="Views\GetOut\CreateGetOutTransfer.cshtml" />
+    <Content Include="Views\GetOut\Index.cshtml" />
+    <Content Include="Views\GetOut\_GateOut_IntraPrint_Prev.cshtml" />
+    <Content Include="Views\GetOut\_GetGridIntraTransferItemDetail.cshtml" />
+    <Content Include="Views\GetOut\_GetGridTransferItem.cshtml" />
+    <Content Include="Views\GetOut\_GetOut_Inter_PrintChalan_Prev.cshtml" />
+    <Content Include="Views\GetOut\_PendingGetOutGrid.cshtml" />
+    <Content Include="Views\GetOut\_PendingGetOutInterTransferGrid.cshtml" />
+    <Content Include="Views\GetOut\_UpdatedGetOutInterTransferList.cshtml" />
+    <Content Include="Views\GetOut\_UpdatedGetoutIntraTransferList.cshtml" />
+    <Content Include="Views\IntraTransfer\CreateIntraInvoiceDocument.cshtml" />
+    <Content Include="Views\IntraTransfer\CreateTaxableIntraStateDocument.cshtml" />
+    <Content Include="Views\IntraTransfer\Index.cshtml" />
+    <Content Include="Views\IntraTransfer\InterTransfer.cshtml" />
+    <Content Include="Views\IntraTransfer\InterTransferDetail.cshtml" />
+    <Content Include="Views\IntraTransfer\IntraInvoiceDocument.cshtml" />
+    <Content Include="Views\IntraTransfer\IntraTransferTaxableList.cshtml" />
+    <Content Include="Views\IntraTransfer\Transfer.cshtml" />
+    <Content Include="Views\IntraTransfer\_GetTransferDocumentGrid.cshtml" />
+    <Content Include="Views\IntraTransfer\_GetUpdatedIntraStateTaxableList.cshtml" />
+    <Content Include="Views\IntraTransfer\_PendingGridInterState.cshtml" />
+    <Content Include="Views\IntraTransfer\_PendingIntraStateTransferGrid.cshtml" />
+    <Content Include="Views\IntraTransfer\_PendingIntraStateTRansferTaxableGrid.cshtml" />
+    <Content Include="Views\IntraTransfer\_PendingIntraStateTransferTaxable_ForApproval_Prev.cshtml" />
+    <Content Include="Views\IntraTransfer\_Pending_InterState_Transfer_Print.cshtml" />
+    <Content Include="Views\IntraTransfer\_Pending_IntraTransfer_Print.cshtml" />
+    <Content Include="Views\IntraTransfer\_UpdatedInterTransferGrid.cshtml" />
+    <Content Include="Views\MannualTransfer\AddMannualTransfer.cshtml" />
+    <Content Include="Views\MannualTransfer\Index.cshtml" />
+    <Content Include="Views\MannualTransfer\MannualTransferPurchaseOrderAtPIC.cshtml" />
+    <Content Include="Views\MannualTransfer\MannualTransferViewDetail.cshtml" />
+    <Content Include="Views\MannualTransfer\UpDateMannualTransfer.cshtml" />
+    <Content Include="Views\MannualTransfer\_ApprovedMannualTransferPrintedPO.cshtml" />
+    <Content Include="Views\MannualTransfer\_GetMannualTrasnferList.cshtml" />
+    <Content Include="Views\MannualTransfer\_GetManualTransferRemarks.cshtml" />
+    <Content Include="Views\MannualTransfer\_PartialMannualTransfer.cshtml" />
+    <Content Include="Views\MannualTransfer\_PendingMannualPOPrintforApproval.cshtml" />
+    <Content Include="Views\MannualTransfer\_PendingMannualPurchaseOrderGrid.cshtml" />
+    <Content Include="Views\MannualTransfer\_PendingMannualTransfer.cshtml" />
+    <Content Include="Views\MannualTransfer\_UpdatedMannualTransfer.cshtml" />
+    <Content Include="Views\MannualTransfer\_UpdatedMannualTransferPOGrid.cshtml" />
+    <Content Include="Views\GateEntries\_TransferItemsListONGRN.cshtml" />
+    <Content Include="Views\GateEntries\TCreateNew.cshtml" />
+    <Content Include="Views\MRNListClassification\_GridItemdetail.cshtml" />
+    <Content Include="Views\MRNListClassification\_PendingTRNMRN.cshtml" />
+    <Content Include="Views\MRNListClassification\_UpdateMRNTRN.cshtml" />
+    <Content Include="Views\MRNListClassification\GetMRSDetails.cshtml" />
+    <Content Include="Views\MaterialRev\_GrnGridOSTRN.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\CreateMannualPurchaseOrder.cshtml" />
+    <Content Include="Views\PurchaseOrder\EditNew.cshtml" />
+    <Content Include="Views\PurchaseOrder\_GridEdit_POGST.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialViewPOWise_GTC.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialViewPOWise_SI.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialViewPOWise_STC.cshtml" />
+    <Content Include="Views\MSPReport\POVettedReport.cshtml" />
+    <Content Include="Views\MSPReport\_GetVettedPODetail.cshtml" />
+    <Content Include="Views\Set_Up\Index.cshtml" />
+    <Content Include="Views\Set_Up\_Item_Grid.cshtml" />
+    <Content Include="Views\IssueStock\PCDebitNote.cshtml" />
+    <Content Include="Views\IssueStock\_PartialView_IssuedStock_Debit_Notes.cshtml" />
+    <Content Include="Views\IssueStock\_PartialView_UpdatedDebitNote.cshtml" />
+    <Content Include="Views\TransferReport\Index.cshtml" />
+    <Content Include="Views\TransferReport\_WebGrid.cshtml" />
+    <Content Include="Views\VendorDebitNote\CreateDebitNote.cshtml" />
+    <Content Include="Views\VendorDebitNote\Index.cshtml" />
+    <Content Include="Views\VendorDebitNote\_GridView.cshtml" />
+    <Content Include="Views\VendorDebitNote\_ItemCalculationView.cshtml" />
+    <Content Include="Views\VendorDebitNote\EditDebitNote.cshtml" />
+    <Content Include="Views\VendorDebitNote\ViewDebitNote.cshtml" />
+    <Content Include="Views\VendorDebitNote\_ApprovedDebitNotes.cshtml" />
+    <Content Include="Views\VendorDebitNote\_DebitNoteDetails.cshtml" />
+    <Content Include="Views\VendorDebitNote\_PendingDebitNotes.cshtml" />
+    <Content Include="Views\VendorDebitNote\_PrintDebitNote.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_SearchGrid.cshtml" />
+    <Content Include="Views\IssueStock\PCDebitNoteReport.cshtml" />
+    <Content Include="Views\VendorDebitNote\_PartialView_for_Print_Debit_Note.cshtml" />
+    <Content Include="Views\GetOut\_GridViewPendigTransferDebitNoteData.cshtml" />
+    <Content Include="Views\GetOut\_GridViewTransferedDebitNoteData.cshtml" />
+    <Content Include="Views\ItemWiseRate\Index.cshtml" />
+    <Content Include="Views\ItemWiseRate\_GridView.cshtml" />
+    <Content Include="Views\IndentRequistion\AmountDetails.cshtml" />
+    <Content Include="Views\PurchaseRequisition\PIPrint.cshtml" />
+    <Content Include="Views\MSPSummary\_MSPSummary.cshtml" />
+    <Content Include="Views\MSPSummary\Index.cshtml" />
+    <Content Include="Views\TransferReport\Receipt.cshtml" />
+    <Content Include="Views\TransferReport\_WebGridTransferReceipt.cshtml" />
+    <Content Include="Views\DesignDemo\PIvsPOandReceivedQty.cshtml" />
+    <Content Include="Views\DesignDemo\_PIvsPOandQtyGrid.cshtml" />
+    <Content Include="Views\DesignDemo\POMaterialStatus.cshtml" />
+    <Content Include="Views\DesignDemo\_POMaterialStatusGrid.cshtml" />
+    <Content Include="Views\DesignDemo\DebitNoteSummary.cshtml" />
+    <Content Include="Views\DesignDemo\_DebitNoteSummaryGrid.cshtml" />
+    <Content Include="Views\MyAccount\ChangePassword.cshtml" />
+    <Content Include="Views\ItemBudget\Index.cshtml" />
+    <Content Include="Views\ItemBudget\_ItemBudgetsGrid.cshtml" />
+    <Content Include="Views\ItemBudget\_ItemBudgetDetailsGrid.cshtml" />
+    <Content Include="Views\ItemBudget\Create.cshtml" />
+    <Content Include="Views\Shared\_EmptyView1.cshtml" />
+    <Content Include="Views\Report\BinCard.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip_User.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_for_Approved_Print_Slip_User_ForOutPro.cshtml" />
+    <Content Include="Views\POManagement\Index.cshtml" />
+    <Content Include="Views\POManagement\GetPODetails.cshtml" />
+    <Content Include="Views\ReceiptVsPO\Index.cshtml" />
+    <Content Include="Views\ReceiptVsPO\ReceiprtVsPOReport.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_GridItemList.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_PendingPIView.cshtml" />
+    <Content Include="Views\Home\MyDashBoard2.cshtml" />
+    <Content Include="Views\GateEntries\EditGRN.cshtml" />
+    <Content Include="Views\POCalculation\Index.cshtml" />
+    <Content Include="Views\POCalculation\ViewPoDetails.cshtml" />
+    <Content Include="Views\POCloser\Index.cshtml" />
+    <Content Include="Views\POCloser\PoDetails.cshtml" />
+    <Content Include="Views\CartageCalculation\Index.cshtml" />
+    <Content Include="Views\CartageCalculation\_DMRGridForCartageCalculation.cshtml" />
+    <Content Include="Views\PoCloserReport\Index.cshtml" />
+    <Content Include="Views\Home\MyDashBoard1.cshtml" />
+    <Content Include="Views\IssueReturn\Index.cshtml" />
+    <Content Include="Views\IssueReturn\ReturnReport.cshtml" />
+    <Content Include="Views\BillUpload\Index.cshtml" />
+    <Content Include="Views\Report\ItemPurchaseReport.cshtml" />
+    <Content Include="Views\NewDMR_Report\_RSTData.cshtml" />
+    <Content Include="Views\MaterialRev\_MRNPreviewPartial.cshtml" />
+    <Content Include="Views\View_Print_Slip_Approval\_GridPOAttach.cshtml" />
+    <Content Include="Views\PurchaseRequisition\_Partial_ClosedPI.cshtml" />
+    <Content Include="Views\PurchaseOrder\DraftPO.cshtml" />
+    <Content Include="Views\PurchaseOrder\PendingPODraft.cshtml" />
+    <Content Include="Views\PurchaseOrder\_GridEdit_DraftPOGST.cshtml" />
+    <Content Include="Views\PurchaseOrder\_PartialPendingDraftPO.cshtml" />
+    <Content Include="Views\IndentPurchaseOrders\_GridEdit_POGST.cshtml" />
+    <Content Include="Views\ProjectBudget\MonthBudget.cshtml" />
+    <Content Include="Views\ProjectBudget\MonthBudgetReport.cshtml" />
+    <Content Include="Views\ProjectBudget\YearBudget.cshtml" />
+    <Content Include="Views\ProjectBudget\YearBudgetReport.cshtml" />
+    <Content Include="Views\ProjectBudget\_PartialBudgetGrid.cshtml" />
+    <Content Include="Views\ProjectBudget\_PartialBudgetMonthGrid.cshtml" />
+    <Content Include="Views\ProjectBudget\_PartialMonthBudget.cshtml" />
+    <Content Include="Views\ProjectBudget\_PartialYearItemBudget.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\PartialView_PrintDraftPO.cshtml" />
+    <Content Include="Views\IntraTransfer\TransferEwayBill.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialPendingEwayBill.cshtml" />
+    <Content Include="Views\IntraTransfer\_Partial_InterState_Transfer_Items.cshtml" />
+    <Content Include="Views\IntraTransfer\_Partial_IntraTransfer_Items.cshtml" />
+    <Content Include="Views\IntraTransfer\TransferEWayBillReport.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialUpdatedEwayBill.cshtml" />
+    <Content Include="Views\IntraTransfer\RejectTransfer.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialTransferForReject.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialInterTransferForReject.cshtml" />
+    <Content Include="Views\IntraTransfer\RejectedTransfer.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialRejectTransferForReject.cshtml" />
+    <Content Include="Views\IntraTransfer\_PartialRejectInterTransferForReject.cshtml" />
+    <Content Include="Views\IntraTransfer\_Rejected_InterState_Transfer_Print.cshtml" />
+    <Content Include="Views\IntraTransfer\_Rejected_IntraTransfer_Print.cshtml" />
+    <Content Include="Views\IntraTransfer\_Partial_UpdateEWayBill_IntraTransfer.cshtml" />
+    <Content Include="Views\IntraTransfer\_Partial_UpdateEWayBill_InterTransfer.cshtml" />
+    <Content Include="Views\GetOut\_GetOut_Inter_PrintChalan.cshtml" />
+    <Content Include="Views\GetOut\_GateOut_IntraPrint.cshtml" />
+    <Content Include="Views\IntraTransfer\_PendingIntraStateTransferTaxable_ForApproval.cshtml" />
+    <Content Include="Views\Print_Slip_For_Approval\_PartialView_For_DisApprovalEdit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\s3.amazonaws.com\" />
+    <Folder Include="ErrorLogs\" />
+    <Folder Include="GateEntryUploadFiles\" />
+    <Folder Include="PurchaseIndentAttachment\" />
+    <Folder Include="PurchaseOrderAttachment\" />
+    <Folder Include="UploadedBillFiles\" />
+    <Folder Include="UploadedFiles\" />
+    <Folder Include="Views\Daily\" />
+    <Folder Include="Views\Date_Wise\" />
+    <Folder Include="Views\DemoReport\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49635</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:49681/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

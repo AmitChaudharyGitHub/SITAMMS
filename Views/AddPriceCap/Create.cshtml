@@ -1,0 +1,452 @@
+﻿@model MMS.ViewModels.PriceCap_report
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    $(function () {
+        $(".multiselect").multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%'
+        });
+    });
+
+    $(function () {
+        $("#fromdate").datepicker({ minDate: 0 });
+        $("#todate").datepicker({ minDate: 0 });
+    });
+
+    function checkDec(el) {
+        var ex = /^[0-9]+\.?[0-9]*$/;
+        if (ex.test(el.value) == false) {
+            el.value = el.value.substring(0, el.value.length - 1);
+        }
+        //alert(rate.value);
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#prjtid1").change(function () {
+            $("#name").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("Getprojectcodes")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (states) {
+
+                    if (states.length > 0)
+                        //    $.each(states, function (i, state) {
+                        //alert(state.Value)
+                    {
+                        $("#name").val(states);
+                    }
+                        // });
+                    else {
+                        //states.length = 0;
+                        $("#name").val('');
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Indent No. Not Created', 'Project Code Empty');
+                        alert('Project Code Empty');
+                    }
+                },
+                error: function (ex) {
+                    debugger;
+                    alert('Failed to retrieve Project Code.' + ex);
+                }
+            });
+            return false;
+        })
+
+    });
+</script>
+
+
+
+@* for Item name code by PROJECT ID *@
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#itemgroupname1").change(function () {
+            $("#tblItemMaster").empty();
+            $("#tblItemMaster").append($("<option></option").val("").html("Select Item Name"));
+            $("#unit1").val('');
+            $("#make1").val('');
+            $("#partno1").val('');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetGroupitem")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#itemgroupname1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#tblItemMaster").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Item Name.');
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+
+
+@* FOR EMPLOYEE NAME BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#prjtid1").change(function () {
+            $("#empName1").empty();
+            $("#empName1").append($("<option></option").val("").html("Select Employee Name"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetEmpname")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#empName1").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('Failed to retrieve Employee Name.');
+                    alert('Failed to retrieve Employee Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+
+@* FOR Data Saved in Database. *@
+
+<script type="text/javascript">
+    var gridList = [];
+
+    function submitForm() {
+        var model = new Object();
+        var itgrp = $("#itemgroupname1 option:selected").val();
+        var itnm = $("#tblItemMaster option:selected").val();
+        debugger;
+        if ($('#PRJID').val() == null) {
+            alert('Kindly Select Project');
+            return false;
+        }
+
+        if (itgrp == "") {
+            alert('Kindly Select Item Group Name');
+            return false;
+        }
+        if (itnm == "") {
+            alert('Kindly Select Item Name');
+            return false;
+        }
+
+
+        if ($("#rate").val().trim() == "") {
+            alert('Kindly Enter Rate');
+            return false;
+        }
+        if ($("#fromdate").val().trim() == "") {
+            alert('Kindly Enter Date');
+            return false;
+        }
+
+        if ($("[name='Active']:checked").val() == "") {
+            alert('Kindly Check Status.');
+            return false;
+        }
+
+
+
+        debugger;
+        var url = '@Url.Action("Create", "AddPriceCap")';
+
+        debugger;
+        // gridList.push(model);
+        $.ajax({
+            type: "POST",
+            url: url,
+            // dataType: "json",
+            // contentType: "application/json; charset=utf-8",
+            // data: JSON.stringify({ VData: model }),
+            data: { //Passing data
+                ProjectId: $('#PRJID').val(),
+                ItemGroupId: $("#itemgroupname1 option:selected").val(),
+                ItemId: $("#tblItemMaster option:selected").val(),
+                Rate: $("#rate").val(),
+                EffectiveDate: $("#fromdate").val(),
+                ValidUpto: $("#todate").val(),
+                Status: $("[name='Active']:checked").val()
+            },
+
+            success: function (data) {//On Successful service call
+                if (data == "1") {
+                    alert('Data Saved Successfully');
+                    $("#rate").val('');
+                    $("button .multiselect").val('');
+                    $("#fromdate").val('');
+                    $("#itemgroupname1").val('');
+                    $("#tblItemMaster").val('');
+                    window.location.href = url;
+                }
+                if (data == "2") {
+                    alert('This Data already exist in table');
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('This Data already exist in table ', 'Confirmation');
+                }
+            },
+
+
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+
+    }
+</script>
+
+
+
+
+
+
+
+@* Here for Check Balance Data *@
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Add PRICE CAP</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    @Html.DropDownList("PRJID", null, htmlAttributes: new
+                                                   {
+                                                       @id = "PRJID",
+                                                       @class = "form-control multiselect",
+                                                       multiple = "multiple"
+                                                   })
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("itemgroupname", null, "Select Item Group", htmlAttributes: new { @id = "itemgroupname1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("tblItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item Name", new { @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("rates", null, new { id = "rate", @class = "form-control gui-input", @placeholder = "Enter Rate", onkeyup = "checkDec(this);" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-rupee"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3" id="blockdiv">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("fromdate", null, new { id = "fromdate", @class = "DatePicker form-control gui-input", @placeholder = "Valid From Date" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3" id="blockdiv">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("todate", null, new { id = "todate", @class = "DatePicker form-control gui-input", @placeholder = "Valid Upto Date" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-3" id="floordiv" style="display:none;">
+                                                    <div class="section">
+                                                        <label class="field">
+                                                            @Html.RadioButton("Active", "true", true)  Approved
+                                                            @Html.RadioButton("Active", "false") Not Approved
+
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-3"></div>
+                                                <div class="col-md-3" style="text-align:right; margin-top:-25px;"><input type="button" id="Submit" class="btn btn-primary" value="Add" onclick="submitForm()" /></div>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    <br />
+                                    <div class="form-group">
+
+                                        <div class="row" id="addprice">
+                                            @Html.Partial("_Partial_For_Edit", Model.AddPriceCap_Reports)
+                                        </div>
+                                    </div>
+                                    <div>
+
+                                    </div>
+
+
+                                </form>
+
+                                <div>
+                                    <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">X</button>
+                                                    <h4 class="modal-title"><span class="text-danger">Confirmation</span></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Data Saved Successfully.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<section id="content_wrapper" ng-app="myApp" ng-controller="myCtrl">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PO Closer</span>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <select id="ddlProjects" class="form-control">
+                                            <option value="">Select Project</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select id="ddlVendor" class="form-control">
+                                            <option value="">Select Vendor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" class="form-control" autocomplete="off" id="txtPONo" placeholder="Purchase Order Number" name="name" value="" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" placeholder="From Date" id="txtFromDate" class="form-control datepicker" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" placeholder="To Date" id="txtToDate" class="form-control datepicker1" />
+                                    </div>
+
+                                
+                                    <div class="col-md-1">
+                                        <input type="button" name="btn" value="Search" id="btnSearch" class="btn btn-primary" ng-click="GetData()" />
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No.</th>
+                                                    <th>Purchase Order No</th>
+                                                    <th>Purchase Order Date</th>
+                                                    <th>Vendor Name</th>
+                                                    <th>PO Description</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Status</th>
+                                                    <th>Received</th>
+                                                   
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-show="Progress">
+                                                    <td colspan="9" class="text-center">
+                                                        <img src="~/Images/Loading.gif" alt="LoadingImage" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-show="Data.length==0" ng-hide="Data.length>0 || Progress">
+                                                    <td colspan="9" class="text-center">
+                                                       <p class="text-danger">No Data Found</p>
+                                                    </td>
+                                                </tr>
+                                                <tr ng-repeat="item in Data">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.PurchaseOrderNo}}</td>
+                                                    <td>{{item.PurchaseOrderDate}}</td>
+                                                    <td>{{item.VendorName}}</td>
+                                                    <td>{{item.PODescription}}</td>
+                                                    <td>{{item.GrossAmount}}</td>
+                                                    <td>{{item.Status}}</td>
+                                                    <td>{{item.Received}}</td>
+
+                                                    <td>
+                                                        <input type="button" method="post" class="btn btn-xs btn-primary" name="name" value="View" ng-click="GetPODetail(item.UId)" ng-show="{{item.Received!='Closed' && item.Received!='Received'}}" />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        var GetResonCloser = '@Url.Action("GetResonCloser","POCloser")';
+        var GetPoDetails = '@Url.Action("PoDetails", "POCloser")'
+        var GetPOData = '@Url.Action("GetPOData", "POCloser")';
+        var projectUrl = '@Url.Action("BindProjectNew","POCloser")';
+        var BindVendor = '@Url.Action("BindVendor")';
+		var GetVar = '@Url.Action("GetString")';
+    </script>
+
+
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script src="~/Script/POCloser.js"></script>
+    <script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+
+}

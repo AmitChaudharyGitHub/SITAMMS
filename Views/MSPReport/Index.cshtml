@@ -1,0 +1,409 @@
+﻿
+@{
+    ViewBag.Title = "MSP Report";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script>
+
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+
+    $(window).load(function () {
+        $("#ProjectId").prop('selectedIndex', 1).trigger('change');
+    });
+</script>
+<script>
+    //$(function () {
+    //    $("#year").datepicker();
+    //    $("#month").datepicker();
+    //});
+    $(function () {
+        $('.date-picker').datepicker({
+            changeMonth: false,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'yy',
+            onClose: function (dateText, inst) {
+                //var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).datepicker('setDate', new Date(year));
+            }
+        });
+
+        $('#btnExportMSP').click(function() {
+            //debugger;
+            var prjt = $("#Projects option:selected").val();
+            var itgp = $("#ItemGroupId option:selected").val();
+            var month = $("#Month option:selected").val();
+            var years = $("#year").val();
+
+            if(prjt=='0'){
+                alert('Please select project.');
+                return false;
+            }
+            if(month==''){
+                alert('Please select month.');
+                return false;
+            }
+            if(years==''){
+                alert('Please select years.');
+                return false;
+            }
+
+
+            $(this).attr('href','#');
+
+            $(this).attr('href','@Url.Action("ExportMSP","MSPReport")?PId='+prjt+'&GId='+itgp+'&m='+month+'&y='+years);
+
+        });
+
+        $('#btnExportMSP1').click(function() {
+            //debugger;
+            var prjt = $("#Projects option:selected").val();
+            var itgp = $("#ItemGroupId option:selected").val();
+            var month = $("#Month option:selected").val();
+            var years = $("#year").val();
+
+            if(prjt=='0'){
+                alert('Please select project.');
+                return false;
+            }
+            if(month==''){
+                alert('Please select month.');
+                return false;
+            }
+            if(years==''){
+                alert('Please select years.');
+                return false;
+            }
+
+
+            $(this).attr('href','#');
+
+            $(this).attr('href','@Url.Action("ExportMSP1","MSPReport")?PId='+prjt+'&GId='+itgp+'&m='+month+'&y='+years);
+
+        });
+
+    });
+</script>
+
+@* Loader Css *@
+
+
+<style type="text/css"> 
+    .ui-datepicker-calendar {
+    display: none;
+ }
+    .loading {
+        font-family: Arial;
+        font-size: 10pt;
+        border: 5px solid #4a89dc;
+        width: 200px;
+        height: 100px;
+        display: none;
+        position: fixed;
+        text-align:center;
+        background-color: White;
+        
+    }
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+
+
+
+        $('#div_filter').hide();    
+        $('#formbody').hide();
+
+        $('#btn_MSP_Search').click(function (e) {
+            $("#loading").show();
+
+            var prjt = $("#ProjectId option:selected").val();
+            var itgp = $("#ItemGroupId option:selected").val();
+            var month = $("#Month option:selected").val();
+            var years = $("#year").val();
+           
+            if (prjt == "") {
+                alert('Kindly Select Project');
+                return false;
+            }
+
+            if (itgp == "") {
+                alert('Kindly Select Item Group Name');
+                return false;
+            }
+            if (month == "") {
+                alert('Kindly Select Month');
+                return false;
+            }
+            if (years == "") {
+                alert('Kindly Enter Year');
+                return false;
+            }
+
+                e.preventDefault();
+                var url = '@Url.Action("GetAllDatas", "MSPReport")';
+                $.get(url,
+                    { PID: $('#Projects option:selected').val(), GID: $('#ItemGroupId option:selected').val(), y: $('#year').val(), m: $('#Month option:selected').val() },
+                    function (result) {
+                        $('#formbody').show();
+                        $('#formbody').html(result);
+                        $('#div_filter').show();
+                        $("#loading").hide();
+                    });
+
+        })
+        $('#btn_Filter_Search').click(function (e) {
+            var Req_chk = $("#Filter_txt1").val();
+            if (Req_chk == "") {
+                alert('Kindly Enter Item Name');
+                return false;
+            }
+
+            e.preventDefault();
+            var url = '@Url.Action("Filter", "MSPReport")';
+            $.get(url,
+                { Names: $('#Filter_txt1').val() },
+                function (result) {
+                    $('#formbody').html(result);
+                    
+                });
+            
+        });
+    });
+</script>
+
+
+
+
+@*<p>@ViewBag.Error</p>*@
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">MSP REPORT</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-5">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field select">
+                                                                    @*@Html.DropDownList("prjtid", null, "Select Project Name", htmlAttributes: new { @id = "ProjectId", @class = "form-control" })*@
+
+                                                                    @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                    <div class="col-md-5">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("itemgroupname", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroupId", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                  
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("SelectDate", null, new { @class = "date-picker form-control gui-input", @placeholder = "Year", @id = "year" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Months", null, "Select Month", htmlAttributes: new { @id = "Month", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="button" id="btn_MSP_Search" class="btn btn-primary" value="Search" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        @*<a href="#" id="btnExportMSP" class="btn btn-primary">Export MSP</a> &nbsp;&nbsp;&nbsp;&nbsp;*@
+
+                                                        <a href="#" id="btnExportMSP1" class="btn btn-primary">Export MSP</a>
+                                                        <br /><br />
+                                                        <p>* You can download MSP Item Group wise or All Groups into Excel Directly </p>
+                                                    </div>
+                                                    
+                                                </div> 
+
+                                            </div>
+                                            <div class="row" id="div_filter">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-5"></div>
+                                                    <div class="col-md-5">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("Filter_txt", null, new { @class = "form-control gui-input", @placeholder = "Filter By Item Name", @id = "Filter_txt1" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-indent"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="button" id="btn_Filter_Search" class="btn btn-success" value="Filter" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-4"></div>
+                                                    <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                                </div>
+                                                <div class="col-md-4"></div>
+                                            </div>
+                                            <div class="pager glyphicon-align-center" id="formbody" style="overflow-x:scroll">
+                                                
+                                            </div>
+                                           
+                                           
+                                            
+                                         </div>
+                                        <br />
+                                        <div>
+                                            @Html.ActionLink("Print", "GETPdf", "DMR_Report", new { @class = "btn btn-primary", @target = "_blank" })
+                                        </div>
+                                    }
+
+
+
+                                </form>
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

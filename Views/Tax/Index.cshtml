@@ -1,0 +1,347 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+
+    var SaveTax = '@Url.Action("AddTax", "Tax")';
+    var Gettax = '@Url.Action("GetTax", "Tax")';
+    var redurl = '@Url.Action("Index", "Tax")';
+
+</script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.get(Gettax,
+
+             function (result) {
+                 $('#formbody').show();
+                 $('#formbody').html(result);
+
+                 $("#loading").hide();
+             });
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveTax;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+                        window.location.href = redurl;
+
+                    }
+                    else if (json.Status == "2")
+                    {
+                        alert("Tax code already exist.");
+                    }
+                    
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            var obj = new Object();
+
+            obj.TaxCode = $("#txttaxCode").val();
+            obj.TaxType = $("#txttaxType").val();
+            obj.TaxStatusExistvalue = $("#ddlTaxStatus option:selected").val();
+
+            if ($("#ddlTaxStatus option:selected").val() == 1) {
+                obj.TaxValue = $("#txtTaxValue").val();
+            } else {
+                obj.TaxNumericValue = $("#txtTaxValue").val();
+            }
+           
+            obj.Description = $("#txtDescription").val();
+
+            return obj;
+
+        }
+
+
+        function Valid() {
+
+
+            var TaxCode = $("#txttaxCode").val();
+            var TaxType = $("#txttaxType").val();
+            var TaxStatusExistvalue = $("#ddlTaxStatus option:selected").val();
+            var TaxValue = $("#txtTaxValue").val();
+            var Description = $("#txtDescription").val();
+            var rr = true;
+
+
+            if (TaxCode == "") {
+                alert('Enter the Tax Code.');
+                $('#txttaxCode').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txttaxCode').css('border-color', '');
+            }
+
+            if (TaxType == "") {
+                alert('Enter the Tax Type.');
+                $('#txttaxType').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txttaxType').css('border-color', '');
+            }
+
+
+            if (TaxValue == "") {
+                alert('Enter the Tax Value.');
+                $('#txtTaxValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtTaxValue').css('border-color', '');
+            }
+
+
+            if (TaxStatusExistvalue == "") {
+
+                alert('Select Excise Status.');
+                $('#ddlTaxStatus').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlTaxStatus').css('border-color', '');
+            }
+
+
+
+
+            if (Description == "") {
+                alert('Enter the Description.');
+                $('#txtDescription').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtDescription').css('border-color', '');
+            }
+
+
+
+
+        if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+
+
+
+
+    });
+</script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Tax Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TaxCode", null, new { id = "txttaxCode", @class = "form-control gui-input", @placeholder = "Tax Code" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Tax Type", null, new { id = "txttaxType", @class = "form-control gui-input", @placeholder = "Tax Type" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+
+
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("TaxStatus", (IEnumerable<SelectListItem>)ViewBag.TaxStatus, htmlAttributes: new { @id = "ddlTaxStatus", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TaxValue", null, new { id = "txtTaxValue", @class = "form-control gui-input", @placeholder = "Tax Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextArea("Description", null, new { id = "txtDescription", @class = "form-control gui-input", @placeholder = "Description" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

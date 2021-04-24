@@ -1,0 +1,287 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    // WebGrid grid = new WebGrid(source: Model, canPage: false);
+    var OrderDate = (DateTime)ViewBag.Date;
+}
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+@*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+@*<script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery-1.11.1.min.js"></script>*@
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var Master =  @Html.Raw(Json.Encode(Model.Master));
+    var Child = @Html.Raw(Json.Encode(Model.Child));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "PurchaseRequisition")';
+    var GetPurchaseIRNo ='@Url.Action("GetPurchaseIRNo", "PurchaseRequisition")';
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")'; 
+
+    var GetItemDetail = '@Url.Action("GetItemDetail", "PurchaseRequisition")';
+
+
+
+    var SendList2 = '@Url.Action("SendList2", "PurchaseRequisition")';
+
+
+
+
+
+</script>  
+
+
+<script src="~/Script/PurchaseIREdit.min.js"></script>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Edit Purchase Indent Requisition</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                               
+                                <p>
+                                  
+                                    <a class="btn btn-primary" data-modal="" href="@Url.Action("Index", "PurchaseRequisition")" id="btnCreate">
+                                        Back to List
+                                    </a>
+                                </p>
+                                <!-- Input Icons -->
+                                <div class="row">
+
+                                  
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Project", @class = "form-control", @Disabled = "Disabled" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("PurchaseIRNo", null, new { id = "PurchaseIRNo", @class = "form-control gui-input required", @placeholder = "Purchase IndentRequisition No.", @Disabled = "Disabled" })
+                                                          
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("PurchaseIRDate", string.Format("{0:dd MMM yyy}", OrderDate), new { @class = "DatePicker form-control", @id = "PurchaseIRDate", @placeholder = " Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("SendTo1", null, "Select Employee", htmlAttributes: new { @id = "SendTo", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                           
+
+                                          
+                                           
+                                        </div>
+                              
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+
+                                            <table class="table table-bordered mbn">
+                                                <thead>
+                                                    <tr class="primary">
+                                                        <th>#</th>
+                                                        <th>Item Group</th>
+                                                        <th>Item Name</th>
+                                                        <th>Unit</th>                                                      
+                                                        <th>Quantity</th>                                                       
+                                                        <th>Add</th>           
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="success">
+                                                        <td>1</td>
+                                                        <td class="col-sm-3">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("ItemGroup", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-3">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item Name", new { @id = "ItemMaster", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Unit", null, new { id = "Unit", @class = "form-control gui-input", @readonly = "readonly" ,@UNo="" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                       
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Qty", null, new { id = "Qty", @class = "form-control gui-input" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                       
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <input type="submit" value="Add" class="btn btn-primary" id="addNew" />
+                                                            </div>
+                                                        </td>
+
+                                                      
+                                                      
+                                                     
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                          
+                                        </div>
+                                    </div>
+
+                                    @* Dynamic Webgrid Design Here *@
+
+                                    <table class="table" id="grid">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Group</th>
+                                                <th>Item Name</th>
+                                                <th>Unit</th>                                               
+                                                <th>Quantity</th>                                                
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="grid"></tbody>
+                                    </table>
+
+                                  
+                                    <br />
+                                    <div id="dvLoading"></div>
+                                    <div>
+                                        <input type="button" id="Submit" class="btn btn-danger" value="Submit" />
+                                    </div>
+
+
+                                </div>
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                <p class="text-danger">Data Save Successfully</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

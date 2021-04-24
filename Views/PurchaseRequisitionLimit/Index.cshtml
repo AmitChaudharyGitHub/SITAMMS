@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "MovableStatus")';
+    var SaveLimitValue = '@Url.Action("LimitValueDetail", "PurchaseRequisitionLimit")';
+    //var GetAllDatas = '@Url.Action("GetAllDatas", "PurchaseRequisitionLimit")';
+
+</script> 
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#formbody').hide();
+        $("#loading").show();
+        
+        var url = '@Url.Action("GetAllDatas", "PurchaseRequisitionLimit")';
+            $.get(url,
+                function (result) {
+                    $('#formbody').show();
+                    $('#formbody').html(result);
+                    $("#loading").hide();
+                });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+
+        $('#btn_save').click(function (e) {
+          
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+           // debugger ;
+            var url = SaveLimitValue;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        $("#LimitValue").val('');
+                        alert("Data Saved Successfully");
+                        location.reload();
+                      //  window.location.href = redUrllnk;
+                    }
+                    else if (json.Status == "2")
+                    {
+                        alert("Some server problem.Kindly Consult to Administration.");
+                    }
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            debugger;
+            var obj = new Object();
+            obj.ProjectId = $("#Projects option:selected").val();
+            obj.LimitValue = $("#LimitValue").val();
+            return obj;
+
+        }
+        function Valid() {
+            debugger;
+            var ProjectNo = $("#Projects option:selected").val();
+            var LimitValue = $("#LimitValue").val();
+
+            var rr = true;
+            if (ProjectNo =="")
+            {
+                alert('Select the Project.');
+                $('#Projects').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#Projects').css('border-color', '');
+            }
+
+            if (LimitValue == "") {
+                alert('Enter Limit Value.');
+                $('#LimitValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#LimitValue').css('border-color', '');
+            }
+
+
+
+
+            if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+    }
+    )
+</script>
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Purchase Requisition Approval Limit Value </span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("LimitValue", null, new { @class = "form-control gui-input", @placeholder = "Limit Value", @id = "LimitValue" })
+                                                        <label for="firstname" class="field-icon">
+                                                            <i class="fa fa-building"></i>
+                                                        </label>
+                                                    </label>
+                                                </div>
+
+
+                                                <div class="col-md-2">
+                                                    <div class="section">
+                                                        <input type="button" id="btn_save" class="btn btn-primary" value="Save" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</section>

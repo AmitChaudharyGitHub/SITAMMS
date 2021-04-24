@@ -1,0 +1,157 @@
+﻿
+@model List<MMS.Models.DebitNoteSummaryViewModel>
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+
+
+<table class="gridTable" id="positionGrid" data-swhgajax="true" data-swhgcontainer="positionGrid" data-swhgcallback="">
+    <thead>
+        <tr class="gridHead">
+            <th scope="col">
+                <a data-swhglnk="true" href="#">SNo.</a>
+            </th>
+            <th scope="col">
+                <a data-swhglnk="true" href="#">Name of PC/Vendor</a>
+            </th>
+            <th scope="col">
+                <a data-swhglnk="true" href="#">Debit Note No.</a>
+            </th>
+            <th scope="col">
+                <a data-swhglnk="true" href="#">Debit Note Date</a>
+            </th>
+            <th scope="col">
+                <a data-swhglnk="true" href="#">Debit Note Amount</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            int i = 0;
+            foreach (var item in Model)
+            {
+                <tr class="gridRow">
+                    <td class="my-classC"><div style="text-align:center;">@(++i)</div> </td>
+                    <td class="my-classC">@item.VendorPCName</td>
+                    <td class="my-classC">@item.DebitNoteNo</td>
+                    <td class="my-classC">@item.DebitNoteDate</td>
+                    <td class="my-classC">@item.Amount</td>
+                </tr>
+            }
+            if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center; color:red; font-size:20px;padding-top:30px;">No Record found</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" style="text-align:center; color:red;">Some error occur</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div style="text-align:right; padding-right:80px;">
+    <strong>Total:</strong> @ViewBag.Total INR
+</div>
+<br />
+<div style="text-align:left;">
+    @Html.ActionLink("Export to Excel", "DebitNoteSummaryExcel", "DesignDemo", new { @class = "btn btn-primary" })
+    @Html.ActionLink("Print", "DebitNoteSummaryPdf", "DesignDemo", new { @class = "btn btn-primary", @target = "_blank" })
+</div>

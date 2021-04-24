@@ -1,0 +1,486 @@
+﻿@{
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+
+    ViewBag.Title = "CreateTaxableIntraStateDocument";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    // WebGrid grid = new WebGrid(source: Model, canPage: false);
+    var Date = (DateTime)ViewBag.TransferDate;
+}
+
+
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/Loading.gif) no-repeat center center;
+        height: 64px;
+        width: 64px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -16px 0 0 -16px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+
+    .Piv2 {
+        display: none;
+    }
+</style>
+
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+   var GetIntraProjectDetail = '@Url.Action("GetDetailOnIntraTaxInvoiceDocument", "IntraTransfer")';
+    var GetGrids = '@Url.Action("GetIntraTransferGrid", "IntraTransfer")';
+    var BindGSTOnGRidItem = '@Url.Action("GetAllGSTType", "IndentPurchaseOrders")'
+
+    var AddIntraTranferTaxable = '@Url.Action("AddIntraTransferTaxInvoice", "IntraTransfer")'
+
+    var testjsonadd = '@Url.Action("AddNewFormat", "IntraTransfer")'
+
+    var GetBIndPIC = '@Url.Action("BindPICOnly", "IntraTransfer")'
+    var RedUrl = '@Url.Action("IntraInvoiceDocument", "IntraTransfer")'
+
+    function putPOdisable() {
+        document.getElementById('btnsave').setAttribute("disabled", "disabled");
+    }
+</script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc"> Create Taxable Inter State Transfer Document   </span>
+                                </div>
+                             
+                                <input type="hidden" value="@ViewBag.IntraTransferName" id="hdnIntraTransferNo" />
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+
+                                        <div class="container tabs-wrap">
+                                           
+                                                
+
+                                                <div class="panel-body">
+                                                    <div class="tab-content pn br-n">
+                                                     
+
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    @*@using (Html.BeginForm())
+                                                                        {*@
+                                                                    @Html.AntiForgeryToken()
+
+                                                                    <div class="form-horizontal">
+
+                                                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <div class="section">
+                                                                                    <label class="field prepend-icon">
+                                                                                        <span style="font:bold" id="dateTime"></span>
+
+                                                                                    </label>
+                                                                                    @*<input type="hidden" value="@ViewBag.PI_reqNo" id="hdn_PurreqNo" />*@
+
+                                                                                    <input type="hidden" id="hdn_IntraTransferMasterDocumentId" />
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                               
+                                                                            </div>
+                                                                            <div class="col-md-12">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table">
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <td class="col-md-3"><span><b> Project Address :</b> </span></td>
+                                                                                                <td class="col-md-3"><span><b> State : </b></span> </td>
+                                                                                                <td class="col-md-3"><span><b> GSTIN :</b></span> </td>
+
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td class="col-md-3"><label id="lbl_project_name"></label> <br /> <label id="lbl_Project_address"></label> <input type="hidden" id="hdn_IntraTrasferProjectId" />  </td>
+
+                                                                                                <td class="col-md-3">  <label id="lbl_Project_State"></label></td>
+                                                                                              
+                                                                                                <td class="col-md-3"><label id="lbl_project_GSTIN"></label></td>
+                                                                                            </tr>
+                                                                                        </tbody>
+
+
+                                                                                        <thead>
+                                                                                            <tr>
+                                                                                                <td class="col-md-3"><span><b> Transfer Project Address :</b> </span></td>
+                                                                                                <td class="col-md-3"><span> <b> State : </b></span> </td>
+                                                                                               
+                                                                                                <td class="col-md-3"><span><b> GSTIN :</b></span> </td>
+
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td class="col-md-3"><label id="lbl_Transferproject_name"></label> <br /> <label id="lbl_TransferProject_address"></label> <input type="hidden"  id="hdn_TransferProjectId" />  </td>
+
+                                                                                                <td class="col-md-3">  <label id="lbl_TransferProject_State"></label></td>
+                                                                                                
+                                                                                                <td class="col-md-3"><label id="lbl_Transferproject_GSTIN"></label></td>
+                                                                                            </tr>
+                                                                                        </tbody>
+
+                                                                                        <thead>
+
+                                                                                          <tr>
+                                                                                         <td class="col-md-2"><span><b> Mode of TPT :</b> </span></td>
+                                                                                         <td class="col-md-3"><span> <b> Vehicle  :</b></span> </td>
+                                                                                          <td class="col-md-3"><span> <b> Vehical No. :</b></span> </td>
+                                                                                          <td class="col-md-2"><span> <b> E-way Bill No. : </b></span> </td>
+                                                                                        <td class="col-md-2"><span> <b> Tax Payable On Reverse Charge : </b></span> </td>
+
+                                                                                       </tr>
+                                                     
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td class="col-md-2">
+                                                                                                  <label id="lblTransportationMode"></label>
+                                                                                                </td>
+
+                                                                                                <td class="col-md-3">
+                                                                                                    <label id="lblVehicleType"></label>
+
+
+                                                                                                </td>
+                                                                                                <td class="col-md-3">
+                                                                                                    <label id="lblVehicleNumber"></label>
+                                                                                                </td>
+                                                                                                <td class="col-md-2">
+                                                                                                    <label id="lblEwayBillNo"></label>
+                                                                                                </td>
+
+                                                                                                <td class="col-md-2">
+                                                                                                    <label id="lblTaxpayableReverseCharges"></label>
+                                                                                                </td>
+
+                                                                                            </tr>
+                                                                                        </tbody>
+
+
+
+
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+
+
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="table-responsive">
+                                                                                    <table class="table">
+                                                                                        <thead>
+                                                                                            <tr>
+
+                                                                                                <td class="col-md-6">Intra Transfer No. :</td>
+                                                                                                <td class="col-md-6">Intra Transfer Date:</td>
+
+
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody>
+                                                                                            <tr>
+
+                                                                                                <td class="col-md-6">
+
+                                                                                                    <label class="field prepend-icon">
+                                                                                                        @Html.TextBox("IntraTransferNo", null, new { id = "txtIntraTransferNo", @class = "form-control gui-input required", @placeholder = "Intra Transfer Number", @readonly = "readonly" })
+
+                                                                                                        <label for="firstname" class="field-icon">
+                                                                                                            <i class="fa fa-building"></i>
+                                                                                                        </label>
+                                                                                                    </label>
+
+                                                                                                </td>
+
+                                                                                                <td class="col-md-6">
+
+                                                                                                    <label class="field prepend-icon">
+                                                                                                        @Html.TextBox("Date", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "txtDate", @placeholder = "Order Date", @readonly = "readonly" })
+                                                                                                        <label for="RefNo" class="field-icon">
+                                                                                                            <i class="fa fa-calendar"></i>
+                                                                                                        </label>
+                                                                                                    </label>
+
+                                                                                                </td>
+
+
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                     <br />
+
+                                                                       
+                                                                </div>
+                                                                <!--naveen-->
+                                                                <div class="col-md-12">
+                                                                    <div class="innerPanel-group" id="formbody">
+
+
+                                                                    </div>
+                                                                </div>
+                                                                <!--naveen-->
+
+                                                                <div class="col-md-12">
+
+                                                                    <br />
+                                                                    <div id="dvLoading"></div>
+                                                                    <div id="#progress" style="display:none"><img src="~/Images/Loading.gif" /></div>
+
+                                                                </div>
+
+                                                                <div class="col-md-12">
+
+
+
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+
+                                                                            <div class="table-responsive">
+                                                                                <table class="table">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <td class="col-md-2"> Total Rate  </td>
+                                                                                            <td class="col-md-2"> Sum Of Total  </td>
+                                                                                            <td class="col-md-2"> Sum Of Packing Charges  </td>
+                                                                                            <td class="col-md-2"> Sum of Cartage  </td>
+                                                                                            <td class="col-md-2">Sum of Sub Total 1 </td>
+                                                                                            <td class="col-md-2"> Sum of Insurance  </td>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td class="col-md-2"> @Html.TextBox("Total_Rate", null, new { id = "Total_Rate", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfTotal", null, new { id = "SumOfTotalVal", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfPacking", null, new { id = "SumOfPackingCharge", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfCartageAmt", null, new { id = "SumOfCartageAll1Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfSubTotal1", null, new { id = "SumOfSubTotalAll1Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfInsurance", null, new { id = "SumOfInsuranceAmt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-12">
+
+                                                                            <div class="table-responsive">
+                                                                                <table class="table">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <td class="col-md-2"> Sum of Sub Total 2  </td>
+                                                                                            <td class="col-md-2"> Sum Of CGST  </td>
+                                                                                            <td class="col-md-2"> Sum Of SGST/UTGST  </td>
+                                                                                            <td class="col-md-2"> Sum Of IGST </td>
+                                                                                            <td class="col-md-2"> Sum of Total GST  </td>
+                                                                                            <td class="col-md-2"> Sum of Gross Amount  </td>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfTotalSub2", null, new { id = "SumOf_total_Sub_2", @class = "form-control gui-input required", @readonly = "readonly" })</td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("Total_SumOf_CGST", null, new { id = "Total_SumOf_CGST", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfTotalSGST/UTGST", null, new { id = "SumOfSGSTAndUTGST_Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfIGST", null, new { id = "SumOf_IGST_Amt", @class = "form-control gui-input required", @readonly = "readonly" })   </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfTotalGSTAmt", null, new { id = "SumOfAll_GST_amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                            <td class="col-md-2"> @Html.TextBox("SumOfAllGrossTotal", null, new { id = "SumOfAll_Gross_Total_amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+
+
+
+                                                                    </div>
+
+
+
+
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="section">
+                                                                                <label class="field prepend-icon">
+                                                                                    @Html.TextBox("Rupees", null, new { id = "Rupees", @class = "form-control gui-input required", @placeholder = "Amount in Word" })
+
+
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6"  id="po_pmcoutlimit">
+                                                                            <label class="field select">
+                                                                               
+
+                                                                                @Html.DropDownList("Employee", new SelectList(string.Empty, "Value", "Text"), "Forward For Approval", htmlAttributes: new { @id = "Employee", @class = "form-control" })
+
+
+                                                                                <i class="arrow"></i>
+                                                                            </label>
+
+                                                                        </div>
+                                                                        
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <div class="section">
+                                                                                <label class="field prepend-icon">
+                                                                                    @Html.TextArea("Remarks", null, new { id = "PORemarks", @class = "form-control gui-input required", @placeholder = "Remarks" })
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+
+
+                                                                        <div class="col-md-6">
+                                                                            <div class="section">
+                                                                                <label class="field prepend-icon">
+                                                                                    @Html.TextBox("DateOfReachTodestination", null, new { @class = "DatePicker form-control", @id = "txtdateofdestination", @placeholder = " Last Date of reach to destination" })
+                                                                                    <label for="RefNo" class="field-icon">
+                                                                                        <i class="fa fa-calendar"></i>
+                                                                                    </label>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+
+
+
+
+
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                  
+
+                                                                    <input type="button" class="btn btn-primary" value="Calculate" onclick="RateSum()" />
+                                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Submit" onclick="putPOdisable()" />
+
+
+                                                                </div>
+
+
+                                                              
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                                <!-- end .section row section -->
+                                                                <!-- end .form-footer section -->
+
+
+                                                                
+
+
+
+
+                                                            </div>
+
+
+                                                     
+
+                                                        
+
+                                                        
+
+                                                        
+
+                                                        
+                                                    </div>
+                                                </div>
+
+                                    
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<script src="~/Script/NumberConversion.js"></script>
+<script src="~/Script/CreateIntraTaxInvoiceDocument.js?v=1.1"></script>
+
+

@@ -1,0 +1,244 @@
+﻿@model MMS.ViewModels.ConversionViewModel
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetUniteData='@Url.Action("GetIAllUnite", "ConversionMaster")';
+
+
+   
+
+
+
+
+
+
+</script>  
+
+<script src="~/Script/Conversation.js"></script>
+
+
+@*<script type="text/javascript">
+
+        $(document).ready(
+            function () {
+                $(window).load(function () {
+                      $.ajax({
+                          url: "/ConversionMaster/GetIAlltemGroup",
+                        type: "Get",
+                        success: function (data) {
+                            debugger;
+
+                            $.each(data, function (i, itname) {
+                                $("#ItemGroups").append('<option value="' + itname.Value + '">' +
+                                     itname.Text + '</option>');
+
+                            });
+
+                        }
+
+                    });
+
+                });
+        });
+
+
+</script>*@
+
+<script type="text/javascript"> 
+    function  submitForm() {
+    
+        var model = new Object();
+
+        if ($('#UniteTo').val() == null) {
+            alert('Kindly Select Unit');
+            return false;
+        }
+
+        if ($('#UniteConersersation').val() == null) {
+            alert('Kindly Select Conversation Unit');
+            return false;
+        }
+    
+        
+        if ($("#txtConversationRate").val().trim() == "") {
+            alert('Kindly Enter Conversation Rate.');
+            return false;
+        }
+
+        var url = '@Url.Action("Index", "ConversionMaster")';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+           
+            data: { //Passing data  
+                
+                UnitCode: $('#UniteTo').val(),
+                UnitName : $("#UniteTo option:selected").text(),
+                
+                UnitConversionCode: $('#UniteConersersation').val(),
+                UnitConversionName : $("#UniteConersersation option:selected").text(),
+                UnitRate : $("#txtConversationRate").val(),
+
+            },
+
+            success: function (data) {
+                if(data !=2)
+                {
+                    alert('Submit Data Successfully');
+                    $("#txtConversationRate").val('');
+                    $('#UniteTo').val('');
+                    $('#UniteConersersation').val('');
+                }
+                else
+                {
+                    alert('Data is already exist.');
+                }
+                //var url = $("#RedirectTo").val();
+                //location.href = url;
+              
+            },
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+
+
+    }
+
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Unit Conversation Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("UniteTo", new SelectList(string.Empty, "Value", "Text"), "Select Unit", htmlAttributes: new { @id = "UniteTo", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("UniteConersersation", new SelectList(string.Empty, "Value", "Text"), "Select Conversation Unit", htmlAttributes: new { @id = "UniteConersersation", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-9">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Conversation Rate", null, new { id = "txtConversationRate", @class = "form-control gui-input", @placeholder = "Enter Conversation Rate Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                @Html.Hidden("RedirectTo", Url.Action("Index", "ConversionMaster"))
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right; margin-top:-25px;"><input type="button" id="Submit" class="btn btn-primary" value="Add" onclick="submitForm()" /></div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+                                <br /> <br />
+                                @{ Html.RenderAction("_GetConvetedUnit", "ConversionMaster"); }
+
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+

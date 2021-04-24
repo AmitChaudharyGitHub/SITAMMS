@@ -1,0 +1,123 @@
+﻿@model IEnumerable<MMS.ViewModels.STC_ViewModel>
+
+@{  
+    //WebGrid grid = new WebGrid(source: Model, canSort: false);
+    WebGrid grid = new WebGrid(source: Model, canSort: false);
+}
+
+<style>
+    /*Here I will write some css for looks good*/
+
+    th, td {
+        padding: 5px;
+    }
+
+    th {
+        background-color: rgb(248, 248, 248);
+    }
+
+    #gridT, #gridT tr {
+        border: 1px solid #0D857B;
+    }
+
+    #subT, #subT tr {
+        border: 1px solid #f3f3f3;
+    }
+
+    #subT {
+        margin: 0px 0px 0px 10px;
+        padding: 5px;
+        width: 95%;
+    }
+
+        #subT th {
+            font-size: 12px;
+        }
+
+    .hoverEff {
+        cursor: pointer;
+    }
+
+        .hoverEff:hover {
+            background-color: rgb(248, 242, 242);
+        }
+
+    .expand {
+        background-image: url(../../Images/details_close.png);
+        background-position-x: -22px;
+        background-repeat: no-repeat;
+    }
+
+    .collapse {
+        background-image: url(../../Images/details_open.png);
+        background-position-x: 0px;
+        background-repeat: no-repeat;
+    }
+</style>
+
+
+<div id="main" style="padding:25px; background-color:white;">
+    @grid.GetHtml(
+    htmlAttributes: new { id = "gridT", width = "700px" },
+    columns: grid.Columns(
+            grid.Column("obStc.ProjectId", "Project ID"),
+            grid.Column("obStc.Statement_Header", "Header"),
+            grid.Column(header: "Order Date", format: (item) => string.Format("{0:dd-MM-yyyy}", item.obStc.CreateDate)),
+
+            //grid.Column("order.CustomerAddress", "Address"),
+
+            grid.Column(format: (item) =>
+            {
+                WebGrid subGrid = new WebGrid(source: item.allDetails);
+                return subGrid.GetHtml(
+                    htmlAttributes: new { id = "subT" },
+                    columns: subGrid.Columns(
+                            subGrid.Column("STC_Description", "Description")
+                            //subGrid.Column("Quantity", "Quantity"),
+                            //subGrid.Column("Rate", "Rate"),
+                            //subGrid.Column("Amount", "Amount")
+                        )
+                    );
+            })
+        )
+    )
+</div>
+
+@* Here I will add some jquery code for make this nested grid collapsible *@
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var size = $("#main #gridT > thead > tr >th").size(); // get total column
+            $("#main #gridT > thead > tr >th").last().remove(); // remove last column
+            $("#main #gridT > thead > tr").prepend("<th></th>"); // add one column at first for collapsible column
+            $("#main #gridT > tbody > tr").each(function (i, el) {
+                $(this).prepend(
+                        $("<td></td>")
+                        .addClass("expand")
+                        .addClass("hoverEff")
+                        .attr('title',"click for show/hide")
+                    );
+
+                //Now get sub table from last column and add this to the next new added row
+                var table = $("table", this).parent().html();
+                //add new row with this subtable
+                $(this).after("<tr><td></td><td style='padding:5px; margin:0px;' colspan='" + (size - 1) + "'>" + table + "</td></tr>");
+                $("table", this).parent().remove();
+                // ADD CLICK EVENT FOR MAKE COLLAPSIBLE
+                $(".hoverEff", this).live("click", function () {
+                    $(this).parent().closest("tr").next().slideToggle(100);
+                    $(this).toggleClass("expand collapse");
+                });
+            });
+
+            //by default make all subgrid in collapse mode
+            $("#main #gridT > tbody > tr td.expand").each(function (i, el) {
+                $(this).toggleClass("expand collapse");
+                $(this).parent().closest("tr").next().slideToggle(100);
+            });
+
+        });
+    </script>

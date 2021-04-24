@@ -1,0 +1,48 @@
+﻿@model MMS.DAL.tbl_wmntdata
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"><h3>Weight Information</h3></div>
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background-color:cadetblue; color:white;">
+                        <th>RST No.</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Gross Weight (K.G.)</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Tare Weight (K.G.)</th>
+                        <th>Net Weight (K.G.)</th>
+                        <th>Vehicle</th>
+                        <th>Vehicle No.</th>
+                        <th>Material</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        <tr style="border:1px solid black !important;">
+                            <td>@Model.txn_no</td>
+                            <td>@Model.date1.Replace(" 12:00:00 AM", "")</td>
+                            <td>@Model.time1</td>
+                            <td>@Model.weight1</td>
+                            <td>@Model.date2.Replace(" 12:00:00 AM", "")</td>
+                            <td>@Model.time2</td>
+                            <td>@Model.weight2</td>
+                            <td style="font-weight:bold">@(Model.weight1 - Model.weight2)</td>
+                            <td>@Model.entry4</td>
+                            <td>@Model.entry1</td>
+                            <td>@Model.entry3</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr style="border:1px solid black !important;"><td colspan="11"><p class="info">No Data Found.</p></td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

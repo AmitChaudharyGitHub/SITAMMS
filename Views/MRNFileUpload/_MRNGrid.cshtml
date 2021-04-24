@@ -1,0 +1,187 @@
+﻿@model MMS.ViewModels.GRNViewModel
+
+<style type="text/css">
+    /*Here we will add css for style webgrid*/
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+            text-align: center;
+        }
+
+    /*.webgrid-table th, a {
+            color: white;
+        }*/
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+        text-align: center;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }
+
+    .hidecol {
+        visibility: hidden;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .hide {
+        display: none;
+    }
+</style>
+
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: false,
+                        canSort: false,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.GHD, null, autoSortAndPage: false);
+        
+
+
+    int rowNum = 0;
+
+    @grid.GetHtml(
+       htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+                headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+      
+       columns:
+            grid.Columns
+            (
+                grid.Column("S.No", format: item => rowNum = rowNum + 1),
+
+                grid.Column("Vendor", header: "Vendor Name"),
+                grid.Column("ItemGroup", header: "Item Group Name"),
+                grid.Column("Item", header: "Item Name"),
+                 grid.Column("ReceiveQty", header: "Receive Qty", canSort: false),
+                   grid.Column("Rate", header: "Rate", canSort: false),
+                  grid.Column("AllAmount", header: "AllAmount", canSort: false),
+
+                grid.Column("", "Upload attachment", format: @<input type="file" name="files" value="" />),
+                grid.Column(null, null, format: (item) => Html.Hidden("GHD[" + (rowNum - 1).ToString() + "].UId", (object)item.UId, new { @style = "display:none" }), style: "hide"),
+                 grid.Column(null, null, format: (item) => Html.Hidden("GHD[" + (rowNum - 1).ToString() + "].ProjectNo", (object)item.ProjectNo, new { @style = "display:none" }), style: "hide")
+           
+
+            ), mode: WebGridPagerModes.Numeric)
+
+
+    }
+
+
+</div>

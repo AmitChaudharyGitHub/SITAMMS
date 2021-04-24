@@ -1,0 +1,412 @@
+﻿
+   
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<section id="content_wrapper">
+    <section id="content" class="table-layout">
+
+        <div class="tray tray-center">
+            <div class="center-block">
+                <div class="admin-form theme-primary">
+                    <div class="panel heading-border panel-primary">
+                        <div class="panel-body bg-light">
+                            <div class="section-divider mb40" id="spy1">
+                                <span><label for=""> MSP Report </label></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="table-responsive" style="overflow-y:auto;">
+
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td rowspan="3" align="center" valign="middle">S. No.</td>
+                                                <td rowspan="3" align="center" valign="middle">Description of Material</td>
+                                                <td rowspan="3" align="center" valign="middle">Unit</td>
+                                                <td rowspan="3" align="center" valign="middle">Rate for this month</td>
+                                                <td colspan="8" align="center" valign="middle">Quantity</td>
+                                                <td colspan="8" align="center" valign="middle">Amount</td>
+                                                <td rowspan="3" align="center" valign="middle">Remakrs</td>
+                                            </tr>
+                                            <tr>
+                                                <td rowspan="2" align="center" valign="middle">Opening Balance</td>
+                                                <td colspan="3" align="center" valign="middle">Quantity Received</td>
+                                                <td colspan="3" align="center" valign="middle">Quantity Issued</td>
+                                                <td rowspan="2" align="center" valign="middle">Closing Balance </td>
+                                                <td rowspan="2" align="center" valign="middle">Opening Balance</td>
+                                                <td colspan="3" align="center" valign="middle">Amount Received</td>
+                                                <td colspan="3" align="center" valign="middle">Amount Issued</td>
+                                                <td rowspan="2" align="center" valign="middle">Closing Balance </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="middle">Recd. Upto  Last month</td>
+                                                <td align="center" valign="middle">Recd. During current month</td>
+                                                <td align="center" valign="middle">Recd. Total upto date</td>
+                                                <td align="center" valign="middle">Issued upto last month</td>
+                                                <td align="center" valign="middle">Issued during current month</td>
+                                                <td align="center" valign="middle">Total Issued upto date</td>
+                                                <td align="center" valign="middle">Recd. Upto  Last month</td>
+                                                <td align="center" valign="middle">Recd. During current month</td>
+                                                <td align="center" valign="middle">Recd. Total upto date</td>
+                                                <td align="center" valign="middle">Issued  upto last month</td>
+                                                <td align="center" valign="middle">Issued  during current month</td>
+                                                <td align="center" valign="middle">Total Issued upto date  </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">1</td>
+                                                <td align="center" valign="top">Tmt Steel  8mm</td>
+                                                <td align="center" valign="top">MT</td>
+                                                <td align="center" valign="top">43800</td>
+                                                <td align="center" valign="top">1179.054</td>
+                                                <td align="center" valign="top">17.52</td>
+                                                <td align="center" valign="top">1196.574</td>
+                                                <td align="center" valign="top">1162.00</td>
+                                                <td align="center" valign="top">15.0</td>
+                                                <td align="center" valign="top">1177.00</td>
+                                                <td align="center" valign="top">19.57</td>
+                                                <td align="center" valign="top">857341</td>
+                                                <td align="center" valign="top">767376</td>
+                                                <td align="center" valign="top"></td>
+                                                <td align="center" valign="top">4466</td>
+                                                <td align="center" valign="top">4232</td>
+                                                <td align="center" valign="top">4493</td>
+                                                <td align="center" valign="top">4423</td>
+                                                <td align="center" valign="top">4466</td>
+                                                <td align="center" valign="top">4455</td>
+                                                <td align="center" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">2</td>
+                                                <td align="left" valign="top">Tmt Steel  10mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">43800</td>
+                                                <td align="right" valign="top">249.723</td>
+                                                <td align="right" valign="top">18</td>
+                                                <td align="right" valign="top">267.723</td>
+                                                <td align="right" valign="top">242.00</td>
+                                                <td align="right" valign="top">6.0</td>
+                                                <td align="right" valign="top">248.00</td>
+                                                <td align="right" valign="top">19.72</td>
+                                                <td align="right" valign="top"> 8 63 867</td>
+                                                <td align="right" valign="top"> 7 88 400</td>
+                                                <td align="right" valign="top">4402</td>
+                                                <td align="right" valign="top">1122</td>
+                                                <td align="right" valign="top">3322</td>
+                                                <td align="right" valign="top">2233</td>
+                                                <td align="right" valign="top">1144</td>
+                                                <td align="right" valign="top">1236</td>
+                                                <td align="right" valign="top">1236</td>
+                                                <td align="left" valign="top">1456</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">3</td>
+                                                <td align="left" valign="top">Tmt Steel  12mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">39600</td>
+                                                <td align="right" valign="top">718.423</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">718.423</td>
+                                                <td align="right" valign="top">695.00</td>
+                                                <td align="right" valign="top">8.0</td>
+                                                <td align="right" valign="top">703.00</td>
+                                                <td align="right" valign="top">15.42</td>
+                                                <td align="right" valign="top"> 6 10 751</td>
+                                                <td align="right" valign="top">1456</td>
+                                                <td align="right" valign="top">1489</td>
+                                                <td align="right" valign="top">4123</td>
+                                                <td align="right" valign="top">1452</td>
+                                                <td align="right" valign="top">1236</td>
+                                                <td align="right" valign="top">1236</td>
+                                                <td align="right" valign="top">4189</td>
+                                                <td align="right" valign="top">1426</td>
+                                                <td align="left" valign="top">2369</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">4</td>
+                                                <td align="left" valign="top">Tmt Steel  16mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">43155</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">748.473</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">748.473</td>
+                                                <td align="right" valign="top">720.00</td>
+                                                <td align="right" valign="top">7.0</td>
+                                                <td align="right" valign="top">727.00</td>
+                                                <td align="right" valign="top">21.47/td>
+                                                <td align="right" valign="top"> 9 26 667</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="right" valign="top">1144</td>
+                                                <td align="right" valign="top">6699</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">4496</td>
+                                                <td align="right" valign="top">7744</td>
+                                                <td align="right" valign="top">4488</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">5</td>
+                                                <td align="left" valign="top">Tmt Steel  20mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">42000</td>
+                                                <td align="right" valign="top">624.695</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">624.695</td>
+                                                <td align="right" valign="top">590.00</td>
+                                                <td align="right" valign="top">9.0</td>
+                                                <td align="right" valign="top">599.00</td>
+                                                <td align="right" valign="top">25.69</td>
+                                                <td align="right" valign="top"> 10 79 190</td>
+                                                <td align="right" valign="top">6632</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">6633</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">4466</td>
+                                                <td align="right" valign="top">4466</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">6</td>
+                                                <td align="left" valign="top">Tmt Steel  25mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">45570</td>
+                                                <td align="right" valign="top">862.79</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">862.79</td>
+                                                <td align="right" valign="top">850.00</td>
+                                                <td align="right" valign="top">11.0</td>
+                                                <td align="right" valign="top">861.00</td>
+                                                <td align="right" valign="top">1.79</td>
+                                                <td align="right" valign="top">  81 570</td>
+                                                <td align="right" valign="top">6699</td>
+                                                <td align="right" valign="top">7788</td>
+                                                <td align="right" valign="top">6699</td>
+                                                <td align="right" valign="top">4456</td>
+                                                <td align="right" valign="top">6633</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">6699</td>
+                                                <td align="right" valign="top">4455</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">7</td>
+                                                <td align="left" valign="top">Tmt Steel  28mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">42000</td>
+                                                <td align="right" valign="top">123.195</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">123.195</td>
+                                                <td align="right" valign="top">117.00</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">117.00</td>
+                                                <td align="right" valign="top">6.19</td>
+                                                <td align="right" valign="top"> 2 60 190</td>
+                                                <td align="right" valign="top">9986</td>
+                                                <td align="right" valign="top">4478</td>
+                                                <td align="right" valign="top">4458</td>
+                                                <td align="right" valign="top">3366</td>
+                                                <td align="right" valign="top">4477</td>
+                                                <td align="right" valign="top">2122</td>
+                                                <td align="right" valign="top">4123</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">8</td>
+                                                <td align="left" valign="top">Tmt Steel  32mm</td>
+                                                <td align="right" valign="top">MT</td>
+                                                <td align="right" valign="top">42000</td>
+                                                <td align="right" valign="top">130.867</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">130.867</td>
+                                                <td align="right" valign="top">128.00</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">128.00</td>
+                                                <td align="right" valign="top">2.87</td>
+                                                <td align="right" valign="top"> 1 20 414</td>
+                                                <td align="right" valign="top">4178</td>
+                                                <td align="right" valign="top">4563</td>
+                                                <td align="right" valign="top">4726</td>
+                                                <td align="right" valign="top">4786</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">4896</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">9</td>
+                                                <td align="left" valign="top">Rmc  M-7.5G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">3163.86</td>
+                                                <td align="right" valign="top">2008.18</td>
+                                                <td align="right" valign="top">17.5</td>
+                                                <td align="right" valign="top">2025.68</td>
+                                                <td align="right" valign="top">2008.18</td>
+                                                <td align="right" valign="top">17.5</td>
+                                                <td align="right" valign="top">2025.68</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">  55 368</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">4789</td>
+                                                <td align="right" valign="top">6936</td>
+                                                <td align="right" valign="top">5978</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">9</td>
+                                                <td align="left" valign="top">Rmc  M-7.5G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">3163.86</td>
+                                                <td align="right" valign="top">2008.18</td>
+                                                <td align="right" valign="top">17.5</td>
+                                                <td align="right" valign="top">2025.68</td>
+                                                <td align="right" valign="top">2008.18</td>
+                                                <td align="right" valign="top">17.5</td>
+                                                <td align="right" valign="top">2025.68</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">  55 368</td>
+                                                <td align="right" valign="top">5469</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="right" valign="top">4569</td>
+                                                <td align="right" valign="top">2145</td>
+                                                <td align="right" valign="top">2156</td>
+                                                <td align="right" valign="top">2369</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">10</td>
+                                                <td align="left" valign="top">Rmc  M-20G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">3857.87</td>
+                                                <td align="right" valign="top">12896.61</td>
+                                                <td align="right" valign="top">49.91</td>
+                                                <td align="right" valign="top">12946.52</td>
+                                                <td align="right" valign="top">12896.61</td>
+                                                <td align="right" valign="top">49.91</td>
+                                                <td align="right" valign="top">12946.52</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">   1 92 546</td>
+                                                <td align="right" valign="top">7456</td>
+                                                <td align="right" valign="top">7896</td>
+                                                <td align="right" valign="top">8979</td>
+                                                <td align="right" valign="top">2145</td>
+                                                <td align="right" valign="top">2156</td>
+                                                <td align="right" valign="top">2598</td>
+                                                <td align="right" valign="top">2356</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">11</td>
+                                                <td align="left" valign="top">Rmc  M-25G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">3970.25</td>
+                                                <td align="right" valign="top">18977.74</td>
+                                                <td align="right" valign="top">262.92</td>
+                                                <td align="right" valign="top">19240.66</td>
+                                                <td align="right" valign="top">18977.74</td>
+                                                <td align="right" valign="top">262.92</td>
+                                                <td align="right" valign="top">19240.66</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">    10 43 858</td>
+                                                <td align="right" valign="top">2012</td>
+                                                <td align="right" valign="top">2534</td>
+                                                <td align="right" valign="top">2458</td>
+                                                <td align="right" valign="top">2336</td>
+                                                <td align="right" valign="top">8989</td>
+                                                <td align="right" valign="top">7898</td>
+                                                <td align="right" valign="top">2255</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">12</td>
+                                                <td align="left" valign="top">Rmc  M-40G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">4414.1</td>
+                                                <td align="right" valign="top">7415.95</td>
+                                                <td align="right" valign="top">54.01</td>
+                                                <td align="right" valign="top">7469.96</td>
+                                                <td align="right" valign="top">7415.95</td>
+                                                <td align="right" valign="top">54.01</td>
+                                                <td align="right" valign="top">7469.96</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">     2 38 406</td>
+                                                <td align="right" valign="top">215</td>
+                                                <td align="right" valign="top">2589</td>
+                                                <td align="right" valign="top">2132</td>
+                                                <td align="right" valign="top">5897</td>
+                                                <td align="right" valign="top">5689</td>
+                                                <td align="right" valign="top">2356</td>
+                                                <td align="right" valign="top">2233</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top">13</td>
+                                                <td align="left" valign="top">Rmc  M-50G</td>
+                                                <td align="right" valign="top">Cum</td>
+                                                <td align="right" valign="top">5985.82</td>
+                                                <td align="right" valign="top">1065.36</td>
+                                                <td align="right" valign="top">42.20</td>
+                                                <td align="right" valign="top">1107.56</td>
+                                                <td align="right" valign="top">1065.36</td>
+                                                <td align="right" valign="top">42.20</td>
+                                                <td align="right" valign="top">1107.56</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">      2 52 602</td>
+                                                <td align="right" valign="top">1065.36</td>
+                                                <td align="right" valign="top">5063</td>
+                                                <td align="right" valign="top">8023</td>
+                                                <td align="right" valign="top">2055</td>
+                                                <td align="right" valign="top">2133</td>
+                                                <td align="right" valign="top">1122</td>
+                                                <td align="right" valign="top">5555</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center" valign="top"></td>
+                                                <td align="left" valign="top">Total</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top"> 4799991</td>
+                                                <td align="right" valign="top">3338555</td>
+                                                <td align="right" valign="top"></td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="right" valign="top">&nbsp;</td>
+                                                <td align="left" valign="top">&nbsp;</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

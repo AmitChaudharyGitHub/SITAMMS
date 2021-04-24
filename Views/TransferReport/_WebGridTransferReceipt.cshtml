@@ -1,0 +1,96 @@
+﻿
+@model List<MMS.Models.GetTransferDataForReceiptReport>
+
+<style>
+    #Grid {
+        font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        #Grid td, #Grid th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+
+        #Grid tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #Grid tr:hover {
+            background-color: #ddd;
+        }
+
+        #Grid th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #4A89DC;
+            color: white;
+        }
+</style>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <table id="Grid">
+        <thead style="text-align:center;">
+            <tr>
+                <th>S.No.</th>
+                <th>Transfer Number</th>
+                <th>Transfer Created Date</th>
+                <th>MRN No.</th>
+                <th>MRN Date</th>
+                <th>Transfer From</th>
+                <th>Item Group</th>
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Unit</th>
+                @*<th>Transfer Qty</th>*@
+                <th>Receive Qty</th>
+                <th>Rate</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 0;}
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@(++i)</td>
+                <td>@item.TransferNumber</td>
+                <td>@item.TransferCreatedDate</td>
+                <td>@item.GateEntryNo</td>
+                <td>@item.GateEntryDate</td>
+                <td>@item.TransferFrom</td>
+                <td>@item.ItemGroup</td>
+                <td>@item.ItemCode</td>
+                <td>@item.Item</td>
+                <td>@item.Unit</td>
+                @*<td>Transfer Qty</td>*@
+                <td>@item.ReceiveQty</td>
+                <td>@item.Rate</td>
+                <td>@item.Amount</td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+    <br />
+    <div style="text-align:right;">
+        @if (ViewBag.IsItemSelected)
+        {
+            <strong>Total Qty:</strong> @ViewBag.TotalQty
+        }
+        <strong>Total Amount:</strong> @ViewBag.TotalAmount
+    </div>
+    <div style="text-align:left;">
+        @Html.ActionLink("Export to Excel", "TransferReceiptExcel", "TransferReport", new { @class = "btn btn-primary" })
+        @Html.ActionLink("Print", "TransferReceiptPdf", "TransferReport", new { @class = "btn btn-primary", @target = "_blank" })
+    </div>
+}
+else
+{
+    <p style="color:red; font-size:18px;">No Record found</p>
+}

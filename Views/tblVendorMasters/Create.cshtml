@@ -1,0 +1,685 @@
+﻿@model BusinessObjects.Entity.tblVendorMaster
+
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+<script src="~/Scripts/Helpers/DropDownBinding.js?v=1.1"></script>
+
+
+<script language="javascript" type="text/javascript">
+
+    function GetState(_CountryId)
+    {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlState").html(procemessage).show();
+        //var url = "/tblVendorMasters/GetStateByCountryId/";
+        var url = '@Url.Action("GetStateByCountryId", "tblVendorMasters")';
+        $.ajax({
+            url: url,
+            data: { CountryId: _CountryId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select State</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+                }
+                $("#ddlState").html(markup).show();
+            },
+
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    function GetCity(_StateId)
+    {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlCity").html(procemessage).show();
+        //var url = "/tblVendorMasters/GetCityByStateId/";
+        var url = '@Url.Action("GetCityByStateId", "tblVendorMasters")';
+        $.ajax({
+            url: url,
+            data: { StateId: _StateId },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var markup = "<option value='0'>Select City</option>";
+                for (var x = 0; x < data.length; x++) {
+                    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+                }
+                $("#ddlCity").html(markup).show();
+            },
+
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+    }
+    $('#btnsave').click(function (event)
+    { alert("A");
+        var valid = ValidMaster();
+        if (valid == false)
+        {
+            event.preventDefault();
+            $j('#Submit').attr('onclick', '').unbind('click');
+        }
+
+    });
+
+    function ValidMaster()
+    {
+        alert("B");
+        var rr = true;
+        var RegistrationType = $("#RegistrationType option:selected").val();
+        if (RegistrationType == "0" || RegistrationType == "")
+        {
+            $('#RegistrationType').css('border-color', '#f0551b');
+            alert("Select RegistrationType");
+            rr = false;
+        }
+        else
+        {
+            $('#RegistrationType').css('border-color', '');
+
+        }
+
+
+        var PRJID = $("#PRJID option:selected").val();
+        if (PRJID == "0" || PRJID == "") {
+            $('#PRJID').css('border-color', '#f0551b');
+            alert("Select Project");
+            rr = false;
+        }
+        else {
+            $('#PRJID').css('border-color', '');
+
+        }
+
+        return rr;
+
+    }
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $(".multiselect").multiselect({
+            includeSelectAllOption: true,
+            buttonWidth:'100%'
+        });
+
+        $('#btnFilterProject').click(function () {
+            var selectedRegions = $('#ddlRegions').val();
+          
+            if (selectedRegions == null) {
+                alert('Select Region(s) to filter Projects');
+            }
+            else {
+                $("#PRJID").multiselect('destroy');
+                //BindDdlWithoutLabel('#PRJID', '@Url.Action("GetProjectsByRegions")', { PRID: $('#ddlRegions').val() });
+                $.ajax({
+                    url: '@Url.Action("GetProjectsByRegions")',
+                    data: { Regions: $('#ddlRegions').val() },
+                    cache: false,
+                    type: "POST",
+                    success: function (data) {
+                        var markup = "";
+                        for (var x = 0; x < data.length; x++) {
+                            markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+                        }
+                        $("#PRJID").html(markup).show();
+                        $("#PRJID").multiselect({
+                            includeSelectAllOption: true,
+                            buttonWidth: '100%'
+                        });
+                    },
+
+                    error: function (reponse) {
+                        alert("error : " + reponse);
+                    }
+                });
+            }
+        });
+
+
+
+       //$('#btnsave').click(function () {
+       //    alert($('#PRJID').val());
+       //    alert($('#RegistrationType').val());
+       //    alert($("[name='BlackListStatus']:checked").val());
+       //});
+
+   });
+</script>
+
+<script type="text/javascript">
+    var gridList = [];
+    @*var GetVendorForDetail = '@Url.Action("Create", "tblVendorMasters")';*@
+
+    function submitForm() {
+        //debugger;
+          var model = new Object();
+        // var model = {};
+        // var model = [];
+
+        //  alert($('#ddlRegions').val());
+
+        //model.TransID = "";
+        //model.PRJID = $('#PRJID').val();
+        //model.RegistrationType = $('#RegistrationType').val();
+        //model.ContactPerson = $("#ContactPerson").val();
+        //model.Address = $("#Address").val();
+        //model.Country = $("#ddlCountry option:selected").val();
+        //model.State = $("#ddlState option:selected").val();
+        //model.City = $("#ddlCity option:selected").val();
+        //model.MobileNo = $("#MobileNo").val();
+        //model.Email = $("#Email").val();
+        //model.Status = $("#Status").val();
+        //model.PanNo = $("#PanNo").val();
+        //model.TinNo = $("#TinNo").val();
+        //model.PinCode = $("#PinCode").val();
+        //model.PhoneNo = $("#PhoneNo").val();
+        //model.BlackListStatus = $("[name='BlackListStatus']:checked").val();
+
+          if ($('#PRJID').val() == null) {
+            alert('Kindly Select Project');
+            return false;
+        }
+        
+
+          if ($('#RegistrationType').val() == null) {
+            alert('Kindly Select Registration Type');
+            return false;
+        }
+      
+
+        if ($("#TinNo").val().trim() == "") {
+            alert('Kindly Enter Tin Number.');
+            return false;
+        }
+       
+
+        if ($("#Name").val().trim() == "") {
+             alert('Kindly Enter Vendor Name.');
+            return false;
+        }
+        
+
+        if ($("#Address").val().trim() == "") {
+           alert('Kindly Enter Address.');
+            return false;
+        }
+       
+
+
+        if ($("#ddlState option:selected").val().trim() == null) {
+           alert('Kindly Select State');
+            return false;
+        }
+       
+
+        if ($("#Status").val().trim() == null) {
+            alert('Kindly Enter Status');
+            return false;
+        }
+
+        if ($("[name='BlackListStatus']:checked").val() == null) {
+            alert('Kindly Check Black List Status.');
+            return false;
+        }
+
+
+
+        debugger;
+        var url = '@Url.Action("Create", "tblVendorMasters")';
+        //$.ajax({
+        //        type: 'POST',
+        //        url: url, // Calling json method
+        //        dataType: 'json',
+        //        contentType: "application/json; charset=utf-8",
+        //       // data: JSON.stringify(model),
+        //        data: JSON.stringify({ tblVendorMaster: model }),
+        //        //data: '{tblVendorMaster: ' + JSON.stringify(model) + '}',
+        //        success: function (data) {
+        //            alert(data);
+        //        },
+        //        failure: function (errMsg) {
+        //            alert(errMsg);
+        //        }
+        //    });
+        debugger;
+       // gridList.push(model);
+        $.ajax({
+            type: "POST",
+            url: url,
+           // dataType: "json",
+           // contentType: "application/json; charset=utf-8",
+            // data: JSON.stringify({ VData: model }),
+            data: { //Passing data  
+          PRID: $('#PRJID').val(),
+          MulRegistrationType: $('#RegistrationType').val(),
+        ContactPerson : $("#ContactPerson").val(),
+        VendorName : $("#Name").val(),     
+        Address : $("#Address").val(),
+        Country : $("#ddlCountry option:selected").val(),
+        State : $("#ddlState option:selected").val(),
+        City : $("#ddlCity option:selected").val(),
+        MobileNo : $("#MobileNo").val(),
+        Email : $("#Email").val(),
+        Status : $("#Status").val(),
+        PanNo : $("#PanNo").val(),
+        TinNo : $("#TinNo").val(),
+       PinCode : $("#PinCode").val(),
+       PhoneNo: $("#PhoneNo").val(),
+       Vat_no: $("#VAT_No").val(),
+       GST_no: $("#GST_NO").val(),
+       AadharNo: $("#Aadhaar_No").val(),
+        BlackListStatus : $("[name='BlackListStatus']:checked").val()
+        },
+          
+            success: function (data) {//On Successful service call
+                alert('Submit Data Successfully');
+                var url = $("#RedirectTo").val();
+                location.href = url;
+              //  window.location.href = "tblVendorMasters/Index";
+                //if (json == "1") {
+                //    debugger;
+                //            alert('Submit Data Successfully');
+                //}
+                //if (json == "3") {
+                //    debugger;
+                //}
+
+            },
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+
+
+
+
+
+    }
+   
+
+</script>
+
+
+@*<script type="text/javascript">
+    $(function () {
+
+
+    $('#btnsave').click(function () {
+        debugger;
+        var model = new Object();
+        model.TransID = "";
+        model.PRJID = $('#PRJID').val();
+        model.RegistrationType = $('#RegistrationType').val();
+        model.Name = $("#ContactPerson").val();
+        model.Address = $("#Address").val();
+        model.Country = $("#ddlCountry option:selected").val();
+        model.State = $("#ddlState option:selected").val();
+        model.City = $("#ddlCity option:selected").val();
+        model.MobileNo = $("#MobileNo").val();
+        model.Email = $("#Email").val();
+        model.Status = $("#Status").val();
+        model.PanNo = $("#PanNo").val();
+        model.TinNo = $("#TinNo").val();
+        model.PinCode = $("#PinCode").val();
+        model.PhoneNo = $("#PhoneNo").val();
+        model.BlackListStatus = $("[name='BlackListStatus']:checked").val();
+        var url = '@Url.Action("Create", "tblVendorMasters")';
+        jQuery.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            //data: JSON.stringify({ ListData: model }),
+            data: JSON.stringify({ ListData: { Name: 'Rintu', Email: 'Rintu@gmial.com' } }),
+            processData: false,
+            cache: false,
+            success: function (json) {//On Successful service call
+                if (json == "1") {
+                    debugger;
+                    alert('Submit Data Successfully');
+                }
+                if (json == "3") {
+                    debugger;
+                }
+
+            },
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+
+    });
+
+    });
+
+
+</script>*@
+
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form  action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Vendor Master</span>
+                                </div>
+
+
+                                <div class="row">
+
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="form-group">
+                                                <label class="control-label col-md-2">Region</label>
+                                                <div class="col-md-7">
+                                                    @Html.DropDownList("Regions", null, null, htmlAttributes: new
+                                                    {
+                                                        @id = "ddlRegions",
+                                                        @class = "form-control multiselect",
+                                                        multiple = "multiple"
+                                                    })
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="button" name="btn" value="Filter Projects" class="btn btn-sm btn-primary" id="btnFilterProject" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PRJID, "Project", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+
+
+                                                    @Html.DropDownList("PRJID", null, "Select Project", htmlAttributes: new
+                                               {
+                                                   @id = "PRJID",
+                                                   @class = "form-control multiselect",
+                                                   multiple = "multiple"
+                                               })
+                                                    @Html.ValidationMessageFor(model => model.PRJID, "", new { @class = "text-danger" })
+
+
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.RegistrationType, "Registration Type", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+
+                                                    @Html.DropDownList("RegistrationType", null, htmlAttributes: new { @id = "RegistrationType", @class = "form-control multiselect", multiple = "multiple" })
+                                                    @Html.ValidationMessageFor(model => model.RegistrationType, "", new { @class = "text-danger" })
+
+
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.TinNo, "TIN No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.TinNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.TinNo, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.VAT_No, "VAT No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.VAT_No, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.VAT_No, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.GST_NO, "GST No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.GST_NO, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.GST_NO, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Aadhaar_No, "Aadhaar No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.Aadhaar_No, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Aadhaar_No, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PanNo, "PAN No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.PanNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.PanNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                @Html.Hidden("RedirectTo", Url.Action("Index", "tblVendorMasters"))
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Country, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+
+                                                    <label class="field select">
+                                                        @Html.DropDownList("Country", null, "Select Country", htmlAttributes: new{@class = "form-control",@id = "ddlCountry",@onchange ="javascript:GetState(this.value);"})@Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.State, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+
+                                                    <label class="field select">
+                                                        @{   try
+                                                            {
+                                                                @Html.DropDownList("State", null, htmlAttributes: new
+                                                           {
+                                                               @class = "form-control",
+                                                               @id = "ddlState",
+                                                               @onchange = "javascript:GetCity(this.value);"
+
+                                                           })}
+                                                            catch
+                                                            { <select id="ddlState" name="State" onchange="javascript:GetCity(this.value);"></select>}}
+                                                        @Html.ValidationMessageFor(model => model.State, "", new { @class = "text-danger" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.City, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @*@Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                    <label class="field select">
+                                                        <select id="ddlCity" name="City"></select>
+                                                        @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+                                                        <i class="arrow"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PinCode, "Pin Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.PinCode, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.PinCode, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <b style="color:red">*</b>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.ContactPerson, "Contact Person", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.ContactPerson, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.ContactPerson, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.MobileNo, "Mobile No", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.PhoneNo, "Phone No.", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @Html.EditorFor(model => model.PhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.PhoneNo, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+
+                                            @*<div class="form-group">
+                                                <div class="col-md-2">
+                                                 
+                                                </div>
+                                              
+                                                <div class="col-md-9">
+                                                    <input type="file" id="FileUpload1" class="form-control" />
+                                                </div>
+
+                                            </div>*@
+
+                                            <div class="form-group" style="display:none;">
+                                                @Html.LabelFor(model => model.BlackListStatus, "Black List Status", htmlAttributes: new { @class = "control-label col-md-2" })
+                                                <div class="col-md-9">
+                                                    @*@Html.EditorFor(model => model.BlackListStatus, new { htmlAttributes = new { @class = "form-control" } })*@
+                                                    Yes:     @Html.RadioButtonFor(model => model.BlackListStatus, "Y")
+                                                    No:   @Html.RadioButtonFor(model => model.BlackListStatus, "N", new { @checked = "checked" })
+                                                    @Html.ValidationMessageFor(model => model.BlackListStatus, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-md-10 text-center">
+                                                    <input type="button" id="btnsave" value="Create" class="btn btn-primary" onclick="submitForm()"  />
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                                            }
+
+                                </div>
+
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+</section>

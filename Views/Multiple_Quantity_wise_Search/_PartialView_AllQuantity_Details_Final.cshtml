@@ -1,0 +1,70 @@
+﻿
+@model MMS.Controllers.Multiple_Quantity_wise_SearchController.PrintData
+@{
+    Layout = null;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table id="t01" width="100%" class="primary">
+    <thead class="primary">
+    <th>Item Name</th>
+    @*<th>Project Name</th>*@
+    <th>Unit</th>
+    <th>Opening Qty</th>
+    <th>Issue Qty</th>
+    <th>Receive Qty</th>
+    <th>Balance Qty</th>
+    @*<th>Date</th>*@
+    @*<th>Sub-total</th>*@
+  
+    </thead>
+    @foreach (var c in Model.ItemData)
+    {
+        <tr class="primary">
+            <td>
+                @c.ItemName
+
+            </td>
+            @*<td>
+                    @item.ProjectName
+                </td>*@
+            <td>
+                @c.UnitName
+            </td>
+            <td>
+                @c.Opening
+            </td>
+            <td>
+                @c.IssueQuantity
+                @*<input id="MFirstName" type="text" class="TextBoxBorder" name="FirstName" value="@item.Rate" />*@
+            </td>
+            <td>
+                @c.ReceiveQty
+            </td>
+            <td>
+                @c.BalanceQuantity
+            </td>
+            @*<td>
+                @c.CreatedDate
+            </td>*@
+            @*<td>
+                    @c.SubTotal
+                </td>*@           
+
+
+        </tr>
+    }
+
+</table>

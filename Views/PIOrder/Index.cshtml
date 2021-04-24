@@ -1,0 +1,473 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetApprovedPI = '@Url.Action("ApprovedPIGrid", "PIOrder")';
+    var GetPartialPO = '@Url.Action("Partial_PO", "PIOrder")';
+    var GetUpdatedPO = '@Url.Action("Updated_PO", "PIOrder")';
+
+    var GetApprovedPIWithPurchase = '@Url.Action("ApprvPiGridWithPurchase", "PIOrder")';
+    var GetPartialPOWithPurchase = '@Url.Action("Partial_POWithPurchase", "PIOrder")';
+    var GetUpdatedPOWithPurchase = '@Url.Action("Updated_POWithPurchase", "PIOrder")';
+
+    var getPurchaseTypeForLoggedEmployee = '@Url.Action("BindEmployeePurchaseType", "PIOrder")';
+</script>
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        $('#formbody').hide();
+        
+        $("#Project").change(function ()
+        {
+            $("#loading").show();
+            $('#ddlPurchaseType').prop('selectedIndex',0);
+            $('#formbody').html('');
+            $('#formbodyPartialPODetail').html('');
+            $('#formbodyUpdatedPO').html('');
+        });
+
+        $('#ddlPurchaseType').change(function(){
+            $("#btnSearch").trigger('click');
+        });
+
+        $("#btnSearch").click(function ()
+        {
+            $("#loading").show();
+
+            if ($('#ddlPurchaseType option:selected').val() != 0)
+            {
+                $.get(GetApprovedPIWithPurchase,
+                    {
+                        PRJID: $('#Project option:selected').val(),
+                        PurchType : $('#ddlPurchaseType option:selected').val(),
+                        PINo:$('#txtPINo').val()
+                    },
+                    function (result)
+                    {
+                        $('#formbody').show();
+                        $('#formbody').html(result);
+                        $("#loadingApproval").hide();
+                    });
+
+
+                $.get(GetPartialPOWithPurchase,
+                    {
+                        PRJID: $('#Project option:selected').val(),
+                        PurchType : $('#ddlPurchaseType option:selected').val(),
+                        PINo:$('#txtPINo').val()
+                    },
+                    function (result) {
+                        $('#formbodyPartialPODetail').show();
+                        $('#formbodyPartialPODetail').html(result);
+                        $("#loadingPartialPo").hide();
+                    });
+
+                $.get(GetUpdatedPOWithPurchase,
+                    {
+                        PRJID: $('#Project option:selected').val(),
+                        PurchType : $('#ddlPurchaseType option:selected').val(),
+                        PINo:$('#txtPINo').val()
+                    },
+                    function (result) {
+                        $('#formbodyUpdatedPO').show();
+                        $('#formbodyUpdatedPO').html(result);
+                        $("#loadingUpdated").hide();
+                    });
+
+            }
+        });
+
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+                async: false,
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Project").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Project").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Project');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: getPurchaseTypeForLoggedEmployee, 
+                async: false,
+                dataType: 'json',
+
+                data: {  },
+         
+
+                success: function (obj) {
+                    obj = $.parseJSON(obj)
+                   
+
+
+                  
+                    GetPurchaseTypeList(obj);
+                    debugger;
+                    if ('@ViewBag.PId' == '') {
+                        $("#Project").prop('selectedIndex', 1).trigger('change');
+                        $("#ddlPurchaseType").prop('selectedIndex', 1).trigger('change');
+                    }
+
+                    if ('@ViewBag.PId' != '') {
+                        var value = GetParameterValues('i');
+                        $('#Project').prop('value','@ViewBag.PId');
+                        $('#ddlPurchaseType').prop('value',value);
+                         $('#ddlPurchaseType').trigger('change');
+                    }
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+                error: function (ex) {
+                    // alert('Failed to retrieve Project Code.' + ex);
+                }
+            });
+
+
+            return false;
+        };
+        GetPrj();
+
+        //$("#Project").change(function () { debugger;
+        //    $("#ddlPurchaseType").empty();           
+        //    $('#formbody').html('');
+
+        //    if($("#Project option:selected").val()!=0)
+        //    {
+        //        $('#loading').show();
+              
+        //        return false;}
+        //})
+
+        function   GetPurchaseTypeList(data) {
+            debugger;
+            var procemessage = "<option value='0'> Please wait...</option>";
+            $("#ddlPurchaseType").html(procemessage).show();
+            var markup = "<option value='0'>Select Purchase Type</option>";
+            for (var x = 0; x < data.length; x++) {
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+            }
+            $("#ddlPurchaseType").html(markup).show();
+
+        }
+
+        function GetParameterValues(param) {
+            var url = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < url.length; i++) {
+                var urlparam = url[i].split('=');
+                if (urlparam[0] == param) {
+                    return urlparam[1];
+                }
+            }
+            return "";
+        }
+
+
+    });
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Purchase Requisation</span>
+                                </div>
+                                
+
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @*@Html.DropDownList("Project", null, "Select Project", htmlAttributes: new { @id = "Project", @class = "form-control" })*@
+                                                            @Html.DropDownList("Project", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "Project", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                            <input type="hidden" id="HdnPrjId" value="@ViewBag.Prjid" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlPurchaseType", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text" name="txt" value="" class="form-control" id="txtPINo" placeholder="Purchase Indent No." autocomplete="off" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="button" name="btn" value="Search" id="btnSearch" class="btn btn-primary" />
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="container tabs-wrap">
+
+                                            <div class="container tabs-wrap">
+                                                <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#pendingPodetail" aria-controls="pendingPodetail" role="tab" data-toggle="tab" aria-expanded="true">Pending PO</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#partialPodetail" aria-controls="partialPodetail" role="tab" data-toggle="tab" aria-expanded="false">Partial PO</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#updatedPodetail" aria-controls="updatedPodetail" role="tab" data-toggle="tab" aria-expanded="false">Updated PO</a>
+                                                    </li>
+                                                </ul>
+
+
+                                                <div class="panel-body">
+                                                    <div class="tab-content pn br-n">
+                                                        <div role="tabpanel" class="tab-pane active" id="pendingPodetail">
+
+                                                            <div class="row">
+
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <div class="form-horizontal">
+
+                                                                   
+                                                                    <div class="row">
+
+                                                                        <div id="dvLoading"></div>
+                                                                        <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                                                        <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                                                        </div>
+
+                                                                        <div class="section-divider mt40 mb25" id="spy5">
+                                                                            <span></span>
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="partialPodetail">
+
+
+                                                            <div class="row">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-4"></div>
+                                                                                <div class="col-md-4"><div style="display:none;" id="loadingPartialPo" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="formbodyPartialPODetail">
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="updatedPodetail">
+
+                                                            <div class="row">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-4"></div>
+                                                                                <div class="col-md-4"><div style="display:none;" id="loadingUpdated" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="formbodyUpdatedPO">
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

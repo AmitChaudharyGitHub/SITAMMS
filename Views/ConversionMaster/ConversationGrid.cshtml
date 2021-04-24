@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MMS.DAL.tblUnitConversionMaster>
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;" class="table table-hover">
+    <tr class="primary">
+        <td style="width: 70px; text-align: center; border: 1px solid black; ">
+            Sr.No.
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+           Unit From
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+          Unit To
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Converted Value
+        </td>
+
+        @*<td style="width: 200px; text-align: center; border: 1px solid black;">
+            Created Date
+        </td>*@
+
+
+
+
+
+
+
+
+        @foreach (var item in Model)
+        {
+        <tr>
+
+            <td style="width: 70px; text-align: center; border: 1px solid black; ">
+                @Html.DisplayFor(x => item.TransId)
+            </td>
+
+            <td style="width: 150px; text-align: left; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.UnitName)
+            </td>
+            <td style="width: 150px; text-align: left; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.UnitConversionName)
+            </td>
+
+            <td style="width: 150px; text-align: right; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.UnitRate)
+            </td>
+
+            @*<td style="width: 200px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>*@
+
+
+        </tr>
+        }
+    </table>

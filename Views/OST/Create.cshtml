@@ -1,0 +1,1090 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    WebGrid grid = new WebGrid(source: Model, canPage: false);
+    var OrderDate = (DateTime)ViewBag.OrderDate;
+}
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<style>
+    .Hide {
+        display:none;
+    }
+
+</style>
+
+@*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+@*<script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery-1.11.1.min.js"></script>*@
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "OST")';
+    var GetOstNo ='@Url.Action("GetOstNo", "OST")';
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "OST")'; 
+
+    var GetItemDetail = '@Url.Action("GetItemDetail", "OST")';
+
+
+
+    var SendList1 = '@Url.Action("SendList1", "OST")';
+
+
+
+
+
+</script>  
+
+
+@*<script src="~/Script/OSTCreate.js"></script>*@
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+       
+
+        window['GetPrj'] = function (dateString)
+        { 
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss},
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                   
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#DispatchSite").html(procemessage).show();
+                    $("#ReceiveSite").html(procemessage).show();
+                    var markup1 = "<option value='0'>Select Dispatch Site</option>";
+                    $("#DispatchSite").html(markup1).show();
+               
+                    var markup2 = "<option value='0'>Select Receive Site</option>";
+                    $("#ReceiveSite").html(markup2).show();
+                    result = $.parseJSON(result);
+                    var List1 = $.parseJSON(result.List1);
+                    var List2 = $.parseJSON(result.List2);
+                   
+                    var selectedDeviceModel1 = $('#DispatchSite');
+                    $.each(List1, function (index, item) {
+                        //alert("A");
+                        selectedDeviceModel1.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+                    var selectedDeviceModel2 = $('#ReceiveSite');
+                    $.each(List2, function (index, item) {
+                        selectedDeviceModel2.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+                    //$("#DispatchSite").prop('selectedIndex', 1);
+                    $("#DispatchSite").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Projects.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+       
+    }
+        )
+
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#DispatchSite").change(function () {
+            $("#TransferDocumentNo").empty();
+            if ($("#DispatchSite option:selected").val() != 0)
+            {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetOstNo, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectID: $("#DispatchSite").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+                      
+
+
+                        $("#TransferDocumentNo").val(obj);
+                     
+
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Transfer Document No.' + ex);
+                    }
+                });
+                return false;}
+        })
+    });
+   
+    $(document).ready(function () {
+       
+        $("#ItemGroup").change(function () {
+            $("#ItemMaster").empty();
+            $("#ItemMaster").append($("<option></option").val("").html("Select Item Name"));
+            if ($("#ItemGroup option:selected").val() != 0) {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemByGroup, 
+
+                    dataType: 'json',
+
+                    data: { id: $("#ItemGroup").val() },
+                   
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        names = $.parseJSON(names)
+
+
+                        $.each(names, function (i, itname) {
+                            $("#ItemMaster").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        })
+    });
+
+    $(document).ready(function () {
+     
+        $("#ItemMaster").change(function () {
+          
+            $("#Unit").empty();
+            if ($("#ItemMaster option:selected").val() != 0) {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemDetail, 
+
+                    dataType: 'json',
+
+                    data: { id: $("#ItemMaster").val(), PrjId: $("#DispatchSite").val() },
+            
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (item) {
+                        item = $.parseJSON(item)
+                       
+                        $("#Rate").val(item.Rate);
+                        $("#Unit").val(item.Unit);
+                        $("#Unit").attr("UNo", item.UnitNo);
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Unit' + ex);
+                    }
+                });
+                return false;
+            }
+        })
+    });
+   
+    $(document).ready(function () {
+        //Show tax percentage
+        $("#TaxType").change(function ()
+        {
+            var a = $("#TaxType option:selected").val();
+
+
+            $("#TaxPer").val(a);
+
+        })
+    });
+
+    $(document).ready(function () {
+
+        function getAmount()
+        {
+            if ($("#Rate").val() != null && $("#Qty").val() != null) {
+                var a = $("#Rate").val() * $("#Qty").val();
+                
+                $("#Amount").val(a.toFixed(2));
+            }
+            else
+            {
+                $("#Amount").val(0);
+            }
+        }
+        //Country Dropdown Selectedchange event
+        $("#Rate").keyup(function () {                      
+            getAmount();
+        })
+        $("#Qty").keyup(function () {
+            getAmount();
+
+        })
+    });
+    function Getgt() {
+   
+        if ($("#AmountOfFreight").val() != null)
+            f = $("#AmountOfFreight").val();
+      
+        GT = +pf + +Tax + +Tdl + +f ;
+       
+        $("#GrandTotal").val(GT.toFixed(2));
+    }
+  
+    $(document).ready(function () {
+       
+        $("#AmountOfFreight").keyup(function () {
+            
+            Getgt();
+
+
+        })
+    });
+  
+   
+
+  
+
+
+
+
+
+
+
+
+    var gridList = [];
+    var pf = 0;
+    var Tdl = 0;
+    var Tax = 0;
+    var GT = 0;
+    var f = 0;
+    var child = 0;
+    var nowTemp = new Date();
+ 
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    $(document).ready(function () {
+
+        $("#addNew").click(function () {
+   
+            var obj = new Object();
+            obj.Id = getUniqueId();
+
+
+            obj.ItemGroup = $("#ItemGroup option:selected").text();
+            obj.ItemGroupNo = $("#ItemGroup option:selected").val();
+            obj.Itemname = $("#ItemMaster option:selected").text();
+            obj.ItemNo = $("#ItemMaster option:selected").val();
+            obj.Unit = $("#Unit").val();
+            obj.UnitNo = $("#Unit").attr('UNo');
+            obj.Qty = $("#Qty").val();
+            obj.Rate = $("#Rate").val();
+            obj.DeliveryCharges = $("#DeliveryCharges").val();
+        
+            if ($("#TaxType option:selected").val() != 0)
+                obj.TaxType = $("#TaxType option:selected").text();
+            else
+                obj.TaxType = '';
+          
+            obj.Vat = $("#TaxPer").val();
+            obj.Amount = $("#Amount").val();
+          
+            
+           
+            
+        
+
+            if (obj.Qty == "")
+            {
+                $('#Qty').css('border-color', '#f0551b');
+                return;
+            }
+            if (obj.Rate == "")
+            {
+                $('#Rate').css('border-color', '#f0551b');
+            }
+           
+            gridList.push(obj);
+            $("#grid").prepend("<tr class='danger _tempRow'><td>" + obj.ItemGroup + "</td><td>" + obj.Itemname + "</td><td>" + obj.Unit + "</td><td>" + obj.Qty + "</td><td class='.Hide'>" + obj.Rate + "</td><td>" + obj.DeliveryCharges + "</td><td>" + obj.TaxType + "</td><td>" + obj.Vat + "</td><td>" + obj.Amount + "</td><td><a href='#' id='removeItem' uniqueId='" + obj.Id + "'>Remove</a></td></tr>");
+            GetPF();
+            //child = 1;
+            $("#Qty").val('');
+            $("#Rate").val('');
+            $("#Amount").val('');
+            $("#DeliveryCharges").val('');
+            $('#Qty').css('border-color', '');
+            $('#Rate').css('border-color', '');
+          //  $(this).td("._hdrt").hide();
+               
+            //    $("#_tdr").hide();
+            $('tr td:nth-child(5)').hide();
+            $('tr td:nth-child(9)').hide();
+                
+        })
+
+        function getMaster()
+        {
+
+            var obj1 = new Object();
+
+            obj1.TransferDocumentNo = $("#TransferDocumentNo").val();
+            obj1.TransferDocumentDate = $("#TransferDocumentDate").val();
+
+            obj1.DispatchSiteNo = $("#DispatchSite option:selected").val();
+            obj1.ReceiveSiteNo = $("#ReceiveSite option:selected").val();
+
+            obj1.ChallanNo = $("#ChallanNo").val();
+            obj1.ChallanDate = $("#ChallanDate").val();
+            obj1.VehicleNo = $("#VehicleNo").val();
+            obj1.P_F = $("#pf").val();
+            obj1.Vat = $("#Vat").val();
+            obj1.DeliveryCharges = $("#TDeliveryCharges").val();
+            obj1.AmountOfFreight = $("#AmountOfFreight").val();
+            obj1.GrandTotal = $("#GrandTotal").val();
+
+            return obj1;
+        }
+
+
+        $("#Submit").click(function () {
+
+            if (gridList.length < 1) {
+                alert("Add Any Item");
+                return;
+            }
+
+            var Valid = ValidMaster();
+            if (Valid == false)
+                return;
+            var obj1 = getMaster();
+               
+  
+            var session =
+                {
+                    'Child': gridList,
+                    'Master': obj1
+                };                     
+
+         
+
+          
+
+
+
+            var url = SendList1;
+            $('#dvLoading').show();
+            $.ajax(
+                {
+                    type: "Post",	           
+                    url: url,  
+                    data: JSON.stringify(session),
+                    contentType: "application/json; charset=utf-8",		
+                    dataType: "json", 	//Expected data format from server
+                    processdata: true, 	//True or False
+                    complete: function ()
+                    {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (json)
+                    {
+                        if (json == "1")
+                        {
+   
+                            $("#myModal").modal('show');
+
+
+                            $("#TransferDocumentNo").val('');
+                            $("#TransferDocumentDate").datepicker("setDate", "");
+
+                            $("#DispatchSite").prop('selectedIndex', 0);
+                            $("#ReceiveSite").prop('selectedIndex', 0);
+                      
+                            //$("#DispatchSite").val(0);
+                            //$("#ReceiveSite").val(0);
+                            $("#ChallanNo").val('');
+                            $("#ChallanDate").datepicker("setDate", "");
+                            $("#VehicleNo").val('');
+                            $("#pf").val('');
+                            $("#Vat").val('');
+                            $("#DeliveryCharges").val('');
+                            $("#AmountOfFreight").val('');
+                            $("#GrandTotal").val('');
+
+                            //child = 0;
+                            gridList = [];
+                            $("#grid").empty();
+                        }
+
+                    },
+                    error: function ()
+                    {
+                        alert('Error in Submit Data');
+                    }
+                    // When Service call fails
+                })
+        })
+
+        $("body").on("click", "#removeItem", function ()
+        {
+            var id = $(this).attr("uniqueId");
+
+            for (var index = 0; index < gridList.length; index++)
+            {
+                if (gridList[index].Id == id) {
+
+                    gridList.splice(index, 1);
+                    $(this).parents("._tempRow").remove(); 
+                }
+            }
+            GetPF();
+        })
+
+        var uniqueId = null;
+        getUniqueId = function () {
+            if (!uniqueId) uniqueId = (new Date()).getTime();
+            return uniqueId++;
+        };
+
+        function GetPF() {
+            pf = 0;
+            Tdl = 0;
+            Tax = 0;
+            GT = 0;
+            if ($("#AmountOfFreight").val() != null)
+                f = $("#AmountOfFreight").val();
+           
+            for (var index = 0; index < gridList.length; index++)
+            {
+                pf = +pf + +gridList[index].Amount;
+   
+                $("#pf").val(pf.toFixed(2));
+                Tdl = +Tdl + +(gridList[index].Qty * gridList[index].DeliveryCharges);                 
+                $("#TDeliveryCharges").val(Tdl.toFixed(2));
+
+
+                Tax = +Tax + +(gridList[index].Amount * gridList[index].Vat / 100);
+    
+                $("#Vat").val(Tax.toFixed(2));
+
+            }
+            GT = +pf + +Tax + +Tdl +  +f ;
+
+            $("#GrandTotal").val(GT.toFixed(2));
+        }
+
+
+    })
+
+    function ValidMaster()
+    {
+        var TransferDocumentNo = $("#TransferDocumentNo").val();
+        var TransferDocumentDate = $("#TransferDocumentDate").val();
+
+        var DispatchSiteNo = $("#DispatchSite option:selected").val();
+        var ReceiveSiteNo = $("#ReceiveSite option:selected").val();
+
+        //var ChallanNo = $("#ChallanNo").val();
+        //var ChallanDate = $("#ChallanDate").val();
+        //var VehicleNo = $("#VehicleNo").val();
+
+        var P_F = $("#pf").val();
+       
+        var GrandTotal = $("#GrandTotal").val();
+
+       
+        var rr = true;
+        if (DispatchSiteNo == "0") {
+            $('#DispatchSite').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#DispatchSite').css('border-color', '');
+
+        }
+        if (ReceiveSiteNo == "0") {
+            $('#ReceiveSite').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#ReceiveSite').css('border-color', '');
+
+        }
+
+        if (TransferDocumentNo == "") {
+            $('#TransferDocumentNo').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#TransferDocumentNo').css('border-color', '');
+        }
+
+        if (TransferDocumentDate == "") {
+            $('#TransferDocumentDate').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#TransferDocumentDate').css('border-color', '');
+        }
+
+
+        if (P_F == "") {
+            $('#pf').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#pf').css('border-color', '');
+        }
+
+        if (GrandTotal == "") {
+            $('#GrandTotal').css('border-color', '#f0551b');
+            rr = false;
+        }
+        else {
+            $('#GrandTotal').css('border-color', '');
+        }
+
+        return rr;
+
+    }
+
+
+    $(document).ready(function () {
+        $(".DatePicker").datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true,
+            value:"",
+        }).val('');
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Other Site Transfer</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                               
+                                <p>
+                                  
+                                    <a class="btn btn-primary" data-modal="" href="@Url.Action("Index", "OST")" id="btnCreate">
+                                        Back to List
+                                    </a>
+                                </p>
+                                <!-- Input Icons -->
+                                <div class="row">
+
+                                  
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("DispatchSite", new SelectList(string.Empty, "Value", "Text"), "Select Dispatch Site", htmlAttributes: new { @id = "DispatchSite", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TransferDocumentNo", null, new { id = "TransferDocumentNo", @class = "form-control gui-input required", @placeholder = "Transfer Document No.", @readonly = "readonly" })
+                                                          
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("TransferDocumentDate", string.Format("{0:dd MMM yyy}", OrderDate), new { @class = "DatePicker form-control", @id = "TransferDocumentDate", @placeholder = "Transfer Document Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("ReceiveSite", new SelectList(string.Empty, "Value", "Text"), "Select Receiving Site", htmlAttributes: new { @id = "ReceiveSite", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanNo", null, new { id = "ChallanNo", @class = "form-control gui-input required",@placeholder = "Challan No." })
+                                                           
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanDate", string.Format("{0:dd MMM yyy}", OrderDate), new { @class = "DatePicker form-control", @id = "ChallanDate", @placeholder = "Challan Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("VehicleNo", null, new { id = "VehicleNo", @class = "form-control gui-input required", @placeholder = "Vehicle No." })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            @*<div class="row">
+                                              
+
+                                            </div>*@
+                                           
+                                        </div>
+                              
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+
+                                            <table class="table table-bordered mbn">
+                                                <thead>
+                                                    <tr class="primary">
+                                                        <th>#</th>
+                                                        <th>Item Group</th>
+                                                        <th>Item Name</th>
+                                                        <th>Unit</th>                                                      
+                                                        <th>Quantity</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        @*<th >Rate</th>
+                                                        <th>Amount</th>*@
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="success">
+                                                        <td>1</td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("ItemGroup", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item Name", new { @id = "ItemMaster", @class = "form-control" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Unit", null, new { id = "Unit", @class = "form-control gui-input", @readonly = "readonly" ,@UNo="" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                       
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Qty", null, new { id = "Qty", @class = "form-control gui-input" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2"> 
+                                                            <div class="section Hide">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Rate", null, new { id = "Rate", @class = "form-control gui-input" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                      
+                                                        <td class="col-sm-2">
+                                                            <div class="section Hide">
+                                                                <label class="field">
+                                                                    @Html.TextBox("Amount", null, new { id = "Amount", @class = "form-control gui-input" , @readonly = "readonly" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                      
+                                                      
+                                                     
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                             @*Second Table Start Here*@ 
+                                            <table class="table table-bordered mbn">
+                                                <thead>
+                                                    <tr class="primary">
+                                                        <th>#</th>
+                                                      
+                                                        <th>Delivery Charges/Unit</th>
+                                                        <th>TaxType</th>
+                                                        <th>Tax%</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th>ADD</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="info">
+                                                        <td>2</td>
+                                                      
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("DeliveryCharges", null, new { id = "DeliveryCharges", @class = "form-control gui-input" })
+
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field select">
+                                                                    @Html.DropDownList("TaxType", null, "Select Tax Name", new { @class = "form-control", @id = "TaxType" })
+                                                                    <i class="arrow"></i>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                                <label class="field">
+                                                                    @Html.TextBox("TaxPer", null, new { id = "TaxPer", @class = "form-control gui-input" })
+
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+                                                               
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-2">
+                                                            <div class="section">
+
+                                                            </div>
+                                                        </td>
+                                                        <td class="col-sm-6">
+                                                            <div class="section">
+                                                                <input type="submit" value="Add" class="btn btn-primary" id="addNew" />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    @* Dynamic Webgrid Design Here *@
+
+                                    <table class="table" id="grid">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Group</th>
+                                                <th>Item Name</th>
+                                                <th>Unit</th>                                               
+                                                <th>Quantity</th>
+                                                <th style="display:none" >Rate</th>
+                                                <th>Delivery/Unit</th>
+                                                <th>TaxType</th>
+                                                <th>Tax%</th>
+                                                <th style="display:none">Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="grid"></tbody>
+                                    </table>
+
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("pf", null, new { id = "pf", @class = "form-control gui-input required", @placeholder = "Total", @readonly = "readonly" })
+                                                    <label for="RefNo" class="field-icon">
+                                                        <i class="fa fa-suitcase"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                   
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("TDeliveryCharges", null, new { id = "TDeliveryCharges", @class = "form-control gui-input", @placeholder = "Delivery Charges", @readonly = "readonly" })
+                                                    <label for="RefNo" class="field-icon">
+                                                        <i class="fa fa-dashboard"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("Vat", null, new { id = "Vat", @class = "form-control gui-input", @placeholder = "Vat", @readonly = "readonly" })
+                                                    <label for="RefNo" class="field-icon">
+                                                        <i class="fa fa-dashboard"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("AmountOfFreight", null, new { id = "AmountOfFreight", @class = "form-control gui-input", @placeholder = "Amount Of Freight" })
+                                                    <label for="RefNo" class="field-icon">
+                                                        <i class="fa fa-dashboard"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="section">
+                                                <label class="field prepend-icon">
+                                                    @Html.TextBox("GrandTotal", null, new { id = "GrandTotal", @class = "form-control gui-input", @placeholder = "Grand Total" })
+                                                    <label for="RefNo" class="field-icon">
+                                                        <i class="fa fa-dashboard"></i>
+                                                    </label>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div id="dvLoading"></div>
+                                    <div>
+                                        <input type="button" id="Submit" class="btn btn-danger" value="Submit" />
+                                    </div>
+
+
+                                </div>
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                <p class="text-danger">Data Save Successfully</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

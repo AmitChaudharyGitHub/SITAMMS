@@ -1,0 +1,155 @@
+﻿@model MMS_P.ViewModels.PurchaseIRNew
+
+
+
+
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+           
+              
+                    
+                        
+                            
+
+                            
+
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr><td class="MasterId" colspan="10" muid=@Model.MasterNew.UId> </td>   </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Project Name:")</th>
+                                        <th style="align-content:center">@Html.DisplayName("Purchase Indent No:")</th>
+                                        <th>@Html.DisplayName("PIC Purchase Limit Value :")</th>
+                                      
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:left">@Html.DisplayFor(model => model.MasterNew.ProjectName)</td>
+                                        <td style="text-align:left">@Html.DisplayFor(model => model.MasterNew.PurRequisitionNo)</td>
+                                        <td style="text-align:left"><label id="lblprojectValue">@ViewBag.LastLimitVal</label></td>
+                                       
+                                    </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Purchase Indent Date:")</th>
+                                        <th>@Html.DisplayName("Purchase Type:")</th>
+                                        <th>@Html.DisplayName("Purchase Created By:")</th>
+                                        
+                                    </tr>
+                                    <tr>
+
+                                        <td style="text-align:left">@Html.DisplayFor(model => model.MasterNew.Date, "{0:dd/MM/yyyy}")</td>
+                                        <td style="text-align:left">@ViewBag.FinalPurchaseType</td>
+                                        <td style="text-align:left">@Html.DisplayFor(model => model.MasterNew.CreatedByName)</td>
+                                       
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="3">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                @if (Model.ChildNew.Count != 0)
+                                {
+                                    <table class="table table-hover" id="gridPurRewD">
+                                        <tr class="primary">
+                                            <th>
+                                                @Html.DisplayName("SrNo.")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Group Name")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Item Name")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Unit")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Demand Qty")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Approve Qty")
+                                            </th>
+
+                                            <th>
+                                                @Html.DisplayName("Rate")
+                                            </th>
+
+                                            
+
+                                        </tr>
+
+                                        @foreach (var item in Model.ChildNew)
+                                        {
+                                            var a = @item.UId;
+                                            var It = @item.ItemNo;
+
+
+
+                                            <tr id=@a style="font-size:11px;text-align:left">
+                                                <td class=SrNo_@a uid=@a it=@It>
+                                                    @Html.DisplayFor(modelItem => item.SNo)
+                                                </td>
+                                                <td class=Group_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                                    @Html.HiddenFor(modelItem => item.ItemGroupNo)
+                                                </td>
+                                                <td class=Item_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemName)
+                                                    @Html.HiddenFor(modelItem => item.ItemNo)
+                                                </td>
+                                                <td class=Unit_@a>
+                                                    @Html.DisplayFor(modelItem => item.Unit)
+                                                    @Html.HiddenFor(modelItem => item.UnitNo)
+                                                </td>
+                                                <td>
+                                                    <span id=DemandQty_@a>
+                                                        @Html.DisplayFor(modelItem => item.DemandQty)
+
+                                                    </span>
+                                                </td>
+                                                <td>
+
+                                                    <span id=ApprovedQty_@a>
+                                                        @Html.DisplayFor(modelItem => item.ApprovedQty)
+                                                        <input type="hidden" value="@item.ApprovedQty" id="aprvdqty_@a" />
+                                                    </span>
+                                                </td>
+
+                                                <td class="Rate_@a">
+                                                    @Html.DisplayFor(modelItem => item.CurrentRate)
+                                                    <input type="hidden" value="@item.CurrentRate" id="hdrate_@a" />
+                                                </td>
+                                                
+                                            </tr>
+                                        }
+
+                                        
+                                    </table>
+                                }
+                            </div>
+
+                            <br />
+
+
+
+
+
+                            <br />
+
+                            <div class="section-divider mt40 mb25" id="spy5">
+                                <span></span>
+                            </div>
+
+
+
+                       
+
+
+                        
+
+        </div>
+    </section>
+
+

@@ -1,0 +1,293 @@
+﻿@model MMS_P.ViewModels.PagedBlockMasterModel
+@*@using PagedList
+@using PagedList.Mvc
+@model IPagedList<BusinessObjects.Entity.BlockMaster>*@
+@{
+    ViewBag.Title = "View";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    //Layout = null;
+    //Layout = "~/Views/Shared/_LayoutBootStrap.cshtml";
+}
+@*<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery‐ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        function getJob() {
+            $.post('@Url.Content("~/BlockMasters/Grid/")', function (data) {
+                $('#formbody').html("");
+                $('#formbody').html(data);
+            });
+        }
+        getJob();
+    });
+    $(document).on("click", "#myPager a", function () {
+        $.ajax({
+            url: $(this).attr("href"),
+            type: 'GET',
+            cache: false,
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    });
+    //$(function () {
+
+    //    $('#myPager').on('click', 'a', function () {
+    //        $.ajax({
+    //            url: "~/BlockMasters/Grid/",
+    //            type: 'GET',
+    //            cache: false,
+    //            success: function (result) {
+    //                $('#formbody').html(result);
+    //            }
+    //        });
+    //        return false;
+    //    });
+    //});
+</script>
+<script>
+    $(function () {
+        $('#applink').click(function () {
+            $('#progress').show();
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                data: { SiteId: $('#ddlSite').val() },
+                complete: function () {
+                    $('#progress').hide();
+                },
+                success: function (result) {
+                    $('#formbody').html(result);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $('#applink').click(function () {
+            $('#progress').show();
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                data: { SiteId: $('#ddlSite').val() },
+                complete: function () {
+                    $('#progress').hide();
+                },
+                success: function (result) {
+                    $('#formbody').html(result);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+<script>
+    function getblock2() {
+
+        $('#myPager').click(function (e) {
+            e.preventDefault();
+        })
+        // alert("1 you clicked the paragraph");
+        var url = "/BlockMasters/Grid/";
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { SiteId: $('#ddlSite').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+    function getblock(_siteid) {
+        // alert("1 you clicked the paragraph");
+        var url = "/BlockMasters/Grid/";
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { SiteId: $('#ddlSite').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+</script>
+<div></div>
+<h1>Blocks Master</h1>
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <!-- Begin: Content Header -->
+                <!-- Begin: Admin Form -->
+                <div class="">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form method="post" action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Blocks Master</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                @*<p>
+                                        @Html.ActionLink("Create New", "Create")
+                                    </p>*@
+                                <div class="row">
+                                    <div class="well">
+                                        @*@using (Ajax.BeginForm("Grid", new AjaxOptions
+                                            {
+                                                HttpMethod = "GET",
+                                                InsertionMode = InsertionMode.Replace,
+                                                UpdateTargetId = "formbody"
+                                            }))*@
+                                        @using (Html.BeginForm("index", null, FormMethod.Get))
+                                        {
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="input-group">
+
+
+                                                    @Html.DropDownList("SiteId", null, htmlAttributes: new
+                   {
+                       @id = "ddlSite",
+                       @style = "width:200px;",
+                       @class = "form-control",
+                       onchange = "javascript:getblock(this.value);"
+                       //                                                                                 onchange = @"
+                       //            var form = document.forms[0];
+                       //            form.action='/BlockMasters/Grid/';
+                       //            form.submit();"
+                   })
+                                                    <br />
+                                                    <br />
+
+                                                    <span class="input-group-btn">
+                                                        @*<button class="btn btn-default" type="submit">
+                                                                Go  @Ajax.ActionLink("Login", "Grid", "BlockMasters", new { SiteId = "SiteId" }, new AjaxOptions
+                                                               {
+                                                                   HttpMethod = "GET",
+                                                                   InsertionMode = InsertionMode.Replace,
+                                                                   UpdateTargetId = "formbody"
+                                                               })
+                                                                <span class="glyphicon glyphicon-log-in"> </span>
+                                                            </button>*@
+                                                        @Html.ActionLink(
+    "Click here to view appointments",
+"Grid",
+    null,
+    new { id = "applink" }
+)
+                                                    </span>
+
+                                                </div>
+                                            </div>
+                                            <div class="pull-right col-lg-1">
+                                                <a class="btn btn-success" data-modal="" href="/BlockMasters/Create" id="btnCreate">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                          <div class="pager glyphicon-align-center" id="formbody">
+
+                                           </div>
+                                        }
+
+                                       
+                                        @*<div id="myPager">
+                                                @Html.PagedListPager(
+                                                Model,
+                                                page => Url.Action(
+                                                    "Grid",
+                                                    new
+                                                    {
+                                                        //humanID = ViewBag.HumanID,
+                                                        page = page
+                                                    }
+                                                ),
+                                                 PagedListRenderOptions.ClassicPlusFirstAndLast
+                                                //new PagedListRenderOptions
+                                                //{
+                                                //    LinkToFirstPageFormat = "<<",
+                                                //    LinkToPreviousPageFormat = "prev",
+                                                //    LinkToNextPageFormat = "next",
+                                                //    LinkToLastPageFormat = ">>",
+                                                //}
+                                            )
+                                            </div>*@
+                                        @*}*@
+                                    </div>
+
+                                </div>
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@*@section scripts{
+    @Scripts.Render("~/scripts/appjs/phones.js")
+
+}*@
+
+
+
+

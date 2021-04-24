@@ -1,0 +1,1039 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    WebGrid grid = new WebGrid(source: Model, canPage: false);
+    var Date = (DateTime)ViewBag.Date;
+}
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+     .Piv2 {
+        display: none;
+    }
+</style>
+}
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "GateEntries")';
+    var GetProjectGateEntryNo ='@Url.Action("GetProjectGateEntryNo", "GateEntries")';
+    var GetStatusTypeNo ='@Url.Action("GetStatusTypeNo", "GateEntries")';
+
+    @*//  var Grid = '@Url.Action("Grid", "GateEntries")';*@ 
+    var Grid = '@Url.Action("GridTest", "GateEntries")';
+
+    var AddM_UpC= '@Url.Action("AddM_UpC", "GateEntries")';
+
+</script>
+
+@*<script src="~/Script/GECreate.min.js"></script>*@
+
+<script>
+    //@*GetPrj*@
+    $(document).ready(function () {
+
+        
+
+        window['GetPrj'] = function (dateString)
+        { 
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss},
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+    }
+        )
+
+    //@*GateEntryNo && EMP*@
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#Projects").change(function () {
+            $("#GateEntryNo").empty();
+            $("#Status").prop('selectedIndex', 0);
+            $("#StatusTypeNo").empty();
+            $('#formbody').html('');
+
+            if($("#Projects option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetProjectGateEntryNo, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { id: $("#Projects").val() },
+                    // Get Selected Country ID.
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+                        //  var r = toArray(obj);
+
+
+                        $("#GateEntryNo").val(obj.Message);
+                        GetEmp1(obj.List);
+
+                    },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;}
+        })
+    });
+    function GetEmp1(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#Employee").html(procemessage).show();
+        var markup = "<option value='0'>Select Employee</option>";
+        for (var x = 0; x < data.length; x++) {
+
+
+            //console.log(data[x].Value);
+
+            markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#Employee").html(markup).show();
+
+    }
+
+    $(document).ready(function () {
+
+        $(document).on('keyup', "td[class^='CDispatch_']", function () {
+            // alert("A");
+            var current = $(this).find('input').val();
+            var str = $(this).attr('class');
+            var a = str.substring(10);
+            var Dispatch = $("#Dispatch_" + a).find('input').val();
+            current = +current + +Dispatch
+            var Qty = $("#Qty_" + a).find('input').val();
+            if (+current > +Qty) {
+                alert("Total Dispatch Quantity Can,t Greater than Qty");
+                $(this).find('input').val('');
+            }
+          
+          
+        });
+
+
+        $(document).on('keyup', "td[class^='CReceive_']", function () {
+            var current = $(this).find('input').val();
+            var str = $(this).attr('class');
+            var a = str.substring(9);
+            var Receive = $("#Receive_" + a).find('input').val();
+            current = +current + +Receive
+            var Dispatch = $("#Dispatch_" + a).find('input').val();
+            if (+current > +Dispatch) {
+                alert("Total Receive Quantity Can,t Greater than Dispatch Qty");
+                $(this).find('input').val('');
+            }
+
+
+        });
+    });
+
+    // @*StatusList*@
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#Status").change(function () {
+            $("#StatusTypeNo").empty();           
+            $('#formbody').html('');
+
+            if($("#Status option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetStatusTypeNo, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { Type: $("#Status").val(),ProjectNo:  $("#Projects").val() },
+                    // Get Selected Country ID.
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+                        //  var r = toArray(obj);
+
+
+                  
+                        GetStatusList(obj);
+
+                    },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;}
+        })
+    });
+    function   GetStatusList(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#StatusTypeNo").html(procemessage).show();
+        var markup = "<option value='0'>Select No</option>";
+        for (var x = 0; x < data.length; x++) {
+
+
+            //console.log(data[x].Value);
+
+            markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#StatusTypeNo").html(markup).show();
+
+    }
+
+    //@*Get Grid*@
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#StatusTypeNo").change(function () {
+            if($("#StatusTypeNo option:selected").val()!=0)
+            { debugger;
+                $('#dvLoading').show();
+                $.ajax({
+                    type:  'GET',
+                    url: Grid, // Calling json method
+
+              
+
+                    data: { Type: $("#Status").val(),PurchaseNo:  $("#StatusTypeNo").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (result) {
+                 
+                        $('#formbody').html(result);
+                        getchallan();
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;}
+        })
+
+        function getchallan()
+        {
+            // alert("z");
+            if ($("#Status").val() == "Dispatch" || $("#Status").val() == "Receive")
+            {
+                
+                $("#ChallanNo").val($("div[class='Challan']").attr('challanno'));
+                $("#VehicleNo").val($("div[class='Challan']").attr('vehicleno')) ;
+                $("#ChallanDate").val($("div[class='Challan']").attr('challandate')) ;
+            }
+           
+        }
+    });
+
+
+
+
+
+
+
+
+
+    //@*Date*@
+
+    $(document).ready(function () {
+        $(".DatePicker").datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true,
+            value:"",
+        });
+
+    });
+
+    //@*Save*@
+    $(document).ready(function ()
+    { debugger;
+        $('#btnsave').click(function (e)
+        {
+            debugger;
+            var Valid=ValidMaster();
+            if(Valid==false)
+                return;
+            var otArr = [];
+            var url = AddM_UpC;
+            if($("#Status").val()=="LP")
+            { debugger;
+                var values = LPToArray();
+                debugger;
+                Valid=values[0];
+                if(Valid==false)
+                    return;
+                otArr=values[1];
+                
+            }
+            else if($("#Status").val()=="IPO")
+            {
+                debugger;
+                var values = IPOToArray();
+                Valid=values[0];
+                if(Valid==false)
+                    return;
+                otArr=values[1];
+            }
+            else if($("#Status").val()=="FC" || $("#Status").val()=="CH"  )
+            {
+                debugger;
+                var values = IPOToArray();
+                Valid=values[0];
+                if(Valid==false)
+                    return;
+                otArr=values[1];
+            }
+
+
+            else if ($("#Status").val() == "Dispatch") {
+                var values = DispatchToArray();
+                Valid = values[0];
+                if (Valid == false)
+                    return;
+                otArr = values[1];
+            }
+            else if ($("#Status").val() == "Receive") {
+                var values = ReceiveToArray();
+                Valid = values[0];
+                if (Valid == false)
+                    return;
+                otArr = values[1];
+            }
+            var obj1 = getMaster();
+            var data = {
+                'Child': otArr,
+                'Master': obj1
+            };    
+            //console.log(data);
+          
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json" ,
+                processdata: true,
+
+                success: function (json)
+                {  if (json == "1")
+                {
+                    $("#myModal").modal('show');
+                    //$("#Date").datepicker("setDate", "");
+                    $("#Time").prop('selectedIndex', 0); 
+                    $("#Projects").prop('selectedIndex', 0); 
+                    $("#Employee").prop('selectedIndex', 0); 
+                    $("#Status").prop('selectedIndex', 0); 
+                    $("#StatusTypeNo").prop('selectedIndex', 0);   
+                     
+                    $('#formbody').html('');
+
+                    $("#GateEntryNo").val('');
+                    $("#ChallanNo").val('');
+                    $("#ChallanDate").datepicker("setDate", "");
+                    $("#VehicleNo").val('');
+                       
+                }
+                },
+
+
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+
+
+
+
+                error: function ()
+                {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridTojson() {
+            var json = '{';
+            var otArr = [];
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                if ($(this)[0].rowIndex != 0) {
+                    x = $(this).children();
+                    var itArr = [];
+                    x.each(function () {
+                        if ($(this).children('input').length > 0) {
+                            itArr.push('"' + $(this).children('input').val() + '"');
+                        }
+                        else {
+                            itArr.push('"' + $(this).text() + '"');
+                        }
+                    });
+                    otArr.push('"' + i + '": [' + itArr.join(',') + ']');
+                }
+            })
+            json += otArr.join(",") + '}'
+            return json;
+        }
+        function LPToArray()
+        {
+            debugger;
+            var otArr = [];
+            var ValidChild=false;
+            var tbl2 = $('#grid tbody tr').each(function (i)
+            {
+                debugger;
+                var obj = new Object();
+                
+
+                if ($(this)[0].rowIndex != 0 && $(this)[0].rowIndex != 1)
+                {
+                    debugger;
+                    x = $(this).children();
+                    obj.ReceiveQty = $(this).children().eq(12).find('input').val();
+                    if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                        ValidChild = true;
+
+                        obj.GateEntryNo = $("#GateEntryNo").val();
+
+                        obj.Status = $("#Status option:selected").val();
+                        obj.StatusTypeId = $("#StatusTypeNo option:selected").val();
+                        obj.StatusTypeNo = $("#StatusTypeNo option:selected").text().trim();
+                        // UnitNo ItemGroupNo Added from controller
+                        obj.ItemNo = $(this).children().eq(0).attr('it');
+                        obj.Item = $(this).children().eq(2).text().trim();
+                        obj.ItemGroup = $(this).children().eq(1).text().trim();
+                        obj.Unit = $(this).children().eq(3).text().trim();
+
+                        obj.StatusChildId = $(this).children().eq(0).attr('ipouid');
+                        obj.Vendor = $("td[class='Ven']").text().trim();
+                        obj.VendorNo = $("td[class='Ven']").attr('vid');
+                        debugger;
+                        obj.Rate = $(this).children().eq(0).attr('rate');
+                        
+                        
+
+
+                       
+                        otArr.push(obj);
+                    }
+                }
+
+            })
+            return [ValidChild, otArr];
+           
+        }
+        function IPOToArray()
+        {
+            debugger;
+            var otArr = [];
+            var ValidChild=false;
+            var tbl2 = $('#grid tbody tr').each(function (i)
+            {
+                var obj = new Object();
+                if ($(this)[0].rowIndex != 0 && $(this)[0].rowIndex != 1)
+                {
+                    debugger;
+                    x = $(this).children();
+                    obj.ReceiveQty = $(this).children().eq(12).find('input').val();
+                    if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                        ValidChild = true;
+
+                        obj.GateEntryNo = $("#GateEntryNo").val();
+
+                        obj.Status = $("#Status option:selected").val();
+                        obj.StatusTypeId = $("#StatusTypeNo option:selected").val();
+                        obj.StatusTypeNo = $("#StatusTypeNo option:selected").text().trim();
+                        // UnitNo ItemGroupNo Added from controller
+                        obj.ItemNo = $(this).children().eq(0).attr('it');
+                        obj.Item = $(this).children().eq(2).text().trim();
+                        obj.ItemGroup = $(this).children().eq(1).text().trim();
+                        obj.Unit = $(this).children().eq(3).text().trim();
+
+                        obj.StatusChildId = $(this).children().eq(0).attr('ipouid');
+                        obj.Vendor = $("td[class='Ven']").text().trim();
+                        obj.VendorNo = $("td[class='Ven']").attr('vid');
+                        debugger;
+                        obj.Rate = $(this).children().eq(0).attr('rate');
+                        
+                        
+
+
+                       
+                        otArr.push(obj);
+                    }
+                }
+            })
+            return [ValidChild, otArr];
+        }
+        function DispatchToArray() {
+            //  alert("A");
+            var otArr = [];
+            var ValidChild = false;
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                var obj = new Object();
+                if ($(this)[0].rowIndex != 0 && $(this)[0].rowIndex != 1 && $(this)[0].rowIndex != 2) {
+                    x = $(this).children();
+                    obj.ReceiveQty = $(this).children().eq(7).find('input').val();
+                    if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                        ValidChild = true;
+                        obj.GateEntryNo = $("#GateEntryNo").val();
+
+                        obj.Status = $("#Status option:selected").val();
+                        obj.StatusTypeId = $("#StatusTypeNo option:selected").val();
+                        obj.StatusTypeNo = $("#StatusTypeNo option:selected").text().trim();
+
+                        obj.ItemNo = $(this).children().eq(0).attr('it');
+                        obj.ItemGroupNo = $(this).children().eq(0).attr('ig');
+                        obj.Item = $(this).children().eq(2).text().trim();
+                        obj.ItemGroup = $(this).children().eq(1).text().trim();
+                        obj.Unit = $(this).children().eq(3).text().trim();
+                        obj.UnitNo = $(this).children().eq(0).attr('unitno');
+
+                        obj.StatusChildId = $(this).children().eq(0).attr('ostuid');
+                        //This Vendor use Here For Receiver Site
+                        obj.Vendor = $("td[class='RVen']").attr('receivename');
+                        obj.VendorNo = $("td[class='RVen']").attr('receiveno');
+
+                        obj.Rate = $(this).children().eq(0).attr('rate');
+
+                        obj.TaxPer = $(this).children().eq(0).attr('taxper');
+                        obj.DeliveryUnitCharge = $(this).children().eq(0).attr('dperunit');
+                        //This ReceiveQty use Here For Dispatch Qty
+
+                        otArr.push(obj);
+                    }
+                }
+            })
+            return [ValidChild, otArr];
+        }
+        function ReceiveToArray() {
+
+            var otArr = [];
+            var ValidChild = false;
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                var obj = new Object();
+                if ($(this)[0].rowIndex != 0 && $(this)[0].rowIndex != 1 && $(this)[0].rowIndex != 2) {
+                    x = $(this).children();
+                    obj.ReceiveQty = $(this).children().eq(7).find('input').val();
+                    if (obj.ReceiveQty != null && obj.ReceiveQty != 0) {
+                        ValidChild = true;
+                        obj.GateEntryNo = $("#GateEntryNo").val();
+
+                        obj.Status = $("#Status option:selected").val();
+                        obj.StatusTypeId = $("#StatusTypeNo option:selected").val();
+                        obj.StatusTypeNo = $("#StatusTypeNo option:selected").text().trim();
+
+                        obj.ItemNo = $(this).children().eq(0).attr('it');
+                        obj.ItemGroupNo = $(this).children().eq(0).attr('ig');
+                        obj.Item = $(this).children().eq(2).text().trim();
+                        obj.ItemGroup = $(this).children().eq(1).text().trim();
+                        obj.Unit = $(this).children().eq(3).text().trim();
+                        obj.UnitNo = $(this).children().eq(0).attr('unitno');
+
+                        obj.StatusChildId = $(this).children().eq(0).attr('ostuid');
+                        //This Vendor use Here For Dispach Site
+                        obj.Vendor = $("td[class='DVen']").attr('dispatchname');
+                        obj.VendorNo = $("td[class='DVen']").attr('dispatchno');
+
+                        obj.Rate = $(this).children().eq(0).attr('rate');
+                        obj.TaxPer = $(this).children().eq(0).attr('taxper');
+                        obj.DeliveryUnitCharge = $(this).children().eq(0).attr('dperunit');
+                        //This ReceiveQty use Here For Receive Qty
+
+                        otArr.push(obj);
+                    }
+                }
+            })
+            return [ValidChild, otArr];
+        }
+        function getMaster() {
+
+
+
+            var obj1 = new Object();
+
+            obj1.Date = $("#Date").val();
+            obj1.Time = $("#Time").val();
+
+            obj1.ProjectNo = $("#Projects option:selected").val();
+            obj1.ProjectName = $("#Projects option:selected").text();
+
+            obj1.GateEntryNo = $("#GateEntryNo").val();
+
+            obj1.EmpId = $("#Employee option:selected").val();
+            if (obj1.EmpId!=0)
+                obj1.EmpName = $("#Employee option:selected").text();
+
+            obj1.ChallanNo = $("#ChallanNo").val();
+            obj1.ChallanDate = $("#ChallanDate").val();
+            obj1.VehicleNo = $("#VehicleNo").val();
+
+            obj1.Status = $("#Status option:selected").val();
+           
+            obj1.StatusTypeId = $("#StatusTypeNo option:selected").val();
+            obj1.StatusTypeNo = $("#StatusTypeNo option:selected").text().trim();   
+
+         
+            obj1.EmpId = $("#Employee option:selected").val();
+            obj1.EmpName = $("#Employee option:selected").text();
+
+
+
+            return obj1;
+        }
+
+
+        function ValidMaster()
+        {
+            var Projects = $("#Projects option:selected").val();
+            var GateEntryNo = $("#GateEntryNo").val();
+            var Status = $("#Status option:selected").val();
+            var StatusTypeNo = $("#StatusTypeNo option:selected").val();
+            var Date = $("#Date").val();
+            var rr = true;
+            if (Projects == "0") {
+                $('#Projects').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#Projects').css('border-color', '');
+
+            }
+            if (GateEntryNo == "") {
+                $('#GateEntryNo').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#GateEntryNo').css('border-color', '');
+            }
+
+            if (Status == "") {
+                $('#Status').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#Status').css('border-color', '');
+            }
+
+            if (StatusTypeNo == "") {
+                $('#StatusTypeNo').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#StatusTypeNo').css('border-color', '');
+            }
+
+            if (Date == "") {
+                $('#Date').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#Date').css('border-color', '');
+            }        
+                                           
+            return rr;
+            
+        }
+
+        function ValidChild()
+        {
+            
+            
+        }
+    });
+
+
+
+
+
+    $(document).ready(function ()
+    {
+          
+        $(document).on('keyup', "td[class^='Receive_']", function () {
+            debugger;
+            var current=$(this).find('input').val();
+            var str=$(this).attr('class');
+            var a=str.substring(8);
+            var Qty = $("#Qty_" + a).find('input').val();
+            var PReceive = $("#PReceive_" + a).find('input').val();
+
+            var GateRecvQty = $("#GateReceive_" + a).find('input').val();
+            if(GateRecvQty =="")
+            {
+                GateRecvQty = 0.000
+            }else{
+                GateRecvQty = GateRecvQty;
+            }
+            var Net = +current + +GateRecvQty;
+            if(Net <= Qty)
+            {
+                var bal = +current + +PReceive;
+                if ( +bal > +Qty)
+                { 
+                    alert("Total Greater than  Purchase Qty");
+                    $(this).find('input').val('');
+                }
+            }
+            else
+            {
+                alert("No more Qunatity issued.");
+                $(this).find('input').val('');
+            }
+          
+        });
+    })
+
+
+    $(document).ready(function () {
+        //  alert('testing');
+      
+
+        $(document).on('keypress',"input[id='Receive']",function(event){
+
+
+            return isNumber(event, this)
+        });
+      
+        function isNumber(evt, element) {
+
+            var charCode = (evt.which) ? evt.which : event.keyCode
+
+            if (
+                (charCode != 45 || $(element).val().indexOf('-') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
+                (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+                (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        var timer;
+        $(function(){
+            $('#dateTime').html(getDateTime());
+
+            // Do a $.ajax call and update start time in your database
+
+            timer = setTimeout(function(){
+                update();
+            }, 1000);
+
+            
+        });
+
+        function update() {
+            $('#dateTime').html(getDateTime());
+
+            timer = setTimeout(function(){
+                update();
+            }, 1000);
+        }
+
+        function getDateTime(){
+            var currentdate = new Date();
+            var datetime = "Current Time: "
+                        + currentdate.getHours() + ":"
+                        + currentdate.getMinutes() + ":"
+                        + currentdate.getSeconds();
+            return datetime;
+        }
+
+    });
+
+</script>
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Material Gate Entry</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <p style="display:none">
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                </p>
+                                <!-- Input Icons -->
+                                <div class="row">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon" style="margin-left:7px">
+                                                            <span style="font:bold" id="dateTime"></span>
+
+                                                        </label>
+                                                      
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section" style="display:none">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Time", null, "Select Time", htmlAttributes: new { @id = "Time", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4" id="Time">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("GateEntryNo", null, new { id = "GateEntryNo", @class = "form-control gui-input required", @readonly = "readonly" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4" style="display:none">
+                                                    <div class="section" style="display:none">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Employee", new SelectList(string.Empty, "Value", "Text"), "Select Employee Name", htmlAttributes: new { @id = "Employee", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Date", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "Date", @placeholder = "Order Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanNo", null, new { id = "ChallanNo", @class = "form-control gui-input required", @placeholder = "Challan/Bill No" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ChallanDate", string.Format("{0:dd MMM yyy}", Date), new { @class = "DatePicker form-control", @id = "ChallanDate", @placeholder = "Challan Date" })
+                                                            <label for="RefNo" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("VehicleNo", null, new { id = "VehicleNo", @class = "form-control gui-input required", @placeholder = "Vehicle No" })
+
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Status", null, "Select Status", htmlAttributes: new { @id = "Status", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("StatusTypeNo", new SelectList(string.Empty, "Value", "Text"), "Select Status No.", htmlAttributes: new { @id = "StatusTypeNo", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                    <div id="dvLoading"></div>
+                                    <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                    <div class="pager glyphicon-align-center" id="formbody">
+
+                                    </div>
+
+
+                                    <br />
+                                    <div >
+                                        <input type="button" id="btnsave" class="btn btn-primary" value="Submit" />
+                                    </div>
+
+                                    <div id="myModal" class="modal fade">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                    <h4 class="modal-title">Confirmation</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                                    <p class="text-danger">Data Save Successfully</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+                                    <!-- end .section row section -->
+                                    <!-- end .form-footer section -->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

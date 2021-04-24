@@ -1,0 +1,350 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+
+  var SaveExcise = '@Url.Action("AddExcise", "ExciseDuty")';
+    var GetExice = '@Url.Action("GetExice", "ExciseDuty")';
+    var redurl = '@Url.Action("Index", "ExciseDuty")';
+</script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.get(GetExice,
+
+               function (result) {
+                   $('#formbody').show();
+                   $('#formbody').html(result);
+
+                   $("#loading").hide();
+               });
+
+
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveExcise;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+                        window.location.href = redurl;
+
+                    }
+                    else if (json.Status == "2")
+                    {
+                        alert("ED code already exist.");
+                    }
+                    
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            var obj = new Object();
+
+            obj.EdCode = $("#txtEdCode").val();
+            obj.EdType = $("#txtEdType").val();
+            obj.ExciseStatusExistvalue = $("#ddlExiceStatus option:selected").val();
+            if ($("#ddlExiceStatus option:selected").val() == 1) {
+                obj.EdValue = $("#txtEdValue").val();
+            } else {
+                obj.EdNumericValue = $("#txtEdValue").val();
+            }
+            
+            obj.Remarks = $("#txtRemarks").val();
+           
+            return obj;
+
+        }
+
+
+        function Valid() {
+
+
+            var EdCode = $("#txtEdCode").val();
+            var EdType = $("#txtEdType").val();
+            var ExciseStatusExistvalue = $("#ddlExiceStatus option:selected").val();
+            var EdValue = $("#txtEdValue").val();
+            var Remarks = $("#txtRemarks").val();
+            var rr = true;
+
+
+            if (EdCode == "") {
+                alert('Enter the ED Code.');
+                $('#txtEdCode').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtEdCode').css('border-color', '');
+            }
+
+            if (EdType == "") {
+                alert('Enter the Ed Type.');
+                $('#txtEdType').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtEdType').css('border-color', '');
+            }
+
+
+            if (EdValue == "") {
+                alert('Enter the ED Value.');
+                $('#txtEdValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtEdValue').css('border-color', '');
+            }
+
+
+            if (ExciseStatusExistvalue == "") {
+
+                alert('Select Excise Status.');
+                $('#ddlExiceStatus').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlExiceStatus').css('border-color', '');
+            }
+
+
+
+
+            if (Remarks == "") {
+                alert('Enter the Description.');
+                $('#txtRemarks').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtRemarks').css('border-color', '');
+            }
+
+
+         
+
+        if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+        //window['Getdet'] = function (dateString) {
+
+       
+          
+           
+
+        //};
+        //Getdet();
+
+    });
+</script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Excise Duty</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("EdCode", null, new { id = "txtEdCode", @class = "form-control gui-input", @placeholder = "ED Code" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Ed Type", null, new { id = "txtEdType", @class = "form-control gui-input", @placeholder = "Ed Type" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    
+
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("ExciseStatus", (IEnumerable<SelectListItem>)ViewBag.ExciseDutyStatus, htmlAttributes: new { @id = "ddlExiceStatus", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("EdValue", null, new { id = "txtEdValue", @class = "form-control gui-input", @placeholder = "Ed Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextArea("Remarks", null, new { id = "txtRemarks", @class = "form-control gui-input", @placeholder = "Remarks" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                               
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+                                                   
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

@@ -1,0 +1,261 @@
+﻿
+@{
+    ViewBag.Title = "Reject Transfer";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetTransfer = '@Url.Action("GetTransferWithoutGateOut", "IntraTransfer")';
+
+
+    $(document).ready(function(){
+
+        $.ajax({
+            type: 'POST',
+            url: GetProjectByEmpId, // Calling json method
+
+            dataType: 'json',
+            data: { E: ss },
+            complete: function () {
+
+            },
+            success: function (result) {
+                var procemessage = "<option value='0'> Please wait...</option>";
+                $("#Projects").html(procemessage).show();
+                var markup = "<option value='0'>Select Project</option>";
+                $("#Projects").html(markup).show();
+                result = $.parseJSON(result)
+
+                var selectedDeviceModel = $('#Projects');
+                $.each(result, function (index, item) {
+                    selectedDeviceModel.append(
+                        $('<option/>', {
+                            value: item.Value,
+                            text: item.Text
+                        })
+                    );
+                });
+                //if (PId != '') {
+                //    $('#Projects option:selected').val(PId);
+                //    GetData();
+                //}
+                //else {
+                //    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                //}
+            },
+            error: function (ex) {
+                alert('Failed to retrieve Project.' + ex);
+            }
+        });
+
+        $('#btn_Search').click(function(){
+
+            $.get(GetTransfer,{ProjectID:$('#Projects').val(), TransferType:$('#TransferType').val(),
+                TransferDate:$('#TransferDate').val()},function(response){
+                    $('#formbody').html(response);
+                });
+        });
+
+
+        $('body').on('click','td input:button',function(){
+            var t_t=$(this).parents('td').find('input[name="HDN_TransferType"]').val();
+            var t_n=$(this).parents('td').find('input[name="HDN_TransferNo"]').val();
+            var t_r=$(this).parents('tr').find('td input[name="RejectRemark"]').val();
+            console.log({TransferNo:t_n, Remarks:t_r, TransferType:t_t});
+            $.post('SaveRejectTransfer',{TransferNo:t_n, Remarks:t_r, TransferType:t_t},function(response){
+                if(response>0)
+                {
+                    alert('Successfully Save');
+                    $('#btn_Search').click();
+                }
+                else
+                    alert('Something Went Wrong');
+
+            });
+            
+
+        });
+
+
+        $('body').on('change','thead th input:checkbox',function(){
+            if($(this).prop('checked'))
+            {
+                $('.TransferChk').attr('Checked','Checked');
+            }
+            else
+                $('.TransferChk').removeAttr('Checked','Checked');
+        });
+
+        //$('body').on('change','.dateBox',function(){
+        //    if($(this).val().trim()!='')
+        //    {
+        //        var dateString =$(this).val();
+        //        var regex = /(((0|1)[0-9]|2[0-9]|3[0-1])\/(0[1-9]|1[0-2])\/((19|20)\d\d))$/;
+        //        if (!regex.test(dateString)) {
+        //            alert('Invalid Date Format.');
+        //            $(this).focus();
+        //        }
+        //    }
+        //});
+
+    });
+
+    function ExportToExcel(url)
+    {
+        $.get(url,function(response){
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            var tab_text = response;
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html","replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus();
+                txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+            }
+            else                 //other browser not tested on IE 11
+                window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        });
+    }
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Cancel Transfer</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                <select class="form-control" name="TransferType" id="TransferType">
+                                                                    <option value="InterTransfer">Intra Transfer (Within State)</option>
+                                                                    <option value="IntraTransfer">Inter Transfer(Other State)</option>
+                                                                </select>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-2">
+                                                        <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+                                        </div>
+
+                                    }
+
+
+
+                                </form>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4"></div>
+                                        <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+
+
+
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br />
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

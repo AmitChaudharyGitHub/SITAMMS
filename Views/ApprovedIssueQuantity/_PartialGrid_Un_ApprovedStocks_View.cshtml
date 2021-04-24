@@ -1,0 +1,321 @@
+﻿@model MMS.ViewModels.Unapproved_VMIndentRequisionses
+
+@{
+    Layout = null;
+}
+
+
+
+
+
+<style>
+
+    .edit-mode { }
+    .edit-user{}
+    .edit-user display-mode{}
+    .save-user edit-mode{}
+    .display-mode{}
+    .cancel-user{}
+
+
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+
+    /*Here we will add css for style webgrid*/
+    .webgrid-table {
+        font-family: "Courier New", Courier, monospace;
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #167f92;
+        border-radius: 10px;
+        color: #024457;
+        margin: 1em 0;
+        overflow: hidden;
+        width: 100%;
+        background-color: white;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+        .webgrid-table td, th {
+            border: 1px solid #d9e4e6;
+            padding: 3px 7px 2px;
+        }
+
+        .webgrid-table th, a {
+            
+            text-align:left;
+        }
+
+
+
+    .webgrid-header {
+        background-color: #497bf9;
+        color: #FFFFFF;
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: left;
+        cursor: crosshair;
+    }
+
+    .webgrid-footer {
+    }
+
+    .webgrid-row-style {
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid-alternating-row {
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
+    }
+
+    .webgrid th:first-child {
+        display: table-cell;
+        text-align: center;
+    }
+
+    .webgrid th:nth-child(2) {
+        display: table-cell;
+    }
+
+        .webgrid th:nth-child(2) span {
+            display: none;
+        }
+
+        .webgrid th:nth-child(2)::after {
+            content: attr(data-th);
+        }
+
+    .webgrid tr:nth-child(2n+1) {
+        background-color: #eaf3f3;
+    }
+
+    .webgrid th {
+        background-color: #167f92;
+        border: 1px solid #fff;
+        color: #fff;
+        display: none;
+        padding: 1em;
+    }
+
+        .webgrid th:first-child {
+            display: table-cell;
+            text-align: center;
+        }
+
+    /* for textbox webgrid*/
+
+    input[type="text"] {
+        width: 70px;
+        font-weight: bold;
+    }
+
+    .hidecol {
+        visibility: hidden;
+    }
+</style>
+
+
+<script>
+    // JQUERY ".Class" SELECTOR.
+    $(document).ready(function () {
+
+        $('input[type="text"]').keypress(function (event) {
+
+            return isNumber(event, this)
+
+        });
+
+    });
+    // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
+    function isNumber(evt, element) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode
+
+        if (
+            (charCode != 45 || $(element).val().indexOf('-') != -1) &&      // “-” CHECK MINUS, AND ONLY ONE.
+            (charCode != 46 || $(element).val().indexOf('.') != -1) &&      // “.” CHECK DOT, AND ONLY ONE.
+            (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(
+      function () {
+          $('input[type="text"]').keyup(
+
+          function () {
+              var a = $('#SurName').val();
+              var b = $('td.passeee').html();
+              var c = $('td.app1').html();
+
+              //if (+b >= +a) {
+              //    //alert("u Can Apply")
+              //    $("#myModal1").modal('hide');
+              //}
+
+              if (+b >= +a) {
+                  //alert("u Can Apply")
+                  $("#myModal1").modal('hide');
+              }
+
+              else {
+
+                  toastr.options.positionClass = "toast-bottom-right";
+                  toastr.options.closeButton = true;
+                  toastr.options.progressBar = true;
+                  toastr.error('Approved Quantity Can not Greater than Quantity', 'Error');
+
+              }
+
+          });
+      })
+</script>
+
+
+
+@*<script type="text/javascript">
+    $(function () {
+        $('.edit-mode').hide();
+        $('.edit-user, .cancel-user').on('click', function () {
+            var tr = $(this).parents('tr:first');
+            tr.find('.edit-mode, .display-mode').toggle();
+        });
+
+        $(".save-user").click(function (e) {
+            //debugger;
+            //alert('Check')
+            var _griddata = gridTojson();
+
+
+
+            var url = '@Url.Action("UpdateGridData")';
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { griddata: _griddata }
+            }).done(function (data) {
+                if (data != "") {
+                    $('#message').html(data);
+                    $("#myModal2").modal('show');
+                }
+            });
+        });
+
+        function gridTojson() {
+            var json = '{';
+            var otArr = [];
+
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                if ($(this)[0].rowIndex != 0) {
+                    x = $(this).children();
+                    var itArr = [];
+                    x.each(function () {
+                        if ($(this).children('input').length > 0) {
+                            itArr.push('"' + $(this).children('input').val() + '"');
+                        }
+                        else {
+                            itArr.push('"' + $(this).text() + '"');
+                        }
+                    });
+                    otArr.push('"' + i + '": [' + itArr.join(',') + ']');
+                }
+            })
+            json += otArr.join(",") + '}'
+            return json;
+        }
+    })
+</script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#closebtn").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+        })
+
+        $(".close").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.AppIndentss, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+              headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                              columns: grid.Columns(
+                //grid.Column("ProjectName", header: "Project Name"),
+                //grid.Column("IndentNo", header: "Indent No.", canSort: false),
+                //grid.Column("Id", header: "", canSort: false, style: "hidecol"),
+                                                          grid.Column("Id", header: "", canSort: false, style: "hidecol"),
+                                                          grid.Column("ItemGroupName", header: "Group Name", canSort: false),
+                                                         grid.Column("ItemName", header: "Item Name", canSort: false),
+                                                                  grid.Column("UnitID", header: "Unit", canSort: false),
+                                                                  grid.Column("Make", header: "Make", canSort: false),
+                                                                  grid.Column("PartNo", header: "PartNo", canSort: false),
+                                                                  grid.Column("Quantity", header: "Quantity", canSort: false, style: "passeee"),
+                //grid.Column("BalanceQuantity", header: "Bal Qty", canSort: false),
+                //grid.Column("IssueQuantity", header: "Issue Quantity", canSort: false),
+                                           grid.Column("Approved_Quantity", header: "Approved Qty",  canSort: false)
+               
+
+
+                                                                     ));
+}
+
+
+</div>
+
+
+<div id="myModal2" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Issue Quantity Approved Successfully</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

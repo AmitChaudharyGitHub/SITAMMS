@@ -1,0 +1,371 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+}
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "Permission")';
+    var GetUserprojId = '@Url.Action("GetUserProjectWise", "Permission")';
+   // var GetItemByGroup='@Url.Action("GetItemByGroupStock", "tblItemMasters")';
+  //  var GetItemGroup='@Url.Action("GetItemGroupStock", "MovableStatus")';
+
+   // var StockGrid = '@Url.Action("StockGrid", "tblItemMasters")';
+
+
+    var SendGridD = '@Url.Action("InsertGrid", "Permission")';
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+
+        $("#Projects").change(function () {
+            $("#ddlUser").empty();
+            $("#ddlUser").append($("<option></option").val("").html("Select User"));
+            if ($('#Projects option:selected').val() != 0) {
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: GetUserprojId,
+                    dataType: 'json',
+                    data: { PrID: $("#Projects").val() },
+                    success: function (data) {
+
+                        $.each(data, function (i, itname) {
+                            $("#ddlUser").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+
+
+                        });
+
+                    }
+
+                })
+            }
+
+        })
+
+
+
+        window['GetGrid'] = function(dateString){
+            $('#dvLoading').show();
+
+            var url = '@Url.Action("PermissionGrid", "Permission")';
+            $.get(url,
+               function (result) {
+                   $('#formbody').show();
+                   $('#formbody').html(result);
+                   $("#loading").hide();
+               });
+
+
+        };
+
+        GetGrid();
+
+       
+
+
+
+
+
+    })
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function()
+    {
+       
+        $('#btnsave').click(function(e)
+        {
+            var V= Valid();
+            
+            if(V==false)
+                return;
+         
+            var _griddata = gridToArray();
+            var url = SendGridD;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json" ,
+                processdata: true,
+
+                success: function (json)
+                {
+                    debugger;
+
+                    if (json == "1")
+                    {
+                       alert("Data Saved Successfully");
+                    }
+                    else if(json =="2")
+                    {
+                        alert("User has Already Permitted.")
+                    }
+
+                },
+              error: function ()
+                {
+                    alert('Error in Submit Data');
+                }
+            });
+
+
+
+        })
+
+
+        function gridToArray() {
+           
+            var otArr2 = [];
+            var tbl2 = $('#subT tbody tr').each(function (i) {
+
+                var obj = new Object();
+
+                if ($(this)[0].rowIndex != 0)
+                {
+
+                  var  x = $(this).children().eq(0).find('input');
+                    var c = x.is(':checked');
+
+                    if (c == true)
+                    {
+                        obj.SubMenuId = x.val();
+                        obj.ProjectId = $("#Projects option:selected").val();
+                        obj.UserId = $("#ddlUser option:selected").val();
+                   
+                        otArr2.push(obj);
+                    }
+                }
+
+            })
+
+
+
+          
+
+            var session = {
+               'SubGrid': otArr2
+                
+            };
+            return session;
+
+        }
+
+
+        function Valid() {
+        
+            
+
+            var ProjectNo = $("#Projects option:selected").val();   
+            
+             var  User = $("#ddlUser option:selected").val();
+
+             var rr = true;
+                         
+            if (ProjectNo == "") {
+                $('#Projects').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#Projects').css('border-color', '');
+            }
+            
+            if (User == "") {
+                $('#ddlUser').css('border-color', '#f0551b');
+                rr = false;
+            }
+            else {
+                $('#ddlUser').css('border-color', '');
+            }
+
+           if (rr == false)
+            {
+             return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+
+
+    });
+
+</script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">User Permission</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                      @Html.DropDownList("User", new SelectList(string.Empty, "Value", "Text"), "Select User", htmlAttributes: new { @id = "ddlUser", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+
+
+                                            <div id="dvLoading"></div>
+                                            <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                            <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                            </div>
+
+
+                                            <br />
+
+
+
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+
+                                <div class="row">
+                                    <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+                                        @*<input type="button" id="btnsave" class="btn btn-primary" value="Create" />*@
+                                        <input type="button" id="btnsave" class="btn btn-primary" value="Save" />
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

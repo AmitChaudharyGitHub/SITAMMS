@@ -1,0 +1,349 @@
+﻿@model MMS_P.ViewModels.InterStateTransfer
+@{
+    ViewBag.Title = "InterTransferDetail";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    var TransferDate = (DateTime)ViewBag.InterTransferDate;
+}
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td {
+        padding: inherit 2px;
+    }
+
+        td input {
+            width: 80px;
+            font-size: 11px !important;
+        }
+</style>
+<script>
+
+    //$(window).load(function () {
+    //    $('#dvLoading').fadeOut(2000);
+    //});
+</script>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript">
+    var GetForwardTo = '@Url.Action("BindStore", "IntraTransfer")';
+    var UpdateTransferList = '@Url.Action("UpdateTransfer", "IntraTransfer")';
+    var redurl = '@Url.Action("Index", "IntraTransfer")';
+</script>
+
+@section scripts{
+  <script src="~/Script/InterTransferDetail.js"></script>    
+}
+
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <div class="section-divider mb40" id="spy1">
+                                <span>
+                                    Intra State Transfer (Within State)
+                                </span>
+                            </div>
+
+                            <p>
+                                <a class="btn btn-primary" data-modal="" href="@Url.Action("Index", "IntraTransfer")" id="btnCreate">
+                                    Intra State Transfer List
+                                    @{int rowNo = 1;}
+                                    @*<input type="hidden" id="hdnTypeSelect" value=@ViewBag.TypeSelect />
+                                        <input type="hidden" value="@ViewBag.PurchaseTypeId" id="purchadeid" />
+                                        <input type="hidden" value="@ViewBag.PurchaseDescisionType" id="purchaseDeceion-id" />
+
+                                        <input type="hidden" id="hdn_sitepurchasevalue" value="@ViewBag.SiteId" />
+                                        <input type="hidden" id="hdn_sitepurchaseLimitValue" value="@ViewBag.SiteLimitVal" />
+                                        <input type="hidden" id="hdn_hopurchasevalue" value="@ViewBag.HOId" />
+                                        <input type="hidden" id="hdn_HOepurchaseLimitValue" value="@ViewBag.HoLimitVal" />*@
+
+                                    <input type="hidden" id="hdnLoggedType" value="@ViewBag.EmpType" />
+
+                                </a>
+                            </p>
+
+
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <td class="MasterId" colspan="10" muid=@Model.Master.TransId>
+                                            <input type="hidden" id="hdnTransferTransID" value="@Model.Master.InterTransferNumber" />
+                                            <input type="hidden" id="hdnTransID" value="@Model.Master.TransId" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>@Html.DisplayName("Project Name:")</th>
+                                        <th>@Html.DisplayName("Transfer Project Name:")</th>
+                                        <th>@Html.DisplayName("Transfer Number :")</th>
+                                        <th>@Html.DisplayName("Transfer Date :")</th>
+                                        <th style="color:red">@Html.DisplayName("Last Recv Date :")</th>
+                                    </tr>
+
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.Master.ProjectName)</td>
+                                        <td>@Html.DisplayFor(model => model.Master.TransferProjectName)</td>
+                                        <td>@Html.DisplayFor(model => model.Master.InterTransferNumber)</td>
+                                        <td>@Html.DisplayFor(model => model.Master.TransferDate)</td>
+                                        <td>@Html.DisplayFor(model => model.Master.ReachingDateofDestination, "{0:dd/MM/yyyy}")</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div>
+                                @if (Model.Child.Count != 0)
+                                {
+                                    <table class="table table-hover" id="gridD">
+                                        <tr class="primary">
+                                            <th>
+                                                @Html.DisplayName("SrNo.")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Group Name")
+                                            </th>
+                                            <th style="white-space:nowrap">
+                                                @Html.DisplayName("Item Name")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Unit")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("HSN Code")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("GIETM Code")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Stock Quantity")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Delivery Quantity")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Balance Quantity")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Discounted Rate")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName("Delivery Rate")
+                                            </th>
+                                            <th>
+                                                @Html.DisplayName(" Estimated Value ")
+                                            </th>
+                                        </tr>
+
+                                        @foreach (var item in Model.Child)
+                                        {
+                                            var a = @item.TransId;
+                                            var It = @item.ItemId;
+                                            <tr id=@a style="font-size:11px;">
+                                                <td class=SrNo_@a uid=@a it=@It>
+                                                    @rowNo
+                                                </td>
+                                                <td class=Group_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                                    @Html.HiddenFor(modelItem => item.ItemGroupId)
+                                                </td>
+                                                <td class=Item_@a>
+                                                    @Html.DisplayFor(modelItem => item.ItemName)
+                                                    @Html.HiddenFor(modelItem => item.ItemId)
+                                                </td>
+                                                <td class=Unit_@a>
+                                                    @Html.DisplayFor(modelItem => item.UnitCode)
+
+                                                </td>
+                                                <td class=HSN_@a>
+                                                    @Html.DisplayFor(modelItem => item.HSNCode)
+
+                                                </td>
+                                                <td class=GIETM_@a>
+                                                    @Html.DisplayFor(modelItem => item.GIETMCode)
+
+                                                </td>
+
+
+
+                                                <td class="StockQty_@a">
+
+                                                    @Html.TextBoxFor(modelItem => item.StockQty, new { disabled = "disabled", @readonly = "readonly" })
+
+                                                </td>
+                                                <td class=DeliveryQty_@a>
+                                                    @Html.TextBoxFor(modelItem => item.DeliveryQty, new { @placeholder = "0" })
+
+                                                </td>
+
+                                                <td class=BalanceQty_@a>
+
+
+                                                    @Html.TextBoxFor(modelItem => item.BalancedQty, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+
+                                                </td>
+
+                                                <td class=Discountedrate_@a>
+
+
+                                                    @Html.TextBoxFor(modelItem => item.DiscountedRate, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+
+                                                </td>
+
+                                                <td class=DeliveryRate_@a>
+
+
+                                                    @Html.TextBoxFor(modelItem => item.DeliveryRate, new { @placeholder = "0" })
+
+                                                </td>
+
+                                                <td class=EstimatedValue_@a>
+
+
+                                                    @Html.TextBoxFor(modelItem => item.EstimatedValue, new { disabled = "disabled", @readonly = "readonly", @placeholder = "0" })
+
+                                                </td>
+
+
+
+
+
+
+
+
+
+                                                @{ rowNo++; }
+
+                                            </tr>
+                                                    }
+
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><b>  Total*  </b></td>
+                                            <td><label id="lblTotalValue"></label></td>
+
+                                        </tr>
+                                    </table>
+                                                    }
+                            </div>
+
+                            <br />
+
+                            <div class="row">
+                                @if (ViewBag.CheckMangExist != 0)
+                                {
+
+                                    <div class="col-md-3" id="iddropdown">
+                                        <div class="section">
+                                            <label class="field select">
+
+                                                @Html.DropDownList("Forward To", new SelectList(string.Empty, "Value", "Text"), "Select Forward To", htmlAttributes: new { @id = "ddlForwardTo", @class = "form-control" })
+
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                                else { }
+
+                                <div class="col-md-6" id="Rmrks">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextArea("PICRemarks", null, new { id = "txtPICRemarks", @class = "form-control", @placeholder = "Remarks" })
+                                            <label for="firstname" class="field-icon">
+                                                <i class="fa fa-building"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <br />
+                            <div class="row">
+                                <div class="col-sm-12">
+
+                                    <input type="submit" value="Approve" id="SubmitA" class="btn btn-success pull-right" />
+                                </div>
+
+
+
+
+                            </div>
+                            <div class="section-divider mt40 mb25" id="spy5">
+                                <span></span>
+                            </div>
+
+
+
+                        </div>
+                        <div id="myModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                        <h4 class="modal-title">Confirmation</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        @*<p>Do you want to save changes you made to document before closing?</p>*@<p></p><p></p><p></p><p></p><p></p><p></p>
+                                        <p class="text-danger">Data Save Successfully</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        @*<button type="button" class="btn btn-primary">Save changes</button>*@<button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="dialog-edit-abc" style="display: none">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+
+
+
+
+

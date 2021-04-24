@@ -1,0 +1,483 @@
+﻿
+@{
+    ViewBag.Title = "TransferEwayBill";
+}
+
+
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+<style>
+    .Piv1 {
+        display: normal;
+    }
+
+    .Piv2 {
+        display: none;
+    }
+</style>
+
+<style>
+    .nav-tabs.nav-tabs-border > li.active > a {
+        border-top: 2px solid #4a89dc;
+        margin-top: -1px;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background: #ffffff none repeat scroll 0 0;
+        color: #555555;
+        cursor: default;
+    }
+
+    .nav-tabs-left > li > a {
+        border-left: 1px solid transparent;
+        border-right: 1px solid #ddd;
+    }
+
+    .nav-tabs > li > a {
+        border-left: 1px solid #ddd;
+        border-radius: 0;
+        color: #777;
+        font-size: 12px;
+        line-height: 18px;
+        padding: 10px 18px;
+    }
+
+    .tab-content .tab-pane {
+        padding: 20px 0;
+    }
+</style>
+
+
+@*<script src="~/Scripts/jquery-1.7.1.js"></script>*@
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetPendingTransfer = '@Url.Action("PendingTransferEwayBill", "IntraTransfer")';
+    var GetUpdatedTransfer = '@Url.Action("UpdatedTransferEwayBill", "IntraTransfer")';
+    
+
+    $(document).ready(function(){
+
+        $.ajax({
+            type: 'POST',
+            url: GetProjectByEmpId, // Calling json method
+
+            dataType: 'json',
+            data: { E: ss },
+            complete: function () {
+
+            },
+            success: function (result) {
+                var procemessage = "<option value='0'> Please wait...</option>";
+                $("#Projects").html(procemessage).show();
+                var markup = "<option value='0'>Select Project</option>";
+                $("#Projects").html(markup).show();
+                result = $.parseJSON(result)
+
+                var selectedDeviceModel = $('#Projects');
+                $.each(result, function (index, item) {
+                    selectedDeviceModel.append(
+                        $('<option/>', {
+                            value: item.Value,
+                            text: item.Text
+                        })
+                    );
+                });
+                //if (PId != '') {
+                //    $('#Projects option:selected').val(PId);
+                //    GetData();
+                //}
+                //else {
+                //    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                //}
+            },
+            error: function (ex) {
+                alert('Failed to retrieve Project.' + ex);
+            }
+        });
+
+        $('#btnSubmit').click(function(){
+            $.get(GetPendingTransfer,{ProjectID:$('#Projects').val(), TransferType:$('#TransferType').val(), 
+                TransferDate:$('#TransferDate').val()},function(response){
+                $('#formbody').html(response);
+                });
+
+            $.get(GetUpdatedTransfer,{ProjectID:$('#Projects').val(), TransferType:$('#TransferType').val(), 
+                TransferDate:$('#TransferDate').val()},function(response){
+                    $('#formbodyApproval').html(response);
+                });
+        });
+
+        $('body').on('click','#BtnFormSubmit',function(){
+            var t_Data=[];
+            var is_valid=true;
+            var t_t=$('input[name="HDN_TransferType"]').val();
+            if($('.TransferChk:checked').length==0)
+            {
+                alert('No Selected Record found.');
+                return false;
+            }
+            //if($('.TransferChk').prop('checked') && $('.TransferChk').parents('tr').find('input:text').val().trim()=='')
+            //{
+            //    alert('Select row textbox value must be filled.');
+            //    return false;
+            //}
+
+
+            $.each($('.TransferChk:checked'),function(){
+                if($(this).parents('tr').find('input[name="EWayBillNo"]').val().trim()=='' || $(this).parents('tr').find('input[name="EWayBillDate"]').val().trim()=='')
+                    is_valid=false;
+                t_Data.push({TransferNumber:$(this).val(), EWayBill:$(this).parents('tr').find('input[name="EWayBillNo"]').val().trim(), EWayBillDate:$(this).parents('tr').find('input[name="EWayBillDate"]').val()});
+            });
+
+            if(!is_valid)
+            {
+                alert('Select row textbox value must be filled.');
+                return false;
+            }
+
+            if(t_Data.length>0)
+            {
+                $.post('SaveTransferEWayBill',{TransferData:t_Data, TransferType:t_t},function(response){
+                    alert(response);
+                });
+                $('#btnSubmit').click();
+            }
+        });
+
+        $('body').on('change','thead th input:checkbox',function(){
+            if($(this).prop('checked'))
+            {
+                $('.TransferChk').attr('Checked','Checked');
+            }
+            else
+                $('.TransferChk').removeAttr('Checked','Checked');
+        });
+
+        $('body').on('change','.dateBox',function(){
+            if($(this).val().trim()!='')
+            {
+                var dateString =$(this).val();
+                var trn_date=$(this).parents('tr').find('input[name="HDN_TransferDate"]').val();
+                var regex = /((0[1-9]|1[0-2])\/((0|1)[0-9]|2[0-9]|3[0-1])\/((19|20)\d\d))$/;
+                if (!regex.test(dateString)) {
+                    alert('Invalid Date Format.');
+                    $(this).val('');
+                    $(this).focus();
+                }
+                else
+                {
+                    var s_d=new Date(dateString);
+                    var t_d=new Date(trn_date);
+                    var c_d=new Date();
+                    if(s_d<t_d || s_d>c_d)
+                    {
+                        alert('E-Way Bill date must be greater than transfer and less than current date.');
+                        $(this).val('');
+                        return false;
+                    }
+                }
+            }
+        });
+
+        $(".IntrDialog").live("click", function (e) {
+            $('#dvLoading').show();
+            debugger;
+            var url = $(this).attr('href');
+
+            e.preventDefault();
+
+            $("#InterTrns-view").dialog({
+                title: 'Delivery Challan ',
+                autoOpen: false,
+                resizable: false,
+                height: 550,
+                width: 1000,
+                show: { effect: 'explode', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        // $("#Transfer-view").dialog('close');
+                        //window.location.href = '@Url.Action("Index", "IntraTransfer")';
+                        $('#dvLoading').hide();
+                        $(this).dialog('close');
+
+                    }
+                },
+                close: function (event, ui) {
+                    $('#dvLoading').hide();
+                    $(this).dialog('close');
+                    // return false;
+                    // window.location.href = '@Url.Action("Index", "IntraTransfer")';
+                }
+            });
+
+
+
+            $("#InterTrns-view").dialog('open');
+            return false;
+        });
+
+        
+
+    });
+
+    function ExportToExcel(url)
+    {
+        $.get(url,function(response){
+            var ua = window.navigator.userAgent;
+            var msie = ua.indexOf("MSIE ");
+            var tab_text = response;
+
+            if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+            {
+                txtArea1.document.open("txt/html","replace");
+                txtArea1.document.write(tab_text);
+                txtArea1.document.close();
+                txtArea1.focus(); 
+                txtArea1.document.execCommand("SaveAs",true,"Say Thanks to Sumit.xls");
+            }  
+            else                 //other browser not tested on IE 11
+                window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+        });
+    }
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Transfer EWay Bill</span>
+                                </div>
+
+                                <input type="hidden" id="hdnLoggedType" value="@ViewBag.EmpType" />
+
+
+                                <div class="panel">
+                                    <div class="panel-heading">
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                  
+
+
+                                                </div>
+                                                <div class="col-md-4">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Project Assign", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section hide">
+                                                        <label class="field select">
+
+                                                         <input type="text" class="form-control dateBox" name="TransferDate" id="TransferDate"  placeholder="Enter Transfer Date (mm/dd/yyyy)"/>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            <select class="form-control" name="TransferType" id="TransferType">
+                                                                <option value="InterTransfer">Intra Transfer (Within State)</option>
+                                                                <option value="IntraTransfer">Inter Transfer(Other State)</option>
+                                                            </select>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="button" class="btn btn-default" id="btnSubmit" value="Submit" />
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="container tabs-wrap">
+
+                                            <div class="container tabs-wrap">
+                                                <ul class="nav nav-tabs nav-tabs-border" role="tablist">
+                                                    <li role="presentation" class="active">
+                                                        <a href="#PendingTransfer" aria-controls="PendingTransfer" role="tab" data-toggle="tab" aria-expanded="true">Pending Transfer E-Way Bill</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#updatedtransfer" aria-controls="updatedtransfer" role="tab" data-toggle="tab" aria-expanded="false">Updated Transfer E-Way Bill</a>
+                                                    </li>
+
+                                                </ul>
+
+
+                                                <div class="panel-body">
+                                                    <div class="tab-content pn br-n">
+                                                        <div role="tabpanel" class="tab-pane active" id="PendingTransfer">
+
+                                                            <div class="row">
+
+
+                                                                @Html.AntiForgeryToken()
+
+                                                                <div class="form-horizontal">
+
+                                                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-4"></div>
+                                                                                <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+                                                                        <div class="pager glyphicon-align-center" id="formbody">
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+
+                                                                </div>
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                                <!-- end .section row section -->
+                                                                <!-- end .form-footer section -->
+                                                            </div>
+
+
+                                                        </div>
+
+                                                        <div role="tabpanel" class="tab-pane" id="updatedtransfer">
+
+
+                                                            <div class="row">
+
+                                                                <div class="form-horizontal">
+                                                                    <div class="row">
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <div class="col-md-4"></div>
+                                                                                <div class="col-md-4">
+                                                                                    <div style="display:none;" id="loadingApproval" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4"></div>
+                                                                        </div>
+
+                                                                        <div class="pager glyphicon-align-center" id="formbodyApproval">
+
+                                                                        </div>
+
+
+                                                                    </div>
+
+
+                                                                </div>
+
+
+                                                                <br />
+                                                                <div>
+
+
+                                                                    <div style="visibility:hidden;" id="container"></div>
+
+                                                                </div>
+
+                                                                <div class="section-divider mt40 mb25" id="spy5">
+                                                                    <span></span>
+                                                                </div>
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+
+<div id="InterTrns-view" style="display: none">
+</div>

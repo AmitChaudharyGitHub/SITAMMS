@@ -1,0 +1,72 @@
+﻿@model List<MMS.Models.VMItemBudgetData>
+
+
+@if (Model != null && Model.Count>0)
+{
+    int i = 1;
+       <div style="min-width: 2500px; overflow-x:overlay;">
+           <table class="table table-bordered">
+               <thead>
+                   <tr>
+                       <th>S No.</th>
+                       <th>Financial Year</th>
+                       <th>Item Code</th>
+                       <th>Item Name</th>
+                       <th>Total Qty.</th>
+                       <th>Rate</th>
+                       <th>Amount</th>
+                       <th>Excess %</th>
+                       <th>Excess Qty.</th>
+                       <th>Apr</th>
+                       <th>May</th>
+                       <th>June</th>
+                       <th>July</th>
+                       <th>Aug</th>
+                       <th>Sep</th>
+                       <th>Oct</th>
+                       <th>Nov</th>
+                       <th>Dec</th>
+                       <th>Jan</th>
+                       <th>Feb</th>
+                       <th>March</th>
+                       <th>Action</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   @foreach (var item in Model)
+                {
+                       <tr id="@(i)">
+                           <td width="80">@(i)</td>
+                           <td width="80"><span id="fy_@(i)">@item.FinancialYear</span></td>
+                           <td width="80"><span id="itemCode_@(i)">@item.ItemCode</span></td>
+                           <td width="120"><span id="itemName_@(i)">@item.ItemName</span></td>
+                           <td width="120"><input id="TotalQty_@(i)" type="number" value="@item.TotalQuantity" class="form-control" /></td>
+                           <td width="120"><input id="Rate_@(i)" type="number"  value="@item.Rate" class="form-control"  /></td>
+                           <td width="120"><input id="Amt_@(i)" type="number" value="@item.Amount" class="form-control" disabled="disabled" /></td>
+                           <td width="120"><input id="ExcessPer_@(i)" type="number" value="@item.ExcessPercentage" class="form-control" /></td>
+                           <td width="120"><input id="ExcessQty_@(i)" type="number" value="@item.ExcessQuantity" class="form-control" disabled="disabled" /></td>
+                           <td width="120"><input id="Apr" type="number"  value="@item.Apr" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="May" type="number"  value="@item.May" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="June" type="number"  value="@item.June" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="July" type="number"  value="@item.July" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Aug" type="number"  value="@item.Aug" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Sep" type="number"  value="@item.Sep" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Oct" type="number"  value="@item.Oct" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Nov" type="number"  value="@item.Nov" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Dec" type="number"  value="@item.Dec" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Jan" type="number"  value="@item.Jan" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Feb" type="number"  value="@item.Feb" class="form-control qty_@(i)" /></td>
+                           <td width="120"><input id="Mar" type="number"  value="@item.Mar" class="form-control qty_@(i)" /></td>
+                           <td>
+                               <input type="button" name="btn" value="Update" id="btnUpdate" class="btn btn-sm btn-primary update" data="@(i++)" />
+                           </td>
+                       </tr>
+                   }
+               </tbody>
+           </table>
+       </div>
+}
+else
+{
+    <p style="color:red; font-size:large" class="text-center">No records found !!!!</p>
+}

@@ -1,0 +1,234 @@
+﻿@model BusinessObjects.Entity.tblItemMaster
+
+@{
+    ViewBag.Title = "Details";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = Request.IsAjaxRequest() ? null :layout;
+
+}
+<script>
+    function getGrid() {
+        this.event.preventDefault();
+        var url = "/tblItemMasters/Grid/";
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { ItemGroupId: $('#ddlItemG').val() },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+</script>
+
+<style type="text/css">
+    dt {
+        color: #5D9CEC;
+    }
+</style>
+@*<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>*@
+
+
+
+@if (!Request.IsAjaxRequest())
+{
+    <section id="content_wrapper">
+        <section id="content" class="table-layout animated fadeIn">
+
+
+            <div class="tray tray-center">
+
+                <div class="mw1000 center-block">
+
+
+                    <div class="admin-form">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <form method="post" action="#" id="form-ui">
+                                    <div class="section-divider mb40" id="spy1">
+                                        <span>Global Items</span>
+                                    </div>
+
+                                    <div class="row" style="text-align:center;">
+                                        <div>
+                                            <h3 class="text-danger" style="text-align:center">Details</h3>
+                                            <hr />
+                                            <table class="table table-bordered" style="text-align:left">
+                                                <tr>
+                                                    <td>Group Name</td>
+                                                    <td>@Html.DisplayFor(m => m.tblItemGroupMaster.GroupName)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Item ID </td>
+                                                    <td>@Html.DisplayFor(m => m.ItemID)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Item Name</td>
+                                                    <td>@Html.DisplayFor(m => m.ItemName)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Item Description</td>
+                                                    <td>@Html.DisplayFor(m => m.ItemDescription)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Purchase Unit</td>
+                                                    <td>@Html.DisplayFor(m => m.UnitMasterPurchase.UnitName)</td>
+                                                </tr>
+                                                <tr class="hide">
+                                                    <td>Issue Unit</td>
+                                                    <td>@Html.DisplayFor(m => m.UnitMasterIssue.UnitName)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Conversion Ratio</td>
+                                                    <td>@Html.DisplayFor(m => m.ConversionRatio)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Make</td>
+                                                    <td>@Html.DisplayFor(m => m.Make)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Part No.</td>
+                                                    <td>@Html.DisplayFor(m => m.PartNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Status</td>
+                                                    <td>@Html.DisplayFor(m => m.Status)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Returnable</td>
+                                                    <td>@Html.DisplayFor(m => m.Returnable)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>HSN Code</td>
+                                                    <td>@Html.DisplayFor(m => m.HSNCode)</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <p style="text-align:center;">
+                                            @Html.ActionLink("Edit", "Edit", new { id = Model.TransID }, new { @class = "btn btn-primary" }) |
+                                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                            @*@Html.ActionLink("Back to List", "Index",null, htmlAttributes: new {  onclick = "javascript:getGrid();" })*@
+                                        </p>
+                                        <div class="section-divider mt40 mb25" id="spy5">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </section>
+}
+else
+{
+    <div class="admin-form">
+
+        <div class="panel heading-border">
+            <div class="panel-body bg-light">
+                <form method="post" action="#" id="form-ui">
+                    @*<div class="section-divider mb40" id="spy1">
+                        <span>Global Items</span>
+                    </div>*@
+
+                    <div class="row" style="text-align:center;">
+                        <div>
+                            <h3 class="text-danger" style="text-align:center">Details</h3>
+                            <hr />
+                            <table class="table table-bordered" style="text-align:left">
+                                <tr>
+                                    <td>Group Name</td>
+                                    <td>@Html.DisplayFor(m => m.tblItemGroupMaster.GroupName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Item ID </td>
+                                    <td>@Html.DisplayFor(m => m.ItemID)</td>
+                                </tr>
+                                <tr>
+                                    <td>Item Name</td>
+                                    <td>@Html.DisplayFor(m => m.ItemName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Item Description</td>
+                                    <td>@Html.DisplayFor(m => m.ItemDescription)</td>
+                                </tr>
+                                <tr>
+                                    <td>Purchase Unit</td>
+                                    <td>@Html.DisplayFor(m => m.UnitMasterPurchase.UnitName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Issue Unit</td>
+                                    <td>@Html.DisplayFor(m => m.UnitMasterIssue.UnitName)</td>
+                                </tr>
+                                <tr>
+                                    <td>Conversion Ratio</td>
+                                    <td>@Html.DisplayFor(m => m.ConversionRatio)</td>
+                                </tr>
+                                <tr>
+                                    <td>Make</td>
+                                    <td>@Html.DisplayFor(m => m.Make)</td>
+                                </tr>
+                                <tr>
+                                    <td>Part No.</td>
+                                    <td>@Html.DisplayFor(m => m.PartNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>@Html.DisplayFor(m => m.Status)</td>
+                                </tr>
+                                <tr>
+                                    <td>Returnable</td>
+                                    <td>@Html.DisplayFor(m => m.Returnable)</td>
+                                </tr>
+                                <tr>
+                                    <td>HSN Code</td>
+                                    <td>@Html.DisplayFor(m => m.HSNCode)</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p style="text-align:center;">
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.TransID }, new { @class = "btn btn-primary" }) |
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                            @*@Html.ActionLink("Back to List", "Index",null, htmlAttributes: new {  onclick = "javascript:getGrid();" })*@
+                        </p>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="section-divider mt40 mb25" id="spy5">
+                        <span></span>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+}

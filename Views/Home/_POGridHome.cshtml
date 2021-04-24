@@ -1,0 +1,48 @@
+﻿@model IEnumerable<MMS.ViewModels.PODetailHome>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    
+</head>
+<body>
+
+    @if (Model.Count() > 0)
+    {
+        <table>
+            <tr>
+               
+                <th style="text-align: left;">PO No.</th>
+                <th style="text-align: left;">PO Date</th>
+                <th style="text-align: center;">Stage</th>
+                <th style="text-align: center;">Purchase Type</th>
+                <th style="text-align: center;">Purchase Status</th>
+                <th style="text-align: center;">PO Value</th>
+                <th style="text-align: center;">System Date</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                   
+                    <td style="text-align: left;">@item.PurchaseOrderNo</td>
+                    <td style="text-align: left;">@item.PODate</td>
+                    <td style="text-align: left;">@item.Stage</td>
+                    <td style="text-align: left;">@item.PurchaseType</td>
+                    <td style="text-align: center;">@item.PurchaseStatus</td>
+                    <td style="text-align: center;">@item.POValue</td>
+                    <td style="text-align: left;">@item.Systemdate</td>
+                </tr>
+            }
+            
+           
+        </table>
+    }
+    else
+    {
+        <p style="color:red; font-size:large">No records found.</p>
+    }
+
+
+</body>
+</html>

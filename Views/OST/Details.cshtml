@@ -1,0 +1,267 @@
+﻿@model MMS_P.ViewModels.OSTDetails
+
+@{
+    ViewBag.Title = "Details";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+ 
+ 
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Site transfer Document Created By @Model.Master.CreatorName  </span>
+                                    <span>  for @Model.Master.DispatchSiteName To  @Model.Master.ReceiveSiteName and Date is @Html.DisplayFor(model => model.Master.TransferDocumentDate2)</span>
+                                </div>
+                            <table><tr><td>
+                                           <dl class="dl-horizontal">
+                                               <dt>
+                                                   @Html.DisplayName("Transfer Document No.")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.TransferDocumentNo)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayName("Transfer Document Date")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.TransferDocumentDate2)
+                                               </dd>
+
+                                              
+                                               <dt>
+                                                   @Html.DisplayName("Dispatch Site")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.DispatchSiteName)
+                                               </dd>
+                                               <dt>
+                                                   @Html.DisplayName("Receive Site")
+                                               </dt>
+
+                                               <dd>
+                                                   @Html.DisplayFor(model => model.Master.ReceiveSiteName)
+                                               </dd>
+                                              
+                                           </dl>
+
+                                </td>><td>
+                                          <dl class="dl-horizontal">
+                                             
+                                              <dt>
+                                                  @Html.DisplayName("Challan No.")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.ChallanNo)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayName("Challan Date")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.ChallanDate2)
+                                              </dd>
+                                              <dt>
+                                                  @Html.DisplayName("Vehicle No.")
+                                              </dt>
+
+                                              <dd>
+                                                  @Html.DisplayFor(model => model.Master.VehicleNo)
+                                              </dd>
+
+                                             
+                                          </dl>
+
+                                </td></tr></table>
+                            @if(Model.Child.Count!=0)
+                            { 
+                            <div id="myPager" style="margin-top:17px;">
+                                @{
+                                    var grid = new WebGrid(
+                                                    canPage: false,
+                                                
+                                                    canSort: false,
+                                                    ajaxUpdateContainerId: "grid");
+
+                                    grid.Bind(Model.Child,  autoSortAndPage: false);
+                                   
+
+                                    @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                                     grid.Column("ItemGroupName",
+                              header: "ItemGroup"),
+                 grid.Column("ItemName",
+                                      header: "Item Name"
+
+          ), grid.Column("UnitName",
+                                                                 header: "Unit"
+
+                                    ),
+                    grid.Column("TbOSTTransferChild.Qty",
+                                                         header: "Qty"
+
+                           ),
+                             grid.Column("TbOSTTransferChild.Dispatch",
+                                                           header: "Dispatch"
+
+                            ),
+                              grid.Column("TbOSTTransferChild.Receive",
+                                                           header: "Receive"
+
+                            ),
+                    grid.Column("TbOSTTransferChild.Rate",
+                                                                           header: "Rate"
+
+                              ), grid.Column("TbOSTTransferChild.Amount",
+                                                                                              header: "Amount"
+
+                                      ), grid.Column("TbOSTTransferChild.DeliveryCharges",
+                                                                                                               header: "Delivery/Unit"
+
+                                              ), grid.Column("TbOSTTransferChild.Vat",
+                                                                                                                header: "Tax%"
+
+                                              )
+
+                                            
+                                    
+                                                                                                                                         ));
+                                }
+
+
+                            </div>
+
+                            }
+                          
+                        </div>
+                        <table>
+                            <tr>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                          
+                                        </dt>
+
+                                        <dd>
+                                            
+                                        </dd>
+                                        <dt>
+                                          
+                                        </dt>
+
+                                        <dd>
+                                           
+                                        </dd>
+                                        <dt>
+                                          
+                                        </dt>
+                                        <dd>
+                                           
+                                        </dd>
+                                        <dt>
+                                         
+                                        </dt>
+                                        <dd>
+                                           
+                                        </dd>
+                                        <dt>
+
+                                        </dt>
+                                        <dd>
+
+                                        </dd>
+                                    </dl>
+
+                                </td>>
+                                <td>
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayName("Total")
+                                        </dt>
+
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.P_F)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("VAT Amount")
+                                        </dt>
+                                         
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.Vat)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("DeliveryCharges")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.DeliveryCharges)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("AmountOfFreight")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.AmountOfFreight)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayName("Grand Total")
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => model.Master.GrandTotal)
+                                        </dd>
+                                    </dl>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+                        @*<p>
+                       
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                        </p>*@
+
+                      
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>

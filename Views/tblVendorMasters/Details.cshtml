@@ -1,0 +1,287 @@
+﻿@model BusinessObjects.Entity.tblVendorMaster
+
+@{
+    //ViewBag.Title = "Details";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout= Request.IsAjaxRequest() == true ? null:layout;
+}
+<style type="text/css">
+    dt {
+        color: #5D9CEC;
+    }
+</style>
+
+@if (!Request.IsAjaxRequest())
+{
+
+    <section id="content_wrapper">
+
+        <section id="content" class="table-layout animated fadeIn">
+
+
+            <div class="tray tray-center">
+
+                <div class="mw1000 left-column">
+
+
+                    <div class="admin-form">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <form method="post" action="#" id="form-ui">
+                                    <div class="section-divider mb40" id="spy1">
+                                        <span>Vendor Master</span>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div>
+                                            <h3 class="text-danger" style="text-align:center">Details</h3>
+                                            <hr />
+                                            <table class="table table-bordered" style="text-align:left">
+                                                <tr>
+                                                    <td>Project</td>
+                                                    <td>
+                                                        @Html.DropDownList("ProjectNames", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })
+                                                    </td>
+                                                <tr>
+                                                    <td>Registration Type</td>
+                                                    <td>
+                                                        @*@Html.DisplayFor(m => m.tblRegistrationType.RegistrationType)*@
+                                                        @Html.DropDownList("RegistrationName", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Vendor Name</td>
+                                                    <td>@Html.DisplayFor(m => m.Name)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Address</td>
+                                                    <td>@Html.DisplayFor(m => m.Address)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Country</td>
+                                                    <td>@Html.DisplayFor(m => m.Country)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>State</td>
+                                                    <td>@Html.DisplayFor(m => m.State)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>City</td>
+                                                    <td>@Html.DisplayFor(m => m.City)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pin Code</td>
+                                                    <td>@Html.DisplayFor(m => m.PinCode)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Status</td>
+                                                    <td>@Html.DisplayFor(m => m.Status)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Contact Person</td>
+                                                    <td>@Html.DisplayFor(m => m.ContactPerson)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mobile No.</td>
+                                                    <td>@Html.DisplayFor(m => m.MobileNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Email</td>
+                                                    <td>@Html.DisplayFor(m => m.Email)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pan No.</td>
+                                                    <td>@Html.DisplayFor(m => m.PanNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Tin No.</td>
+                                                    <td>@Html.DisplayFor(m => m.TinNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>VAT No.</td>
+                                                    <td>@Html.DisplayFor(m => m.VAT_No)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>GST No.</td>
+                                                    <td>@Html.DisplayFor(m => m.GST_NO)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Aadhaar No.</td>
+                                                    <td>@Html.DisplayFor(m => m.Aadhaar_No)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Phone No.</td>
+                                                    <td>@Html.DisplayFor(m => m.PhoneNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Black List Status</td>
+                                                    <td>@Html.DisplayFor(m => m.BlackListStatus)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <p style="text-align:center">
+                                            @*@Html.ActionLink("Edit", "Edit", new { id = Model.VendorID }, new { @class = "btn btn-primary" }) |*@
+                                            @Html.ActionLink("Edit", "Edit", new { id = Model.TransID }, new { @class = "btn btn-primary" }) |
+                                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                                        </p>
+                                    </div>
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+
+
+}
+else
+{
+    <div class="admin-form">
+
+        <div class="panel heading-border">
+            <div class="panel-body bg-light">
+                <form method="post" action="#" id="form-ui">
+                    @*<div class="section-divider mb40" id="spy1">
+                        <span>Vendor Master</span>
+                    </div>*@
+
+                    <div class="row">
+
+                        <div>
+                            <h3 class="text-danger" style="text-align:center">Details</h3>
+                            <hr />
+                            <table class="table table-bordered" style="text-align:left">
+                                <tr>
+                                    <td>Project</td>
+                                    <td>
+                                        @Html.DropDownList("ProjectNames", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })
+                                    </td>
+                                <tr>
+                                    <td>Registration Type</td>
+                                    <td>
+                                        @*@Html.DisplayFor(m => m.tblRegistrationType.RegistrationType)*@
+                                        @Html.DropDownList("RegistrationName", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Vendor Name</td>
+                                    <td>@Html.DisplayFor(m => m.Name)</td>
+                                </tr>
+                                <tr>
+                                    <td>Address</td>
+                                    <td>@Html.DisplayFor(m => m.Address)</td>
+                                </tr>
+                                <tr>
+                                    <td>Country</td>
+                                    <td>@Html.DisplayFor(m => m.Country)</td>
+                                </tr>
+                                <tr>
+                                    <td>State</td>
+                                    <td>@Html.DisplayFor(m => m.State)</td>
+                                </tr>
+                                <tr>
+                                    <td>City</td>
+                                    <td>@Html.DisplayFor(m => m.City)</td>
+                                </tr>
+                                <tr>
+                                    <td>Pin Code</td>
+                                    <td>@Html.DisplayFor(m => m.PinCode)</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>@Html.DisplayFor(m => m.Status)</td>
+                                </tr>
+                                <tr>
+                                    <td>Contact Person</td>
+                                    <td>@Html.DisplayFor(m => m.ContactPerson)</td>
+                                </tr>
+                                <tr>
+                                    <td>Mobile No.</td>
+                                    <td>@Html.DisplayFor(m => m.MobileNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>@Html.DisplayFor(m => m.Email)</td>
+                                </tr>
+                                <tr>
+                                    <td>Pan No.</td>
+                                    <td>@Html.DisplayFor(m => m.PanNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>Tin No.</td>
+                                    <td>@Html.DisplayFor(m => m.TinNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>VAT No.</td>
+                                    <td>@Html.DisplayFor(m => m.VAT_No)</td>
+                                </tr>
+                                <tr>
+                                    <td>GST No.</td>
+                                    <td>@Html.DisplayFor(m => m.GST_NO)</td>
+                                </tr>
+                                <tr>
+                                    <td>Aadhaar No.</td>
+                                    <td>@Html.DisplayFor(m => m.Aadhaar_No)</td>
+                                </tr>
+                                <tr>
+                                    <td>Phone No.</td>
+                                    <td>@Html.DisplayFor(m => m.PhoneNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>Black List Status</td>
+                                    <td>@Html.DisplayFor(m => m.BlackListStatus)</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p style="text-align:center">
+                            @*@Html.ActionLink("Edit", "Edit", new { id = Model.VendorID }, new { @class = "btn btn-primary" }) |*@
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.TransID }, new { @class = "btn btn-primary" }) |
+                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-danger" })
+                        </p>
+                    </div>
+                    <div class="section-divider mt40 mb25" id="spy5">
+                        <span></span>
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+}
+

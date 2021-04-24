@@ -1,0 +1,64 @@
+﻿@model List<MMS.ViewModels.ProjectYearBudgetReport>
+    @{
+        int yearinc = 0;
+        int sno = 1;
+    }
+
+<style>
+      th {
+        font-weight: bold !important;
+    }
+</style>
+
+ <table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th >SNo.</th>
+            <th >Items</th>
+            <th >Unit</th>
+            <th ></th>
+            @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.ToYear; i++)
+            {
+                <th>@((i) + "-" + (i + 1))</th>
+                yearinc++;
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td rowspan="4">@sno</td>
+                <td rowspan="4">@item.ItemName</td>
+                <td rowspan="4">@item.ItemUnit</td>
+            </tr>
+            <tr>
+                <td>Item Qty</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.ToYear; i++)
+                {
+                    var itemObj = item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s);
+                    <td>@item.BudgetItemData.Where(s=>s.BudgetYear==i.ToString()).Select(s=>s.ItemQty).FirstOrDefault()</td>
+                }
+            </tr>
+            <tr>
+                <td>ItemRate</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.ToYear; i++)
+                {
+                   
+                    <td>@item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s.ItemRate).FirstOrDefault()</td>
+                }
+            </tr>
+            <tr>
+                <td>ItemAmt</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.ToYear; i++)
+                {
+
+                    <td>@item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s.TotalAmt).FirstOrDefault()</td>
+                }
+            </tr>
+
+            sno++;
+        }
+    </tbody>
+</table>

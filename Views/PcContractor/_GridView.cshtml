@@ -1,0 +1,62 @@
+﻿
+@model MMS_P.ViewModels.PageVendorMasterModelPage
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+
+
+<style>
+    .webgrid-header td, th {
+        background-color: #72AAD3; /*#D3D3D3; color: #6D70B5;*/
+        padding-bottom: 4px;
+        padding-top: 5px;
+        text-align: center;
+        border-bottom: 1px solid white;
+        border-top: 1px solid white;
+        margin-bottom: 2px;
+        padding: 0px 5px;
+        text-align: center;
+        height: 22px;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+
+<div id="myPager" style="margin-top:17px;">
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.PcContractorrMasterBll, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+                      headerStyle: "webgrid-header",
+            //headerStyle: "text-align: center",
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                                   grid.Column("tblPC_RegistrationType.RegistrationType", header: "Group", style: "text-align: center;"),
+                                                      grid.Column("Name", header: "Name", style: "text-align: center"),
+                                                      grid.Column(header: " Action ", canSort: false, style: "action",
+                                                  format: @<text>
+                                                        @*@Html.Raw("<a data-modal='' href='/tblVendorMasters/details/" + item.TransID + "' id='" + item.TransID + "' title='Detail' > <span class='glyphicon glyphicon-search'> </span> </a>")
+                                                            @Html.Raw("<a data-modal='' href='/tblVendorMasters/edit/" + item.TransID + "' id='" + item.TransID + "' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>")
+                                                            @Html.Raw("<a data-modal='' href='/tblVendorMasters/delete/" + item.TransID + "' id='" + item.TransID + "' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>")*@
+                                                        <a data-modal='' href='@Url.Action("Details", "PcContractor", new { id = item.TransID })' id='@item.TransID' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>
+                                                        <a data-modal='' href='@Url.Action("Edit", "PcContractor", new { id = item.TransID })' id='@item.TransID' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>
+                                                        <a data-modal='' href='@Url.Action("Delete", "PcContractor", new { id = item.TransID })' id='@item.TransID' title='Delete'> <span class='glyphicon glyphicon-trash'> </span> </a>
+                                                </text>)
+
+                                                                                                                                            ));
+    }
+
+
+</div>

@@ -1,0 +1,520 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    if (Session["EmailCheck"] == null)
+    {
+        Response.Redirect("~/MyAccount/Login");
+        return;
+    }
+
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    //WebGrid grid = new WebGrid(source: Model, canPage: false);
+}
+<style type="text/css">
+    .chk{
+        width: 30px; height: 30px;
+    }
+    .ui-datepicker {
+      z-index: 100000 !important; /* has to be larger than 1050 */
+    }
+</style>
+
+<section id="content_wrapper" ng-app="app" ng-controller="ctrl">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Return Issue Quantity</span>
+                                </div>
+
+                                <div class="well">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3">
+                                                <select id="ddlProjects" class="form-control">
+                                                    <option value="">Select Project</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="ddlItemGroups" class="form-control">
+                                                    <option value="">Select Item Group</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="ddlItems" class="form-control">
+                                                    <option value="">Select Item Name</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3">
+                                                <select id="ddlPC" class="form-control">
+                                                    <option value="">Select PC Name</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select id="ddlType" class="form-control">
+                                                    <option value="">Select Type</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3"> 
+                                                <input type="text" name="txt" class="form-control" value="" placeholder="Issue Indent No." id="txtIndentNo" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3">
+                                                <input type="text" name="txt" class="form-control datepicker-field" value="" id="txtFromDate" placeholder="From Date" autocomplete="off" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" name="txt" class="form-control datepicker-field" value="" id="txtToDate" placeholder="To Date" autocomplete="off" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button id="btnSearch" class="btn btn-primary"  ng-click="GetData()">Search</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" ng-show="Data.length>0">
+                                    <div class="col-md-2 pull-right">
+                                        <input type="button" name="btn" value="Return Qty." class="btn btn-primary" ng-click="Varify()" />
+                                    </div>
+                                </div>
+                               
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                           <thead>
+                                               <tr>
+                                                   <th>S.No.</th>
+                                                   <th>Issue Date</th>
+                                                   <th>Indent No.</th>
+                                                   <th>Item Group Name</th>
+                                                   <th>Item Name</th>
+                                                   <th>P.C Name</th>
+                                                   <th>Issue To</th>
+                                                   <th>Issue Type</th>
+                                                   <th>Issue Quantity</th>
+                                                   <th>Action</th>
+                                                   <th>Return Qty.</th>
+                                               </tr>
+                                           </thead>
+                                            <tbody>
+                                               <tr ng-repeat="item in Data">
+                                                   <td>{{$index+1}}</td>
+                                                   <td>{{item.IssueDate}}</td>
+                                                   <td>{{item.IndentNo}}</td>
+                                                   <td>{{item.GroupName}}</td>
+                                                   <td>{{item.ItemName}}</td>
+                                                   <td>{{item.VendorName}}</td>
+                                                   <td>{{item.IssueTo}}</td>
+                                                   <td>{{item.MaterialType}}</td>
+                                                   <td id="issue_{{item.Id}}">{{item.IssueQuantity}}</td>
+                                                   <td>
+                                                       <input type="checkbox" name="chk" value="" ng-model="value" ng-change="CheckChanged(item.Id)" class="chk" id="{{item.Id}}" />
+                                                   </td>
+                                                   <td>
+                                                       <input type="text" name="txt" value="" class="form-control {{item.Id}}" placeholder="0" ng-model="value1" ng-change="TextChanged(item.Id)" autocomplete="off" readonly="readonly" style="width:90px;" />
+                                                   </td>
+                                               </tr>
+                                                <tr ng-show="Data.length==0">
+                                                    <td colspan="30">
+                                                        <p class="alert alert-default">No Data Found.</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            
+                                <br />
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Selected Issued Qty. to Return</h4>
+                </div>
+                <div class="modal-body" style="max-height:300px; overflow-y:auto;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>S.No.</th>
+                                <th>Indent No.</th>
+                                <th>Item Group Name</th>
+                                <th>Item Name</th>
+                                <th>P.C Name</th>
+                                <th>Issue To</th>
+                                <th>Issue Quantity</th>
+                                <th>Return Qty.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item1 in SelectedData">
+                                <td>{{$index+1}}</td>
+                                <td>{{item1.IndentNo}}</td>
+                                <td>{{item1.GroupName}}</td>
+                                <td>{{item1.ItemName}}</td>
+                                <td>{{item1.VendorName}}</td>
+                                <td>{{item1.IssueTo}}</td>
+                                <td>{{item1.IssueQuantity}}</td>
+                                <td>{{item1.ReturnQty}}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6"></td>
+                                <td>Total Return Qty. </td>
+                                <td>
+                                    <storng>{{TotalReturnQty()}}</storng>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer text-left">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Return Date</label>
+                                <input type="text" name="txt"  autocomplete="off" placeholder="Return Date"  class="form-control datepicker-field" id="txtReturnDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Temporary Return No.</label>
+                                <input type="text" name="txt" value="" id="txtReturnNo" autocomplete="off" readonly="readonly" placeholder="Temporary Return No." class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                           <div class="form-group">
+                               <label>Reason</label>
+                               <select id="ddlReason" class="form-control">
+                                   <option value="">Select Reason</option>
+                               </select>
+                           </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Return By</label>
+                                <textarea id="txtReturnBy" placeholder="Return By" rows="2" cols="30" class="form-control" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="txtRemarks" placeholder="Remarks" rows="2" cols="30" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-10">&nbsp;</div>
+                        <div class="col-md-1">
+                            <input type="button" name="btn" value="Return Qty." ng-click="ReturnQty()" class="btn btn-primary" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+
+
+
+
+
+@section scripts{
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+
+    <script type="text/javascript">
+        var empId = '@ViewBag.EmpId';
+        var getGroups = '@Url.Action("GetItemGroups", "IssueReturn")';
+        var getItems = '@Url.Action("GetItemName", "IssueReturn")';
+        var getPc = '@Url.Action("GetPCVendorByProjectId", "QuantityIssues")';
+        var issueMaterialType = '@Url.Action("GetIssueMaterialType","IssueReturn")';
+        $(document).ready(function () {
+
+            BindDdl('#ddlProjects', GetProjects, {}, 'Project');
+            BindDdl('#ddlItemGroups', getGroups, {}, 'Item Group');
+            BindDdl('#ddlType', issueMaterialType, {}, 'Type');
+            BindDdl('#ddlReason', '@Url.Action("GetReasonMaster")', {}, 'Reason');
+            $('#ddlItemGroups').change(function () {
+                if ($(this).val() == '') {
+                    ClearDdl('#ddlItems', 'Item Name');
+                }
+                else {
+                    BindDdl('#ddlItems', getItems, { GroupId: $(this).val() }, 'Item Name');
+                }
+            });
+
+            $('#ddlProjects').change(function () {
+                if ($(this).val() == '') {
+                    ClearDdl('#ddlPC', 'PC Name');
+                }
+                else {
+                    BindDdl('#ddlPC', getPc, { ProjectId: $(this).val(), DivType:'WTP0000001' }, 'PC Name');
+                }
+            });
+            var app = angular.module('app',[]);
+            app.controller('ctrl', function ($scope) {
+                $scope.Data = [];
+                $scope.SelectedData = [];
+                $scope.GetData = function () {
+                    if ($('#ddlProjects').val() == '') {
+                        bootbox.alert("Please select Project");
+                        return false;
+                    }
+
+                    
+                    $.get('@Url.Action("GetIssueQuantities")', {
+                        ProjectId: $('#ddlProjects').val(),
+                        ItemGroupNo: $('#ddlItemGroups').val(),
+                        ItemNo: $('#ddlItems').val(),
+                        VendorNo: $('#ddlPC').val(),
+                        IssueType: $('#ddlType').val(),
+                        IndentNo: $('#txtIndentNo').val(),
+                        FromDate: $('#txtFromDate').val(),
+                        ToDate: $('#txtToDate').val(),
+                    }, function (data) {
+                       // alert(data.Data);
+                        $scope.Data = data.Data;
+                        $scope.$apply();
+                    });
+
+                }
+
+                $scope.CheckChanged = function (id) {
+                    if ($('#' + id).prop('checked')) {
+                        $('.' + id).removeAttr('readonly');
+                    }
+                    else {
+                        $('.' + id).attr('readonly', 'readonly');
+                        $('.' + id).val('');
+                    }
+                }
+
+                $scope.TextChanged = function (id) {
+                    debugger;
+                    if (isNaN($('.' + id).val())) {
+                        alert('Please enter number only.');
+                        $('.' + id).val('');
+                    }
+                    else {
+                        if (parseFloat($('#issue_' + id).text()) < parseFloat($('.' + id).val())) {
+                            alert('Return Qty. can not be greater than Issue Qty.');
+                            $('.' + id).val('');
+                        }
+                    }
+                }
+
+                $scope.Varify = function () {
+                    var count = $('[name="chk"]:checked').length;
+                    $scope.SelectedData = [];
+                    if(count==0)
+                        alert('Please select Qty. to return.');
+                    else {
+                        $('input[name=chk]:checked').each(function () {
+                            var id = $(this).attr('id');
+                            var d = $scope.Data.find(x=>x.Id == id);
+                            if ($('.' + id).val()!='' && $('.' + id).val()!='0') {
+                                if (parseFloat($('.' + id).val()) > parseFloat(d.IssueQuantity)) {
+
+                                }
+                                else {
+                                    $scope.SelectedData.push({
+                                        IndentNo: d.IndentNo,
+                                        GroupName: d.GroupName,
+                                        ItemName: d.ItemName,
+                                        ReturnQty: $('.' + id).val(),
+                                        Id: d.Id,
+                                        VendorName: d.VendorName,
+                                        IssueTo: d.IssueTo,
+                                        IssueQuantity: d.IssueQuantity
+                                    });
+                                }
+                            }
+                        });
+                        $('#txtReturnDate').val('');
+                        $('#txtReturnNo').val('');
+                        $('#txtReturnBy').val('');
+                        $('#txtRemarks').val('');
+                        $('#ddlReason').prop('selectedIndex', 0);
+                        $('#myModal').modal();
+
+                       
+
+                    }
+                }
+
+                $scope.TotalReturnQty = function () {
+                    var total = 0;
+                    if ($scope.SelectedData.length > 0) {
+                        for (var i = 0; i < $scope.SelectedData.length; i++) {
+                            total = total + parseFloat($scope.SelectedData[i].ReturnQty);
+                        }
+                        return total.toFixed(2);
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+
+                
+
+                $scope.ReturnQty = function () {
+                    var returnDate = $('#txtReturnDate').val();
+                    var returnBy = $('#txtReturnBy').val();
+                    var reason = $('#ddlReason').val();
+                    var temporaryReturnNo = $('#txtTemporaryReturnNo').val();
+                    var remarks = $('#txtRemarks').val();
+                    var projectId=$('#ddlProjects').val();
+
+                    if (projectId == '') {
+                        bootbox.alert('Please select Project');
+                        return false;
+                    }
+
+                    if (returnDate == '') {
+                        bootbox.alert('Please select Return Date');
+                        return false;
+                    }
+                    if (returnBy == '') {
+                        bootbox.alert('Please enter the value of Return By');
+                        return false;
+                    } if (reason == '') {
+                        bootbox.alert('Please select Reason.');
+                        return false;
+                    }
+                    if (temporaryReturnNo == '') {
+                        bootbox.alert('Temporary Return No. can not be empty.');
+                        return false;
+                    }
+
+                    if (remarks == '') {
+                        bootbox.alert('Please enter remarks');
+                        return false;
+                    }
+
+
+
+                    if ($scope.SelectedData.length > 0) {
+
+                        var returnMaster = {
+                            ProjectId:projectId,
+                            ReturnDate: returnDate,
+                            ReturnBy: returnBy,
+                            Reason: reason,
+                            TemporaryReturnNo: temporaryReturnNo,
+                            Remarks:remarks
+                        };
+
+                        $.post('@Url.Action("ReturnQty")', {ReturnMaster:returnMaster,ReturnData: $scope.SelectedData }, function (response) {
+                            if (response.Status == 1) {
+                                $scope.SelectedData = [];
+                                $scope.Data = [];
+                                $('#myModal').modal('hide');
+                                bootbox.alert("Data Saved successfully. <strong>Return No. is " + response.ReturnNo + "</strong>");
+                                $scope.$apply();
+                            }
+                            else if(response.Status==2) {
+                                bootbox.alert("Data not Saved.");
+                            }
+                            else if (response.Status == 3) {
+                                bootbox.alert("Some error occured. Error: " + response.Error);
+                            }
+                            
+
+                        });
+                    }
+                }
+
+
+            });
+
+            $(document).on('change', '#txtReturnDate', GetTempReturnNo);
+            
+        });
+
+        function GetTempReturnNo() {
+            var projectId = $('#ddlProjects').val();
+            var returnDate=$('#txtReturnDate').val();
+            if (returnDate != '' && projectId != '') {
+                $.get('@Url.Action("GetTempReturnNo")', { ProjectId: projectId, ReturnDate: returnDate }, function (response) {
+                    console.log(response);
+                    if (response != '') {
+                        var resArray = JSON.parse(response);
+                        $('#txtReturnNo').val(resArray[0]);
+                    }
+                    else {
+                        $('#txtReturnNo').val('');
+
+                    }
+                });
+            }
+        }
+    </script>
+    <script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+}

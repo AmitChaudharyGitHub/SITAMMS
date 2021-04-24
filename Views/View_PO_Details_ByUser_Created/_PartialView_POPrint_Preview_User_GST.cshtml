@@ -1,0 +1,820 @@
+﻿@model MMS.Controllers.Print_Slip_For_ApprovalController.PrintData
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.min.js")" type="text/javascript"></script>
+
+
+
+    
+
+    
+
+    <script>
+        $(document).ready(function () {
+            $('#Reset1').on('click', function () {
+                $("#prjtid1").val('');
+                $("#empName1").val('');
+                $("#textarea_Remark").val('');
+                $("#Status_Approval").val('');
+
+            });
+
+        });
+    </script>
+
+
+
+
+
+    <style>
+        td {
+            text-align: center;
+        }
+
+        table tr td {
+            font-size: 12px;
+        }
+    </style>
+    <style type="text/css">
+        .tblEmployee {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        .EmployeeTableTH {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        .EmployeeTableTD {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+    </style>
+
+
+    
+    <script type="text/javascript">
+        var check = $("#hdn_IsPOReleaseID").val();
+        if (check == null || check == " ") {
+            $("#btnReleased").show();
+        }
+        else {
+            $("#btnReleased").hide();
+        }
+
+
+
+
+        $(document).ready(function () {
+           
+           
+
+
+            $('#btnReleased').click(function () {
+                debugger;
+                $.ajax({
+                    url: '@Url.Action("DoRelease", "IndentPurchaseOrders")',
+                    data:   { UID: $("#hdn_Uid_Idd").val() } ,
+                    type: 'POST',
+                  //  contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        alert('PO has Released Successfully.');
+                        window.location.href = '@Url.Action("RelesedPO", "IndentPurchaseOrders")';
+                    }
+                });
+
+            });
+
+            //$(document).ready(function () {
+            //    $("#dialog-form").dialog({
+            //        autoOpen: false,
+            //        resizable: false,
+            //        height: 550,
+            //        width: 1000,
+            //        show: { effect: 'explode', direction: "up" },
+            //        modal: true,
+            //        draggable: true,
+            //        open: function () {
+            //            jQuery('.ui-widget-overlay').bind('click', function () {
+            //                jQuery('#dialog').dialog('close');
+            //            })
+            //        }
+            //    });
+            //});
+        });
+
+    </script>
+
+
+    @* Print Code here *@
+    <style>
+        #divtoprint, #divtoprint * {
+            visibility: visible;
+        }
+
+        #divtoprint {
+        }
+    </style>
+
+
+
+
+    <script>
+        function PrintContent()
+        {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+    </script>
+
+</head>
+<body>
+    <div id="divtoprint">
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+ 	font-weight:normal;
+                }
+
+                table {
+                    border-style: solid;
+                    border-color: #000000;
+                    border-top-width: 0.5px;
+                    border-left-width: 0.5px;
+                    border-bottom-width: 0px;
+                    border-right-width: 0px;
+                }
+
+                tr, td {
+                    border-style: solid;
+                    border-color: #000000;
+                }
+
+                tr {
+                    border-width: 0px;
+                }
+
+                .nb {
+                    border-bottom-width: 0px;
+                }
+
+                td, th {
+                    border-top-width: 0px;
+                    border-left-width: 0px;
+                    border-bottom-width: 0.5px;
+                    border-right-width: 0.5px;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+        <center>
+            <table class="table table-bordered" cellpadding="4" cellspacing="0" border="1" width="100%">
+
+                <tbody>
+                    <tr>
+                        <td rowspan="3"><img src="~/Images/logo.png" /></td>
+                        <td>
+                            Ahluwalia Contracts (India) Ltd<br />
+                            CIN: L45101DL1979PLC009654
+                        </td>
+                        <td>Title: Purchase (QMSP-08)</td>
+                        <td>Revision 3.0 dated 01/08/2020</td>
+
+                    </tr>
+                    <tr style="border-bottom: 2px solid black !important;">
+                        <td>ISO 9001:2015</td>
+                        <td>ISO 14001:2015</td>
+                        <td>ISO 45001:2018</td>
+
+                    </tr>
+                    @*<tr>
+                        <td colspan="3">PURCHASE ORDER (F-02/QMSP-08)</td>
+                    </tr>*@
+                </tbody>
+            </table>
+        </center>
+
+        <h5 style="text-align:center;"><u>PURCHASE ORDER (F-02/QMSP-08)</u></h5>
+
+        <table class="table table-bordered" style="width:100%" cellpadding="4" cellspacing="0" border="1">
+
+            <thead>
+
+                <tr>
+                    <th style="text-align:left; font-size:12px;">Project Name & Address:</th>
+                    <th style="text-align:left; font-size:12px;">PO No.@Model.HeaderData.PurchaseOrderNo</th>
+                    <th style="text-align:left; font-size:12px;">PO Date: @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy") </th>
+                    <input type="hidden" id="hdn_Uid_Idd" value="@Model.HeaderData.UId" />
+                    <input type="hidden" id="hdn_IsPOReleaseID" value="@Model.HeaderData.IsReleasePOBy" />
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:justify; width:40%; font-size:12px;">
+                        @Model.HeaderData.ProjectName
+                        <p style="margin:0px; font-size:12px;">@Model.HeaderData.Location</p>
+                    </td>
+                    <td colspan="2" style="color:black; text-align:left; font-size:12px;">
+                        Indent Ref No. @Model.HeaderData.IndentRefNo   Dtd. @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy")
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align:left; font-size:12px;">
+                        Supplier's Name & Address:
+                    </th>
+                    <th style="color:black; text-align:left; font-size:12px;">ACIL TIN No. : @Model.HeaderData.AcilTinNo </th>
+                    <th style="text-align:left; font-size:12px;"> ACIL GST No. : @Model.HeaderData.AcilGSTNo  </th>
+                </tr>
+                <tr>
+                    <td style="width:40%; text-align:justify;">
+                        @Model.HeaderData.Name     <br />  @Model.HeaderData.Address <br /> @Model.HeaderData.Vendor_country_state_city
+                        <p style="margin:0px; font-size:12px;">Supplier TIN No. @Model.HeaderData.VendorTInNO</p>
+                        <p style="margin:0px; font-size:12px;">Supplier GST No. @Model.HeaderData.VendorGSTNo</p>
+                        <p style="margin:0px; font-size:12px;">Contact:Mr. @Model.HeaderData.ContactPerson (@Model.HeaderData.MobileNo)</p>
+                    </td>
+                    <td colspan="2" valign="top" style="color:black; text-align:left;font-weight:100">
+                        Reference:@Model.HeaderData.Reference
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        @* Table for Dear sir *@
+        <div style="margin:0px;">
+            <p>
+                Dear Sir,<br />
+                We are pleased to place on your firm the following order for supplies as per the rates specified hereunder:
+            </p>
+        </div>
+        <div class="panel-body pn">
+            @*<table id="tblEmployee1" class="table">
+                    <thead>
+                        <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading" class="Load" style="width:100px; height:100px" />
+                    </thead>
+                    <tbody></tbody>
+                </table>*@
+            @{int rowNo = 1;}
+
+            <table id="t01" width="100%" style="font-size:10px;" cellpadding="4" cellspacing="0" border="1">
+                <thead>
+                    <tr>
+                        
+                        <th height="10px" colspan="17" style="text-align:center">Discription</th>
+                        <th height="10px colspan="4">HSN CODE</th>
+                        <th height="10px colspan=" 4">Item Cide</th>
+                        <th height="10px colspan=" 4">Unit</th>
+                    </tr>
+                    <tr>
+                        <th height="10px" rowspan="2">S.No.</th>
+                        <th height="10px" rowspan="2">Qty</th>
+                        <th height="10px" rowspan="2">Rate(in Rs.) </th>
+                        <th height="10px" rowspan="2">Discount (%) </th>
+                        <th height="10px" rowspan="2">Amount(After Discount)</th>
+                        <th height="10px" rowspan="2">P&F Chrg. %</th>
+                        <th height="10px" rowspan="2">P&F Amt</th>
+                        <th height="10px" rowspan="2">Cartage Type</th>
+                        <th height="10px" rowspan="2">Cartage Type Rate</th>
+                        <th height="10px" rowspan="2">Transpt. Amt.</th>
+                        <th height="10px" rowspan="2">Insurance</th>
+                        <th height="10px" rowspan="2">Ins. Amt.</th>
+                        <th height="10px" rowspan="2">Taxable Amount</th>
+                        <th height="10px" rowspan="2">CGST (%)</th>
+                        <th height="10px" rowspan="2">SGST/UTGST (%) </th>
+                        <th height="10px" rowspan="2">IGST  (%) </th>
+                        <th height="10px" rowspan="2">CGST (Amt. Rs.)</th>
+                        <th height="10px" rowspan="2">SGST/UTGST (Amt. Rs.)</th>
+                        <th height="10px" rowspan="2">IGST (Amt. Rs.)</th>
+                        <th height="10px" rowspan="2">Amt(Rs.)</th>
+                      
+                    </tr>
+                </thead>
+                @foreach (var c in Model.ItemData)
+                {
+                    <tr>
+                        <td><label> @rowNo</label>   @{ rowNo++; }</td>
+                        <td style="text-align:left">
+                            @c.ItemName <br />
+                            (
+                            @if (c.ItemDescrp == null)
+                            {
+                            }
+                            else
+                            {
+
+                                @c.ItemDescrp.ToString()
+                            }
+                            )
+
+                        </td>
+                        @*
+                    <td>
+                        @item.ProjectName
+                    </td>*@
+                        <td style="text-align:left">
+                            @c.UnitName
+                        </td>
+                        <td style="text-align:right;">
+                            @c.Qty
+                        </td>
+                        <td style="text-align:right;">
+                            @c.Rate
+                            @*<input id="MFirstName" type="text" class="TextBoxBorder" name="FirstName" value="@item.Rate" />*@
+                        </td>
+                        <td style="text-align:right;">
+                            @c.Discount
+                        </td>
+                        @*
+                    <td>
+                        @c.Vat
+                    </td>*@
+                        <td colspan="2" style="text-align:right;">
+                            @*@c.SubTotal*@
+                            @c.Amount
+                        </td>
+                        @*
+                    <td>
+                        @c.SubTotal
+                    </td>*@
+
+                        @*
+                    <td>
+                        <p>@c.Remark</p>
+                    </td>*@
+
+
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="3" class="nb"></td>
+                    <td colspan="2" style="text-align:left;">Sub Total</td>
+                    <td colspan="2" style="text-align:right;">@Model.HeaderData.T_Total</td>
+                </tr>
+
+                @if (Model.HeaderData.P_Total > Convert.ToDecimal(0.00))
+                {
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;"> Packing & Forwarding Charges</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.P_Total</td>
+                    </tr>
+                }
+
+                @if (Model.HeaderData.Excise_DutyType != "Select")
+                {  //Model.HeaderData.Ex_Total > Convert.ToDecimal(0.00)
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">@Model.HeaderData.Excise_DutyType</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.Ex_Total</td>
+                    </tr>
+
+                }
+
+
+                @if (Model.HeaderData.Insi_Type_1 != "Select")
+                {
+                    
+
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">Insurance : @Model.HeaderData.Insi_Type_1</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.T_Insi1</td>
+                    </tr>
+                }
+
+
+
+
+
+                @if (Model.HeaderData.Cartage_Type_1 != "Select")
+                { // Model.HeaderData.CR1_Total > Convert.ToDecimal(0.00)
+
+                    if (Model.HeaderData.IsCartage1 == "Yes")
+                    {
+                        if (Model.HeaderData.CR1_Total > Convert.ToDecimal(0.00))
+                        {
+                            <tr>
+                                <td colspan="3" class="nb"></td>
+                                <td colspan="2" style="text-align:left;">Cartage  : @Model.HeaderData.Cartage_Type_1</td>
+                                <td colspan="2" style="text-align:right;">@Model.HeaderData.CR1_Total</td>
+                            </tr>
+                        }
+                    }
+                    else if (Model.HeaderData.IsCartage1 == "No")
+                    {
+                        if (Model.HeaderData.CR1_Total >= Convert.ToDecimal(0.00))
+                        {
+                            <tr>
+                                <td colspan="3" class="nb"></td>
+                                <td colspan="2" style="text-align:left;">Cartage  : @Model.HeaderData.Cartage_Type_1</td>
+                                <td colspan="2" style="text-align:right;">@Model.HeaderData.CR1_Total</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+
+                    }
+
+
+
+                }
+
+
+
+                <tr>
+                    <td colspan="3" class="nb"></td>
+                    <td colspan="2" style="text-align:left;">SubTotal</td>
+                    <td colspan="2" style="text-align:right;">@Model.HeaderData.T_SubTotal1</td>
+                </tr>
+
+                @if (Model.HeaderData.Insi_Type_2 != "Select")
+                { //Model.HeaderData.T_Insi1 > Convert.ToDecimal(0.00)
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">Insurance : @Model.HeaderData.Insi_Type_2</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.T_Insi2</td>
+                    </tr>
+                }
+
+
+
+                @if (Model.HeaderData.Tax_1 != "Select")
+                {  //Model.HeaderData.T_TotTax > Convert.ToDecimal(0.00)
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">Tax : @Model.HeaderData.Tax_1</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.T_TotTax</td>
+                    </tr>
+                }
+
+              
+
+
+
+
+                @*@foreach (var cc in Model.ItemData)
+                    {
+
+                   
+
+                    <tr>
+                        <td colspan="3"></td>
+                        <td colspan="3" style="text-align:left;">Tax : @cc.Tax_type</td>
+                        <td colspan="2" style="text-align:right;">@cc.T_Tax</td>
+                    </tr>
+
+
+                    }*@
+
+
+
+
+
+
+
+
+
+
+
+                @if (Model.HeaderData.Insi_Type_3 != "Select")
+                {
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">Insurance : @Model.HeaderData.Insi_Type_3</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.T_Insi3</td>
+                    </tr>
+                }
+
+
+
+
+                @*@foreach (var cc in Model.ItemData)
+            {
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="3" style="text-align:left;">Tax : @cc.Tax_type</td>
+                <td colspan="2" style="text-align:right;">@cc.T_Tax</td>
+            </tr>
+
+
+            }*@
+
+
+                @if (Model.HeaderData.Cartage_Type_2 != "Select")
+                {  //Model.HeaderData.CR2_Total > Convert.ToDecimal(0.00)
+
+                    if (Model.HeaderData.IsCartage2 == "Yes")
+                    {
+                        if (Model.HeaderData.CR2_Total > Convert.ToDecimal(0.00))
+                        {
+                            <tr>
+                                <td colspan="3" class="nb"></td>
+                                <td colspan="2" style="text-align:left;">Cartage  : @Model.HeaderData.Cartage_Type_2</td>
+                                <td colspan="2" style="text-align:right;">@Model.HeaderData.CR2_Total</td>
+                            </tr>
+                        }
+                    }
+                    else if (Model.HeaderData.IsCartage2 == "No")
+                    {
+                        if (Model.HeaderData.CR2_Total >= Convert.ToDecimal(0.00))
+                        {
+                            <tr>
+                                <td colspan="3" class="nb"></td>
+                                <td colspan="2" style="text-align:left;">Cartage  : @Model.HeaderData.Cartage_Type_2</td>
+                                <td colspan="2" style="text-align:right;">@Model.HeaderData.CR2_Total</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                    }
+
+
+
+
+
+                }
+
+
+
+
+
+
+                @if (Model.HeaderData.Insi_Type_4 != "Select")
+                { //Model.HeaderData.T_Insi2 > Convert.ToDecimal(0.00)
+                    <tr>
+                        <td colspan="3" class="nb"></td>
+                        <td colspan="2" style="text-align:left;">Insurance  : @Model.HeaderData.Insi_Type_4</td>
+                        <td colspan="2" style="text-align:right;">@Model.HeaderData.T_Insi4</td>
+                    </tr>
+                }
+
+
+                <tr>
+                    <td colspan="3" class="nb"></td>
+                    <td colspan="2" style="text-align:left;">SubTotal </td>
+                    <td colspan="2" style="text-align:right;">@Model.HeaderData.T_SubTotal2</td>
+                </tr>
+
+
+
+
+                @*
+            <tr>
+                <td colspan="3"></td>
+                <td colspan="3" style="text-align:left;">Surcharge</td>
+                <td colspan="2" style="text-align:right;">
+                    @if (Model.HeaderData.SurCharge != null)
+                    {
+                    @Model.HeaderData.SurCharge;
+                    }
+                    else {
+                    <p>0</p>
+                    }
+                </td>
+            </tr>*@
+
+                <tr>
+                    <td colspan="3"></td>
+                    <td colspan="2" style="text-align:left;">Grand Total</td>
+                    <td colspan="2" style="text-align:right;">@Model.HeaderData.GrandTotal</td>
+                </tr>
+
+                <tr>
+                    <td colspan="7" style="text-align:left;">
+                        <b> Amount In Word :</b>  @ViewBag.PrintamountInWord
+                    </td>
+                </tr>
+                @*
+            <tr>
+                <td colspan="3">iyfulfujjfj</td>
+                <td colspan="2">Grand Total</td>
+                <td colspan="2">@Model.HeaderData.GrandTotal</td>
+            </tr>*@
+
+
+            </table>
+
+        </div>
+   
+
+
+        <h5><u>Specific Terms & Conditions</u></h5>
+        <div>
+
+            <table style="width:100%;" cellpadding="4" cellspacing="0" border="1">
+                @foreach (var items_Dels in ViewBag.Delevery_details)
+                {
+
+                    <tr>
+                        <td style="text-align:left; font-size:12px;" width="20">1</td>
+                        <td align="left" style="text-align:left;">Delivery Address: @items_Dels.Delivery_Address</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left; font-size:12px;">2</td>
+                        <td align="left" style="text-align:left;">Contact Person At Site: @items_Dels.Contact_Person_Name @items_Dels.Contact_Person_Mobile</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left; font-size:12px;">3</td>
+                        <td align="left" style="text-align:left;">Billing Address :@items_Dels.Billing_Address</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:left; font-size:12px;">4</td>
+                        <td align="left" style="text-align:left;">Delivery Schedule: @items_Dels.Delivery_Schedule</td>
+                    </tr>
+                }
+
+
+                @{int stcsi = 5;
+
+                    foreach (var items_Stcs in ViewBag.Stc_details)
+                    {
+
+                        <tr>
+
+                            <td align="left" style="text-align:left;">
+                                @stcsi
+                            </td>
+                            <td align="left" style="text-align:left;">
+                                @items_Stcs.STC_Description
+                            </td>
+                            @*<td>
+                                @item.ProjectName
+                            </td>
+                            <td>
+                                @item.UnitName
+                            </td>*@
+
+                        </tr>
+                        stcsi++;
+                    }
+                }
+
+            </table>
+        </div>
+
+
+
+        <h5><u>Specific Instructions</u></h5>
+        <div>
+            <table id="table_Si1" style="width:100%;" cellpadding="4" cellspacing="0" border="1">
+
+                @{int sii = 1;
+                    foreach (var items_Sis in ViewBag.Si_details)
+                    {
+
+                        <tr>
+                            <td width="20">
+                                @sii
+                            </td>
+                            <td style="text-align:left; font-weight: normal;">
+                                @items_Sis.SI_Description
+                            </td>
+                            @*<td>
+                                @item.ProjectName
+                            </td>
+                            <td>
+                                @item.UnitName
+                            </td>*@
+
+                        </tr>
+                        sii++;
+                    }
+                }
+
+            </table>
+        </div>
+
+
+
+
+        <p>Please supply the above material/goods immediately at abovementioned site as per the terms and conditions stipulated above and overleaf. Also, please confirm acceptance of this PO.</p>
+
+
+
+
+        <table class="table table-bordered" style="width:100%" cellpadding="4" cellspacing="0" border="1">
+            <thead>
+                <tr class="alert-danger">
+                    <th style="text-align:left; font-size:12px;">Prepared by</th>
+                    <th style="text-align:left; font-size:12px;">Checked by</th>
+                    <th style="text-align:left; font-size:12px;">Authorised Signatory</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:left;">@Model.HeaderData.PoCreatedBy <br />  Signature:</td>
+                    <td style="text-align:left;">@Model.HeaderData.PoApprovedBy <br /> Signature: </td>
+                    <td style="text-align:left;"> @Model.HeaderData.IsReleasePOBy <br /> Signature: </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <table style="width:100%" cellpadding="4" cellspacing="0" border="1">
+            <tr><td colspan="2" text-align:left;">Acceptance of PO by Supplier</td></tr>
+            <tr>
+                <td>(Supplier to sign and put official stamp here on copy of the PO and return to ACIL for record, or confirm acceptance by  e-mail.)</td>
+                <td>Counter-signature of Project In-Charge /Controlling Dept. Rep in Head Office</td>
+            </tr>
+        </table>
+
+        <br />
+        <table style="width:100%" cellpadding="4" cellspacing="0" border="1">
+            <tr>
+                <td>Correspondence Address:</td>
+                <td> A-177, Okhla Industrial Area, Phase-1, New Delhi - 110020</td>
+            </tr>
+            <tr>
+                <td>Contact Person:</td>
+                <td> Barun Kumar (+91-8587906391)</td>
+            </tr>
+        </table>
+
+        <div class="breakpage"></div>
+        <center>
+            <h5><u>General Terms & Conditions</u></h5>
+
+            <p style="font-size:12px;">(Reference PO No.<b style="color:blue;" id="bold1">@Model.HeaderData.PurchaseOrderNo</b> Dated @Model.HeaderData.PurchaseOrderDate.Value.ToString("dd/MM/yyyy"))</p>
+
+        </center>
+        <div>
+            <table id="table_Gtcs1" style="width:100%;" cellpadding="4" cellspacing="0" border="1">
+                @{int i = 1;
+                    foreach (var items_Gtcsc in ViewBag.Gtc_details)
+                    {
+
+                        <tr>
+                            <td width="20">
+                                @i
+                            </td>
+                            <td Style="text-align:left; font-weight: normal;">
+                                @items_Gtcsc.GTC_Description
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </table>
+
+            @*<table id="tblEmployee1" class="table">
+                <thead>
+                    <img src="~/Images/Loading.gif" alt="Loading" id="imgLoading1" class="Load" style="width:500px; height:500px" />
+                </thead>
+                <tbody></tbody>
+            </table>*@
+
+        </div>
+
+
+
+        
+    </div>
+
+    <div style="clear:both;"></div>
+    <div>
+        <input type="button" id="btnReleased" class="btn btn-primary" value="Release" />
+        @*<input type="button" id="btnBack" class="btn btn-danger" value="Calculate" />*@
+        <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+    </div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,94 @@
+﻿@model MMS_P.ViewModels.GetPendingPIHome
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".editDialog").on("click", function (e) {
+            var url = $(this).attr('href');
+            $("#dialog-edit").dialog({
+                title: 'Forword Price Cap Detail',
+                autoOpen: false,
+                resizable: false,
+                height: 400,
+                width: 550,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit").dialog('open');
+           // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+        $("#btncancel").on("click", function (e) {
+            $("#dialog-edit").dialog('close');
+
+        });
+    });
+</script>
+
+
+
+<table class="table">
+
+    <tr class="primary">
+
+
+        
+        <th align="left" class="EmployeeTableTH">
+            @Html.DisplayName("Site Name")
+        </th>
+        <th align="left" class="EmployeeTableTH">
+            @Html.DisplayName("Indent Date")
+        </th>
+        <th align="left" class="EmployeeTableTH">
+            @Html.DisplayName("Indent No")
+        </th>
+        
+
+    </tr>
+
+           @foreach (var item in Model.MHome)
+           {
+            <tr id=@item.UId class="system">
+
+                <td class="EmployeeTableTD" style="font-size: 10px;" >
+                    @Html.DisplayFor(modelItem => item.ProjectName)
+                </td>
+                <td class="EmployeeTableTD" style="font-size: 10px;">
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td class="EmployeeTableTD" style="font-size: 10px;" >
+                    @*@Html.DisplayFor(modelItem => item.PurRequisitionNo)*@
+                @Html.ActionLink(item.PurRequisitionNo, "ViewPriceCaps", new { id = ((decimal)item.UId)  }, new { @class = "editDialog", @id = "text1", @style = "color:#497bf9" })
+                </td>
+               
+           
+        
+
+    </tr>
+
+           }
+
+
+
+</table>
+
+
+<div id="dialog-edit" style="display: none">
+</div>

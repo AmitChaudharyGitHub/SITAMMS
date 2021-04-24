@@ -1,0 +1,220 @@
+﻿@model IEnumerable<MMS.Models.IndentsendDetail>
+@{
+    ViewBag.Title = "GetAllIndentDetails";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+    WebGrid grid = new WebGrid(source: Model, canSort: false);
+}
+
+<style>
+    #gridT, #gridT tr {
+        border: 1px solid #0D857B;
+    }
+
+    #nestedT, #nestedT tr {
+        border: 1px solid #f3f3f3;
+    }
+
+    #nestedT {
+        margin: 0px 0px 0px 10px;
+        padding: 5px;
+        width: 95%;
+    }
+
+        #nestedT th {
+            font-size: 14px;
+            font-weight: bold;
+            background-color: green;
+        }
+
+    .recordHoverEffect {
+        cursor: pointer;
+    }
+
+        .recordHoverEffect:hover {
+            background-color: rgb(248, 242, 242);
+        }
+
+    .expandRecordRecord {
+        background-image: url(../../Images/ShowHideImage.png);
+        background-position-x: -22px;
+        background-repeat: no-repeat;
+    }
+
+    .collapseRecordRecord {
+        background-image: url(../../Images/ShowHideImage.png);
+        background-position-x: -2px;
+        background-repeat: no-repeat;
+    }
+</style>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var size = $("#main #gridT > thead > tr >th").size();
+            $("#main #gridT > thead > tr >th").last().remove();
+            $("#main #gridT > thead > tr").prepend("<th></th>");
+            $("#main #gridT > tbody > tr").each(function (i, el) {
+                $(this).prepend(
+                        $("<td>View</td>")
+                        .addClass("expandRecord")
+                        .addClass("recordHoverEffect")
+                        .attr('title', "Show Hide Details")
+                    );
+
+
+                var table = $("table", this).parent().html();
+
+                $(this).after("<tr><td></td><td style='padding:5px; margin:0px;' colspan='" + (size - 1) + "'>" + table + "</td></tr>");
+                $("table", this).parent().remove();
+
+                $(".recordHoverEffect", this).on("click", ".recordHoverEffect", function () {
+                    alert('Hows');
+                    $(this).parent().closest("tr").next().slideToggle(100);
+                    $(this).toggleClass("expandRecord collapseRecord");
+                });
+            });
+
+
+            $("#main #gridT > tbody > tr td.expandRecord").each(function (i, el) {
+                $(this).toggleClass("expandRecord collapseRecord");
+                $(this).parent().closest("tr").next().slideToggle(100);
+            });
+
+        });
+    </script>
+}
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">VIEW SENDED INDENT REQUISTION</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Stats", new[] { new SelectListItem() { Text = "Pending", Value = "Pending" }, new SelectListItem() { Text = "Approved", Value = "Approved" } }, "Select Status", new { htmlAttributes = new { @class = "form-control gui-input" } })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @*@Html.DropDownList("Projct", null, "Select Project", htmlAttributes: new { @class = "form-control" })*@
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="button" id="Search" class="btn btn-primary" value="Search" />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div id="main" style="padding: 25px; background-color: yellow;">
+                                                    @grid.GetHtml(
+                                 htmlAttributes: new { id = "gridT", width = "600px", style = "background-color:skyblue; color:blue; font-size:14pt; font-family:TimesNewRoman;" },
+                               columns: grid.Columns(
+                              grid.Column("obj_tblIndentRequisition.IndentNo", "Indent No."),
+                            grid.Column("obj_tblIndentRequisition.Date", "Date"),
+                            grid.Column("obj_tblIndentRequisition.Status", "Status"),
+
+                        grid.Column(format: (item) =>
+                        {
+                            WebGrid subGrid = new WebGrid(source: item.detalsIndent);
+                            return subGrid.GetHtml(
+                                htmlAttributes: new { id = "nestedT", style = "background-color:red; color:white; font-size:12pt; font-family:verdana;" },
+                                columns: subGrid.Columns(
+                                        subGrid.Column("ProjectID", " Project ID"),
+                                        subGrid.Column("EmployeeID", "Employee Name"),
+                                        subGrid.Column("ItemGroupID", "ItemGroup Name"),
+                                        subGrid.Column("ItemID", "Item Name"),
+                                        subGrid.Column("UnitID", "Unit Name"),
+                                            subGrid.Column("Make", "Make"),
+                                                subGrid.Column("PartNo", "Part No."),
+                                                subGrid.Column("Quantity", "Quantity")
+                                    )
+                                );
+                        })
+                    )
+                )
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+                                </form>
+
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+

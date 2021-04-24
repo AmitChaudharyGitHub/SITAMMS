@@ -1,0 +1,1326 @@
+﻿
+@model MMS_P.ViewModels.PagedCashPurchaseMasterModel
+
+@{
+    ViewBag.Title = "Index";
+
+    //var fromDate = (DateTime)ViewBag.fromDate;
+    //var toDate = (DateTime)ViewBag.toDate;
+}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    /*.select2-container {
+        width: 210px !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 31px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 42px !important;
+    }
+
+    .select2-selection__arrow {
+        height: 34px !important;
+    }*/
+</style>
+
+
+
+
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+            window['GetPrj'] = function (dateString) {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetProjectByEmpId, // Calling json method
+
+                    dataType: 'json',
+                    data: { E: ss },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (result) {
+                        var procemessage = "<option value='0'> Please wait...</option>";
+                        $("#Projects").html(procemessage).show();
+                        var markup = "<option value='0'>Select Project</option>";
+                        $("#Projects").html(markup).show();
+                        result = $.parseJSON(result)
+
+                        var selectedDeviceModel = $('#Projects');
+                        $.each(result, function (index, item) {
+                            selectedDeviceModel.append(
+                                $('<option/>', {
+                                    value: item.Value,
+                                    text: item.Text
+                                })
+                            );
+                        });
+
+                        $("#Projects").prop('selectedIndex', 1);
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Project.' + ex);
+                    }
+                });
+                return false;
+            };
+            GetPrj();
+
+
+        }
+           )
+
+        $(document).ready(function () {
+            //Country Dropdown Selectedchange event
+            $("#ItemGroups").change(function () {
+                $("#Items").empty();
+                $("#Items").append($("<option></option").val("").html("Select Item Name"));
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemByGroup, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { id: $("#ItemGroups").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                        names = $.parseJSON(names)
+
+
+                        $.each(names, function (i, itname) {
+                            $("#Items").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+
+                        FindAllGroupLastOpeningInSite();
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            });
+            $("#Projects").change(function () {
+                $("#grid").empty();
+            });
+        });
+
+        $(document).ready(function () {
+            $("#TotalPurchase").keyup(function () {
+
+                CalcTheoritical();
+
+
+            });
+
+
+            $("#TotalIssue").keyup(function () {
+
+                //alert("A");
+                CalcTheoritical();
+
+
+            });
+
+
+            function CalcTheoritical() {
+                var LastOpening = $("#LastOpening").val();
+                var TotalPurchase = $("#TotalPurchase").val();
+                var TotalIssue = $("#TotalIssue").val();
+
+                if (LastOpening == "" || LastOpening == null) {
+                    LastOpening = 0;
+                }
+                if (TotalPurchase == "" || TotalPurchase == null) {
+                    TotalPurchase = 0;
+                }
+                if (TotalIssue == "" || TotalIssue == null) {
+                    TotalIssue = 0;
+                }
+
+                var Theoritical = ((LastOpening + TotalPurchase) - TotalIssue).toFixed(2);
+                $("#Theoritical").val(Theoritical);
+                $("#Physical").val(Theoritical);
+                DiffPT();
+            }
+            $("#Rate").keyup(function () {
+
+                //alert("A");
+                CalcTheoriticalRate();
+                CalcPhysicalRate();
+
+            });
+            $("#Theoritical").keyup(function () {
+
+                //alert("A");
+                CalcTheoriticalRate();
+                DiffPT();
+
+            });
+            $("#Physical").keyup(function () {
+
+                //alert("A");
+
+                CalcPhysicalRate();
+                DiffPT();
+
+            });
+            function CalcTheoriticalRate() {
+                var Theoritical = $("#Theoritical").val();
+                var Rate = $("#Rate").val();
+                if (Rate == "" || Rate == null) {
+                    Rate = 0;
+                }
+                if (Theoritical == "" || Theoritical == null) {
+                    Theoritical = 0;
+                }
+
+                var TheoriticalRate = +Theoritical * +Rate;
+                $("#TStockValue").val(TheoriticalRate);
+            }
+            function CalcPhysicalRate() {
+                var Physical = $("#Physical").val();
+                var Rate = $("#Rate").val();
+                if (Rate == "" || Rate == null) {
+                    Rate = 0;
+                }
+                if (Physical == "" || Physical == null) {
+                    Physical = 0;
+                }
+
+                var PhysicalRate = +Physical * +Rate;
+                $("#PStockValue").val(PhysicalRate);
+            }
+
+
+            function DiffPT() {
+                var Physical = $("#Physical").val();
+                var Theoritical = $("#Theoritical").val();
+
+                if (Theoritical == "" || Theoritical == null) {
+                    Theoritical = 0;
+                }
+                if (Physical == "" || Physical == null) {
+                    Physical = 0;
+                }
+
+                var Diff = (Theoritical - Physical).toFixed(2);
+                $("#Difference").val(Diff);
+            }
+
+            window['CalStock'] = function () {
+                //alert("A");
+                CalcTheoritical();
+                DiffPT()
+                CalcTheoriticalRate();
+                CalcPhysicalRate();
+            }
+
+
+            // alert("A");
+            //$(document).on('keyup', "#TotalPurchase", function () {
+            //    var current = $(this).find('input').val();
+            //    var str = $(this).attr('class');
+            //    var a = str.substring(8);
+            //    var Qty = $("#Qty_" + a).find('input').val();
+            //    var PReceive = $("#PReceive_" + a).find('input').val();
+            //    var bal = +current + +PReceive;
+            //    if (+bal > +Qty) {
+            //        alert("Total Greater than  Purchase Qty");
+            //        $(this).find('input').val('');
+            //    }
+
+
+            //});
+        })
+
+
+        $(document).ready(function () {
+            //Item Dropdown Selectedchange event
+            $("#Items").change(function () {
+                //alert("A");
+                $("#Unit").empty();
+                //$("#grid").empty();
+                $("#LastOpening").val('');
+                $("#TotalPurchase").val('');
+
+                $("#Rate").val('');
+
+                $("#TotalIssue").val('');
+
+                $("#Theoritical").val('');
+
+                $("#Physical").val('');
+
+                $("#Difference").val('');
+
+                $("#TStockValue").val('');
+
+                $("#PStockValue").val('');
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemDetail2, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { id: $("#Items").val(), pid: $("#Projects").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (item) {
+                        item = $.parseJSON(item)
+
+
+                        $("#Unit").val(item.Unit);
+                        $("#Unit").attr('uid', item.UnitNo);
+
+                        $("#LastOpening").val(item.Opening);
+                        $("#TotalPurchase").val(item.Purchase);
+                        $("#TotalIssue").val(item.Issue);
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Make.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+
+
+        function SaveStock() {
+            var url = SaveOpening;
+            if ($("#HiddenOpeningDate").val() != "") {
+
+                if ($('#Projects option:selected').val() != 0) {
+                    if ($('#Items option:selected').val() != 0) {
+                        if ($("#Opening").val() != 0 && $("#Opening").val() != "") {
+                            if ($("#TotalPurchase").val() == null)
+                                $("#TotalPurchase").val() = 0.00;
+                            if ($("#Rate").val() == null)
+                                $("#Rate").val() = 0.00;
+                            if ($("#TotalIssue").val() == null)
+                                $("#TotalIssue").val() = 0.00;
+                            if ($("#Theoritical").val() == null)
+                                $("#Theoritical").val() = 0.00;
+                            if ($("#Physical").val() == null)
+                                $("#Physical").val() = 0.00;
+                            if ($("#Difference").val() == null)
+                                $("#Difference").val() = 0.00;
+                            if ($("#TStockValue").val() == null)
+                                $("#TStockValue").val() = 0.00;
+                            if ($("#PStockValue").val() == null)
+                                $("#PStockValue").val() = 0.00;
+                            $('#dvLoading').show();
+                            $.ajax({
+
+                                url: url,
+                                type: 'GET',
+                                data: { Project: $('#Projects option:selected').val(), ItemGroup: $('#ItemGroups option:selected').val(), Item: $('#Items option:selected').val(), Unit: $("#Unit").attr('uid'), TotalPurchase: $("#TotalPurchase").val(), Rate: $("#Rate").val(), TotalIssue: $("#TotalIssue").val(), Theoritical: $("#Theoritical").val(), Physical: $("#Physical").val(), Difference: $("#Difference").val(), TStockValue: $("#TStockValue").val(), PStockValue: $("#PStockValue").val(), ProjectName: $('#Projects option:selected').text(), LastOpening: $("#LastOpening").val(), OpeningDate: $("#HiddenOpeningDate").val() },
+                                complete: function () {
+                                    $('#dvLoading').hide();
+                                },
+                                success: function (result) {
+                                    if (result == "1") {
+
+                                        $("#myModal").modal('show');
+                                        $("#Opening").val('');
+                                        FindOneItemLastOpeningInSite();
+                                    }
+                                    else if(result == "3")
+                                    {
+                                        alert("You have already received the item.")
+                                    } else if (result == "4")
+                                    {
+                                        alert("You have already received the item.")
+                                    }
+                                }
+                            });
+                            return false;
+                        }
+                        else {
+                            alert("Give Quantity");
+                        }
+                    }
+                    else {
+                        alert("Enter Item");
+                    }
+                }
+                else {
+                    alert("Enter Project");
+                }
+            }
+            else {
+                alert("Kindly contact to admin for opening date.");
+            }
+        }
+        window['FindAllGroupLastOpeningInSite'] = function () {
+
+
+            var url = GetAllGroupLastOpeningInSite;
+            if ($('#Projects option:selected').val() != 0 && $('#ItemGroups option:selected').val() != 0) {
+                $('#dvLoading').show();
+                $.ajax({
+
+                    url: url,
+                    type: 'GET',
+                    data: { Project: $('#Projects option:selected').val(), ItemGroup: $('#ItemGroups option:selected').val() },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (result) {
+                        //alert(result);
+                        $("#grid").empty();
+                        item = $.parseJSON(result)
+                        // alert(item);
+                        if (item != null) {
+                            $.each(item, function (i, itname) {
+
+                                //$("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ProjectName + "</td><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.Opening + "</td><td>" + itname.tblItemMasterStock.Rate + "</td></tr>");
+
+                                $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.LastOpening + "</td><td>" + itname.tblItemMasterStock.TotalPurchase + "</td><td>" + itname.tblItemMasterStock.TotalIssue + "</td><td>" + itname.tblItemMasterStock.TheoriticalQty + "</td><td>" + itname.tblItemMasterStock.PhysicalQty + "</td><td>" + itname.tblItemMasterStock.DiffFromTheoritical + "</td><td>" + itname.tblItemMasterStock.Rate + "</td><td>" + itname.tblItemMasterStock.TStockValue + "</td><td>" + itname.tblItemMasterStock.PStockValue + "</td></tr>");
+                            })
+                        }
+                    }
+                });
+                return false;
+            }
+
+        }
+        window['FindOneItemLastOpeningInSite'] = function () {
+
+
+            var url = GetOneItemLastOpeningInSite;
+            if ($('#Projects option:selected').val() != 0 && $('#Items option:selected').val() != 0) {
+                $('#dvLoading').show();
+                $.ajax
+                    ({
+
+                        url: url,
+                        type: 'GET',
+                        data: { Project: $('#Projects option:selected').val(), Item: $('#Items option:selected').val() },
+                        complete: function () {
+                            $('#dvLoading').hide();
+                        },
+                        success: function (result) {
+                            $("#grid").empty();
+                            item = $.parseJSON(result)
+                            if (item != null) {
+                                $.each(item, function (i, itname) {
+
+                                    // $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ProjectName + "</td><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.Opening + "</td><td>" + itname.tblItemMasterStock.Rate + "</td></tr>");
+                                    $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.LastOpening + "</td><td>" + itname.tblItemMasterStock.TotalPurchase + "</td><td>" + itname.tblItemMasterStock.TotalIssue + "</td><td>" + itname.tblItemMasterStock.TheoriticalQty + "</td><td>" + itname.tblItemMasterStock.PhysicalQty + "</td><td>" + itname.tblItemMasterStock.DiffFromTheoritical + "</td><td>" + itname.tblItemMasterStock.Rate + "</td><td>" + itname.tblItemMasterStock.TStockValue + "</td><td>" + itname.tblItemMasterStock.PStockValue + "</td></tr>");
+                                })
+                            }
+                        }
+                    });
+                return false;
+            }
+
+        }
+
+
+    </script>*@
+
+
+
+
+<section id="content_wrapper">
+
+    <section id="content" class="table-layout animated fadeIn">
+
+
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            @*<form method="post" action="#" id="form-ui">*@
+                            <div class="section-divider mb40" id="spy1">
+                                <span>@Html.Label("  Opening ", new { id = "L1" })</span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p style="color:black; font:bold">Last Opening Date :  @ViewBag.LastOpeningDateprojectWise  </p>
+                                    <input type="hidden" id="HiddenOpeningDate" value="@ViewBag.LastOpeningDateprojectWise" />
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.DropDownList("ItemGroups", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroups", @class = "form-control" })
+                                            <i class="arrow"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.DropDownList("Items", new SelectList(string.Empty, "Value", "Text"), "Select Item", htmlAttributes: new { @id = "Items", @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-md-offset-0">
+                                    <div class="form-group">
+                                        @Html.DropDownList("ItemId", new SelectList(string.Empty, "Value", "Text"), "Select Item Code", htmlAttributes: new { @id = "ItemId", @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="field select">
+                                        @Html.TextBox("Unit", null, new { id = "Unit", @class = "form-control gui-input", @readonly = "readonly", @placeholder = "Unit", uid = "" })
+                                    </label>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("LastOpening", null, new { id = "LastOpening", @class = "form-control gui-input hide", @readonly = "readonly", @placeholder = "Last Opening", uid = "" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Total Purchase")
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Rate")
+
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Total Issue")
+
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Theoretical")
+
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Physical")
+
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        @*<label class="field select">*@
+                                        @Html.Label("Difference")
+
+
+                                        @*</label>*@
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("TotalPurchase", null, new { id = "TotalPurchase", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("Rate", null, new { id = "Rate", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("TotalIssue", null, new { id = "TotalIssue", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("Theoritical", null, new { id = "Theoritical", @class = "form-control gui-input", @readonly = "readonly" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("Physical", null, new { id = "Physical", @readonly = "readonly", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("Difference", null, new { id = "Difference", @class = "form-control gui-input", @readonly = "readonly" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-2">
+                                    <div class="section">
+
+                                        @Html.Label("Theoretical Stock Value")
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+
+                                        @Html.Label("Physical Stock Value")
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("TStockValue", null, new { id = "TStockValue", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <label class="field select">
+                                            @Html.TextBox("PStockValue", null, new { id = "PStockValue", @class = "form-control gui-input" })
+
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <input type="submit" value="Calculate" id="btnDateLast1" onclick="javascript:CalStock()" class="btn btn-info" />
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="section">
+                                        <input type="submit" value="Save" id="btnDateLast" onclick="javascript:SaveStock()" class="btn btn-primary" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="section">
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <br />
+                            <div id="dvLoading"></div>
+                            <table class="table" id="grid2">
+                                <thead>
+                                    <tr>
+                                        <th>Group</th>
+                                        <th>Item Code</th>
+                                        <th>Item</th>
+                                        <th>Last</th>
+                                        <th>Purchase</th>
+                                        <th>Issue</th>
+                                        <th>Theoretical</th>
+                                        <th>Physical</th>
+                                        <th>Diff</th>
+                                        <th>Rate</th>
+
+                                        <th>Th..Value</th>
+                                        <th>Phy..Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grid"></tbody>
+                            </table>
+                            <table class="table" id="grid">
+                                @*<thead>
+                                        <tr>
+                                            <th>Project</th>
+                                            <th>Item Group</th>
+                                            <th>Item Name</th>
+                                            <th>Opening</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>*@
+                                <tbody id="grid"></tbody>
+                            </table>
+
+
+
+                            <br />
+                            <br />
+                            <br />
+                            <h4>Search Item</h4>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <label class="field prepend-icon">
+                                            @Html.TextBox("ItemName", null, new { id = "ItemName", @class = "form-control gui-input required", placeholder = "Item Name" })
+                                            <label for="ItemName" class="field-icon">
+                                                <i class="fa fa-building"></i>
+                                            </label>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="section">
+                                        <input type="button" id="btnSearch" class="btn btn-danger" value="Search" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12" id="formbody">
+
+                                </div>
+                            </div>
+
+
+
+
+                            <div id="myModal" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                            <h4 class="modal-title">Confirmation</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @*<p>Do you want to save changes you made to document before closing?</p>*@
+                                            <p class="text-danger">Data Save Successfully</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</section>
+
+@section scripts{
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+<script>
+
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        $(window).load(function () {
+            //$('#btnDateLast').attr("disabled", "disabled");
+            $('#btnDateLast').hide();
+        });
+        $('#btnDateLast1').click(function(){
+            // $("#btnDateLast").removeAttr('disabled');
+            $("#btnDateLast").show();
+            var inputVal= $("#Rate").val();
+            if (inputVal == '')
+            {
+                alert('Rate field should not be empty');
+                return false;
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+
+    var GetItemByGroup='@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+
+    var GetGItemCodeByGroup='@Url.Action("GetItemCodeByGroup", "tblItemMasters")';
+
+    var GetItemDetail = '@Url.Action("GetItemDetail", "tblItemMasters")';
+    var GetItemDetail2 = '@Url.Action("GetItemDetail2", "tblItemMasters")';
+
+    var SaveOpening = '@Url.Action("SaveOpeningFirst", "tblItemMasters")';
+
+
+    var GetAllGroupLastOpeningInSite = '@Url.Action("FindAllGroupLastOpeningInSite", "tblItemMasters")';
+    var GetOneItemLastOpeningInSite = '@Url.Action("FindOneItemLastOpeningInSite", "tblItemMasters")';
+    var redurl = '@Url.Action("ItemOpeningFirst", "tblItemMasters")';
+
+
+</script>
+
+
+@*<script src="~/Script/ItemOpeningFirst.js"></script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".DatePicker").datepicker({
+            dateFormat: 'dd M yy',
+            changeMonth: true,
+            changeYear: true,
+        }).val('');
+
+        $("#Items").select2({});
+        $("#ItemId").select2({});
+
+        $('#btnSearch').click(SearchItems);
+
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1);
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+    });
+
+    function SearchItems() {
+        var url = '@Url.Action("GetItemDetails", "PurchaseRequisition")';
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { ItemGroupId: $('#ddlItemG').val(), ItemName: $("#ItemName").val(), HSNCode: $('#HSNCode').val(), UnitId: $('#ddlUnits').val(),IsEdit:false },
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                console.log(result);
+                $('#formbody').html(result);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#ItemGroups").change(function () {
+            $("#Items").empty();
+            $('#ItemId').empty();
+            $("#select2-Items-container").text('Select Item');
+            $("#Items").append($("<option></option").val("").html("Select Item Name"));
+           // $("#ItemId").append($("<option></option").val("").html("Select Item Code"));
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetItemByGroup, // Calling json method
+                dataType: 'json',
+                data: { id: $("#ItemGroups").val() },
+                // Get Selected Country ID.
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (names) {
+                    names = $.parseJSON(names)
+                    $.each(names, function (i, itname) {
+                        $("#Items").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+                        
+                    });
+                    BindDdl('#ItemId',GetGItemCodeByGroup,{id:$("#ItemGroups").val()},"Item Code");
+                    FindAllGroupLastOpeningInSite();
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        });
+        $("#Projects").change(function () {
+            $("#grid").empty();
+        });
+    });
+
+    $(document).ready(function () {
+        $("#TotalPurchase").keyup(function () {
+
+            CalcTheoritical();
+
+
+        });
+
+
+        $("#TotalIssue").keyup(function () {
+
+            //alert("A");
+            var tp = $("#TotalPurchase").val();
+            var ts= $("#TotalIssue").val();
+            if(+tp >= +ts)
+            {
+                CalcTheoritical();
+            }
+            else{
+                alert("Total Issue Can't greater than Total purchase.")
+            }
+
+            //  CalcTheoritical();
+
+
+        });
+
+
+        function CalcTheoritical() {
+            var LastOpening = $("#LastOpening").val();
+            var TotalPurchase = $("#TotalPurchase").val();
+            var TotalIssue = $("#TotalIssue").val();
+
+            if (LastOpening == "" || LastOpening == null) {
+                LastOpening = 0;
+            }
+            if (TotalPurchase == "" || TotalPurchase == null) {
+                TotalPurchase = 0;
+            }
+            if (TotalIssue == "" || TotalIssue == null) {
+                TotalIssue = 0;
+            }
+
+            var Theoritical = ((LastOpening + TotalPurchase) - TotalIssue).toFixed(3);
+            $("#Theoritical").val(Theoritical);
+            $("#Physical").val(Theoritical);
+            DiffPT();
+        }
+        $("#Rate").keyup(function () {
+
+            //alert("A");
+            CalcTheoriticalRate();
+            CalcPhysicalRate();
+
+        });
+        $("#Theoritical").keyup(function () {
+
+            //alert("A");
+            CalcTheoriticalRate();
+            DiffPT();
+
+        });
+        $("#Physical").keyup(function () {
+
+            //alert("A");
+
+            CalcPhysicalRate();
+            DiffPT();
+
+        });
+        function CalcTheoriticalRate() {
+            var Theoritical = $("#Theoritical").val();
+            var Rate = $("#Rate").val();
+            if (Rate == "" || Rate == null) {
+                Rate = 0;
+            }
+            if (Theoritical == "" || Theoritical == null) {
+                Theoritical = 0;
+            }
+
+            var TheoriticalRate = +Theoritical * +Rate;
+            var dd = TheoriticalRate.toFixed(2);
+            $("#TStockValue").val(dd);
+        }
+        function CalcPhysicalRate() {
+            var Physical = $("#Physical").val();
+            var Rate = $("#Rate").val();
+            if (Rate == "" || Rate == null) {
+                Rate = 0;
+            }
+            if (Physical == "" || Physical == null) {
+                Physical = 0;
+            }
+
+            var PhysicalRate = +Physical * +Rate;
+            var kol = PhysicalRate.toFixed(2);
+            $("#PStockValue").val(kol);
+        }
+
+
+        function DiffPT() {
+            var Physical = $("#Physical").val();
+            var Theoritical = $("#Theoritical").val();
+
+            if (Theoritical == "" || Theoritical == null) {
+                Theoritical = 0;
+            }
+            if (Physical == "" || Physical == null) {
+                Physical = 0;
+            }
+
+            var Diff = (Theoritical - Physical).toFixed(3);
+            $("#Difference").val(Diff);
+        }
+
+        window['CalStock'] = function () {
+            //alert("A");
+            CalcTheoritical();
+            DiffPT()
+            CalcTheoriticalRate();
+            CalcPhysicalRate();
+        }
+
+
+        // alert("A");
+        //$(document).on('keyup', "#TotalPurchase", function () {
+        //    var current = $(this).find('input').val();
+        //    var str = $(this).attr('class');
+        //    var a = str.substring(8);
+        //    var Qty = $("#Qty_" + a).find('input').val();
+        //    var PReceive = $("#PReceive_" + a).find('input').val();
+        //    var bal = +current + +PReceive;
+        //    if (+bal > +Qty) {
+        //        alert("Total Greater than  Purchase Qty");
+        //        $(this).find('input').val('');
+        //    }
+
+
+        //});
+    })
+
+
+    $(document).ready(function () {
+        //Item Dropdown Selectedchange event
+
+        $('#ItemId').change(function(){
+            var data = $('#Items').find('option[value="'+$("#ItemId option:selected").val()+'"]');
+            console.log(data);
+            $('#Items option:selected').val('');
+            $('#Items option:selected').val(data.val());
+            $('#select2-Items-container').text(data.text());
+            SetUp();
+        });
+
+        $("#Items").change(function () {
+            var data = $('#ItemId').find('option[value="'+$("#Items option:selected").val()+'"]');
+            console.log(data);
+            $('#ItemId option:selected').val('');
+            $('#ItemId option:selected').val(data.val());
+            $('#select2-ItemId-container').text(data.text());
+            SetUp();
+        });
+    });
+
+    function SetUp()
+    {
+            //alert("A");
+            $("#Unit").empty();
+            //$("#grid").empty();
+            $("#LastOpening").val('');
+            $("#TotalPurchase").val('');
+
+            $("#Rate").val('');
+
+            $("#TotalIssue").val('');
+
+            $("#Theoritical").val('');
+
+            $("#Physical").val('');
+
+            $("#Difference").val('');
+
+            $("#TStockValue").val('');
+
+            $("#PStockValue").val('');
+
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetItemDetail2, // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#Items").val(), pid: $("#Projects").val() },
+                // Get Selected Country ID.
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (item) {
+                    item = $.parseJSON(item)
+
+                    $("#Unit").val(item.Unit);
+                    $("#Unit").attr('uid', item.UnitNo);
+
+                    $("#LastOpening").val(item.Opening);
+                    $("#TotalPurchase").val(item.Purchase);
+                    $("#TotalIssue").val(item.Issue);
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Make.' + ex);
+                }
+            });
+            return false;
+        }
+
+
+    function SaveStock() {
+        var url = SaveOpening;
+        debugger;
+        if ($("#HiddenOpeningDate").val() != "") {
+
+            if ($('#Projects option:selected').val() != 0) {
+                if ($('#Items option:selected').val() != 0) {
+                    if ($("#Opening").val() != 0 && $("#Opening").val() != "") {
+                        if ($("#TotalPurchase").val() == null)
+                            $("#TotalPurchase").val() = 0.00;
+                        if ($("#Rate").val() == null)
+                            $("#Rate").val() = 0.00;
+                        if ($("#TotalIssue").val() == null)
+                            $("#TotalIssue").val() = 0.00;
+                        if ($("#Theoritical").val() == null)
+                            $("#Theoritical").val() = 0.00;
+                        if ($("#Physical").val() == null)
+                            $("#Physical").val() = 0.00;
+                        if ($("#Difference").val() == null)
+                            $("#Difference").val() = 0.00;
+                        if ($("#TStockValue").val() == null)
+                            $("#TStockValue").val() = 0.00;
+                        if ($("#PStockValue").val() == null)
+                            $("#PStockValue").val() = 0.00;
+                        $('#dvLoading').show();
+                        $.ajax({
+
+                            url: url,
+                            type: 'GET',
+                            data: { Project: $('#Projects option:selected').val(), ItemGroup: $('#ItemGroups option:selected').val(), Item: $('#Items option:selected').val(), Unit: $("#Unit").attr('uid'), TotalPurchase: $("#TotalPurchase").val(), Rate: $("#Rate").val(), TotalIssue: $("#TotalIssue").val(), Theoritical: $("#Theoritical").val(), Physical: $("#Physical").val(), Difference: $("#Difference").val(), TStockValue: $("#TStockValue").val(), PStockValue: $("#PStockValue").val(), ProjectName: $('#Projects option:selected').text(), LastOpening: $("#LastOpening").val(), OpeningDate: $("#HiddenOpeningDate").val() },
+                            complete: function () {
+                                $('#dvLoading').hide();
+                            },
+                            success: function (result) {
+                                if (result == "1") {
+
+                                    $("#myModal").modal('show');
+                                    $("#Opening").val('');
+                                    FindOneItemLastOpeningInSite();
+                                    window.location.href= redurl;
+                                }
+                                else if(result =="2")
+                                {
+                                    alert("Some Problem Occured.Kindly Contact Administrator.")
+                                }
+                                else if(result == "3")
+                                {
+                                    alert("You have already received the item.")
+                                } else if (result == "4")
+                                {
+                                    alert("You have already received the item.")
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                    else {
+                        alert("Give Quantity");
+                    }
+                }
+                else {
+                    alert("Enter Item");
+                }
+            }
+            else {
+                alert("Enter Project");
+            }
+        }
+        else {
+            alert("Kindly contact to admin for opening date.");
+        }
+    }
+    window['FindAllGroupLastOpeningInSite'] = function () {
+
+
+        var url = GetAllGroupLastOpeningInSite;
+        if ($('#Projects option:selected').val() != 0 && $('#ItemGroups option:selected').val() != 0) {
+            $('#dvLoading').show();
+            $.ajax({
+
+                url: url,
+                type: 'GET',
+                data: { Project: $('#Projects option:selected').val(), ItemGroup: $('#ItemGroups option:selected').val() },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    //alert(result);
+                    $("#grid").empty();
+                    item = $.parseJSON(result)
+                    // alert(item);
+                    if (item != null) {
+                        $.each(item, function (i, itname) {
+
+                            //$("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ProjectName + "</td><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.Opening + "</td><td>" + itname.tblItemMasterStock.Rate + "</td></tr>");
+
+                            $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ItemGroupName + "</td><td>"+itname.tblItemMasterStock.ItemNo+"</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.LastOpening + "</td><td>" + itname.tblItemMasterStock.TotalPurchase + "</td><td>" + itname.tblItemMasterStock.TotalIssue + "</td><td>" + itname.tblItemMasterStock.TheoriticalQty + "</td><td>" + itname.tblItemMasterStock.PhysicalQty + "</td><td>" + itname.tblItemMasterStock.DiffFromTheoritical + "</td><td>" + itname.tblItemMasterStock.Rate + "</td><td>" + itname.tblItemMasterStock.TStockValue + "</td><td>" + itname.tblItemMasterStock.PStockValue + "</td></tr>");
+
+                        })
+                    }
+                }
+            });
+            return false;
+        }
+
+    }
+    window['FindOneItemLastOpeningInSite'] = function () {
+
+
+        var url = GetOneItemLastOpeningInSite;
+        if ($('#Projects option:selected').val() != 0 && $('#Items option:selected').val() != 0) {
+            $('#dvLoading').show();
+            $.ajax
+                ({
+
+                    url: url,
+                    type: 'GET',
+                    data: { Project: $('#Projects option:selected').val(), Item: $('#Items option:selected').val() },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (result) {
+                        $("#grid").empty();
+                        item = $.parseJSON(result)
+                        if (item != null) {
+                            $.each(item, function (i, itname) {
+
+                                // $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ProjectName + "</td><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.Opening + "</td><td>" + itname.tblItemMasterStock.Rate + "</td></tr>");
+                                $("#grid").prepend("<tr class='danger _tempRow'><td>" + itname.ItemGroupName + "</td><td>" + itname.ItemName + "</td><td>" + itname.tblItemMasterStock.LastOpening + "</td><td>" + itname.tblItemMasterStock.TotalPurchase + "</td><td>" + itname.tblItemMasterStock.TotalIssue + "</td><td>" + itname.tblItemMasterStock.TheoriticalQty + "</td><td>" + itname.tblItemMasterStock.PhysicalQty + "</td><td>" + itname.tblItemMasterStock.DiffFromTheoritical + "</td><td>" + itname.tblItemMasterStock.Rate + "</td><td>" + itname.tblItemMasterStock.TStockValue + "</td><td>" + itname.tblItemMasterStock.PStockValue + "</td></tr>");
+                            })
+                        }
+                    }
+                });
+            return false;
+        }
+
+    }
+</script>
+}

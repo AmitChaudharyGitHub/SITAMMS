@@ -1,0 +1,257 @@
+﻿@model MMS.Models.VMItemBudgetData
+
+@{
+    ViewBag.Title = "Create Budget";
+}
+<script type="text/javascript">
+    @if(TempData["Error"]!=null)
+    {
+        <text>
+            alert('@TempData["Error"]');
+       </text>
+    }
+</script>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">@ViewBag.Title</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <div class="form-horizontal">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3">
+                                                <strong>Project Name:</strong>
+                                                <label id="lblProject">@ViewBag.ProjectName</label>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="section">
+                                                    <strong>Item Name:</strong>
+                                                    <label>@ViewBag.ItemName</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-8 col-md-offset-0">
+
+                        @using (Html.BeginForm("Create", "ItemBudget", FormMethod.Post, new { id = "frm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <input type="hidden" id="ProjectId" name="ProjectId" value="@ViewBag.ProjectId" />
+                            <input type="hidden" id="ItemId" name="ItemId" value="@ViewBag.ItemId" />
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Total Quantity</label>
+                                        @Html.EditorFor(model => model.TotalQuantity, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                                        @Html.ValidationMessageFor(model => model.TotalQuantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Rate</label>
+                                        @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Amount</label>
+                                        @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                                        @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Financial Year</label>
+                                        <input type="text" name="FinancialYear" id="FinancialYear" value="@ViewBag.FinancialYear" class="form-control" disabled="disabled" />
+                                        @Html.ValidationMessageFor(model => model.FinancialYear, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Excess Percentage</label>
+                                        @Html.EditorFor(model => model.ExcessPercentage, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ExcessPercentage, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>Excess Quantity</label>
+                                        @Html.EditorFor(model => model.ExcessQuantity, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                        @Html.ValidationMessageFor(model => model.ExcessQuantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>April Qty.</label>
+                                        @Html.EditorFor(model => model.Apr, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Apr, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>May Qty.</label>
+                                        @Html.EditorFor(model => model.May, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.May, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>June Qty.</label>
+                                        @Html.EditorFor(model => model.June, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.June, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>July Qty.</label>
+                                        @Html.EditorFor(model => model.July, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.July, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>August Qty.</label>
+                                        @Html.EditorFor(model => model.Aug, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Aug, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>September Qty.</label>
+                                        @Html.EditorFor(model => model.Sep, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Sep, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>October Qty.</label>
+                                        @Html.EditorFor(model => model.Oct, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Oct, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>November Qty.</label>
+                                        @Html.EditorFor(model => model.Nov, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Nov, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>December Qty.</label>
+                                        @Html.EditorFor(model => model.Dec, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Dec, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>January Qty.</label>
+                                        @Html.EditorFor(model => model.Jan, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Jan, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>February Qty.</label>
+                                        @Html.EditorFor(model => model.Feb, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Feb, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label><span style="color:red;">*</span>March Qty.</label>
+                                        @Html.EditorFor(model => model.Mar, new { htmlAttributes = new { @class = "form-control qty" } })
+                                        @Html.ValidationMessageFor(model => model.Mar, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                @Html.ActionLink("Back to List", "Index")
+                                <input type="submit" name="btn" value="Create" id="btnSubmit" class="btn btn-primary pull-right" />
+                            </div>
+                        }
+
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+
+
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div class="modal fade" id="loadingModal" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/Images/36.gif" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section scripts{
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script src="~/Script/CreateItemBudget.js"></script>
+}

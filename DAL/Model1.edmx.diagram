@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1cf032a75e504a2fa03f374abb1278e1" Name="Diagram1">
+        <EntityTypeShape EntityType="MMSEntities.BlockMaster" Width="1.5" PointX="5.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.FloorMaster" Width="1.5" PointX="7.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntry" Width="1.5" PointX="7.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntry_Mid" Width="1.5" PointX="9.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntry_Mid_history" Width="1.5" PointX="9.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntryChild" Width="1.5" PointX="5.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntryChild_Mid" Width="1.5" PointX="11.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.GateEntryChild_Mid_History" Width="1.5" PointX="11.75" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.ns_AddPriceCap" Width="1.5" PointX="13.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.ns_Price_Cap_Enable_Item_Group" Width="1.5" PointX="13.75" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.ns_RateNotification" Width="1.5" PointX="7.75" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.ns_tbl_ApprovedItemQuantity" Width="1.5" PointX="13.75" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.ns_tbl_IssueQuantity" Width="1.5" PointX="15.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.nstblStockDEMO" Width="1.5" PointX="15.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.PurchaseRequisitionChild" Width="1.5" PointX="13.75" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.PurchaseRequisitionMaster" Width="1.5" PointX="15.75" PointY="17" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.SessionMaster" Width="1.5" PointX="17.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbCashPurchaseChild" Width="1.5" PointX="5.25" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbCashPurchaseMaster" Width="1.5" PointX="3" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbDelivery_Details_PO_History" Width="1.75" PointX="7.75" PointY="20" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrder_Approval_For_Print" Width="1.5" PointX="17.75" PointY="12" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrder_GST" Width="1.5" PointX="17.75" PointY="20" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrder_GST_History" Width="1.5" PointX="9.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrderChild" Width="1.5" PointX="19.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrderChild_GST" Width="1.5" PointX="0.75" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrderChild_GST_History" Width="1.5" PointX="2.75" PointY="22" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.TbIndentPurchaseOrderMaster" Width="1.5" PointX="19.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_beforPIdecesionPurchase" Width="1.5" PointX="4.75" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_PurchaseOrderAttachFiles" Width="1.5" PointX="21.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_PurchaseRequistionAttachFiles" Width="1.5" PointX="21.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_wmntdata" Width="1.5" PointX="21.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblAccountType" Width="1.5" PointX="21.75" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblALLRemark" Width="1.5" PointX="21.75" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblApproval_AccountType" Width="1.5" PointX="21.75" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblApprovalStatu" Width="1.5" PointX="6.75" PointY="25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblBillingAddress" Width="1.5" PointX="23.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblClosedPurchaseOrder" Width="1.5" PointX="23.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblDepartment" Width="1.5" PointX="23.75" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblDesignation" Width="1.5" PointX="11.75" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblDivisionMaster" Width="1.5" PointX="23.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblEmployeeMaster" Width="1.5" PointX="13.75" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblEquipmentCategory" Width="1.5" PointX="23.75" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblEquipmentSubCategory" Width="1.5" PointX="23.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblFinancialSelectionType" Width="1.5" PointX="23.75" PointY="24" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblGenral_Terms_Conditions" Width="1.5" PointX="19.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblGenral_Terms_Conditions_Child" Width="1.5" PointX="21.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblGenral_Terms_Conditions_Child_History" Width="1.5" PointX="23.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblGetOutTransfer" Width="1.5" PointX="25.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblGST_SplitTaxMaster" Width="1.5" PointX="4.75" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblIndentRequisition" Width="1.5" PointX="25.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblInterStateTransferChild" Width="1.5" PointX="6.75" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblInterStateTransferMaster" Width="1.5" PointX="25.75" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblIntraStateTransferChild" Width="1.5" PointX="25.75" PointY="26" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblIntraStateTransferMaster" Width="1.5" PointX="27.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblIntraStateTransferTaxableChild" Width="1.5" PointX="27.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemBudget" Width="1.5" PointX="27.75" PointY="17" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemCurrentStock" Width="1.5" PointX="27.75" PointY="24" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemExcessPercentageHistory" Width="1.5" PointX="27.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemGroupMaster" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemMaster" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemMasterFirstOpening" Width="1.5" PointX="27.75" PointY="30" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemMasterStock" Width="1.5" PointX="15.75" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblItemOpeningDeletedHistory" Width="1.5" PointX="17.75" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblLogInformation" Width="1.5" PointX="29.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMachineMaster" Width="1.5" PointX="29.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMainHeader" Width="1.5" PointX="29.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMakeMaster" Width="1.5" PointX="8.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMang_PI_Approval_History" Width="1.5" PointX="29.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSCartageType" Width="1.5" PointX="10.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSEquipmentMaster" Width="1.5" PointX="29.75" PointY="17" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSExciseDuty" Width="1.5" PointX="19.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSGateEntryFileDirectory" Width="1.5" PointX="29.75" PointY="23" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSGSTTaxType" Width="1.5" PointX="21.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSInsuranceMaster" Width="1.5" PointX="23.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSMRNEntryFileDirectory" Width="1.5" PointX="29.75" PointY="27" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSPCDebitNote" Width="1.5" PointX="29.75" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSQuotation" Width="1.5" PointX="0.75" PointY="33" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSQuotation_Document" Width="1.5" PointX="2.75" PointY="33" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSTaxValue" Width="1.5" PointX="31.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMMSUserPermission" Width="1.5" PointX="31.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMovableStatusMaster" Width="1.5" PointX="4.75" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblMovingDescription" Width="1.5" PointX="31.75" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblOutProApprovalLimit" Width="1.5" PointX="31.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPC_RegistrationType" Width="1.5" PointX="12.75" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPI_PurchaseType" Width="1.5" PointX="31.75" PointY="18" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPIC_PI_Approval_History" Width="1.5" PointX="31.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPIPurchasedecisionType" Width="1.5" PointX="31.75" PointY="25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectCode" Width="1.5" PointX="31.75" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectGSTNo" Width="1.5" PointX="31.75" PointY="32" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectMaster" Width="1.5" PointX="6.75" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectOpeningAndClosingDate" Width="1.5" PointX="31.75" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectParticularsDetailA" Width="1.5" PointX="33.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblProjectTINNo" Width="1.5" PointX="8.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPurchaseLimitValueByProjectWise" Width="1.5" PointX="17.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPurchaseOrderApprovalLimitValue" Width="1.5" PointX="19.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblPurchaseRequisitionApprovalLimitValue" Width="1.5" PointX="21.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblReasonCloserMaster" Width="1.5" PointX="23.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblReceiveData" Width="1.5" PointX="25.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblRegion" Width="1.5" PointX="27.75" PointY="36" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblRegistrationType" Width="1.5" PointX="1.5" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblReturnQtyChild" Width="1.5" PointX="33.75" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblReturnQtyMaster" Width="1.5" PointX="33.75" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblReturnReasonMaster" Width="1.5" PointX="35.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblRolemaster" Width="1.5" PointX="0.75" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSourceLocation" Width="1.5" PointX="2.75" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecific_Instructions" Width="1.5" PointX="35.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecific_Instructions_Child" Width="1.5" PointX="35.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecific_Instructions_Child_History" Width="1.5" PointX="10.75" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecificTermsAndCondition" Width="1.5" PointX="35.75" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecificTermsAndConditions_Child" Width="1.5" PointX="12.75" PointY="38" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSpecificTermsAndConditions_Child_History" Width="1.5" PointX="35.75" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblSubHeader" Width="1.5" PointX="35.75" PointY="24" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblTaxPayableOnReverseCharge" Width="1.5" PointX="35.75" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblTransfertypeselection" Width="1.5" PointX="35.75" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblTransportationModeNew" Width="1.5" PointX="35.75" PointY="34" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblUnitConversionMaster" Width="1.5" PointX="35.75" PointY="37" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblUniteConversionMapped" Width="1.5" PointX="4.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblUnitMaster" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblUploadedBill" Width="1.5" PointX="6.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblUserDivision" Width="1.5" PointX="14.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblVehicleType" Width="1.5" PointX="19.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblVendorDebitNoteChild" Width="1.5" PointX="21.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblVendorDebitNoteMaster" Width="1.5" PointX="29.75" PointY="39" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblVendorMaster" Width="1.5" PointX="0.75" PointY="13.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblVendorTypeMaster" Width="1.5" PointX="37.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.UserRole" Width="1.5" PointX="37.75" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblCityList_old" Width="1.5" PointX="37.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblCountry" Width="1.5" PointX="37.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="MMSEntities.tblState" Width="1.5" PointX="37.75" PointY="16" IsExpanded="true" />
+        <AssociationConnector Association="MMSEntities.FK__TbCashPur__ItemI__5F141958" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK__TbCashPurc__MUId__60083D91" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK__TbCashPur__Vendo__60FC61CA" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK_tblItemGroupMaster" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK_tblUnitMasterI" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK_tblUnitMasterP" ManuallyRouted="false" />
+        <AssociationConnector Association="MMSEntities.FK_tblRegistrationType" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MMSEntities.tblIntraTransferTaxableMaster" Width="1.5" PointX="38.375" PointY="18.75" />
+        <EntityTypeShape EntityType="MMSEntities.tblCityList" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="MMSEntities.tblPcContractorMaster" Width="1.5" PointX="15" PointY="42.375" />
+        <AssociationConnector Association="MMSEntities.FK_tblPC_RegistrationType" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_ContactPersonMaster" Width="1.5" PointX="38.375" PointY="26.75" />
+        <EntityTypeShape EntityType="MMSEntities.TbDelivery_Details_PO" Width="1.5" PointX="38.375" PointY="30.75" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_OfficeAddress" Width="1.5" PointX="38.375" PointY="36.75" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_TCSTaxMaster" Width="1.5" PointX="32.375" PointY="39.75" />
+        <EntityTypeShape EntityType="MMSEntities.TbDraftDelivery_Details_PO" Width="1.5" PointX="40.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MMSEntities.TbDraftIndentPurchaseOrder_GST" Width="1.5" PointX="40.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MMSEntities.TbDraftIndentPurchaseOrderChild_GST" Width="1.5" PointX="40.75" PointY="17.75" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_ProjectMonthBudget" Width="1.5" PointX="40.75" PointY="28.75" />
+        <EntityTypeShape EntityType="MMSEntities.tbl_ProjectYearBudget" Width="1.5" PointX="40.75" PointY="33.75" />
+        <EntityTypeShape EntityType="MMSEntities.tblDraftGenral_Terms_Conditions_Child" Width="1.5" PointX="34.75" PointY="40.75" />
+        <EntityTypeShape EntityType="MMSEntities.tblDraftSpecific_Instructions_Child" Width="1.5" PointX="40.75" PointY="38.75" />
+        <EntityTypeShape EntityType="MMSEntities.tblDraftSpecificTermsAndConditions_Child" Width="1.5" PointX="0.75" PointY="41.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

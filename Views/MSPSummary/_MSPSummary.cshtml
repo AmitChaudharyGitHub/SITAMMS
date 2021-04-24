@@ -1,0 +1,77 @@
+﻿@model List<MMS.Models.MSPSummary>
+
+<style>
+   #Grid {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#Grid td, #Grid th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#Grid tr:nth-child(even){background-color: #f2f2f2;}
+
+#Grid tr:hover {background-color: #ddd;}
+
+#Grid th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4A89DC;
+    color: white;
+}
+</style>
+
+
+@if (Model != null && Model.Count > 0)
+{
+    <table id="Grid">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>Item Group</th>
+                <th>Opening Balance</th>
+                <th>Recd. Upto Last Month</th>
+                <th>Recd. During Current Month</th>
+                <th>Recd. Total upto date</th>
+                <th>Issued Upto Last Month</th>
+                <th>Issued During Current Month</th>
+                <th>Issued Total upto date</th>
+                <th>Closing Balance</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int i = 0;}
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@(++i)</td>
+                    <td>@item.ItemGroupName</td>
+                    <td>@item.OpeningBalance</td>
+                    <td>@item.ReceivedUptoLastMonth</td>
+                    <td>@item.ReceivedDuringCurrentMonth</td>
+                    <td>@item.ReceivedTotalUptoDate</td>
+                    <td>@item.IssuedUptoLastMonth</td>
+                    <td>@item.IssuedDuringCurrentMonth</td>
+                    <td>@item.TotalIssuedUptoDate</td>
+                    <td>@item.ClosingBalance</td>
+                    <td>@item.Remarks</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <br/>
+    <div style="text-align:left;">
+        @Html.ActionLink("Export to Excel", "GetExcel", "MSPSummary", new { @class = "btn btn-primary" })
+        @Html.ActionLink("Print", "GETPdf", "MSPSummary", new { @class = "btn btn-primary", @target = "_blank" })
+    </div>
+}
+else
+{
+    <p style="color:red; font-size:18px;">No Record found</p>
+}

@@ -1,0 +1,406 @@
+﻿@model IEnumerable<MMS.Models.Get_MSP_Record>
+@{
+    ViewBag.Title = "MSP Report";
+    Layout = null;
+
+}
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;" class="table table-hover">
+    <tr class="primary">
+        <td rowspan="3" style="width: 100px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Item Code
+        </td>
+        <td rowspan="3" style="width: 70px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Item Description
+        </td>
+        <td rowspan="3" style="width: 100px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Unit Name
+        </td>
+        @*<td rowspan="3" style="width: 70px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Rate For This Month
+        </td>*@
+        <td colspan="8" style="width: 100px; text-align: center; border: 1px solid black;">
+            Quantity
+        </td>       
+       
+        <td colspan="8" style="text-align: center; width: 80px; border: 1px solid black;
+                                                                        ">
+            Amount
+        </td>
+
+        <td colspan="2" style="text-align: center; width: 80px; border: 1px solid black;">
+            Return
+        </td>
+
+        <td rowspan="3" style="width: 100px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Remark
+        </td>
+        @*<td rowspan="3" style="width: 120px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Received Amount
+        </td>
+        <td rowspan="3" style="width: 120px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Net Receivable
+        </td>*@
+
+    <tr>
+        <td style="text-align: center; border: 1px solid black; width: 80px" rowspan="2">
+            Opening Balance
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px" colspan="3">
+            Quantity Received
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px" colspan="3">
+            Quantity Issued
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; " rowspan="2">
+            Closing Balance
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px" rowspan="2">
+            Opening Balance
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px" colspan="3">
+           Amount Received
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px" colspan="3">
+            Amount Issued
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; " rowspan="2">
+            Closing Balance
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; " rowspan="2">
+            Current Month Return Qty
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; " rowspan="2">
+            Current Month Return Amt
+        </td>
+    </tr>
+
+    <tr>
+
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Recd. Upto  Last month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Recd. During current month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 100px">
+            Recd. Total upto date
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Issued upto last month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Issued during current month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Total Issued upto date
+        </td>
+
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Recd. Upto  Last month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Recd. During current month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Recd. Total upto date
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Issued  upto last month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Issued  during current month
+        </td>
+        <td style="text-align: center; border: 1px solid black; width: 80px">
+            Total Issued upto date
+        </td>
+
+    </tr>
+    <tr>
+        @*<td style="width: 80px; text-align: center; border: 1px solid black; ">
+            
+        </td>*@
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            
+        </td>
+        @*<td style="width: 80px; text-align: center; border: 1px solid black; ">
+            =(K/C)
+        </td>*@
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            A=(B-E)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            B
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            C
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            D=(B+C)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            E
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            F
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            G=(E+F)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            H=(D-G)
+        </td>
+       
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            I=(J-M)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            J
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            K
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            L=(J+K)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            M
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            N
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            O=(M+N)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; ">
+            P=(L-O)
+        </td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; "></td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; "></td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; "></td>
+        <td style="width: 80px; text-align: center; border: 1px solid black; "></td>
+       
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.ItemCode)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDescription)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.UnitID)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit)
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.RateForThisMonth)
+            </td>*@
+            <td >
+                @Html.DisplayFor(modelItem => item.OpeningBalanceQty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvUptoLastMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvDuringCurrentMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvTotalUpto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedUptoLastMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedDuringCurrentMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedTotalUpto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClosingBalance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OpeningBalanceAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvAmtUptoLastMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvAmtDuringCurrentMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecvAmtTotalUpto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedAmtUptoLastMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedAmtDuringCurrentMonth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IssuedAmtTotalUpto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClosingBalanceAmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentMonthReturnQty)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentMonthReturnAmt)
+            </td>
+
+            @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+                </td>*@
+        </tr>
+    }
+</table>
+
+@*<table class="table table-hover" id="webgrid" style="width:100%;">
+    <tr class="primary">
+        
+        <th>
+            @Html.DisplayNameFor(model => model.ItemDescription)
+        </th>
+        
+        <th>
+            @Html.DisplayNameFor(model => model.Unit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RateForThisMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpeningBalanceQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvUptoLastMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvDuringCurrentMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvTotalUpto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedUptoLastMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedDuringCurrentMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedTotalUpto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClosingBalance)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OpeningBalanceAmt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvAmtUptoLastMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvAmtDuringCurrentMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RecvAmtTotalUpto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedAmtUptoLastMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedAmtDuringCurrentMonth)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IssuedAmtTotalUpto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ClosingBalanceAmt)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.ItemDescription)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Unit)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RateForThisMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpeningBalanceQty)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvUptoLastMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvDuringCurrentMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvTotalUpto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedUptoLastMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedDuringCurrentMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedTotalUpto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClosingBalance)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OpeningBalanceAmt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvAmtUptoLastMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvAmtDuringCurrentMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RecvAmtTotalUpto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedAmtUptoLastMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedAmtDuringCurrentMonth)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IssuedAmtTotalUpto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ClosingBalanceAmt)
+        </td>
+        
+    </tr>
+}
+
+</table>*@

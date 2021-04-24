@@ -1,0 +1,86 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model IPagedList<BusinessObjects.Entity.BlockMaster>
+@*@model MMS_P.ViewModels.PagedBlockMasterModel*@
+@{
+    ViewBag.Title = "Index";
+}
+@*<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+<div id="myPager">
+    <h2>Index</h2>
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                "1.SiteName"
+                @*@Html.DisplayNameFor(model => model.ProjectMaster.SiteName)*@
+            </th>
+            <th>
+                "2.BlockName"
+                @*@Html.DisplayNameFor(model => model.BlockName)*@.
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectMaster.SiteName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BlockName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.BlockId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.BlockId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.BlockId })
+                </td>
+            </tr>
+        }
+
+    </table>
+    @*<div id="myPager" onclick="javascript:getblock(this.value);">*@
+
+    @Html.PagedListPager(
+        Model,
+        page => Url.Action(
+            "Grid",
+            new
+            {
+                //SiteId= $('#ddlSite').val(),
+                humanID = ViewBag.HumanID,
+                page = page
+            }
+        ),
+            PagedListRenderOptions.ClassicPlusFirstAndLast
+            //    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly,
+            //new AjaxOptions
+            //{
+            //    InsertionMode = InsertionMode.Replace,
+            //    HttpMethod = "Get",
+            //    UpdateTargetId = "formbody"
+            //})
+        )
+    @*//new PagedListRenderOptions
+        //{
+        //    LinkToFirstPageFormat = "<<",
+        //    LinkToPreviousPageFormat = "prev",
+        //    LinkToNextPageFormat = "next",
+        //    LinkToLastPageFormat = ">>",
+        //}*@
+
+</div>
+
+@*@Html.PagedListPager((IPagedList)Model,
+ page => Url.Action("Index", new { humanID = ViewBag.HumanID, page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(PagedListRenderOptions.PageNumbersOnly,
+        new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "Get",
+            UpdateTargetId = "targetContainer"
+        }))*@

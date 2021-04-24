@@ -1,0 +1,341 @@
+﻿@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+
+
+<script src="~/Content/admindesigns.com/demos/admin/theme/vendor/jquery/jquery-1.11.1.min.js"></script>
+
+<link href="//cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+
+
+
+
+@* FOR Indent Number BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#prjtid1").change(function () {
+            $("#indent1").empty();
+            //$("#indent1").append($("<option></option").val("").html("Select Indent"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetIndentno")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    if (names.length > 0) {
+                        var procemessage = "<option value='0'> Please wait...</option>";
+                        $("#indent1").html(procemessage).show();
+                        var markup = "<option value='0'>Select Indent</option>";
+                        $("#indent1").html(markup).show();
+
+                        $.each(names, function (i, itname) {
+
+                            $("#indent1").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+                    }
+
+
+                    else {
+                        var markup = "<option value='0'>Select Indent</option>";
+                        $("#indent1").html(markup).show();
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.warning('Indent Number is Empty', 'Confirmation');
+                        alert('Indent Number is Empty');
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Indent Number' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+
+
+
+@section Scripts{
+    @* Load DataTable js here *@
+    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.10/sorting/date-uk.js"></script>
+   }
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#myTable').DataTable({
+
+            "processing": true, // for show processing bar
+            "serverSide": true, // for process on server side
+            "orderMulti": false, // for disable multi column order
+            "dom": '<"top"i>rt<"bottom"lp><"clear">', // for hide default global search box // little confusion? don't worry I explained in the tutorial website
+
+            "ajax": {
+                "url": "@Url.Action("IndentWiseSearch", "IndentWise_Search_Report")",
+                "type": "POST",
+                "datatype": "json",
+              
+            },
+
+            "columns": [
+
+                     //{ "data": "Id", "name": "Id", "autoWidth": true },
+
+                    //{ "data": "ProjectID", "name": "ProjectID", "autoWidth": true },
+                    { "data": "ProjectName", "name": "ProjectName", "autoWidth": true },
+                    { "data": "IndentNo", "name": "IndentNo", "autoWidth": true },
+                    //{ "data": "EmployeeID", "name": "EmployeeID", "autoWidth": true },
+                    //{ "data": "EmployeeName", "name": "EmployeeName", "autoWidth": true },
+                    //{ "data": "ItemGroupID", "name": "ItemGroupID", "autoWidth": true },
+
+                    { "data": "ItemGroupName", "name": "ItemGroupName", "autoWidth": true },
+                    //{ "data": "ItemID", "name": "ItemID", "autoWidth": true },
+                    { "data": "ItemName", "name": "ItemName", "autoWidth": true },
+                    //{ "data": "UnitID", "name": "UnitID", "autoWidth": true },
+                    //{ "data": "Make", "name": "Make", "autoWidth": true },
+                    //{ "data": "PartNo", "name": "PartNo", "autoWidth": true },
+                    { "data": "Quantity", "name": "Quantity", "autoWidth": true },
+                    //{ "data": "BalanceQuantity", "name": "BalanceQuantity", "autoWidth": true },
+                    { "data": "IssueQuantity", "name": "IssueQuantity", "autoWidth": true },
+
+                     //{ "data": "SessionId", "name": "SessionId", "autoWidth": true },
+                     // { "data": "SiteId", "name": "SiteId", "autoWidth": true },
+                     //  { "data": "IssuedBy", "name": "IssuedBy", "autoWidth": true },
+                     //   { "data": "Status", "name": "Status", "autoWidth": true },
+                     //    { "data": "ModifiedDate", "name": "ModifiedDate", "autoWidth": true },
+
+                    //{ "data": "AvailableQuantity", "name": "AvailableQuantity", "autoWidth": true },
+                    //{ "data": "AfterIssue_AvlQty_Stock", "name": "AfterIssue_AvlQty_Stock", "autoWidth": true },
+                    { "data": "CreatedDate", "name": "CreatedDate", "sType": "eu_date" }
+
+
+
+            ]
+        });
+
+        //Apply Custom search on jQuery DataTables here
+        oTable = $('#myTable').DataTable();
+        $('#Submit1').click(function () {
+            
+            //Apply search for Employee Name // DataTable column index 0
+            oTable.columns(2).search($("#prjtid1 option:selected").text().trim());
+            //Apply search for Country // DataTable column index 3
+            oTable.columns(3).search($("#indent1 option:selected").text().trim());
+            //hit search on server
+            oTable.draw();
+
+
+        });
+
+
+    });
+</script>
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">REPORT INDENT WISE QUANTITY ISSUE</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <div style="margin-top:-30px;">
+                                    @Html.ActionLink("Go To Back", "Index", "Report_Quantity_Issue", null, new { @class = "btn active btn-xs btn-danger" })                                   
+                                </div>
+                                <br />
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+                                                <div class="col-md-5">
+                                                    <div class="section">
+                                                        <div class="form-group">
+
+                                                            <div class="col-md-12">
+                                                                <div class="section">
+                                                                    <label class="field select">
+                                                                        @*@Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })*@
+                                                                        @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                                        <i class="arrow"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <div class="section">
+                                                        <label class="field select select2 select2-container select2-container">
+                                                            @Html.DropDownList("indentno", new SelectList(string.Empty, "Value", "Text"), "Select Indent", htmlAttributes: new { @id = "indent1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <input type="button" id="Submit1" class="btn btn-danger" value="Search" />
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            
+                                            
+
+                                            @* Another Div *@
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div>
+                                                        <table id="myTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    @*<th>ID</th>
+                                                                    <th>ProjectID</th>*@
+                                                                    <th>ProjectName</th>
+                                                                    <th>IndentNo</th>
+                                                                    @*<th>EmployeeID</th>
+                                                                    <th>EmployeeName</th>
+                                                                    <th>ItemGroupID</th>*@
+
+                                                                    <th>Group Name</th>
+                                                                    @*<th>ItemID</th>*@
+                                                                    <th>Item Name</th>
+                                                                    @*<th>UnitID</th>
+                                                                        <th>Make</th>
+                                                                        <th>PartNo</th>*@
+                                                                        <th>Approved Qty</th>
+                                                                    @*<th>Bal Quantity</th>*@
+                                                                    <th>Issued Quantity</th>
+
+                                                                    @*<th>SessionId</th>
+                                                                        <th>SiteId</th>
+                                                                        <th>IssuedBy</th>
+                                                                        <th>Status</th>
+                                                                        <th>ModifiedDate</th>*@
+
+                                                                    @*<th>AvailableQuantity</th>
+                                                                    <th>AfterIssue_AvlQty_Stock</th>*@
+                                                                    <th>CreatedDate</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <br />
+
+
+
+                                    }
+
+
+
+                                </form>
+                                <div id="dvLoading"></div>
+
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+
+
+
+
+                                <div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger"><small>Issue Quantity Sent Successfully</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

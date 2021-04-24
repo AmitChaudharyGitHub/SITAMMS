@@ -1,0 +1,419 @@
+﻿@model MMS.ViewModels.Quot_PIDetail
+
+@{
+    ViewBag.Title = "AddQuotation";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td {
+        padding: inherit 2px;
+    }
+
+        td input {
+            width: 80px;
+            font-size: 11px !important;
+        }
+</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        GetTotalValue();
+        var ID = '@ViewBag.ID';
+        function GetTotalValue() {
+            debugger;
+            var T = 0;
+            $("td[class^='Amount_").each(function () {
+                debugger;
+                if ($(this).find('input').val() != null) {
+                    var A = $(this).find('input').val()
+                    T = +T + +A;
+                }
+            });
+
+            $("#lblTotalValue").text(T.toFixed(2));
+
+
+        }
+
+        $('#btnPIPrint').click(function () {
+            var url = '/PurchaseRequisition/PIPrint/' + ID;
+            $("#dialog-edit-abc").dialog({
+                title: 'Purchase Indent Details',
+                autoOpen: false,
+                resizable: false,
+                height: 650,
+                width: 1100,
+                show: { effect: 'drop', direction: "up" },
+                modal: true,
+                draggable: true,
+                open: function (event, ui) {
+                    $(this).load(url);
+                },
+                buttons: {
+                    "Close": function () {
+                        $(this).dialog("close");
+
+                    }
+                },
+                close: function (event, ui) {
+                    $("#dialog-edit-abc").dialog('close');
+                    //window.location.href = url;
+                }
+            });
+
+            $("#dialog-edit-abc").dialog('open');
+            // $("#dialog-edit").dialog('close');
+            return false;
+        });
+
+
+    });
+</script>
+
+@*<script type="text/javascript">
+    var gridList = [];
+    var pf = 0;
+    var Tdl = 0;
+    var Tax = 0;
+    var GT = 0;
+    var f = 0;
+    var child = 0;
+    var nowTemp = new Date();
+
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+
+    $(document).ready(function () {
+
+        $("#addNew").click(function () {
+            debugger;
+            var obj = new Object();
+            obj.Id = getUniqueId();
+            obj.Quotref = $("#Quotref").val();
+            obj.Remarks = $("#txtRemark").val();
+            var fileUpload = $("#fu1").get(0);
+            var files = fileUpload.files;
+            var fileData = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+                
+            }
+
+           // obj.filename = files[0].name;
+            debugger;
+            //obj.ItemGroupName = $("#ItemGroup option:selected").text();
+            //obj.ItemGroupNo = $("#ItemGroup option:selected").val();
+            //obj.ItemName = $("#ItemMaster option:selected").text();
+            //obj.ItemNo = $("#ItemMaster option:selected").val();
+            //obj.Unit = $("#Unit").val();
+            //obj.UnitNo = $("#Unit").attr('UNo');
+            //obj.DemandQty = $("#Qty").val();
+            //obj.LastPurchaseRate = $("#LPRate").val();
+            //obj.CurrentRate = $("#CRate").val();
+            //obj.CurrentValue = $("#CValue").val();
+            //obj.Remarks = $("#Remark").val();
+
+
+           
+
+            gridList.push(obj);
+            $("#grid").prepend("<tr class='danger _tempRow'><td>" + obj.ItemGroupName + "</td><td>" + obj.ItemName + "</td><td>" + obj.Unit + "</td><td>" + obj.DemandQty + "</td><td>" + obj.LastPurchaseRate + "</td><td>" + obj.CurrentRate + "</td><td>" + obj.CurrentValue + "</td><td>" + obj.Remarks + "</td><td><a href='#' id='removeItem' uniqueId='" + obj.Id + "'>Remove</a></td></tr>");
+            //$("#<tr class='danger _tempRow'><td></td><td></td><td></td><td></td><td></td><td>Total PI Value</td><td></td><td></td><td></td></tr>").insertAfter("#grid")
+
+
+
+
+
+        })
+
+        var uniqueId = null;
+        getUniqueId = function () {
+            if (!uniqueId) uniqueId = (new Date()).getTime();
+            return uniqueId++;
+        };
+
+    });
+</script>*@
+
+<script type='text/javascript'>
+$(document).ready(function(){
+	var counter = 2;
+	$('#del_file').hide();
+	$('img#add_file').click(function(){
+	    $('#file_tools').before('<div class="file_upload" id="f' + counter + '"><input name="files" type="file" id="f' + counter + '"></div>');
+	    $('#del_file').fadeIn(0);
+	counter++;
+	});
+	$('img#del_file').click(function(){
+		if(counter==3){
+			$('#del_file').hide();
+		}
+		counter--;
+		$('#f'+counter).remove();
+	});
+});
+</script>
+
+@if (TempData["error"] != null)
+{
+    <script type="text/javascript">
+        alert('@TempData["error"]');
+    </script>
+}
+
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            
+                            <div class="section-divider mb40" id="spy1">
+                                <span>Add Comparetive/Quotation</span>
+                            </div>
+
+                         
+                                @using (Ajax.BeginForm("SaveQuot", "Quotation", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+                                {
+                                    // @Html.AntiForgeryToken()
+
+                                <div class="row">
+                                    <div class="col-md-3"><b> @Html.DisplayName("Project Name:") </b></div>
+                                    <div class="col-md-3"> @Html.DisplayFor(model => model.Pmaster.ProjectName) </div>
+                                    <div class="col-md-3"><b> @Html.DisplayName("Purchase Requisition No:") </b> </div>
+                                    <div class="col-md-3">@Html.DisplayFor(model => model.Pmaster.PurchaseReqNo)</div>
+                                </div>
+                                
+                                <div class="clearfix"></div>
+
+                                <div class="row">                                    
+                                    <div class="col-md-3"><b> @Html.DisplayName("Purchase Type:") </b></div>
+                                    <div class="col-md-3">@Html.DisplayFor(model => model.Pmaster.PurchaseType)</div>
+                                    <div class="col-md-3"><b> @Html.DisplayName("Purchase delivery date:") </b></div>
+                                    <div class="col-md-3">@Html.DisplayFor(model => model.Pmaster.PIdeliveryDate) </div>
+                                  
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="row">
+                                    <div class="col-md-3"><b> @Html.DisplayName("Purchase Status:") </b></div>
+                                    <div class="col-md-3">@Html.DisplayFor(model => model.Pmaster.PurchaseStatus)</div>
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3"></div>
+                                </div>
+
+
+                                <div class="clearfix"></div>
+
+                                <br />
+
+                                <div class="row">
+
+                                    @if (Model.Pchild.Count != 0)
+                                    {
+                                        <table class="table table-hover" id="gridD">
+                                            <tr class="primary">
+                                                <th>
+                                                    @Html.DisplayName("Item Group")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Item Name")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Description")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Unit")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Quantity")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Value")
+                                                </th>
+                                            </tr>
+
+                                            @foreach (var item in Model.Pchild)
+                                            {
+                                                var a = @item.UId;
+
+                                                <tr id=@a style="font-size:11px;">
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ItemName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Remark)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.UnitName)
+
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.AppQuantity)
+
+                                                    </td>
+                                                    <td class="Amount_@a">
+                                                        @Html.DisplayFor(modelItem => item.TotalValue)
+                                                        @Html.HiddenFor(modelItem => item.TotalValue)
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>Total* : </b></td>
+                                                <td><label id="lblTotalValue"></label></td>
+                                            </tr>
+                                        </table>
+                                    }
+                                </div>
+
+
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="section" style="text-align:right;">
+                                            <label class="field">
+                                                @*@Html.TextArea("QuotationReference", new { id = "Quotref", @class = "form-control gui-input" })*@
+                                                @Html.TextAreaFor(model=>model.Pmaster.Quotref, new { @class = "form-control gui-input" , @Placeholder = "Reference" })
+                                                @Html.HiddenFor(model=>model.Pmaster.PurchaseReqNo)
+                                                @Html.HiddenFor(model => model.Pmaster.UID)
+                                                @Html.HiddenFor(model=>model.Pmaster.ProjectId)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="section" style="text-align:right;">
+                                            <label class="field">
+                                                @Html.TextAreaFor(model=>model.Pmaster.Quotremarks, new {  @class = "form-control gui-input" ,@Placeholder="Remarks" })
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @*<input type="file" name="files" id="fu1" multiple />*@
+
+                                        @*<label for="file1" class="field file">
+                                            <span class="button btn-primary"> Choose File </span>
+                                            <input type="file" class="gui-file" name="files" id="fu1" multiple onChange="document.getElementById('uploader1').value = this.value;">
+                                            <input type="text" class="gui-input" id="uploader1" placeholder="no file selected" readonly>
+                                        </label>*@
+                                        @if (ViewBag.Documents != null && ViewBag.Documents.Count>0)
+                                        {
+                                            int i = 0;
+                                            <h3>Uploaded Files</h3>
+                                            foreach (var item in ViewBag.Documents)
+                                            {
+                                                <p>@(++i). @item.FileName </p>
+                                            }
+                                            
+                                        }
+                                        <input type="hidden" id="hdnIsEdit" name="isEdit" value="@ViewBag.QuotationTransId" />
+                                        <div class='file_upload' id='f1'><input name='files' type='file' id='f1' /></div>
+                                        
+                                        <div id='file_tools'>
+                                            <img src='../images/file_add.png' id='add_file' height='15' width='15' title='Add more file' />
+                                            <img src='../images/file_delete.png' id='del_file' height='15' width='15' title='Delete' />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div class="col-md-12">
+                                    <div class="section" style="float:right">
+                                        <input type="button" name="btnPrint" value="Print PI" class="btn btn-success" id="btnPIPrint" />
+                                        <input type="submit" value="Save Quotation" id="SubmitA" class="btn btn-success" />
+                                    </div>
+                                </div>
+
+
+                                  }
+
+
+                                @if (ViewBag.Message != null)
+                                {
+                                    <script type="text/javascript">
+                                      window.onload = function () {
+                                         alert("@ViewBag.Message");
+                                         };
+                                    </script>
+                                }
+                         
+                      </div>
+                       
+
+                       
+                        <div id="myModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                        <h4 class="modal-title">Confirmation</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        @*<p>Do you want to save changes you made to document before closing?</p>*@<p></p><p></p><p></p><p></p><p></p>
+                                        <p class="text-danger">Data Save Successfully</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        @*<button type="button" class="btn btn-primary">Save changes</button>*@<button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button><button type="button" class="btn btn-primary"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="dialog-edit" style="display: none">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<div id="dialog-edit-abc" style="display: none">
+</div>

@@ -1,0 +1,368 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+
+}
+
+<script>
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+    var BindPIOnly = '@Url.Action("GetPIByProjectId", "DesignDemo")';
+    var GetPurchasRequestionType =  '@Url.Action("GetPurchaseType", "PurchaseRequisition")';
+    var ForPiPurchaseTypeOnly = '@Url.Action("GetPIPurchaseType", "ManagePIPurchaseType")';
+    var UpdateRecord = '@Url.Action("ToModifiedPurchaseReqType", "ManagePIPurchaseType")';
+    var Reload = '@Url.Action("Index", "ManagePIPurchaseType")';
+</script>
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                   // $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+        $(window).load(function () {
+
+            $.ajax({
+                type: 'Get',
+                url: GetPurchasRequestionType, // Calling json method
+                success: function (data) {
+
+
+                    $.each(data, function (i, itname) {
+                        $("#ddlPurchaseType").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+
+
+                    });
+
+
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Purchase Type.' + ex);
+                }
+            });
+
+        })
+
+
+
+        $("#Projects").change(function ()
+        {
+            if($("#Projects option:selected").val()!="-1")
+            {
+                $('#dvLoading').show();
+                $("#ddlPurchaseReq").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: BindPIOnly,
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val()},
+
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (objlst) {
+                        objlst = $.parseJSON(objlst)
+                         GetPILIST(objlst);
+
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve.' + ex);
+                    }
+                });
+                return false;
+            }
+            else
+            {
+                var markup = "<option value='-1'>Select P.I</option>";
+
+                $("#ddlPurchaseReq").html(markup).show();
+            }
+
+        });
+
+        $("#ddlPurchaseReq").change(function () {
+            if($("#ddlPurchaseReq option:selected").val()!="-1")
+            {
+                $('#dvLoading').show();
+                $('#txtPIPurchaseType').val('');
+                debugger;
+                $.ajax({
+                    type: 'POST',
+                    url: ForPiPurchaseTypeOnly, 
+
+                    dataType: 'json',
+
+                    data: { PI: $("#ddlPurchaseReq option:selected").text() },
+                   
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (obj) {
+
+                        obj = $.parseJSON(obj); 
+                       $("#txtPIPurchaseType").val(obj.PurchaseType);
+                        },
+                    error: function (ex) {
+                         alert('Failed to retrieve Purchase Type.' + ex);
+                    }
+                });
+
+
+                var url = '@Url.Action("GetAllPIDetail", "ManagePIPurchaseType")';
+                $.get(url,
+                    { id: $('#ddlPurchaseReq option:selected').val()},
+                    function (result) {
+                        $('#formbody').show();
+                        $('#formbody').html(result);
+                   
+                        $("#dvLoading").hide();
+                    });
+
+
+
+
+
+
+
+
+                return false;
+            }
+            else{
+                $('#txtPIPurchaseType').val('');
+            }
+
+        })
+
+        
+
+
+    })
+
+    function GetPILIST(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#ddlPurchaseReq").html(procemessage).show();
+        var markup = "<option value='-1'>Select P.I</option>";
+        for (var x = 0; x < data.length; x++) {
+            if (data[x].Value != null)
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#ddlPurchaseReq").html(markup).show();
+
+    }
+
+    function SubmitRecord()
+    {
+        $.ajax({
+            type: "POST",
+            url: UpdateRecord,
+            data: { 
+               
+                PUrchaseType: $("#ddlPurchaseType option:selected").val(),
+
+                PINo: $("#ddlPurchaseReq option:selected").text() 
+              
+               
+            },
+
+            success: function (data) {
+                if (data == "1") {
+                    alert('Data Updated Successfully');
+                    $("#txtPIPurchaseType").val('');
+       
+                    
+                    window.location.href = Reload;
+                }
+                else if(data =="2")
+                {
+                    alert("Purchase Order has been made on this purchase indent,so purchase type can not be changed.")
+                    return false;
+                }
+
+                
+            },
+
+
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+    }
+
+</script>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Update Purchase Indent Type</span>
+                                </div>
+                                <form class="row" id="PIPurchaseForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <div class="form-horizontal">
+
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label>Project</label>
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label>Purchase Requisition</label>
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("PurchaseRequsition", new SelectList(string.Empty, "Value", "Text"), "Select P.I ", htmlAttributes: new { @id = "ddlPurchaseReq", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label>Purchase Requisition Purchase Type</label>
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("PurchaseType", null, new { id = "txtPIPurchaseType", @class = "form-control gui-input", @placeholder = "PI Purchase Type",@readonly="readonly" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label>Select Purchase Type to Repalce</label>
+                                                        <label class="field select">
+                                                            @Html.DropDownList("PurchaseType", new SelectList(string.Empty, "Value", "Text"), "Select Purchase Type", htmlAttributes: new { @id = "ddlPurchaseType", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row"> 
+
+                                                <div class="col-md-1">
+                                                   <input type="button" id="btn_Submit" class="btn btn-primary" value="Update" onclick="SubmitRecord()" />
+                                                </div>
+                                            </div>
+
+
+
+                                        </div>
+
+
+                                            }
+
+                                  </form>
+
+
+
+
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+
+
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+
+                                    <span></span>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+

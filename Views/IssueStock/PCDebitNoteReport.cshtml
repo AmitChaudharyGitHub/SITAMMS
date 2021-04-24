@@ -1,0 +1,302 @@
+﻿
+@{
+    ViewBag.Title = "PC Debit Note Report";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+
+</script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var GetIssueByProjId= '@Url.Action("BindIssueTo", "IssueStock")';
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 0).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+        $('#div_filter').hide();
+        $('#formbody').hide();
+
+        $("#btn_Search").click(SearchUpdatedDebitNotes);
+        $(document).on('click','.printDebitNote',function(){
+
+            var win=window.open('/IssueStock/UpdatedDebitNotePdf?DebitCode='+$(this).attr('data')+'&PID='+$("#Projects option:selected").val(),"_blank");
+            win.focus();
+        });
+
+        $("#fromdate").datepicker();
+        $("#todate").datepicker();
+
+        $("#Projects").change(function () {
+
+            if ($("#Projects option:selected").val() != 0) {
+                $('#dvLoading').show();
+                $("#IssuedTo").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: GetIssueByProjId, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val() },
+                    // Get Selected Country ID.
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+
+                        // console.log(obj)
+                        GetIssuedlist(obj);
+
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;
+            } else {
+                var markup = "<option value='0'>Select Issued To</option>";
+
+                $("#IssuedTo").html(markup).show();
+            }
+        });
+    });
+
+    function SearchUpdatedDebitNotes(){
+        if($("#Projects option:selected").val()=='0'){
+            alert('Please select project');
+            return false;
+        }
+    var url = '@Url.Action("SearchDataForUpdatedDebitNotes", "IssueStock")';
+    $.get(url,
+        { PID: $("#Projects option:selected").val(),Fromdate: $('#fromdate').val(), ToDate: $('#todate').val(),ContractorType: $("#ddlContractorType option:selected").val(),IssuedTo: $('#IssuedTo option:selected').val()},
+        function (result) {
+            $('#updatedDebitNotesData').html(result);
+        });
+    }
+
+    function GetIssuedlist(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#IssuedTo").html(procemessage).show();
+        var markup = "<option value='0'>Select Issued To</option>";
+        for (var x = 0; x < data.length; x++) {
+
+
+            //console.log(data[x].Value);
+            if (data[x].Value != null)
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#IssuedTo").html(markup).show();
+
+    }
+
+
+
+</script>
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PC DEBIT NOTES</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <input type="hidden" id="HdnPrjId" value="@ViewBag.Prjid" />
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                <select id="ddlContractorType" required="required">
+                                                                    <option value="">Select Contractor Type</option>
+                                                                    <option value="PC">PC Contractor</option>
+                                                                    <option value="SC">Sub Contractor</option>
+                                                                </select>
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @*@Html.DropDownList("IssuedTo", null, "Select Issue To", htmlAttributes: new { @id = "IssuedTo", @class = "form-control" })*@
+                                                                @Html.DropDownList("IssuedTo", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select Issue To", htmlAttributes: new { @id = "IssuedTo", @class = "form-control" })
+                                                                <i class="arrow"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <div class="form-group">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "From Date", @id = "fromdate" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field prepend-icon">
+                                                                @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "To Date", @id = "todate" })
+                                                                <label for="firstname" class="field-icon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </label>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+                                    }
+
+                                </form>
+
+                         
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div id="updatedDebitNotesData">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div class="modal fade" id="loadingModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/Images/36.gif" />
+            </div>
+        </div>
+    </div>
+</div>

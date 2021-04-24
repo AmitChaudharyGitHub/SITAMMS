@@ -1,0 +1,88 @@
+﻿@model List<MMS.ViewModels.ProjectYearBudgetReport>
+@{
+    int yearinc = 0;
+    int sno = 1;
+}
+
+<style>
+    th {
+        font-weight: bold !important;
+    }
+
+</style>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>SNo.</th>
+            <th>Items</th>
+            <th>Unit</th>
+            <th></th>
+            @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.FromYear; i++)
+            {
+                <th>@((DateTime.Now.Year + yearinc) + "-" + (DateTime.Now.Year + yearinc + 1))</th>
+                yearinc++;
+            }
+
+            @for (int i = 1; i <= 12; i++)
+            {
+                <th>@(new DateTime(ViewBag.FromYear, i, 1).ToString("yy") + "-" + new DateTime(ViewBag.FromYear, i, 1).ToString("MMM"))</th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td rowspan="4">@sno</td>
+                <td rowspan="4">@item.ItemName</td>
+                <td rowspan="4">@item.ItemUnit</td>
+            </tr>
+            <tr>
+                <td>Item Qty</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.FromYear; i++)
+                {
+                    var itemObj = item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s);
+                    <td>
+                        @item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s.ItemQty).FirstOrDefault()
+                    </td>
+                }
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <td>
+                        @item.BudgetMonthItem.Where(s => s.BudgetMonth==i.ToString()).Select(s => s.ItemQty).FirstOrDefault()
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td>ItemRate</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.FromYear; i++)
+                {
+
+                    <td>@item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s.ItemRate).FirstOrDefault()</td>
+                }
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <td>@item.BudgetMonthItem.Where(s => s.BudgetMonth == i.ToString()).Select(s => s.ItemRate).FirstOrDefault()</td>
+                }
+            </tr>
+            <tr>
+                <td>ItemAmt</td>
+                @for (int i = (int)ViewBag.FromYear; i <= (int)ViewBag.FromYear; i++)
+                {
+                    <td>
+                        @item.BudgetItemData.Where(s => s.BudgetYear == i.ToString()).Select(s => s.TotalAmt).FirstOrDefault()
+                    </td>
+                }
+                @for (int i = 1; i <= 12; i++)
+                {
+                    <td>@item.BudgetMonthItem.Where(s => s.BudgetMonth == i.ToString()).Select(s => s.TotalAmt).FirstOrDefault()</td>
+                }
+            </tr>
+
+            sno++;
+        }
+    </tbody>
+</table>

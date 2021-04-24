@@ -1,0 +1,655 @@
+﻿
+@{
+    ViewBag.Title = "PC Debit Note";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-2.1.1.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId", "VendorWiseReport")';
+    var GetIssueByProjId= '@Url.Action("BindIssueTo", "IssueStock")';
+    // added
+    var GetItemByGroup = '@Url.Action("GetItemByGroup", "PurchaseRequisition")';
+
+</script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#IssuedTo").select2();
+        $("#Projects").select2();
+        $("#ddlContractorType").select2();
+        $("#ItemGroups").select2();
+        $("#ItemMaster").select2();
+        window['GetPrj'] = function (dateString) {
+            $('#dvLoading').show();
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+                    $('#dvLoading').hide();
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                    $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+        $('#ddlContractorFrom').change(function () {
+            var d_t=$('#ddlContractorFrom').val();
+            if ($(this).val() != '') {
+                //    if ($(this).prop('selectedIndex') == 2) {
+                //        if ($("#Projects option:selected").val() != 0) {
+                //            $('#dvLoading').show();
+                //            $("#IssuedTo").empty();
+                //            $.ajax({
+                //                type: 'POST',
+                //                url: GetIssueByProjId, // Calling json method
+                //                dataType: 'json',
+                //                data: { ProjectId: $("#Projects option:selected").val() },
+                //                // Get Selected Country ID.
+                //                complete: function () {
+                //                    $('#dvLoading').hide();
+                //                },
+                //                success: function (obj) {
+                //                    obj = $.parseJSON(obj)
+
+                //                    // console.log(obj)
+                //                    GetIssuedlist(obj);
+
+                //                },
+                //                error: function (ex) {
+                //                    // alert('Failed to retrieve Project Code.' + ex);
+                //                }
+                //            });
+                //            return false;
+                //        } else {
+                //            var markup = "<option value='0'>Select Issued To</option>";
+
+                //            $("#IssuedTo").html(markup).show();
+                //        }
+                //    }
+                //    else {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetPCVendorByProjectId1", "QuantityIssues")', // Calling json method
+
+                    dataType: 'json',
+
+                    data: { ProjectId: $("#Projects option:selected").val(), DivType:d_t },
+                    // Get Selected Country ID.
+
+                    success: function (names) {
+                        //debugger;
+                        var procemessage = "<option value='0'> Please wait...</option>";
+                        $("#IssuedTo").html(procemessage).show();
+                        var markup = "<option value='0'>Select Issue To / PC </option>";
+                        $("#IssuedTo").html(markup).show();
+                        names = $.parseJSON(names);
+                      //  debugger;
+                        $.each(names, function (i, itname) {
+                            $("#IssuedTo").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Issue To / PC ' + ex);
+                    }
+                });
+                // }
+            }
+        });
+
+        $("#Projects").change(function () {
+
+            
+            
+        });
+
+        $("#ItemGroups").change(function () {
+            $("#ItemMaster").empty();
+            $("#ItemMaster").append($("<option></option").val("").html("Select Item Name"));
+
+            if ($("#ItemGroups option:selected").val() !== 0) {
+
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetItemByGroup,
+
+                    dataType: 'json',
+
+
+                    data: { id: $("#ItemGroups").val() },
+
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    success: function (names) {
+                       
+                        names = $.parseJSON(names)
+
+                        $.each(names, function (i, itname) {
+                            if(itname.Text!=null){
+                                $("#ItemMaster").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+                            }
+                            
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve Item Name.' + ex);
+                    }
+                });
+                return false;
+            }
+        });
+
+        $('#div_filter').hide();
+        $('#formbody').hide();
+
+        $('#btn_Search').click(function (e) {
+            e.preventDefault();
+            if ($("#ddlContractorType option:selected").val() == '') {
+                alert('Please select contractor type');
+                return false;
+            }
+            if($("#IssuedTo option:selected").val() == 0){
+                alert('Please select Issued to');
+                return false;
+            }
+                $('#loadingModal').modal();
+                SearchPendingDebitNotes();
+                SearchUpdatedDebitNotes();
+                $('#loadingModal').modal('hide');
+                $(':checkbox').prop('checked','');
+        });
+
+
+        $(document).on('click','.printDebitNote',function(){
+
+            var win=window.open('/IssueStock/UpdatedDebitNotePdf?DebitCode='+$(this).attr('data')+'&PID='+$("#Projects option:selected").val(),"_blank");
+            win.focus();
+        });
+
+        function SearchPendingDebitNotes(){
+             var url = '@Url.Action("GetAllDataForDebitNotes", "IssueStock")';
+            $.get(url,
+                { PID: $("#Projects option:selected").val(), fromdate: $('#fromdate').val(), todate: $('#todate').val(), IssuedTo: $('#IssuedTo option:selected').val(), ItemGroups: $('#ItemGroups option:selected').val(), ItemId: $('#ItemMaster option:selected').val(), SelectType: $("#ddlType option:selected").val(), ContractorType: $("#ddlContractorType option:selected").val() },
+                function (result) {
+                    $('#formbody').show();
+                    $('#formbody').html(result);
+                    $('#div_filter').show();
+                    //GetSavedData();
+                });
+        }
+
+        function SearchUpdatedDebitNotes(){
+
+            var url = '@Url.Action("SearchDataForUpdatedDebitNotes", "IssueStock")';
+            $.get(url,
+                { PID: $("#Projects option:selected").val(),Fromdate: $('#fromdate').val(), ToDate: $('#todate').val(),ContractorType: $("#ddlContractorType option:selected").val(),IssuedTo: $('#IssuedTo option:selected').val()},
+                function (result) {
+                    $('#updatedDebitNotesData').html(result);
+                });
+        }
+
+
+        $("#txtDebitDate").change(function() {
+            if ($("#txtDebitDate").val() == '') {
+                alert('Please select debit note date');
+                $('#txtDebitCode').val('');
+                return false;
+            }
+            if ($("#ddlContractorType option:selected").val() == '') {
+                alert('Please select contractor type');
+                $('#txtDebitDate').val('');
+                return false;
+            }
+
+            if ($("#Projects option:selected").val() == '0') {
+                alert('Please select project');
+                $('#txtDebitDate').val('');
+                return false;
+            }
+
+            var url='@Url.Action("GetDebitCode","IssueStock")';
+            $.get(url,{projectId:$("#Projects option:selected").val(),debitDate:$("#txtDebitDate").val(),contractorType:$('#ddlContractorType option:selected').val()},
+                function(result){
+                    $('#txtDebitCode').val(result);
+                });
+        });
+
+
+        $('#btnDebitNoteSubmit').click(SubmitSelectedData);
+
+    });
+
+
+    function GetIssuedlist(data) {
+        var procemessage = "<option value='0'> Please wait...</option>";
+        $("#IssuedTo").html(procemessage).show();
+        var markup = "<option value='0'>Select Issued To</option>";
+        for (var x = 0; x < data.length; x++) {
+
+
+            //console.log(data[x].Value);
+            if (data[x].Value != null)
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+        }
+        $("#IssuedTo").html(markup).show();
+       
+    }
+
+    function GetSelectedData() {
+        var allSelectedRows = "";
+        var currentRow = "";
+        var checkboxes = $('.chkDebitNote:checkbox:checked');
+
+        if (checkboxes.length > 0) {
+            checkboxes.each(function () {
+                var tds = $(this).closest('tr').find('td');
+                currentRow = "<tr>";
+                // alert(tds.text());
+                tds.each(function (index) {
+                    //if ((tds.length - 2) == index) {
+                    //    alert($(this).closest('tr').html());
+                    //}
+                    if ((tds.length - 1) != index)
+                        currentRow += '<td>' + $(this).text() + '</td>';
+                });
+                currentRow += '</tr>';
+                allSelectedRows += currentRow;
+            });
+            var tableHeaders = '<tr><th>S.No.</th><th>Issue Date</th><th>Requisition No</th><th>Item Code</th><th>HSN Code</th><th>Item Group</th><th>Item</th><th>Unit</th><th>Quantity</th><th>Amount</th><th>Issued To PC/Work</th><th>Issued Name</th><th>Issued Type</th><th>Debit Note</th></tr>';
+            $('#selectedDataDiv').html('<h3>Selected Data</h3><table class="table table-bordered">' + tableHeaders + allSelectedRows + '</table>');
+        }
+        else {
+            $('#selectedDataDiv').html('<p class="danger">No data selected.</p>');
+        }
+    }
+
+    function OnCheckAllChange() {
+        $('.chkDebitNote').prop('checked', $('#chkSelectAll').prop('checked'));
+        var someObj = {};
+        someObj.ids = [];
+        someObj.notes = [];
+        //alert($('#chkSelectAll').prop('checked'));
+        if ($('#chkSelectAll').prop('checked')) {
+            $('.chkDebitNote').each(function () {
+                var $this = $(this);
+                if ($this.is(':checked')) {
+                    var id=$this.attr('id');
+                    someObj.ids.push(id);
+                    someObj.notes.push($('#txt' + id).val());
+                }
+            });
+
+            var url = '@Url.Action("SaveMultipleData", "IssueStock")';
+            $.post(url, { arr: someObj }, function () { });
+        }
+        else {
+            $('.chkDebitNote').each(function () {
+                var $this = $(this);
+                if (!$this.is(':checked')) {
+                    var id = $this.attr('id');
+                    someObj.ids.push(id);
+                    someObj.notes.push($('#txt' + id).val());
+                }s
+            });
+
+            var url = '@Url.Action("RemoveMultipleData", "IssueStock")';
+            $.post(url, { arr: someObj }, function () { });
+        }
+    }
+
+    function SubmitSelectedData() {
+        if($('.chkDebitNote:checkbox:checked').length==0){
+            alert('Please select data to submit.');
+            return false;
+        }
+        if ($('#txtDebitDate').val() == '') {
+            alert('Debit Date Can not be blank.');
+            return false;
+        }
+        if ($('#txtDebitCode').val() == '') {
+            alert('Debit Code Can not be blank.');
+            return false;
+        }
+
+        $('#loadingModal').modal();
+        $('#frmGridData').submit();
+        $('#loadingModal').modal('hide');
+    }
+
+    function GetUpdatedDebitNoteData() {
+        //if($('#txtSearchDebitCode').val()==''){
+        //    alert('Please enter debit note code.');
+        //    return false;
+        //}
+        var url = '@Url.Action("GetUpdatedDebitNotes", "IssueStock")';
+        $('#loadingModal').modal();
+        $.get(url,
+            { DebitNoteCode: $('#txtSearchDebitCode').val() },
+            function (result) {
+                $('#updatedDebitNotesData').html(result);
+            });
+        $('#loadingModal').modal('hide');
+    }
+
+    function ChkDebitNoteChange(checkbox){
+
+        var url='@Url.Action("SaveResult", "IssueStock")';
+        $.post(url,{id:checkbox.id,isChecked:checkbox.checked,note:$('#txt'+checkbox.id).val()},function(result){
+            SetCheckBoxs(result);
+        });
+
+    }
+
+    function SetCheckBoxs(result){
+        console.log(result);
+        for(var key in result){
+            console.log(result[key]);
+            $('#'+key).prop('checked','checked');
+            $('#txt'+key).val(result[key]);
+        }
+        if($('.chkDebitNote:checked').length==100)
+            $('#chkSelectAll').prop('checked',true);
+        else
+            $('#chkSelectAll').prop('checked',false);
+    }
+
+    function GetSavedData(){
+        var url='@Url.Action("GetSavedResult", "IssueStock")';
+        $.get(url,null,function(result){
+            SetCheckBoxs(result);
+        });
+
+    }
+
+    function OnPrintPreview(){
+        var url='@Url.Action("SelectedDebitNotePdf","IssueStock")';
+        var debitCode=$('#txtDebitCode').val();
+        var debitCodeDate=$('#txtDebitDate').val();
+        url=url+'?DebitCode='+debitCode+'&DebitDate='+debitCodeDate;
+        window.open(url, 'Debit Note',"status=1,toolbar=1");
+    }
+
+
+
+    $(function () {
+        $("#fromdate").datepicker({dateFormat:'dd/mm/yy'});
+        $("#todate").datepicker({dateFormat:'dd/mm/yy'});
+        $("#txtDebitDate").datepicker({dateFormat:'dd/mm/yy',  maxDate: 0});
+        $('#btnSearchByDebitCode').click(GetUpdatedDebitNoteData);
+    });
+
+
+</script>
+
+
+@if (TempData["DebitNoteNo"] != null) {
+<script>
+    var debitnoteno='@TempData["DebitNoteNo"].ToString()';
+    if(debitnoteno!='')
+        alert('Successfully Created. Debit Note No. '+debitnoteno);
+    else
+        alert('Something went wrong. Try again.');
+</script>
+}
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PC DEBIT NOTE</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div >
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <input type="hidden" id="HdnPrjId" value="@ViewBag.Prjid" />
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                        @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <select id="ddlContractorType" required="required" class="form-control">
+                                                            <option value="">Select Contractor Type</option>
+                                                            <option value="PC">PC Contractor</option>
+                                                            <option value="SC">Sub Contractor</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                       
+                                                        <select class="form-control" id="ddlContractorFrom">
+                                                            <option value="">---Select Division Type---</option>
+                                                            <option value="WTP0000001">Civil</option>
+                                                            <option value="WTP0000002">Electrical</option>
+                                                            <option value="WTP0000003">Plumbing</option>
+                                                            <option value="WTP0000004">MECHANICAL</option>
+                                                            <option value="WTP0000005">LES</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        @Html.DropDownList("IssuedTo", new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } }, "Select Issue To", htmlAttributes: new { @id = "IssuedTo", @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                       @Html.DropDownList("ItemGroups", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroups", @class = "form-control" })
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item", htmlAttributes: new { @id = "ItemMaster", @class = "form-control" })
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <label class="field prepend-icon">
+                                                                @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "From Date", @id = "fromdate" })
+                                                                <label for="firstname" class="field-icon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </label>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field prepend-icon">
+                                                                @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "To Date", @id = "todate" })
+                                                                <label for="firstname" class="field-icon">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </label>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="section">
+                                                            <label class="field select">
+                                                                @Html.DropDownList("SelectType", null, "Select Type", htmlAttributes: new { @id = "ddlType", @class = "form-control" })
+                                                                
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <input type="button" id="btn_Search" class="btn btn-primary" value="Search" />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    }
+
+                                </form>
+
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#pendingDebitNotesTab">Pending Debit Notes</a></li>
+                                    <li><a data-toggle="tab" href="#updatedDebitNotesTab">Updated Debit Notes</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="pendingDebitNotesTab" class="tab-pane fade in active">
+
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                @Html.TextBox("txtDebitDate", null, new { @class = "form-control gui-input", @placeholder = "Debit Note Date", @id = "txtDebitDate" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-md-4"><input type="text" id="txtDebitCode" class="form-control" readonly="readonly" placeholder="Debit Note Code" /></div>
+                                        </div>
+
+                                        <br />
+                                        <div class="pager glyphicon-align-center" id="formbody"></div>
+
+                                        <hr class="mb10" />
+                                        <div>
+                                            <input type="button" id="btnPrintPreview" value="Print Preview" onclick="OnPrintPreview()" class="btn btn-primary" />
+                                            @*<a href="@Url.Action("SelectedDebitNotePdf","IssueStock")" target="_blank" class="btn btn-primary">Print Preview</a>*@
+                                            <input type="button" name="btnDebitNoteSubmit" value="Submit" id="btnDebitNoteSubmit" class="btn btn-primary" />
+                                        </div>
+
+                                        <br />
+                                        <div id="selectedDataDiv" style="width: 100%; overflow:scroll">
+
+                                        </div>
+                                    </div>
+                                    <div id="updatedDebitNotesTab" class="tab-pane fade">
+                                        <br />
+                                        <div class="col-md-12">
+                                            <div class="col-sm-3">
+                                                <input type="text" id="txtSearchDebitCode" placeholder="Search by Debit Code" class="form-control" />
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="button" id="btnSearchByDebitCode" value="Search" class="btn btn-primary" />
+                                            </div>
+                                        </div>
+
+                                        <div id="updatedDebitNotesData">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                @*<div>
+                                        @Html.ActionLink("Export to Excel", "GetExcel", "CurrentStock", new { @class = "btn btn-primary" })
+                                        @Html.ActionLink("Print", "IssueStockPdf", "CurrentStock_Report", new { @class = "btn btn-primary", @target = "_blank" })
+                                    </div>*@
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div class="modal fade" id="loadingModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/Images/36.gif" />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model MMS.ViewModels.Get_All_Data_Indentpurchase_Master_VM
+
+@{
+    Layout = null;
+}
+
+<style>
+    .aas {
+        background-color: #4A89DC;
+        color: white;
+        cursor: crosshair;
+    }
+</style>
+
+<div id="myPager" style="margin-top:17px;" class="primary">
+
+
+    @{
+        var grid = new WebGrid(
+                        canPage: true,
+                        rowsPerPage: Model.PageSize,
+                        canSort: true,
+                        ajaxUpdateContainerId: "grid");
+
+        grid.Bind(Model.GetDetails_PO, rowCount: Model.TotalRows, autoSortAndPage: false);
+        grid.Pager(WebGridPagerModes.All);
+
+        @grid.GetHtml(htmlAttributes: new { id = "grid" },
+            fillEmptyRows: false,
+             tableStyle: "webgrid-table",
+              headerStyle: "webgrid-header",
+                footerStyle: "webgrid-footer",
+                alternatingRowStyle: "webgrid-alternating-row",
+                rowStyle: "webgrid-row-style",
+            mode: WebGridPagerModes.All,
+                              columns: grid.Columns(
+                                               //grid.Column("ProjectName", header: "Project Name"),
+                                               grid.Column("PurchaseOrderNo", header: "PO No.", canSort: false),
+                                                         grid.Column("ProjectNo", header: "Project Name", canSort: false),
+                                                         grid.Column("SupplierNo", header: "Vendor", canSort: false),                                                        
+                                                         //grid.Column("UnitID", header: "Unit", canSort: false),                                                        
+                              grid.Column("CreatedDate", header: "Date", format: @<text>@item.CreatedDate.ToString("dd/MM/yy")</text>, canSort: false),
+                      // grid.Column("Status", header: "Status", canSort: false)
+                      grid.Column(header: "Status", format: @item => Html.DropDownList("Stats", new[] { new SelectListItem() { Text = "Approved", Value = "Approved" }, new SelectListItem() { Text = "Not Approved", Value = "Not Approved" } }, "Select Status", new { htmlAttributes = new { @class = "gui-input" } }))
+
+                                     ));
+    }
+
+
+</div>

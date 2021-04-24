@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    .yellow{
+        background-color:yellow;
+    }
+</style>
+
+<section id="content_wrapper" ng-app="myApp" ng-controller="myCtrl">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">PO Re-CALCULATION</span>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <select id="ddlProjects" class="form-control">
+                                            <option value="">Select Project</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control" autocomplete="off" id="txtPONo" placeholder="Purchase Order Number" name="name" value="" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <input type="button" name="btn" value="Search" id="btnSearch" class="btn btn-primary" ng-click="GetData()" />
+                                    </div>
+                                </div>
+                                    <br />
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr No.</th>
+                                                        <th>Purchase Order No</th>
+                                                        <th>Vendor Name</th>
+                                                        <th>Purchase Order Date</th>
+                                                        <th>Status</th>
+                                                        <th>Approved BY</th>
+                                                        <th>Approval Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-show="Progress" class="text-center">
+                                                        <td colspan="8">
+                                                            <img src="~/Images/Loading.gif" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr ng-repeat="item in Data" ng-class="{yellow:item.ReceivedQty==0}">
+                                                        <td>{{$index+1}}</td>
+                                                        <td><a href="javascript:void(0)" class="viewPo">{{item.PurchaseOrderNo}}</a></td>
+                                                        <td>{{item.Name}}</td>
+                                                        <td>{{item.PurchaseOrderDate}}</td>
+                                                        <td>{{item.Status}}</td>
+                                                        <td>{{item.ApprovedBy}}</td>
+                                                        <td>{{item.ApprovedDate}}</td>
+                                                        <td ng-show="item.ReceivedQty>0">
+                                                            <input type="button" method="post" class="btn btn-xs btn-primary" name="name" value="View" ng-click="GetPPDetails(item.PurchaseOrderNo)" />
+                                                        </td>
+                                                        <td ng-show="item.ReceivedQty==0">
+                                                            <p>Qty. Not Received</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                               
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" style="width:1100px;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">P.O Detail</h4>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        var GetPoDetails ='@Url.Action("ViewPoDetails", "POCalculation")'
+        var GetPOData = '@Url.Action("GetPOData", "POCalculation")';
+        var projectUrl = '@Url.Action("BindProjectNew","POCalculation")';
+    </script>
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindDdl('#ddlProjects', projectUrl, {}, 'Project', true);
+           
+            var app = angular.module('myApp', []);
+            app.controller('myCtrl', function ($scope) {
+                $scope.Progress = false;
+                $scope.Data = [];
+                $scope.GetData = function () {
+
+                    var projectId = $('#ddlProjects option:selected').val();
+                    var PONo = $('#txtPONo').val();
+
+                    if (projectId == '') {
+                        alert('Please select Project');
+                        return false;
+                    }
+                    $scope.Progress = true;
+                    $.get(GetPOData, { ProjectId: projectId, PONO: PONo }, function (response) {
+                        if (response.Status == 1) {
+                            $scope.Data = response.Data;
+
+                        }
+                        else if (response.Status == 3) {
+                            alert('Some error occur ' + response.Error);
+                        }
+                        $scope.Progress = false;
+                        $scope.$apply();
+                    });
+                }
+                $scope.PODetail = [];
+                $scope.GetPPDetails = function (PurchaseOrderNo) {
+                    $.get('@Url.Action("GetPO")', { PO: PurchaseOrderNo }, function (response) {
+                        location.href = GetPoDetails + '?q='+response;
+                    });
+                }
+
+            });
+
+            $(document).on('click', '.viewPo', function () {
+                var po = $(this).text();
+                $.ajax({
+                    url: '@Url.Action("GetPO_details", "View_Print_Slip_Approval")',
+                    data: { Id: po },
+                    success: function (response) {
+                        $('#modalBody').html('');
+                        $('#modalBody').html(response);
+                        $('#myModal').modal();
+                    }
+                })
+
+
+            });
+        });
+
+    </script>
+   <script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+   
+}

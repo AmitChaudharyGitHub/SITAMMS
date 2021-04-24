@@ -1,0 +1,195 @@
+﻿
+
+<style>
+    .gridTable {
+        margin: 5px;
+        padding: 10px;
+        border: 1px #c8c8c8 solid;
+        border-collapse: collapse;
+        min-width: 550px;
+        background-color: #fff;
+        color: #fff;
+        width: 100%;
+    }
+
+    .gridHead th {
+        font-weight: bold;
+        background-color: #5c93f0;
+        color: #fff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .gridHead a:link, .gridHead a:visited, .gridHead a:active, .gridHead a:hover {
+        color: #fff;
+    }
+
+    .gridHead a:hover {
+        text-decoration: underline;
+    }
+
+    .gridTable tr.gridAltRow {
+        background-color: #efeeef;
+    }
+
+    .gridTable tr:hover {
+        background-color: #7da3f2;
+    }
+
+    .gridTable tr :hover {
+        color: white;
+    }
+
+    .gridAltRow td {
+        padding: 10px 4px;
+        margin: 5px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridRow td {
+        padding: 10px 4px;
+        color: #333;
+        font-size: 12px;
+    }
+
+    .gridFooter td {
+        padding: 10px;
+        color: #ffffff;
+        font-size: 12pt;
+        text-align: center;
+        background-color: #5c93f0;
+    }
+
+    .gridFooter a {
+        text-decoration: none;
+        padding: 6px 11px;
+        margin-right: 6px;
+        border-radius: 3px;
+        color: #fff;
+        text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+        border: 1px solid #43505e;
+        background: #556270;
+        background: -moz-linear-gradient(top, #556270 0%, #444d57 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#556270), color-stop(100%,#444d57));
+        background: -webkit-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -o-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: -ms-linear-gradient(top, #556270 0%,#444d57 100%);
+        background: linear-gradient(to bottom, #556270 0%,#444d57 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#556270', endColorstr='#444d57',GradientType=0 );
+        -moz-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        -webkit-box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+        box-shadow: inset 0 3px 0px -2px rgba(255, 255, 255, .3);
+    }
+
+    .my-classR {
+        text-align: right;
+    }
+
+    .my-classL {
+        text-align: left;
+    }
+
+    .my-classC {
+        text-align: center;
+    }
+</style>
+
+
+
+<div id="gridposition" style="width: 100%; overflow:scroll">
+    @if (Model.Count > 0)
+    {
+        var grid1 = new WebGrid(source: Model, canPage: true, rowsPerPage: 10, ajaxUpdateContainerId: "positionGrid");
+
+        @grid1.GetHtml(mode: WebGridPagerModes.All,
+                   tableStyle: "gridTable",
+                   headerStyle: "gridHead",
+                   footerStyle: "gridFooter",
+                   rowStyle: "gridRow",
+                   alternatingRowStyle: "gridAltRow",
+                   htmlAttributes: new { id = "positionGrid" },
+                   fillEmptyRows: false,
+                   columns: grid1.Columns(
+                       grid1.Column(header: "S.No.", format: @<text><div style="text-align:center;">@(item.WebGrid.Rows.IndexOf(item) + 1)</div></text>),
+                        grid1.Column("GroupName", header: "Item Group", style: "my-classL"),
+                        grid1.Column("ItemNo", header: "Item Code", style: "my-classC"),
+                         grid1.Column("ItemName", header: "Item Description", style: "my-classL"),
+                          grid1.Column("UnitCode", header: "Unit", style: "my-classL"),
+                           grid1.Column("QTy", header: "Qty.", style: "my-classR"),
+                            grid1.Column("Rate", header: "Rate", style: "my-classR"),
+                            grid1.Column("DiscountPercentage", header: "Discount(%)", style: "my-classR"),
+                             grid1.Column("Discount", header: "Amount after discount", style: "my-classR"),
+                              grid1.Column("PandF", header: "P&F ", style: "my-classR"),
+                               grid1.Column("CartageAmt", header: "Cartage", style: "my-classR"),
+                                grid1.Column("InsuranceAmt", header: "Insurance", style: "my-classR"),
+                                  grid1.Column("CGSTPer", header: "CGST(%)", style: "my-classR"),
+                                   grid1.Column("SGSTAndUTGSTPer", header: "SGST/UTGST(%)", style: "my-classR"),
+                                    grid1.Column("IGSTPer", header: "IGST(%)", style: "my-classR"),
+                                     grid1.Column("CGSTAmt", header: "CGST Amt.", style: "my-classR"),
+                                      grid1.Column("SGSTAndUTGSTAmt", header: "SGST/UTGST Amt.", style: "my-classR"),
+                                       grid1.Column("IGSTAmt", header: "IGST Amt.", style: "my-classR"),
+                                       grid1.Column("TCSPer",header:"TCS(%)", style: "my-classR"),
+                                       grid1.Column("TCSAmt", header: "TCS Amt", style: "my-classR"),
+                                        grid1.Column("GrandTotal", header: "Grand Toal", style: "my-classR")
+
+
+                    ));
+        <br />
+        <div style="text-align:left;">
+            @Html.ActionLink("Export to Excel", "GetExcel", "NewDMR_Report", new { @class = "btn btn-primary" })
+            @Html.ActionLink("Print", "DMRStockPdf", "NewDMR_Report", new { @class = "btn btn-primary", @target = "_blank" })
+        </div>
+    }
+    else
+    {
+        <p style="color:red; font-size:large">No records found !!!!</p>
+    }
+
+
+</div>
+<div class="row">
+    <div class="col-md-12" style="text-align:right;">
+
+        @if (ViewBag.displyTotalSum != null)
+            {
+            <b>Total Amount : </b>     @ViewBag.displyTotalSum  <b>INR</b>
+        }
+
+    </div>
+</div>
+
+<script>
+    var gsttype='@Model[0].TaxType';
+    var tcsactive =@(ViewBag.TCSActive!=null? ViewBag.TCSActive.ToString().ToLower():false.ToString().ToLower());
+    if(tcsactive)
+    {
+        if (gsttype.indexOf("IGST") == -1) {
+            $('.gridHead th:eq(14), .gridHead th:eq(17)').css('display', 'none');
+            // alert($('tbody tr').length);
+            $.each($('.gridTable tbody tr'), function () {
+                $(this).children('td:eq(14)').css('display', 'none');
+                $(this).children('tr td:eq(17)').css('display', 'none');
+            });
+
+        }
+        else {
+            $('.gridHead th:eq(12), .gridHead th:eq(13), .gridHead th:eq(15), .gridHead th:eq(16)').css('display', 'none');
+            $.each($('.gridTable tbody tr'), function () {
+                $(this).children('td:eq(12)').css('display', 'none');
+                $(this).children('tr td:eq(13)').css('display', 'none');
+                $(this).children('td:eq(15)').css('display', 'none');
+                $(this).children('tr td:eq(16)').css('display', 'none');
+            });
+        }
+    }
+    else
+    {
+        $('.gridHead th:eq(18), .gridHead th:eq(19)').css('display','none');
+        $.each($('.gridTable tbody tr'), function () {
+            $(this).children('td:eq(18)').css('display', 'none');
+            $(this).children('tr td:eq(19)').css('display', 'none');
+        });
+    }
+
+</script>

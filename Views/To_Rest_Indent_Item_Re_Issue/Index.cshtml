@@ -1,0 +1,473 @@
+﻿
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+
+}
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script>
+    $(function () {
+        $("#startdate").datepicker({ maxDate: '0', dateFormat: 'dd/MM/yy', }).datepicker("setDate", new Date());
+    });
+</script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+</style>
+
+<script>
+    $(window).load(function () {
+        $('#dvLoading').fadeOut(2000);
+    });
+</script>
+
+@* FOR Indent Number BINDING HERE *@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#prjtid1").change(function () {
+            $('#empsname1').val('').prop("placeholder", "Issued To");
+            $("#indent1").empty();
+            //$("#indent1").append($("<option></option").val("").html("Select Indent"));
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetIndentno")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#prjtid1").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    if (names.length > 0)
+                    {
+                        var procemessage = "<option value='0'> Please wait...</option>";
+                        $("#indent1").html(procemessage).show();
+                        var markup = "<option value='0'>Select Indent</option>";
+                        $("#indent1").html(markup).show();
+
+                        $.each(names, function (i, itname) {
+
+                            $("#indent1").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+                        });
+                    }
+                       
+                   
+                    else {
+                        var markup = "<option value='0'>Select Indent</option>";
+                        $("#indent1").html(markup).show();
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.warning('Indent Number is Empty', 'Confirmation');
+                       alert('Indent Number is Empty');
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Indent Number' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+@* Get Employee Name Here*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#indent1").change(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetemployeeId_IndentNo")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#indent1").val() },
+                // Get Selected Country ID.
+
+                success: function (obj) {
+                    obj = $.parseJSON(obj)
+                    //  var r = toArray(obj);
+                   
+                    $("#empsname1").val(obj.empnames);
+                    //$("#sttsname1").val(obj.statuss);
+                    // $("#blocksssname1").val(obj.blockss);
+                    //$("#florssname1").val(obj.floors);
+                },
+                error: function (ex) {
+                    // alert('Failed to retrieve Project Code.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+<script>
+    function GetFloor() {
+
+        var url = '@Url.Action("Details", "To_Rest_Indent_Item_Re_Issue")';
+        $('#dvLoading').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { id: $("#indent1 option:selected").text() },
+            complete: function () {
+                $('#dvLoading').hide();
+            },
+            success: function (result) {
+
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+
+</script>
+
+
+@* Here Jquery code for block and floor details and selection *@
+
+<script>
+    $(document).ready(function () {
+
+        $("body").on("keyup", 'input[type="number"]', function () {
+            var valid = true;
+            $('input[type="number"]').each(function () {
+
+                if ($(this).is(':invalid')) {
+                    console.log("not valid");
+
+                    valid = false;
+                }
+            })
+            if (valid == false) {
+                $("#Submit").attr("disabled", "disabled");
+            }
+            else {
+                $("#Submit").removeAttr("disabled");
+            }
+        });
+
+
+
+
+
+        $("#Submit").click(function (e) {
+            var valid = true;
+            $('input[type="number"]').each(function () {
+                if ($(this).is(':invalid')) {
+                    console.log("not valid");
+                    valid = false;
+
+                }
+            })
+
+            if (valid) {
+                var _griddata = gridTojson();
+
+                var url = '@Url.Action("UpdateGridData")';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { griddata: _griddata }
+                }).done(function (data) {
+
+                    if (data != "" && data != "1") {
+                        $('#message').html(data);
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.success('Issue Quantity Sent Successfully', 'Confirmation');
+                        $("#myModal").modal('show');
+                    }
+
+                    if (data == "1") {
+                        //$('#message').html(data);
+                        toastr.options.positionClass = "toast-bottom-right";
+                        toastr.options.closeButton = true;
+                        toastr.options.progressBar = true;
+                        toastr.error('Issue Qty Can not be greater than Balance Qty ', 'Confirmation');
+                        // $("#myModal").modal('show');
+                    }
+                    else {
+                        //toastr.error("Error");
+                    }
+                });
+            }
+        });
+
+        function gridTojson() {
+            var json = '{';
+            var otArr = [];
+
+            var tbl2 = $('#grid tbody tr').each(function (i) {
+                if ($(this)[0].rowIndex != 0) {
+                    x = $(this).children();
+                    var itArr = [];
+                    x.each(function () {
+                        if ($(this).children('input').length > 0) {
+                            itArr.push('"' + $(this).children('input').val() + '"');
+                        }
+                        else {
+                            itArr.push('"' + $(this).text() + '"');
+                        }
+                    });
+
+                    itArr.push('"' + $("#prjtid1 option:selected").val() + '"');
+                    itArr.push('"' + $("#prjtid1 option:selected").text() + '"');
+                    itArr.push('"' + $("#indent1 option:selected").text() + '"');
+                    itArr.push('"' + $("#empsname1").val() + '"');
+                    itArr.push('"' + $("#startdate").val() + '"');
+                    itArr.push('"' + $("#Stats option:selected").text() + '"');
+                    otArr.push('"' + i + '": [' + itArr.join(',') + ']');
+                }
+            })
+            json += otArr.join(",") + '}'
+            return json;
+        }
+
+        //function getAddress() {
+        //    var addrs = $("#txt1").val();
+        //}
+    })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#closebtn").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+            $("#Stats").val('');
+        })
+
+        $(".close").click(function () {
+            $("#indent1").val('');
+            $("#prjtid1").val('');
+            $("#empsname1").val('');
+            $("#grid").empty();
+            $("#Stats").val('');
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">RE-ISSUE REST QUANTITY</span>
+                                </div>
+                                <!-- .section-divider -->
+                                <!-- Basic Inputs -->
+                                <!-- Input Icons -->
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        // Here Field data
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @Html.DropDownList("Stats", new[] { new SelectListItem() { Text = "Approved", Value = "Approved" } }, "Select Item Status", new { htmlAttributes = new { @class = "form-control gui-input" } })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select">
+                                                            @*@Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })*@
+                                                            @Html.DropDownList("prjtid", null, "Select Project", htmlAttributes: new { @id = "prjtid1", @class = "form-control" })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field select select2 select2-container select2-container">
+                                                            @Html.DropDownList("indentno", new SelectList(string.Empty, "Value", "Text"), "Select Indent", htmlAttributes: new { @id = "indent1", @class = "form-control", @onchange = "javascript:GetFloor(this.value);", })
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+
+
+
+                                                <div class="col-md-3">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("empsname", null, "Issue To", new { id = "empsname1", @class = "form-control gui-input", @readonly = "readonly" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-user"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                           
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+                                                    <div class="section">
+                                                        <div class="form-group">
+
+                                                            <div class="col-md-12">
+                                                                <label class="field prepend-icon">
+                                                                    @Html.TextBox("SelectDate", null, new { @class = "form-control gui-input", @placeholder = "Enter Date", @id = "startdate" })
+                                                                    <label for="firstname" class="field-icon">
+                                                                        <i class="fa fa-calendar"></i>
+                                                                    </label>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                           </div>
+
+
+
+                                            </div>
+                                        <br />
+
+
+                                       
+
+                                    }
+
+
+
+                                </form>
+                                <div id="dvLoading"></div>
+                                <div id="#progress" style="display:none"><img src="~/Images/36.gif" /></div>
+                                <div class="pager glyphicon-align-center" id="formbody">
+                                    @*@{Html.RenderAction("Grid", "ViewSendingIndentRequisition");}*@
+
+                                </div>
+
+
+                                <br />
+                                <div>
+                                    <input type="button" id="Submit" class="btn btn-danger" value="Quantity Issue" />
+                                    @*@Html.ActionLink("Go To View", "View_To_Quantity_Issues", "QuantityIssues", null, new { @class = "btn btn-system" })*@
+                                    @*@Html.ActionLink("Sent To Purchase", "#", null, new { @class = "btn btn-system" })*@
+                                </div>
+
+
+
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                                                <h4 class="modal-title">Confirmation</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger"><small>Issue Quantity Sent Successfully</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal" id="closebtn">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="section-divider mt40 mb25" id="spy5">
+                                    <span></span>
+                                </div>
+
+                                <!-- end .section row section -->
+                                <!-- end .form-footer section -->
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

@@ -1,0 +1,399 @@
+﻿
+@{
+    ViewBag.Title = "UploadFile";
+
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<style type="text/css">
+    #dvLoading {
+        background: #000 url(../../Images/36.gif) no-repeat center center;
+        height: 100px;
+        width: 100px;
+        position: fixed;
+        z-index: 1000;
+        left: 50%;
+        top: 50%;
+        margin: -25px 0 0 -25px;
+    }
+
+    td {
+        padding: inherit 2px;
+    }
+
+        td input {
+            width: 80px;
+            font-size: 11px !important;
+        }
+</style>
+<script>
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+
+    var GetProjectGateEntryNo ='@Url.Action("GetProjectGateEntryNo", "GateEntries")';
+    var GetStatusTypeNo ='@Url.Action("GetStatusTypeNo", "GateEntries")';
+    var GetGRNNo = '@Url.Action("GetGRN", "GateEntries")';
+    var GrnGrd =  '@Url.Action("GrnGrid", "GateEntrydocumentUpload")';
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                     $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+        $("#Status").change(function () {
+            $("#StatusTypeNo").empty();           
+            $('#formbody').html('');
+
+            if($("#Status option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetStatusTypeNo, // Calling json method
+
+                    dataType: 'json',
+
+                    data: { Type: $("#Status").val(),ProjectNo:  $("#Projects").val() },
+                    // Get Selected Country ID.
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+                        //  var r = toArray(obj);
+
+
+                  
+                        GetStatusList(obj);
+
+                    },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;}
+        })
+        
+        $("#StatusTypeNo").change(function () {
+            $("#ddlGrn").empty();           
+            $('#formbody').html('');
+
+            if($("#StatusTypeNo option:selected").val()!=0)
+            {
+                $('#dvLoading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: GetGRNNo, 
+
+                    dataType: 'json',
+
+                    data: { PONumber: $("#StatusTypeNo option:selected").val()},
+                    
+
+                    success: function (obj) {
+                        obj = $.parseJSON(obj)
+                        //  var r = toArray(obj);
+
+
+                  
+                        BindGrnList(obj);
+
+                    },
+                    complete: function () {
+                        $('#dvLoading').hide();
+                    },
+                    error: function (ex) {
+                        // alert('Failed to retrieve Project Code.' + ex);
+                    }
+                });
+                return false;}
+        })
+
+        $("#ddlGrn").change(function ()
+        {
+            if($('#ddlGrn option:selected').val() != 0)
+            {
+                $.get(GrnGrd,
+              { Grid: $('#ddlGrn option:selected').val()},
+              function (result) {
+                  $('#formbody').show();
+                  $('#formbody').html(result);
+                  $("#loading").hide();
+              });
+            }
+                
+        });
+
+
+
+
+        function   GetStatusList(data) {
+            var procemessage = "<option value='0'> Please wait...</option>";
+            $("#StatusTypeNo").html(procemessage).show();
+            var markup = "<option value='0'>Select No</option>";
+            for (var x = 0; x < data.length; x++) {
+             markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+            }
+            $("#StatusTypeNo").html(markup).show();
+
+        }
+        function   BindGrnList(data) {
+            var procemessage = "<option value='0'> Please wait...</option>";
+            $("#ddlGrn").html(procemessage).show();
+            var markup = "<option value='0'>Select No</option>";
+            for (var x = 0; x < data.length; x++) {
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+
+            }
+            $("#ddlGrn").html(markup).show();
+
+        }
+
+    });
+</script>
+<section id="content_wrapper">
+    <section id="content" class="table-layout animated fadeIn">
+        <div class="tray tray-center">
+            <div class="mw1000 center-block">
+                <div class="admin-form">
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+
+                            <div class="section-divider mb40" id="spy1">
+                                <span>Add Gate Entry File</span>
+                            </div>
+
+
+                            @using (Ajax.BeginForm("GrnUpload", "GateEntrydocumentUpload", new AjaxOptions() { HttpMethod = "POST" }, new { enctype = "multipart/form-data" }))
+                            {
+                                // @Html.AntiForgeryToken()
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field select">
+
+                                                @Html.DropDownList("Project Assign", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                            <div class="section">
+                                                <label class="field select">
+                                                    @Html.DropDownList("Status", null, "Select Status", htmlAttributes: new { @id = "Status", @class = "form-control" })
+                                                    <i class="arrow"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                   
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field select">
+                                                @Html.DropDownList("StatusTypeNo", new SelectList(string.Empty, "Value", "Text"), "Select Status No.", htmlAttributes: new { @id = "StatusTypeNo", @class = "form-control" })
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="section">
+                                            <label class="field select">
+
+                                                @Html.DropDownList("GRN", new SelectList(string.Empty, "Value", "Text"), "Select GRN", htmlAttributes: new { @id = "ddlGrn", @class = "form-control" })
+
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+
+                                    
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-4"></div>
+                                            <div class="col-md-4"><div style="display:none;" id="loading" class="loading">Loading. Please wait.<br /><img src="~/Images/loader.gif" style="width:50px;height:50px" /></div></div>
+                                        </div>
+                                        <div class="col-md-4"></div>
+                                    </div>
+                                    <div class="pager glyphicon-align-center" id="formbody">
+
+                                    </div>
+
+
+                                </div>
+
+
+                                @*<div class="row">
+
+                                    @if (Model.Pchild.Count != 0)
+                                    {
+                                        <table class="table table-hover" id="gridD">
+                                            <tr class="primary">
+                                                <th>
+                                                    @Html.DisplayName("Item Group")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Item Name")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Unit")
+                                                </th>
+                                                <th style="white-space:nowrap">
+                                                    @Html.DisplayName("Quantity")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Value")
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayName("Remarks")
+                                                </th>
+
+                                            </tr>
+
+                                            @foreach (var item in Model.Pchild)
+                                            {
+                                                var a = @item.UId;
+
+                                                <tr id=@a style="font-size:11px;">
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ItemGroupName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.ItemName)
+
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.UnitName)
+
+
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.AppQuantity)
+
+                                                    </td>
+                                                    <td class="Amount_@a">
+
+                                                        @Html.DisplayFor(modelItem => item.TotalValue)
+                                                        @Html.HiddenFor(modelItem => item.TotalValue)
+                                                    </td>
+                                                    <td>
+
+                                                        @Html.DisplayFor(modelItem => item.Remark)
+                                                    </td>
+
+
+
+                                                </tr>
+                                            }
+
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td><b>Total* : </b></td>
+                                                <td><label id="lblTotalValue"></label></td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    }
+                                </div>*@
+
+
+
+                                <br />
+
+                                
+
+
+
+                               
+
+                                <div class="col-md-12">
+                                    <div class="section" style="float:right">
+                                        <input type="submit" value="Save File" id="SubmitA" class="btn btn-success" />
+
+                                    </div>
+                                </div>
+
+
+                            }
+
+
+                            
+                        </div>
+
+
+
+                        
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

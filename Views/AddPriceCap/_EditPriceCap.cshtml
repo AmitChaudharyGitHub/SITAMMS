@@ -1,0 +1,170 @@
+﻿@model MMS.Models.PricecapModel
+@{
+    Layout = null;
+}
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () { 
+    $(function () {
+        $(".multiselect").multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%'
+        });
+    });
+    $(function () {
+        $("#EffectiveDate").datepicker({ minDate: 0 });
+    });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#ItemGroupId").change(function () {
+            $("#ItemId").empty();
+            $("#ItemId").append($("<option></option").val("").html("Select Item Name"));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetGroupitems")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#ItemGroupId").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#ItemId").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {                 
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+
+@using (Html.BeginForm("UpdatePriceCap", "AddPriceCap", "POST"))
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-horizontal">
+            <table width="100%">
+                
+                <tr>
+                    <td>@Html.LabelFor(model => model.ProjectId)</td>
+                    <td>
+                        <div class="col-md-8">
+                            @Html.DropDownList("ProjectId", null, htmlAttributes: new { @id = "ProjectId", @class = "form-control multiselect", multiple = "multiple" })
+                        @Html.ValidationMessageFor(model => model.ProjectId)
+                        </div>
+                    </td>
+                    @*<td>
+                        @Html.EditorFor(model => model.ProjectId)
+                        @Html.ValidationMessageFor(model => model.ProjectId)
+                    </td>*@
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+             
+                <tr>
+                    <td>@Html.LabelFor(model => model.ItemGroupId)</td>
+                    <td>
+                        <div class="col-md-8">
+                            <div class="section">
+                                <label class="field select">
+                                    @Html.DropDownList("ItemGroupId", null, "Select Item Group", htmlAttributes: new { @id = "ItemGroupId", @class = "form-control" })
+                                    <i class="arrow"></i>
+                                    @Html.ValidationMessageFor(model => model.ItemGroupId)
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.ItemId)</td>
+                    <td>
+                        <div class="col-md-8">
+                            <div class="section">
+                                <label class="field select">
+                                    @Html.DropDownList("ItemId", null, "Select Item", htmlAttributes: new { @id = "ItemId", @class = "form-control" })
+                                    <i class="arrow"></i>
+                                    @Html.ValidationMessageFor(model => model.ItemId)
+                                </label>
+                            </div>
+                        </div>                 
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Rate)</td>
+                    <td>
+                        @Html.EditorFor(model => model.Rate)
+                        @Html.ValidationMessageFor(model => model.Rate)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.EffectiveDate)</td>
+                    <td>
+                        @Html.EditorFor(model => model.EffectiveDate, new { id = "EffectiveDate", @class = "DatePicker", })
+                        @Html.ValidationMessageFor(model => model.EffectiveDate)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.Status)
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.Status)
+                        @Html.ValidationMessageFor(model => model.Status)
+                    </td>
+
+                </tr>
+
+                @*<tr>
+                    <td>@Html.LabelFor(model => model.Mobile)</td>
+                    <td>
+                        @Html.EditorFor(model => model.Mobile)
+                        @Html.ValidationMessageFor(model => model.Mobile)
+                    </td>
+
+                </tr>*@
+                <tr>
+                    <td colspan="2" style="height:20px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button type="submit" id="btnUpdate" name="Command" value="Update" class="btn btn-primary">
+                            <span class="ui-button-text">Update</span>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+</fieldset>
+}

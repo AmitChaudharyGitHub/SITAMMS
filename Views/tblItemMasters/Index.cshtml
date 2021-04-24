@@ -1,0 +1,271 @@
+﻿@model MMS_P.ViewModels.PagedGlobalItemModel1
+
+@{
+    ViewBag.Title = "Index";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+
+    Layout = layout;
+}
+
+@*<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.20.min.js")" type="text/javascript"></script>*@
+<script src="~/Scripts/Appjs/phones.js"></script>
+@section scripts{
+    
+<script>
+    $(document).ready(function () {
+      @*getJob();
+      function getJob() {
+          $.post('@Url.Content("~/tblItemMasters/Grid/")', function (data) {
+              $('#formbody').html("");
+              $('#formbody').html(data);
+          });
+      }*@
+
+
+        $('#btnSearch').click(SearchItems);
+
+
+  });
+    // Fill Grid for Paging
+    $(document).on("click", "#myPager a", function () {
+        var url = "/tblItemMasters/Grid/";
+        $.ajax({
+
+            url: $(this).attr("href"),
+            type: 'GET',
+            cache: false,
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    });
+
+
+    function getDetails() {
+        this.event.preventDefault();
+        var url = "/tblItemMasters/Details/";
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+        return false;
+    }
+    // Fill Grid for List Selection
+    function getblock(_siteid) {
+        if (_siteid != 0) {
+
+            var url = '@Url.Action("Grid", "tblItemMasters")';
+            $('#progress').show();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: { ItemGroupId: $('#ddlItemG').val() },
+                complete: function () {
+                    $('#progress').hide();
+                },
+                success: function (result) {
+                    $('#formbody').html(result);
+                }
+            });
+            return false;
+        }
+    }
+
+    @*function getblockSearch() {
+        if ($("#ItemName").val() != "") {
+
+            var url = '@Url.Action("SearchGrid", "tblItemMasters")';
+            $('#progress').show();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: { Name: $("#ItemName").val() },
+                complete: function () {
+                    $('#progress').hide();
+                },
+                success: function (result) {
+                    $('#formbody').html(result);
+                }
+            });
+            return false;
+        }
+    }*@
+
+    function SearchItems() {
+        var url = '@Url.Action("Grid1", "tblItemMasters")';
+        $('#progress').show();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: { ItemGroupId: $('#ddlItemG').val(), ItemName: $("#ItemName").val(), HSNCode: $('#HSNCode').val(), UnitId:$('#ddlUnits').val()},
+            complete: function () {
+                $('#progress').hide();
+            },
+            success: function (result) {
+                $('#formbody').html(result);
+            }
+        });
+    }
+
+    function EnableDisableItem(transId) {
+        $.get('@Url.Action("EnableDisableItem", "tblItemMasters")', { TransId: transId }, function (response) {
+            if (response.Status == 1) {
+                alert('Item Status updated successfully.');
+                SearchItems();
+            }
+            else {
+                alert('Item Status not updated.');
+            }
+        });
+    }
+
+</script>
+
+}
+
+
+<section id="content_wrapper">
+  
+    <section id="content" class="table-layout animated fadeIn">
+       
+  
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+
+                <div class="admin-form">
+
+                    <div class="panel heading-border">
+                        <div class="panel-body bg-light">
+                            <form method="post" action="#" id="form-ui">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span>Global Items</span>
+                                </div>
+
+                               
+                                    <div class="well">
+                                     
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <div class="col-md-2">
+                                                    <a class="btn btn-primary" data-modal="" href="@Url.Action("Create","tblItemMasters" )" id="btnCreate">Create New</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="field select">
+                                                    @Html.DropDownList("ItemGroupId", null, "Select Item Group", htmlAttributes: new { @id = "ddlItemG", @class = "form-control" })
+                                                    <i class="arrow"></i>
+                                                </label>
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="section">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("ItemName", null, new { id = "ItemName", @class = "form-control gui-input required", placeholder="Item Name" })
+                                                        <label for="ItemName" class="field-icon">
+                                                            <i class="fa fa-building"></i>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="section">
+                                                    <label class="field prepend-icon">
+                                                        @Html.TextBox("HSNCode", null, new { id = "HSNCode", @class = "form-control gui-input required", placeholder = "HSN Code" })
+                                                        <label for="ItemName" class="field-icon">
+                                                            <i class="fa fa-building"></i>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <label class="field select">
+                                                    @Html.DropDownList("Units", null, "Select Unit", htmlAttributes: new { @id = "ddlUnits", @class = "form-control" })
+                                                    <i class="arrow"></i>
+                                                </label>
+
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="section">
+                                                    <input type="button" id="btnSearch" class="btn btn-danger" value="Search" onclick="javascript:getblockSearch();" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                @Html.ActionLink("Export to Excel", "GetAllItemToExcel", "AllItemDetail", new { @class = "btn btn-primary" })
+                                            </div>
+                                        </div>
+                                        </div>
+                                
+                            </form>
+
+                            @*<form action="Create" method="post">*@
+                            <div class="pager glyphicon-align-center" id="formbody">
+                                @*@{Html.RenderAction("Grid", "tblItemMasters");}*@
+                            </div>
+
+
+                            @*</form>*@
+                        </div>
+                        <div class="section-divider mt40 mb25" id="spy5">
+                            <span></span>
+                        </div>
+
+
+                        @*</form>*@
+                    </div>
+                </div>
+
+                </div>
+
+            </div>
+      
+       
+    </section>
+   
+</section>
+
+<!-- modal placeholder-->
+<div id='myModal' class='modal fade in'>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@*@section scripts{
+    @Scripts.Render("~/scripts/appjs/phones.js")
+}*@
+
+
+
+

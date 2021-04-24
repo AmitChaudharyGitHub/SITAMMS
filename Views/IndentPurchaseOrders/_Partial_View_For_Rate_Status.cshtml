@@ -1,0 +1,200 @@
+﻿@model MMS.Models.PricecapModel2
+@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Country Dropdown Selectedchange event
+        $("#ItemGroupId").change(function () {
+            $("#ItemId").empty();
+            $("#ItemId").append($("<option></option").val("").html("Select Item Name"));
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetGroupitems")', // Calling json method
+
+                dataType: 'json',
+
+                data: { id: $("#ItemGroupId").val() },
+                // Get Selected Country ID.
+
+                success: function (names) {
+
+                    $.each(names, function (i, itname) {
+                        $("#ItemId").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {                 
+                    alert('Failed to retrieve Item Name.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+
+<script type="text/javascript">
+    var gridList = [];
+
+    function submitForm() {
+        var model = new Object();
+        var itgrp = $("#Emp1 option:selected").val();
+
+          if (itgrp == "") {
+           alert('Kindly Select Forword To');
+            return false;
+          }
+          if ($("#Ratesss").val().trim() == "") {
+            alert('Kindly Enter Rate');
+            return false;
+          }
+          if ($("#Remarks").val().trim() == "") {
+              alert('Kindly Enter Date');
+              return false;
+          }
+        var url = '@Url.Action("SendPriceCapDetails", "IndentPurchaseOrders")';
+        $.ajax({
+            type: "POST",
+            url: url,
+            // data: JSON.stringify({ VData: model }),
+            data: { //Passing data
+                ForwordTo: $('#Emp1').val(),
+                Rate: $("#Ratesss").val(),
+                Remark: $("#Remarks").val()
+        },
+            success: function (data) {//On Successful service call
+                if (data == "1") {
+                    alert('Record Send Successfully');
+                    $("#Ratesss").val('');
+                    $("#Remarks").val('');
+                    window.location.href = '@Url.Action("Create", "IndentPurchaseOrders")';
+                }
+                if (data == "2") {
+                    alert('This Data already exist in table');
+                    toastr.options.positionClass = "toast-bottom-right";
+                    toastr.options.closeButton = true;
+                    toastr.options.progressBar = true;
+                    toastr.error('This Data already exist in table ', 'Confirmation');
+                }
+            },
+            failure: function (errMsg) {
+                debugger;
+                alert('Error in Submit Data');
+            }
+        });
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend></legend>
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-horizontal">
+            <table width="100%">                             
+                <tr>
+                    <td>@Html.LabelFor(model => model.CreatedBy)</td>
+                    <td>
+                        <div class="col-md-8">
+                            <div class="section">
+                                <label class="field select">
+                                    @Html.DropDownList("Createdby", null, "Forword To", htmlAttributes: new { @id = "Emp1", @class = "form-control", @style = "font-weight: normal;" })
+                                    <i class="arrow"></i>
+                                    @Html.ValidationMessageFor(model => model.CreatedBy)
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(model => model.Rate)</td>
+                    <td>
+                        <div class="col-md-8">
+                            <div class="section">
+                                <label class="field prepend-icon">
+                                    @Html.TextBoxFor(model => model.Rate,  new { @id = "Ratesss", @class = "form-control", @type = "number", @style = "width:170px; font-weight: normal;" })
+                                    @Html.ValidationMessageFor(model => model.Rate)
+                                    @*<label for="firstname" class="field-icon">
+                                        <i class="fa fa-rupee"></i>
+                                    </label>*@
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>
+                <tr>
+                    <td><b>Remark</b></td>
+                    <td>
+                        <div class="col-md-8">
+                            <div class="section">
+                                <label class="field prepend-icon">
+                                    @Html.TextArea("Remarks", null, new { Style = "width:170px; font-weight: normal;" })
+                                    @*<label for="firstname" class="field-icon">
+                                <i class="fa fa-rupee"></i>
+                            </label>*@
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+
+                </tr>
+
+                @*<tr>
+                    <td>@Html.LabelFor(model => model.EffectiveDate)</td>
+                    <td>
+                        @Html.EditorFor(model => model.EffectiveDate, new { id = "EffectiveDate", @class = "DatePicker", })
+                        @Html.ValidationMessageFor(model => model.EffectiveDate)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td colspan="2" style="height:8px;"></td>
+                </tr>*@
+                @*<tr>
+                    <td>
+                        @Html.LabelFor(model => model.Status)
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.Status)
+                        @Html.ValidationMessageFor(model => model.Status)
+                    </td>
+
+                </tr>*@
+
+                @*<tr>
+                    <td>@Html.LabelFor(model => model.Mobile)</td>
+                    <td>
+                        @Html.EditorFor(model => model.Mobile)
+                        @Html.ValidationMessageFor(model => model.Mobile)
+                    </td>
+
+                </tr>*@
+                <tr>
+                    <td colspan="2" style="height:20px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" id="Submit" class="btn btn-primary" value="Send" onclick="submitForm()" />
+                        @*<button type="submit" id="btnUpdate" value="Send" onclick="submitForm()" class="btn btn-primary">
+                            <span class="ui-button-text">Send</span>
+                        </button>*@
+                    </td>
+                </tr>
+            </table>
+        </div>
+</fieldset>
+}

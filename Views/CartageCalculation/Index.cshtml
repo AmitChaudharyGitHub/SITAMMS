@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewBag.Title = "Cartage Re-Calculation";
+}
+
+<section id="content_wrapper" ng-app="myApp" ng-controller="myCtrl" class="myCtrlScope">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">@ViewBag.Title</span>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <select id="ddlProjects" class="form-control">
+                                            <option value="">Select Project</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select id="ddlVendor" class="form-control">
+                                            <option value="">Select Vendor</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select id="ddlPO" class="form-control">
+                                            <option value="">Select P.O</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select id="ddlMRN" class="form-control">
+                                            <option value="">Select MRN</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-md-1">
+                                        <input type="button" name="btn" value="Search" id="btnSearch" class="btn btn-primary" ng-click="GetData()" />
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div ng-show="Progress" class="text-center">
+                                            <img src="~/Images/Loading.gif" alt="LoadingImage" />
+                                        </div>
+
+
+                                        <div id="dataGrd">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</section>
+
+@section scripts{
+    <script type="text/javascript">
+        var projectUrl = '@Url.Action("BindProjectNew","POCloser")';
+        var BindVendor = '@Url.Action("BindVendor", "POCloser")';
+        var BindPO = '@Url.Action("GetPO")';
+        var BindMRN = '@Url.Action("GetMRN")';
+        var GetVar = '@Url.Action("GetString", "POCloser")';
+        var GetMRNData = '@Url.Action("MRNData")';
+    </script>
+
+
+    <script src="~/Scripts/Helpers/DropDownBinding.js"></script>
+    <script src="~/Scripts/Helpers/CommonFunctions.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindDdl('#ddlProjects', projectUrl, {}, 'Project', true);
+            $(document).on('change', '#ddlProjects', function () {
+                if ($(this).val() != '')
+                    BindDdl('#ddlVendor', BindVendor, { ProjectId: $('#ddlProjects option:selected').val() }, 'Vendor', true);
+                else
+                    ClearDdl('#ddlVendor', 'Vendor');
+            });
+
+            $('#ddlVendor').change(function () {
+                if ($(this).val() != '')
+                    BindDdl('#ddlPO', BindPO, { ProjectId: $('#ddlProjects').val(), VendorId: $('#ddlVendor').val() }, 'P.O', true);
+                else
+                    ClearDdl('#ddlPO', 'P.O');
+            });
+
+            $('#ddlPO').change(function () {
+                if ($(this).val() != '')
+                    BindDdl('#ddlMRN', BindMRN, { TypeId: 2, ProjectId: $('#ddlProjects').val(), VendorId: $('#ddlVendor').val(), PO: $('#ddlPO').val() }, 'MRN', true);
+                else
+                    ClearDdl('#ddlMRN', 'MRN');
+            });
+
+            var app = angular.module('myApp', []);
+            app.controller('myCtrl', function ($scope) {
+                $scope.Progress = false;
+                
+                $scope.GetData = function () {
+                    debugger;
+                    var projectId = $('#ddlProjects option:selected').val();
+                    var vendorid = $('#ddlVendor option:selected').val();
+                    var pono = $('#ddlPO').val();
+                    var mrn = $('#ddlMRN').val();
+
+                    if (projectId == '') {
+                        alert('Please select Project');
+                        return false;
+                    }
+
+                    if (vendorid == '') {
+                        alert('Please select Vendor');
+                        return false;
+                    }
+
+                    if (pono == '') {
+                        alert('Please select P.O');
+                        return false;
+                    }
+
+                    if (mrn == '') {
+                        alert('Please select MRN');
+                        return false;
+                    }
+                    $scope.Progress = true;
+                    $.ajax({
+                        url: GetMRNData,
+                        data: { MRN: mrn },
+                        success: function (response) {
+                            $('#dataGrd').html('');
+                            $('#dataGrd').html(response);
+                            $scope.Progress = false;
+                            $scope.$apply();
+                        }
+                    });
+                }
+
+
+            });
+
+            $(document).on('click', '.edit', function () {
+                var id = $(this).data('val');
+                if ($('#cartageType_' + id).data('val') == 3 || $('#cartageType_' + id).data('val') == 5) {
+                    $('#lbl_' + id).addClass('hide');
+                    $('#txt_' + id).removeClass('hide');
+                    $('#remark_' + id).removeClass('hide');
+                    $('#THremark').removeClass('hide');
+                    
+                    $(this).addClass('hide');
+                    $('#btnUpdate_' + id).removeClass('hide');
+                } else {
+                    alert('You can edit cartage for Lumpsum or Extra as Actual only.');
+                }
+            });
+            $(document).on('click', '.update', function () {
+                var id = $(this).data('val');
+                $('#txt_' + id).closest('td').css('border', '0px solid red');
+                $('#lblRemark_' + id).closest('td').css('border', '0px solid red');
+
+                if ($('#txt_' + id).val() == '') {
+                    alert('Please enter amount to update.');
+                    $('#txt_' + id).closest('td').css('border', '2px solid red');
+                    return false;
+                }
+
+                if ($('#lblRemark_' + id).val() == '') {
+                    alert('Please enter remark to update.');
+                    $('#remark_' + id).closest('td').css('border', '2px solid red');
+                    return false;
+                }
+
+               
+
+                $('#lbl_' + id).removeClass('hide');
+                $('#txt_' + id).addClass('hide');
+                $('#remark_' + id).addClass('hide');
+                $('#THremark').addClass('hide');
+                $(this).addClass('hide');
+                $('#btnEdit_' + id).removeClass('hide');
+                $('#txt_' + id).closest('td').css('border', '0px solid red');
+                $('#remark_' + id).closest('td').css('border', '0px solid red');
+               
+
+                $.post('@Url.Action("SaveCartage")', { Uid: id, CartageTypeId: $('#cartageType_' + id).data('val'), CartageAmt: $('#txt_' + id).val(), Remark: $('#lblRemark_' + id).val() }, function (response) {
+                    if (response.Status == 1) {
+                        alert('Data Updated successfully.');
+                        angular.element(('.myCtrlScope')).scope().GetData();
+                    }
+                    else {
+                        alert('Data not updated.');
+                    }
+                });
+            });
+        });
+
+    </script>
+    <script src="~/Scripts/Helpers/AngularJs_1.7.7.js"></script>
+
+}

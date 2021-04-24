@@ -1,0 +1,244 @@
+﻿
+@model MMS.Models.VendorDebitNoteViewModel
+@{
+    ViewBag.Title = "Edit Vendor Debit Note";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    Layout = layout;
+}
+
+<script type="text/javascript">
+
+</script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Script/VendorDebitNote.js"></script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <form id="frmDebitNoteData" method="post" action="/VendorDebitNote/SaveDebitNote">
+                    <div class="admin-form theme-primary">
+                        <!-- Begin: Content Header -->
+                        <!-- Begin: Admin Form -->
+                        <div class="form-headerStyle theme-primary">
+
+                            <div class="panel heading-border">
+                                <div class="panel-body bg-light">
+                                    <div class="section-divider mb40" id="spy1">
+                                        <span style="color:#4a89dc">Vendor Debit Note</span>
+                                    </div>
+                                    <!-- .section-divider -->
+                                    <!-- Basic Inputs -->
+
+                                    <div class="form-horizontal">
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><strong>Project Name & Adddress</strong></th>
+                                                            <th><strong>GST No.</strong></th>
+                                                            <th><strong>Vendor Name and Address</strong></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>@ViewBag.ProjectName<br />@ViewBag.SiteAddress</td>
+                                                            <td>@ViewBag.GSTNo</td>
+                                                            <td>@ViewBag.VendorName <br /> @ViewBag.VendorAddress</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><strong>PO No.</strong></th>
+                                                            <th><strong>PO Date</strong></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><label id="PONo">@ViewBag.PONo</label></td>
+                                                            <td><label id="PODate">@ViewBag.PODate</label></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="col-md-3">
+                                                    <input type="text" id="txtDebitNoteDate1" value="@ViewBag.DebitNoteDate" class="form-control" readonly="readonly" placeholder="Select Debit Note Date" />
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="text" id="txtDebitNoteNo" value="@ViewBag.DebitNoteCode" class="form-control" readonly="readonly" placeholder="Debit Note No." />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <br /><br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @Html.Partial("_ItemCalculationView", Model.Items)
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div id="formdata">
+
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <td class="col-md-2"> Total Rate  </td>
+                                                <td class="col-md-2"> Sum Of Total  </td>
+                                                <td class="col-md-2"> Sum Of Packing Charges  </td>
+                                                <td class="col-md-2"> Sum of Cartage  </td>
+                                                <td class="col-md-2">Sum of Sub Total 1 </td>
+                                                <td class="col-md-2"> Sum of Insurance  </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyTotalAmountCalculation">
+                                            <tr>
+                                                <td class="col-md-2"> @Html.TextBox("Total_Rate",Model.TotalCalculation.TotalRate, new { id = "Total_Rate", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfTotal", Model.TotalCalculation.Total, new { id = "SumOfTotalVal", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfPacking", Model.TotalCalculation.SumOfPacking, new { id = "SumOfPackingCharge", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfCartageAmt", Model.TotalCalculation.SumOfCartageAmt, new { id = "SumOfCartageAll1Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfSubTotal1", Model.TotalCalculation.SubTotal1, new { id = "SumOfSubTotalAll1Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfInsurance", Model.TotalCalculation.Total_Insurance, new { id = "SumOfInsuranceAmt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <td class="col-md-2"> Sum of Sub Total 2  </td>
+                                                <td class="col-md-2"> Sum Of CGST  </td>
+                                                <td class="col-md-2"> Sum Of SGST/UTGST  </td>
+                                                <td class="col-md-2"> Sum Of IGST </td>
+                                                <td class="col-md-2"> Sum of Total GST  </td>
+                                                <td class="col-md-2"> Sum of Gross Amount  </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfTotalSub2", Model.TotalCalculation.SubTotal2, new { id = "SumOf_total_Sub_2", @class = "form-control gui-input required", @readonly = "readonly" })</td>
+                                                <td class="col-md-2"> @Html.TextBox("Total_SumOf_CGST", Model.TotalCalculation.Total_CGST, new { id = "Total_SumOf_CGST", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfTotalSGST/UTGST", Model.TotalCalculation.Total_SGSTAndUTGST, new { id = "SumOfSGSTAndUTGST_Amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfIGST", Model.TotalCalculation.Total_IGST, new { id = "SumOf_IGST_Amt", @class = "form-control gui-input required", @readonly = "readonly" })   </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfTotalGSTAmt", Model.TotalCalculation.Total_Taxable, new { id = "SumOfAll_GST_amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                                <td class="col-md-2"> @Html.TextBox("SumOfAllGrossTotal", Model.TotalCalculation.GrandTotal, new { id = "SumOfAll_Gross_Total_amt", @class = "form-control gui-input required", @readonly = "readonly" }) </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table">
+                                    <tr>
+                                        <td width="80">Send To</td>
+                                        <td>
+                                            <label class="field select" style="width:200px;">
+                                                @Html.DropDownList("Employee", null, htmlAttributes: new { @id = "SendTo", @class = "form-control" })
+                                                <i class="arrow"></i>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+                     
+                        <div class="col-md-12">
+                            @*<input  type="button" value="test" id="test_myval_nowtst" />*@
+
+                            <input type="button" class="btn btn-danger" value="Calculate" onclick="RateSum()" />
+
+                            <input type="button" class="btn btn-primary" value="Update" id="btnUpdate" />
+                            @*<input type="button" name="sr1" value="Click Here" onClick="testSkill()" />*@
+                            <div style="visibility:hidden;" id="container"></div>
+                            @*@Html.ActionLink("Print PO Slip", "Index", "Print_PO_Slip", null, new { @class = "btn btn-system" })*@
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+
+
+
+    </section>
+    <!-- End: Content -->
+</section>
+
+<div class="modal fade" id="loadingModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="~/Images/36.gif" />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1045 @@
+﻿
+@{
+    ViewBag.Title = "AddUser";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+  
+}
+
+<style>
+    .Hide {
+        display:none
+    }
+</style>
+
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+<script>
+    $(function () {
+        $("#txtDateofJoining").datepicker(
+            {
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-60:+0" ,
+            }
+            );
+        $("#txtDateofBirth").datepicker();
+       
+    });
+</script>
+
+
+
+<script type="text/javascript">
+    var ss = @Html.Raw(Json.Encode(ViewBag.EmpId));
+    var GetProjectByEmpId = '@Url.Action("GetProjectByEmpId","tblItemMasters")';
+    var GetUserType = '@Url.Action("GetUserType", "AddProject")';
+    var GetDept = '@Url.Action("GetUserDept", "AddProject")';
+    var GetDesig = '@Url.Action("GetUserDesig", "AddProject")';
+    var GetReptortingTo = '@Url.Action("GetReportingTo", "AddProject")';
+    var GetCountry = '@Url.Action("GetCountry", "AddProject")';
+    var GetState = '@Url.Action("GetState", "AddProject")';
+    var  GetCityList = '@Url.Action("GetCity", "AddProject")';
+    var SaveUser  = '@Url.Action("SaveUser", "AddProject")';
+
+    var RedUr  =  '@Url.Action("UserList", "AddProject")';
+
+</script>
+
+
+<script type="text/javascript">
+
+
+
+    $(document).ready(function () {
+
+        window['GetPrj'] = function (dateString) {
+
+            $.ajax({
+                type: 'POST',
+                url: GetProjectByEmpId, // Calling json method
+
+                dataType: 'json',
+                data: { E: ss },
+                complete: function () {
+
+                },
+                success: function (result) {
+                    var procemessage = "<option value='0'> Please wait...</option>";
+                    $("#Projects").html(procemessage).show();
+                    var markup = "<option value='0'>Select Project</option>";
+                    $("#Projects").html(markup).show();
+                    result = $.parseJSON(result)
+
+                    var selectedDeviceModel = $('#Projects');
+                    $.each(result, function (index, item) {
+                        selectedDeviceModel.append(
+                            $('<option/>', {
+                                value: item.Value,
+                                text: item.Text
+                            })
+                        );
+                    });
+
+                   // $("#Projects").prop('selectedIndex', 1).trigger('change');
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Project.' + ex);
+                }
+            });
+            return false;
+        };
+        GetPrj();
+
+
+
+
+    });
+
+    $(document).ready(function()
+    {
+
+        $(window).load(function () {
+
+            $.ajax({
+                type: 'Get',
+                url: GetUserType, // Calling json method
+                success: function (data) {
+
+
+                    $.each(data, function (i, itname) {
+                        $("#ddlUserType").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+
+
+                    });
+
+
+
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve User Type.' + ex);
+                }
+            });
+
+            debugger;
+            $.ajax({
+
+                type: 'Get',
+                url: GetDept,
+                success: function (data) {
+                    $.each(data, function (i, itname) {
+
+                        $("#ddlDepartment").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Department.' + ex);
+                }
+
+            });
+
+            $.ajax({
+
+                type: 'Get',
+                url: GetReptortingTo,
+                success: function (data) {
+                    $.each(data, function (i, itname) {
+
+                        $("#ddlReportingTo").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Reporting To.' + ex);
+                }
+
+            });
+
+
+            $.ajax({
+
+                type: 'Get',
+                url: GetCountry,
+                success: function (data) {
+                    $.each(data, function (i, itname) {
+
+                        $("#ddlCountry").append('<option value="' + itname.Value + '">' +
+                             itname.Text + '</option>');
+
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve Country.' + ex);
+                }
+
+            });
+
+
+        });
+
+
+        $("#ddlDepartment").change(function () {
+            $("#ddlDesignation").empty();
+            $("#ddlDesignation").append($("<option></option").val("").html("Select Designation"));
+            if ($('#ddlDepartment option:selected').val() != 0) {
+                $.ajax({
+
+                    type: 'POST',
+                    url: GetDesig,
+                    dataType: 'json',
+                    data: { DeptId: $("#ddlDepartment").val() },
+                    success: function (data) {
+
+                        $.each(data, function (i, itname) {
+                            $("#ddlDesignation").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+
+
+                        });
+
+                    }
+
+                })
+            }
+        });
+
+        $("#ddlCountry").change(function () {
+            $("#ddlState").empty();
+            $("#ddlState").append($("<option></option").val("").html("Select State"));
+            if ($('#ddlCountry option:selected').val() != 0) {
+                $.ajax({
+
+                    type: 'POST',
+                    url: GetState ,
+                    dataType: 'json',
+                    data: { CountryID: $("#ddlCountry").val() },
+                    success: function (data) {
+
+                        $.each(data, function (i, itname) {
+                            $("#ddlState").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+
+
+                        });
+
+                    }
+
+                })
+            }
+        });
+
+        $("#ddlState").change(function () {
+            $("#ddlCity").empty();
+            $("#ddlCity").append($("<option></option").val("").html("Select City"));
+            if ($('#ddlState option:selected').val() != 0) {
+                $.ajax({
+
+                    type: 'POST',
+                    url: GetCityList,
+                    dataType: 'json',
+                    data: { StateId: $("#ddlState").val() },
+                    success: function (data) {
+
+                        $.each(data, function (i, itname) {
+                            $("#ddlCity").append('<option value="' + itname.Value + '">' +
+                                 itname.Text + '</option>');
+
+
+
+                        });
+
+                    }
+
+                })
+            }
+        });
+
+
+        $('#txtConfirmPassword').on('keyup', function () {
+            if ($(this).val() == $('#txtPassword').val()) {
+                $('#message').html('matching').css('color', 'green');
+                $('#message').hide();
+            } else $('#message').html('not matching').css('color', 'red');
+        });
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveUser;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+
+                        window.location.href = RedUr;
+
+                    } else if (json.Status == "2")
+                    {
+                        alert("Name already exist.");
+                    } else if (json.Status == "3")
+                    {
+                        alert("Server problem")
+                    } else if (json.Status == "4")
+                    {
+                        alert("Problem in saving record.");
+                    }
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+        
+     
+
+
+        function gridToArray() {
+            var obj = new Object();
+
+            
+
+          
+
+            obj.FName = $("#txtFirstName").val();
+            obj.LName = $("#txtLastName").val();
+            obj.OfficialEmpID = $("#txtEmployeeID").val();
+            obj.MobileNo = $("#txtMobileNo").val();
+            obj.DOJ = $("#txtDateofJoining").val();
+            obj.DateOfBirth = $("#txtDateofBirth").val();
+            obj.Address = $("#txtAddress").val();
+            obj.ZipCode = $("#txtZIPCode").val();
+            obj.Email = $("#txtEmail").val();
+            obj.AltEmail = $("#txtAltEmail").val();
+            obj.Password = $("#txtPassword").val();
+          //  obj.ProjectName = $("#txtConfirmPassword").val();
+
+            obj.EmpType = $("#ddlEmployeeType option:selected").text();
+            obj.DeptID = $("#ddlDepartment option:selected").val();
+            obj.DesgID = $("#ddlDesignation option:selected").val();
+            obj.ReportingTo = $("#ddlReportingTo option:selected").val();
+            obj.Country = $("#ddlCountry option:selected").val();
+            obj.State = $("#ddlState option:selected").val();
+            obj.City = $("#ddlCity option:selected").val();
+            obj.AccountType = $("#ddlUserType option:selected").val();
+           // obj.ProjectID = $("#Projects option:selected").val();
+            obj.PRID = $("#PRJID").val();
+            obj.TypeName = $("#ddlType option:selected").text();
+            obj.PurType =$("#PurType").val();
+
+            return obj;
+
+        }
+
+        function Valid() { debugger;
+
+            var FName = $("#txtFirstName").val();
+            var LName = $("#txtLastName").val();
+            var OfficialEmpID = $("#txtEmployeeID").val();
+            var MobileNo = $("#txtMobileNo").val();
+            var DOJ = $("#txtDateofJoining").val();
+            var DateOfBirth = $("#txtDateofBirth").val();
+            var Address = $("#txtAddress").val();
+            var ZipCode = $("#txtZIPCode").val();
+            var Email = $("#txtEmail").val();
+            
+            var Password = $("#txtPassword").val();
+
+
+            var EmpType = $("#ddlEmployeeType option:selected").val();
+            var DeptID = $("#ddlDepartment option:selected").val();
+            var DesgID = $("#ddlDesignation option:selected").val();
+            var ReportingTo = $("#ddlReportingTo option:selected").val();
+            var Country = $("#ddlCountry option:selected").val();
+            var State = $("#ddlState option:selected").val();
+            var City = $("#ddlCity option:selected").val();
+            var AccountType = $("#ddlUserType option:selected").val();
+            var PRID = $("#PRJID option:selected").val();
+            var PurType =$("#PurType option:selected").val();
+
+           
+
+            var rr = true;
+            if (FName == "") {
+                alert('Enter First Name.');
+                $('#txtFirstName').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtFirstName').css('border-color', '');
+            }
+
+            if (LName == "") {
+                alert('Enter the Last Name.');
+                $('#txtLastName').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtLastName').css('border-color', '');
+            }
+
+
+            if (OfficialEmpID == "") {
+                alert('Enter the Official Emp ID.');
+                $('#txtEmployeeID').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtEmployeeID').css('border-color', '');
+            }
+
+
+            if (MobileNo == "") {
+                alert('Enter the Mobile No.');
+                $('#txtMobileNo').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtMobileNo').css('border-color', '');
+            }
+
+
+            if (DOJ == "") {
+                alert('Enter Date of Joining.');
+                $('#txtDateofJoining').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtDateofJoining').css('border-color', '');
+            }
+
+
+            if (Address == "") {
+                alert('Enter Address.');
+                $('#txtAddress').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtAddress').css('border-color', '');
+            }
+
+           
+
+
+            if (Email == "") {
+                alert('Enter Email-ID.');
+                $('#txtEmail').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtEmail').css('border-color', '');
+            }
+
+
+           
+
+            if (Password == "") {
+                alert('Enter Password.');
+                $('#txtPassword').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtPassword').css('border-color', '');
+            }
+
+
+            if (EmpType == "") {
+
+                alert('Select Employee.');
+                $('#ddlEmployeeType').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlEmployeeType').css('border-color', '');
+            }
+
+
+
+            if (DeptID == "") {
+                alert('Select the Department.');
+                $('#ddlDepartment').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlDepartment').css('border-color', '');
+            }
+
+
+
+            if (DesgID == "") {
+                alert('Select the Designation.');
+                $('#ddlDesignation').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlDesignation').css('border-color', '');
+            }
+
+
+            if (ReportingTo == "") {
+                alert('Select Reporting To.');
+                $('#ddlReportingTo').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlReportingTo').css('border-color', '');
+            }
+
+
+
+
+            if (Country == "") {
+                alert('Select the Country.');
+                $('#ddlCountry').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlCountry').css('border-color', '');
+            }
+
+
+
+            if (State == "") {
+                alert('Select the State.');
+                $('#ddlState').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlState').css('border-color', '');
+            }
+
+
+
+
+            if (City == "") {
+                alert('Select the City.');
+                $('#ddlCity').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlCity').css('border-color', '');
+            }
+
+
+
+            if (AccountType == "") {
+                alert('Select the Account Type');
+                $('#ddlUserType').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlUserType').css('border-color', '');
+            }
+
+
+            if (PRJID == "0" || PRJID == "") {
+                $('#PRJID').css('border-color', '#f0551b');
+                alert("Select Project");
+                rr = false;
+            }
+            else {
+                $('#PRJID').css('border-color', '');
+
+            }
+
+
+            if (PurType == "0" || PurType == "") {
+                $('#PurType').css('border-color', '#f0551b');
+                alert("Select Project");
+                rr = false;
+            }
+            else {
+                $('#PurType').css('border-color', '');
+
+            }
+
+
+
+            if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+        $("#ddlUserType").change(function () {
+            if($("#ddlUserType option:selected").val() == 2)
+            {
+               
+               // $("#ddlType").append($("<option></option").val("").html("Select Type"));
+                $("#ddlType").hide();
+            }
+            else{
+                $("#ddlType").show();
+            }
+        })
+
+        
+
+
+    });
+
+
+</script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".multiselect").multiselect({
+            includeSelectAllOption: true,
+            buttonWidth: '100%'
+        });
+    });
+</script>
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">User Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("FirstName", null, new { id = "txtFirstName", @class = "form-control gui-input", @placeholder = "First Name" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("LastName", null, new { id = "txtLastName", @class = "form-control gui-input", @placeholder = "Last Name" })
+                                                            <label for="lastname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("EmployeeID", null, new { id = "txtEmployeeID", @class = "form-control gui-input", @placeholder = "Employee ID" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @*@Html.DropDownList("EmployeeType", new SelectList(string.Empty, "Value", "Text"), "Select Employee Type", htmlAttributes: new { @id = "ddlEmployeeType", @class = "form-control" })*@
+                                                            @Html.DropDownList("EmployeeType", (IEnumerable<SelectListItem>)ViewBag.EmployeeType, htmlAttributes: new { @id = "ddlEmployeeType", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Department", new SelectList(string.Empty, "Value", "Text"), "Select Department", htmlAttributes: new { @id = "ddlDepartment", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Designation", new SelectList(string.Empty, "Value", "Text"), "Select Designation", htmlAttributes: new { @id = "ddlDesignation", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Reporting To", new SelectList(string.Empty, "Value", "Text"), "Select Reporting To", htmlAttributes: new { @id = "ddlReportingTo", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Mobile No", null, new { id = "txtMobileNo", @class = "form-control gui-input", @placeholder = "Contact No." })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Date of Joining",  null, new { id = "txtDateofJoining", @class = "form-control gui-input", @placeholder = "Date of Joining" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Date of Birth", null, new { id = "txtDateofBirth", @class = "form-control gui-input", @placeholder = "Date of Birth" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Address", null, new { id = "txtAddress", @class = "form-control gui-input", @placeholder = "Address" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Country", new SelectList(string.Empty, "Value", "Text"), "Select Country", htmlAttributes: new { @id = "ddlCountry", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("State", new SelectList(string.Empty, "Value", "Text"), "Select State", htmlAttributes: new { @id = "ddlState", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("City", new SelectList(string.Empty, "Value", "Text"), "Select City", htmlAttributes: new { @id = "ddlCity", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row">
+
+                                               <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ZIP Code", null, new { id = "txtZIPCode", @class = "form-control gui-input", @placeholder = "ZIP Code" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("User Type", new SelectList(string.Empty, "Value", "Text"), "Select User Type", htmlAttributes: new { @id = "ddlUserType", @class = "form-control" })
+                                                      
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <div class="row">
+                                                 <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("E-mail", null, new { id = "txtEmail", @class = "form-control gui-input", @placeholder = "E-mail" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Alt-Email", null, new { id = "txtAltEmail", @class = "form-control gui-input", @placeholder = "Alt. Email" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.Password("Password", null, new { id = "txtPassword", @class = "form-control gui-input", @placeholder = "Password" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.Password("Confirm Password", null, new { id = "txtConfirmPassword", @class = "form-control gui-input", @placeholder = "Confirm Password" })
+                                                            <span id='message'></span>
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    
+                                                    @Html.DropDownList("PRJID", null, null, htmlAttributes: new
+                                                                    {
+                                                                        @id = "PRJID",
+                                                                        @class = "form-control multiselect",
+                                                                        multiple = "multiple"
+                                                                    })
+
+
+
+                                                    @*<div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Project Assign", new SelectList(string.Empty, "Value", "Text"), "Select Project Assign", htmlAttributes: new { @id = "Projects", @class = "form-control" })
+
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>*@
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+
+                                                            @Html.DropDownList("Type", (IEnumerable<SelectListItem>)ViewBag.TypeObj, htmlAttributes: new { @id = "ddlType", @class = "Hide form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                
+
+                                               
+
+
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    @Html.DropDownList("PurType", null, null, htmlAttributes: new { @id = "PurType", @class = "form-control multiselect", multiple = "multiple" })
+                                                </div>
+                                                <div class="col-md-6">
+
+
+                                                    
+
+                                                </div>
+
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+                                                    @*<input type="button" id="btnsave" class="btn btn-primary" value="Create" />*@
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save User Detail" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

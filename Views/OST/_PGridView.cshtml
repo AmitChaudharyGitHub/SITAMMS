@@ -1,0 +1,44 @@
+﻿@model MMS_P.ViewModels.PagedOSTMasterModel
+@{
+    ViewBag.Title = "_GridView";
+    Layout = null;
+}
+
+    <div id="myPager" style="margin-top:17px;">
+        @{
+            var grid = new WebGrid(
+                            canPage: true,
+                            rowsPerPage: Model.PageSize,
+                            canSort: true,
+                            ajaxUpdateContainerId: "grid");
+
+            grid.Bind(Model.Master, rowCount: Model.TotalRows, autoSortAndPage: false);
+            grid.Pager(WebGridPagerModes.All);
+
+            @grid.GetHtml(htmlAttributes: new { id = "grid" },   
+            fillEmptyRows: false,
+            tableStyle: "table table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            columns: grid.Columns(
+                                    grid.Column(String.Format("{0:MM/dd/yyyy}", "TransferDocumentnoDate"), header: "Date"),
+                                    grid.Column("TransferDocumentnoNo", header: "TransferDocumentno No."),
+                                    grid.Column("DispatchSiteName", header: "Dispatch Site"),
+                                    grid.Column("ReceiveSiteName", header: "Receive Site"),
+                                    grid.Column("ChallanNo", header: "Challan No."),
+                                    grid.Column("VehicleNo", header: "Vehicle No."),
+                                    grid.Column("GrandTotal", header: "Amount"),
+                                               
+                                              grid.Column(header: "Action", canSort: false, style: "action",
+                                                format: @<text>
+                                              
+        <a data-modal='' href='@Url.Action("Details", "GateEntries", new { id = item.UId })' id='@item.UId' title='Detail'> <span class='glyphicon glyphicon-search'> </span> </a>
+        <a data-modal='' href='@Url.Action("Edit", "GateEntries", new { id = item.UId })' id='@item.UId' title='Edit'> <span class='glyphicon glyphicon-edit'> </span> </a>
+      
+                                                   </text>)
+
+                                                                                                                                            ));
+        }
+
+
+    </div>
+

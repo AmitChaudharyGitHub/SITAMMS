@@ -1,0 +1,249 @@
+﻿@model BusinessObjects.Entity.tblVendorMaster
+
+@{
+    ViewBag.Title = "Delete";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    layout = Request.IsAjaxRequest() ? null : layout;
+    Layout = layout;
+}
+
+<style type="text/css">
+    dt {
+        color: #5D9CEC;
+    }
+</style>
+
+@if (!Request.IsAjaxRequest())
+{
+    <section id="content_wrapper">
+
+        <section id="content" class="table-layout animated fadeIn">
+
+
+            <div class="tray tray-center">
+
+                <div class="mw1000 center-block">
+
+
+                    <div class="admin-form">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <form method="post" action="#" id="form-ui">
+                                    <div class="section-divider mb40" id="spy1">
+                                        <span>Vendor Master</span>
+                                    </div>
+
+                                    <div class="row">
+                                        <h3 class="text-danger">Are you sure you want to delete this?</h3>
+                                        <div>
+
+                                            <hr />
+                                            <table class="table table-bordered" style="text-align:left">
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.tblRegistrationType.RegistrationType)</td>
+                                                    <td>@Html.DisplayFor(model => model.MulRegistrationType)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.PRJID)</td>
+                                                    <td>@Html.DropDownList("ProjectNames", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.Name)</td>
+                                                    <td>@Html.DisplayFor(model => model.Name)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.Address)</td>
+                                                    <td>@Html.DisplayFor(model => model.Address)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.Country)</td>
+                                                    <td>@Html.DisplayFor(model => model.Country)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.State)</td>
+                                                    <td>@Html.DisplayFor(model => model.State)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.City)</td>
+                                                    <td>@Html.DisplayFor(model => model.City)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.MobileNo)</td>
+                                                    <td>@Html.DisplayFor(model => model.MobileNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.Email)</td>
+                                                    <td>@Html.DisplayFor(model => model.Email)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.Status)</td>
+                                                    <td>@Html.DisplayFor(model => model.Status)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.PanNo)</td>
+                                                    <td>@Html.DisplayFor(model => model.PanNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.TinNo)</td>
+                                                    <td>@Html.DisplayFor(model => model.TinNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.PinCode)</td>
+                                                    <td>@Html.DisplayFor(model => model.PinCode)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.ServiceTaxNo)</td>
+                                                    <td>@Html.DisplayFor(model => model.ServiceTaxNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.PhoneNo)</td>
+                                                    <td>@Html.DisplayFor(model => model.PhoneNo)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>@Html.DisplayNameFor(model => model.BlackListStatus)</td>
+                                                    <td>@Html.DisplayFor(model => model.BlackListStatus)</td>
+                                                </tr>
+                                            </table>
+
+                                            <br/>
+                                           @Html.AntiForgeryToken()
+                                        <div class="form-actions no-color">
+                                            @Html.Hidden("id", Model.TransID)
+                                            <input type="submit" value="Delete" class="btn btn-danger" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                                            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-system" })
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="section-divider mt40 mb25" id="spy5">
+                                        <span></span>
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+}
+else
+{
+    <div class="admin-form">
+
+        <div class="panel heading-border">
+            <div class="panel-body bg-light">
+                <div action="#" id="form-ui">
+                  
+                    <div class="row">
+                        <h3 class="text-danger">Are you sure you want to delete this?</h3>
+                        <div>
+
+                            <hr />
+
+                            <table class="table table-bordered" style="text-align:left">
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.tblRegistrationType.RegistrationType)</td>
+                                    <td>@Html.DisplayFor(model => model.MulRegistrationType)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.PRJID)</td>
+                                    <td>@Html.DropDownList("ProjectNames", null, new { style = "height:50px; width:400px", multiple = "true", @class = "form-control" })</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.Name)</td>
+                                    <td>@Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.Address)</td>
+                                    <td>@Html.DisplayFor(model => model.Address)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.Country)</td>
+                                    <td>@Html.DisplayFor(model => model.Country)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.State)</td>
+                                    <td>@Html.DisplayFor(model => model.State)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.City)</td>
+                                    <td>@Html.DisplayFor(model => model.City)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.MobileNo)</td>
+                                    <td>@Html.DisplayFor(model => model.MobileNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.Email)</td>
+                                    <td>@Html.DisplayFor(model => model.Email)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.Status)</td>
+                                    <td>@Html.DisplayFor(model => model.Status)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.PanNo)</td>
+                                    <td>@Html.DisplayFor(model => model.PanNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.TinNo)</td>
+                                    <td>@Html.DisplayFor(model => model.TinNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.PinCode)</td>
+                                    <td>@Html.DisplayFor(model => model.PinCode)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.ServiceTaxNo)</td>
+                                    <td>@Html.DisplayFor(model => model.ServiceTaxNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.PhoneNo)</td>
+                                    <td>@Html.DisplayFor(model => model.PhoneNo)</td>
+                                </tr>
+                                <tr>
+                                    <td>@Html.DisplayNameFor(model => model.BlackListStatus)</td>
+                                    <td>@Html.DisplayFor(model => model.BlackListStatus)</td>
+                                </tr>
+                            </table>
+
+                          
+
+                            <form method="post" action="/tblVendorMasters/Delete">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id",Model.TransID)
+                                <div class="form-actions no-color">
+                                    <input type="submit" value="Delete" class="btn btn-danger" /> &nbsp;&nbsp;&nbsp;&nbsp;
+                                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-system" })
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="section-divider mt40 mb25" id="spy5">
+                        <span></span>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+

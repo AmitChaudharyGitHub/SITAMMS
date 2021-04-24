@@ -1,0 +1,586 @@
+﻿@model List<MMS.ViewModels.GetPOCalculation>
+@{
+    ViewBag.Title = "PO Details";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    Layout = layout;
+}
+<style>
+    .disabled {
+        border: 1px solid #808080;
+    }
+    .table th,td
+    {
+        padding:5px !important;
+        font-size:12px !important;
+    }
+    .form-control{
+        font-size:12px !important;
+    }
+
+    #myPanel .panel{
+        padding:1px !important;
+    }
+
+</style>
+
+
+<section id="content_wrapper" ng-app="myApp" ng-controller="myCtrl">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                      <div id="myPanel">
+                          <div class="panel heading-border">
+                              <div class="panel-body bg-light">
+                                  <div class="section-divider mb40" id="spy1">
+                                      <span style="color:#4a89dc">PO Details</span>
+                                  </div>
+                                  <br />
+
+
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <div class="well">
+                                              <table class="table table-bordered">
+                                                  <tr>
+                                                      <td>P.O No. <strong id="PoNO"><a href="javascript:void(0)" class="viewPo">@ViewBag.PoNo</a></strong></td>
+                                                      <td>P.I No. <strong id="PoNO">@ViewBag.PI</strong></td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>Vendor Name: <strong>@ViewBag.VendorName</strong></td>
+                                                      <td>Vendor Address: <strong>@ViewBag.VendorAddress</strong></td>
+                                                  </tr>
+                                              </table>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <p class="text-danger" style="font-size:18px;">Note:- Updation will change the rate of received and issued stock of the P.O.</p><br />
+                                  <div class="row">
+                                      <div class="col-md-12">
+                                          <table class="table table-bordered" id="webgrid">
+                                              <tr>
+                                                  <th style="width:500px;"><strong>Item Name</strong></th>
+                                                  <th style="width:500px;"><strong>Unit</strong></th>
+                                                  <th></th>
+                                              </tr>
+
+                                          </table>
+                                          @foreach (var item in Model)
+                                          {
+                                              <div class="panel panel-default">
+                                                  <div class="panel-body">
+                                                      <div class="row">
+                                                          <div class="col-md-11">
+                                                              <div data-toggle="collapse" href="#collapse_@(item.UId)">
+                                                                  <table class="table table-bordered">
+                                                                      <tr>
+                                                                          <td style="width:500px;"><h4>@(item.ItemName)</h4></td>
+                                                                          <td style="width:500px;">@(item.UnitName)</td>
+                                                                          <td colspan="3">&nbsp;</td>
+                                                                      </tr>
+                                                                  </table>
+                                                              </div>
+                                                          </div>
+                                                          <div class="col-md-1">
+                                                              <input type="checkbox" class="checkbox" name="name" id="@(item.UId)" value="" />
+                                                          </div>
+
+                                                      </div>
+
+
+                                                      <div id="collapse_@(item.UId)" class="panel-collapse collapse">
+                                                          <table class="table" style="font-size:12px; padding:0px">
+                                                              <tr>
+                                                                  <th>Qty</th>
+                                                                  <th>Rate</th>
+                                                                  <th>Discount %</th>
+                                                                  <th>Amount (After Discount)</th>
+                                                                  <th>P&F Chrg. %</th>
+                                                                  <th>P&F Amt.</th>
+                                                                  <th>Cartage Type</th>
+                                                                  <th>Cartage Type Rate</th>
+                                                                  <th>Cartage Amt.</th>
+                                                                  <th>Insurance (%)</th>
+                                                                  <th>Insurance Amt.</th>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td><input type="text" id="qty_@item.UId" class="form-control" style="width:80px;" disabled name="name" value="@item.Qty" /> </td>
+                                                                  <td><input type="text" id="rate_@item.UId" class="form-control decimalNumber disabled" style="width:90px;" name="name" value="@item.Rate" /></td>
+                                                                  <td><input type="text" id="discountPer_@item.UId" class="form-control decimalNumber disabled" style="width:80px;" autocomplete="off" name="name" value="@item.Discount" /></td>
+                                                                  <td><input type="text" id="totalAmount_@item.UId" class="form-control decimalNumber" style="width:90px;" disabled name="name" value="@item.Total" /></td>
+                                                                  <td><input type="text" id="packagePer_@item.UId" class="form-control decimalNumber disabled" style="width:80px;" name="name" value="@item.PackingChargesPercentage" /> </td>
+                                                                  <td><input type="text" id="packageAmt_@item.UId" class="form-control decimalNumber" style="width:80px;" disabled autocomplete="off" name="name" value="@item.PackingChargesAmount" /></td>
+                                                                  <td>
+                                                                      <select id="ddlCartageType_@item.UId" class="form-control disabled ddlCarType" data-val="@item.CartageTypeId">
+                                                                          <option value="">Select</option>
+                                                                      </select>
+                                                                  </td>
+                                                                  <td><input type="text" id="cartageRate_@item.UId" class="form-control decimalNumber disabled" style="width:80px;" autocomplete="off" name="name" value="@item.Cartage_rate" /></td>
+                                                                  <td><input type="text" id="cartageAmt_@item.UId" class="form-control decimalNumber" style="width:80px;" disabled name="name" value="@item.CartageAmount" /> </td>
+                                                                  <td><input type="text" id="insuranceRate_@item.UId" class="form-control decimalNumber disabled" style="width:80px;" autocomplete="off" name="name" value="@item.InsuranceRate" /> </td>
+                                                                  <td><input type="text" id="insuranceAmt_@item.UId" class="form-control decimalNumber" style="width:80px;" disabled name="name" value="@item.InsuranceAmount" /> </td>
+                                                              </tr>
+
+                                                              <tr>
+                                                                  <th>Taxable Amount</th>
+                                                                  <th>GST %</th>
+                                                                  <th>IGST (%)</th>
+                                                                  <th>CGST (%)</th>
+                                                                  <th>SGST / UTGST (%)</th>
+                                                                  <th>IGST Amt.</th>
+                                                                  <th>CGST Amt.</th>
+                                                                  <th>SGST / UTGST Amt.</th>
+                                                                  <th>Gross Amount</th>
+                                                                  <th colspan="2">Remarks</th>
+                                                              </tr>
+                                                              <tr>
+                                                                  <td><input type="text" id="taxableAmount_@item.UId" class="form-control" style="width:90px;" disabled name="name" value="@item.TaxableAmount" /> </td>
+                                                                  <td>
+                                                                      <select id="ddlGST_@item.UId" class="form-control disabled ddlGST" data-val="@item.TaxRateType">
+                                                                          <option value="">Select</option>
+                                                                      </select>
+                                                                  </td>
+                                                                  <td><input type="text" id="igstPercentage_@item.UId" class="form-control" style="width:80px;" name="name" value="@item.IGSTPercentage" disabled="disabled" /> </td>
+                                                                  <td><input type="text" id="cgstPercentage_@item.UId" class="form-control" style="width:80px;" name="name" value="@item.CGSTPercentage" disabled="disabled" /> </td>
+                                                                  <td><input type="text" id="sgstPercentage_@item.UId" class="form-control" style="width:80px;" name="name" value="@item.SGSTPercentage" disabled="disabled" /> </td>
+                                                                  <td><input type="text" id="igstAmt_@item.UId" class="form-control" style="width:80px;" disabled name="name" value="@item.IGSTAmount" /></td>
+                                                                  <td><input type="text" id="cgstAmt_@item.UId" class="form-control" style="width:90px;" disabled name="name" value="@item.CGSTAmount" /></td>
+                                                                  <td><input type="text" id="sgstAmt_@item.UId" class="form-control" style="width:90px;" disabled name="name" value="@item.SGSTAmount" /></td>
+                                                                  <td><input type="text" id="grossAmt_@item.UId" class="form-control" style="width:100px;" disabled name="name" value="@item.GrossAmount" /></td>
+                                                                  <td colspan="2">
+                                                                      <input type="text" id="remark_@item.UId" class="form-control disabled" style="width:200px;" name="name" />
+                                                                  </td>
+
+                                                              </tr>
+
+                                                          </table>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          }
+                                      </div>
+                                  </div>
+                                  <br />
+
+                                  <div class="text-right">
+                                      <div class="col-lg-12">
+                                          <input type="button" class="btn btn-danger" name="btn" value="Calculate" id="btnCalculate" />
+                                          <input type="button" name="btn" id="btnUpdate" class="btn btn-success" value="Update" />
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg" style="width:1100px;">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">P.O Detail</h4>
+                </div>
+                <div class="modal-body" id="modalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+@section scripts{
+    <script src="~/Scripts/Helpers/DropDownBinding.js?v=1.0"></script>
+    <script src="~/Scripts/Helpers/CommonFunctions.js"></script>
+    <script type="text/javascript">
+        var BindCartageType = '@Url.Action("BindCartageType", "POCalculation")';
+        BindGST = '@Url.Action("BindGST", "POCalculation")';
+
+        
+        $(document).ready(function () {
+            var objData = [];
+            
+            BindDdlWithFun('.ddlCarType', BindCartageType, {}, 'Cartage', function () {
+                $('.ddlCarType').each(function () {
+                    $(this).val($(this).data('val'));
+                });
+            });
+           
+
+            BindDdlWithFun('.ddlGST', BindGST, {}, 'GST', function () {
+                $('.ddlGST').each(function () {
+                    $(this).val($(this).data('val'));
+                });
+            });
+
+
+            $('.disabled').attr('disabled', 'disabled');
+
+            $('.checkbox').change(function () {
+                var id = $(this).attr('id');
+                if ($(this).prop('checked') == false) {
+                    $('#collapse_' + id + ' .disabled').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#collapse_' + id + ' .disabled').removeAttr('disabled');
+                }
+            });
+
+            $('#btnCalculate').click(CalculateItemWise);
+
+            $('#btnUpdate').click(UpdateItems);
+
+            $('[id^=rate_],[id^=discountPer_],[id^=packagePer_],[id^=ddlCartageType_],[id^=cartageRate_],[id^=insuranceRate_],[id^=ddlGST_],[id^=cartageAmt_],[id^=cartageRate_]')
+                .change(function () {
+
+                var id = $(this).attr('id').split('_')[1];
+                Calculate(id);
+                });
+
+
+            $(document).on('click', '.viewPo', function () {
+                var po = $(this).text();
+                $.ajax({
+                    url: '@Url.Action("GetPO_details", "View_Print_Slip_Approval")',
+                    data: { Id: po },
+                    success: function (response) {
+                        $('#modalBody').html('');
+                        $('#modalBody').html(response);
+                        $('#myModal').modal();
+                    }
+                })
+
+
+            });
+
+        });
+
+       
+
+        function Calculate(id) {
+
+            var qty =parseFloat($('#qty_' + id).val()).toFixed(3)
+            var rate = parseFloat($('#rate_' + id).val()).toFixed(3);
+            var discountPer = parseFloat($('#discountPer_' + id).val()).toFixed(3);
+            var totalAmount = $('#totalAmount_' + id).val();
+            var packagePer =($('#packagePer_' + id).val()=='')?0.00:parseFloat($('#packagePer_' + id).val()).toFixed(3);
+            var packageAmt = $('#packageAmt_' + id).val();
+            var cartageType = $('#ddlCartageType_' + id+" option:selected").val();
+            var cartageRate = parseFloat($('#cartageRate_' + id).val()).toFixed(3);
+            var cartageAmt = $('#cartageAmt_' + id).val();
+            var insuranceRate = $('#insuranceRate_' + id).val();
+            var insuranceAmt = $('#insuranceAmt_' + id).val();
+            var taxableAmount = $('#taxableAmount_' + id).val();
+            var gST = $('#ddlGST_' + id+" option:selected").val();
+            var cgstPercentage = $('#cgstPercentage_' + id).val();
+            var sgstPercentage = $('#sgstPercentage_' + id).val();
+            var igstPercentage = $('#igstPercentage_' + id).val();
+            var sgstAmt = $('#sgstAmt_' + id).val();
+            var cgstAmt = $('#cgstAmt_' + id).val();
+            var igstAmt = $('#igstAmt_' + id).val();
+            var grossAmt = $('#grossAmt_' + id).val();
+
+            var subTotal1 = 0.00;
+            var subTotal2 = 0.00;
+            var discount=(rate*discountPer)/100;
+            var newRate = rate-discount;
+            var totalAmount = parseFloat(qty* newRate).toFixed(3);
+
+
+
+            subTotal1 = totalAmount;
+
+            cartageAmt=0.00;
+
+            $('#totalAmount_' + id).val(totalAmount);
+
+
+            packageAmt = parseFloat((totalAmount * packagePer) / 100).toFixed(3);
+
+            if (packageAmt == NaN)
+                packageAmt = 0.00;
+
+            subTotal1 =parseFloat(totalAmount) +parseFloat(packageAmt);
+
+            $('#packageAmt_' + id).val(packageAmt);
+
+            if($('#ddlCartageType_'+id+" option:selected").val()!=""){
+                if ($('#ddlCartageType_' + id + " option:selected").val() == 4) {
+                    $('#cartageRate_' + id).removeAttr('disabled');
+                    $('#cartageAmt_' + id).removeAttr('disabled');
+                }
+                else {
+                    $('#cartageRate_' + id).attr('disabled', 'disabled');
+                    $('#cartageAmt_' + id).removeAttr('disabled');
+                }
+
+                if ($('#cartageRate_' + id).val() == "" || $('#cartageRate_' + id).val() == null) {
+                    cartageRate = 0.00;
+                    cartageAmt = $('#cartageAmt_' + id).val()==""?0.00:parseFloat($('#cartageAmt_' + id).val()).toFixed(3);
+                }
+                else {
+                    cartageRate = parseFloat(cartageRate).toFixed(3);
+                    cartageAmt = (qty * cartageRate).toFixed(3);
+                }
+            }
+            else {
+                cartageAmt=0.00
+            }
+
+            if (cartageAmt == NaN)
+                cartageAmt = 0.00;
+
+            $('#cartageAmt_' + id).val(cartageAmt);
+
+            subTotal1 = subTotal1 + parseFloat(cartageAmt);
+
+            if (insuranceRate == "") {
+                insuranceRate = 0.00;
+            }
+
+            insuranceAmt = parseFloat(((subTotal1 * parseFloat(insuranceRate)) / 100)).toFixed(3);
+
+            if (insuranceAmt == NaN)
+                insuranceAmt = 0.00;
+
+            subTotal2 = subTotal1;
+
+            subTotal2 = subTotal2 +parseFloat(insuranceAmt);
+
+            $('#insuranceAmt_' + id).val(insuranceAmt);
+
+            var itaxAmt = 0.00;
+            var staxAmt = 0.00;
+            var ctaxAmt = 0.00;
+            var UTGSTPer=0.00;
+            var UTGSTAmt=0.00;
+
+            taxableAmount = parseFloat(subTotal2).toFixed(3);
+
+            $('#taxableAmount_' + id).val(taxableAmount);
+
+            if (gST != '') {
+                var gstType = $('#ddlGST_' + id + " option:selected").text();
+                if (gstType.includes("IGST ")) {
+                    $('#cgstPercentage_' + id).val("0.00");
+                    $('#sgstPercentage_' + id).val("0.00");
+                    $('#igstPercentage_' + id).val("0.00");
+
+                    $('#sgstAmt_' + id).val('0.00');
+                    $('#cgstAmt_' + id).val('0.00');
+                    $('#igstAmt_' + id).val('0.00');
+
+                    var per = parseFloat(gstType.split(" ")[1].replace('%')).toFixed(3);
+                    $('#igstPercentage_' + id).val(per);
+
+                    itaxAmt = parseFloat((subTotal2 * per) / 100).toFixed(3);
+
+                    $('#igstAmt_' + id).val(itaxAmt);
+                }
+                else if (gstType.includes('UTGST ')) {
+                    $('#cgstPercentage_' + id).val("0.00");
+                    $('#sgstPercentage_' + id).val("0.00");
+                    $('#igstPercentage_' + id).val("0.00");
+
+                    $('#sgstAmt_' + id).val('0.00');
+                    $('#cgstAmt_' + id).val('0.00');
+                    $('#igstAmt_' + id).val('0.00');
+
+                    var per = parseFloat(gstType.split(" ")[1].replace('%')).toFixed(3);
+                    $('#sgstPercentage_' + id).val(per);
+                    staxAmt = parseFloat((subTotal2 * per) / 100).toFixed(3);
+                    ctaxAmt = 0.00;
+                    $('#sgstAmt_' + id).val(staxAmt);
+
+                    UTGSTPer=per;
+                    UTGSTAmt=staxAmt;
+                }
+                else {
+                    debugger;
+                    $('#cgstPercentage_' + id).val("0.00");
+                    $('#sgstPercentage_' + id).val("0.00");
+                    $('#igstPercentage_' + id).val("0.00");
+
+                    $('#sgstAmt_' + id).val('0.00');
+                    $('#cgstAmt_' + id).val('0.00');
+                    $('#igstAmt_' + id).val('0.00');
+
+                    var per = parseFloat(gstType.split(" ")[1].replace('%')).toFixed(3);
+
+                    $('#cgstPercentage_' + id).val(parseFloat(per / 2).toFixed(3));
+                    $('#sgstPercentage_' + id).val(parseFloat(per / 2).toFixed(3));
+
+                    staxAmt = parseFloat((subTotal2 * (per/2)) / 100).toFixed(3);
+                    ctaxAmt = staxAmt;
+
+                    $('#sgstAmt_' + id).val(staxAmt);
+                    $('#cgstAmt_' + id).val(ctaxAmt);
+                }
+            }
+            else {
+                itaxAmt = 0.00;
+                staxAmt = 0.00;
+                ctaxAmt = 0.00;
+                $('#cgstPercentage_' + id).val("0.00");
+                $('#sgstPercentage_' + id).val("0.00");
+                $('#igstPercentage_' + id).val("0.00");
+
+                $('#sgstAmt_' + id).val('0.00');
+                $('#cgstAmt_' + id).val('0.00');
+                $('#igstAmt_' + id).val('0.00');
+            }
+
+            var grossAmout = parseFloat(parseFloat(taxableAmount) + parseFloat(itaxAmt) + parseFloat(staxAmt) + parseFloat(ctaxAmt)).toFixed(3);
+            $('#grossAmt_' + id).val(grossAmout);
+
+
+            objData.push({
+                 uid: id,
+                 rate : parseFloat($('#rate_' + id).val()).toFixed(3),
+                 Discount: parseFloat($('#discountPer_' + id).val()).toFixed(3),
+                 Discounted_Amount: totalAmount,
+                 totalAmount : $('#totalAmount_' + id).val(),
+                 PackingChargesPercentage: parseFloat($('#packagePer_' + id).val()).toFixed(3),
+                 PackingChargesAmount: $('#packageAmt_' + id).val(),
+
+                 cartageTypeId: $('#ddlCartageType_' + id + " option:selected").val(),
+                 Cartage_rate : parseFloat($('#cartageRate_' + id).val()).toFixed(3),
+                 CartageAmount: $('#cartageAmt_' + id).val(),
+
+
+                 InsuranceRate: $('#insuranceRate_' + id).val(),
+                 InsuranceAmount: $('#insuranceAmt_' + id).val(),
+
+                 taxableAmount: $('#taxableAmount_' + id).val(),
+                 TaxCode: $('#ddlGST_' + id + " option:selected").val(),
+                 TaxRateType: $('#ddlGST_' + id + " option:selected").text(),
+                 NewRate:newRate,
+                 CGSTPercentage: $('#cgstPercentage_' + id).val(),
+                 SGSTPercentage: $('#sgstPercentage_' + id).val(),
+                 SGSTAmount: $('#sgstAmt_' + id).val(),
+                 CGSTAmount: $('#cgstAmt_' + id).val(),
+                 IGSTPercentage: $('#igstPercentage_' + id).val(),
+                 IGSTAmount: $('#igstAmt_' + id).val(),
+                 UTGSTPercentage:UTGSTPer,
+                 UTGSTAmount: UTGSTAmt,
+                 SubTotal1: subTotal1,
+                 SubTotal2: subTotal2,
+                 GrossAmount: $('#grossAmt_' + id).val(),
+                 Total: totalAmount,
+                 TotalGrosssAmount:$('#grossAmt_' + id).val(),
+                 Remark: $('#remark_' + id).val()
+            });
+
+        }
+
+        function CalculateItemWise() {
+            if ($('.checkbox:checked').length == 0) {
+                alert('Please select item to calculate.');
+                return false;
+            }
+            else {
+                objData = [];
+                var isValid = true;
+
+                $('.checkbox:checked').each(function () {
+                    var id = $(this).attr("id");
+                    if ($('#ddlCartageType_' + id).val() == '' || $('#ddlGST_' + id).val() == '')
+                        isValid = false;
+                });
+
+                if (isValid) {
+                    $('.checkbox:checked').each(function () {
+                        var id = $(this).attr("id");
+
+                        Calculate(id);
+                    });
+                    alert('Calculated.');
+                }
+                else {
+                    alert('GST or Cartage is not selected.');
+                }
+            }
+        }
+
+        function UpdateItems() {
+            var invalidCtrl = [];
+
+        
+
+            $('input[id^="remark"]').css('border', '1px solid black');
+            if ($('.checkbox:checked').length == 0) {
+                alert('Please select item to update.');
+                return false;
+            }
+
+
+            else {
+                var isValid = true;
+                $('.checkbox:checked').each(function () {
+                    var id = $(this).attr("id");
+                    if ($('#remark_' + id).val() == '') {
+                        invalidCtrl.push(id);
+                        isValid = false;
+                    }
+                });
+
+                if (isValid == false) {
+                    $('#remark_' + invalidCtrl[0]).css('border','1px solid red');
+                    alert('Remarks can not be empty.');
+                    return false;
+                }
+
+
+                objData = [];
+                $('.checkbox:checked').each(function () {
+                    var id = $(this).attr("id");
+                    Calculate(id);
+                });
+
+                if (objData.length > 0) {
+                    $.post('@Url.Action("UpdatePOItem")', { PO: $('#PoNO').text(), Data: objData }, function (response) {
+                        if (response.Status == 1) {
+                            alert('Data updated successfully.');
+                            location.href = "@Url.Action("Index","POCalculation")";
+                        }
+                        else {
+                            alert('Data not updated successfully.');
+                        }
+                    });
+                }
+            }
+        }
+
+
+    </script>
+
+
+}

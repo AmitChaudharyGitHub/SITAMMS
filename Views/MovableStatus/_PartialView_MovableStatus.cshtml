@@ -1,0 +1,112 @@
+﻿
+@model IEnumerable<MMS.Models.GetMovableReport>
+@{
+    ViewBag.Title = "";
+    Layout = null;
+
+}
+
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;" class="table table-hover">
+    <tr class="primary">
+        <td  style="width: 50px; text-align: center; border: 1px solid black; ">
+                Sr.No.
+            </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+           Item Name
+        </td>
+
+        <td style="width: 150px; text-align: center; border: 1px solid black;">
+            Unit
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Last Receive Qty
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Last Receive Date
+        </td>
+        <td style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+            Last Issue Qty
+        </td>
+        <td  style="width: 150px; text-align: center; border: 1px solid black;
+                                                                        ">
+          Last Issue Date
+        </td>
+
+       
+        <td style="width: 150px; text-align: center; border: 1px solid black;">
+         Balance Qty
+        </td>
+
+        <td style="width: 100px; text-align: center; border: 1px solid black;">
+         Rate
+        </td>
+        <td style="width: 100px; text-align: center; border: 1px solid black;">
+        Amount
+        </td>
+
+
+        <td  style="width: 200px; text-align: center; border: 1px solid black;">
+           Item Movable Status
+        </td>
+
+        
+       
+
+    
+
+    
+    
+    @foreach (var item in Model)
+    {
+        <tr>
+          
+            <td style="width: 50px; text-align: center; border: 1px solid black; ">
+                @Html.DisplayFor(x=> item.ID)
+            </td>
+           
+            <td  style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.UniteName)
+            </td>
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.LastRcvQty)
+            </td> 
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.ItemReceiveDate)
+            </td>
+
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.LastIssueQty)
+            </td> 
+            <td  style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.ItemIssueDate)
+            </td>
+            
+            <td style="width: 150px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.Qty)
+            </td>
+            <td style="width: 100px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.Rate)
+            </td>
+            <td style="width: 100px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+
+
+
+            
+            <td  style="width: 200px; text-align: center; border: 1px solid black;">
+                @Html.DisplayFor(modelItem => item.MovingStatus)
+            </td>
+          
+          
+        </tr>
+    }
+</table>

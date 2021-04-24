@@ -1,0 +1,100 @@
+﻿@model List<MMS.ViewModels.TransferEWayBill>
+
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+@if (ViewBag.Status == "Pending")
+{
+            <th><input type="checkbox" /></th>
+}
+            <th>Transfer Number</th>
+            <th>Project Name</th>
+            <th>Transfer Date</th>
+            <th>E-Way Bill</th>
+            <th>E-Way Bill Date</th>
+            <th>Amount</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="7">No Record Found</td>
+            </tr>
+        }
+        @foreach (var data in Model)
+        {
+            <tr>
+                @if (ViewBag.Status == "Pending")
+                {
+               <td><input type="checkbox" class="TransferChk" value="@data.TransferNumber" /></td>
+                }
+                <td>@data.TransferNumber
+                </td>
+                <td>@data.ProjectName</td>
+                <td>@data.TransferDate.Value.ToString("dd/MM/yyyy")
+                <input type="hidden" name="HDN_TransferDate" value="@data.TransferDate.Value.ToString("MM/dd/yyyy")" />
+                </td>
+                @if (data.EWayBill == null)
+                {
+                    <td>
+                        <input class="form-control" type="text" name="EWayBillNo" />
+                        </td>
+                        }
+                        else
+                        {
+                    <td>@data.EWayBill</td>
+                        }
+                    
+                @if (data.EWayBillDate == null)
+                {
+                    <td>
+                        <input type="text" class="form-control dateBox DatePicker" name="EWayBillDate" placeholder="mm/dd/yyyy" autocomplete="off" />
+                    </td>
+                }
+                else
+                {
+                    <td>@data.EWayBillDate.Value.ToString("MM/dd/yyyy")</td>
+                }
+                <td>@data.Amount</td>
+                <td>
+                    @if(ViewBag.TransferType == "InterTransfer")
+                    {
+                <a class="IntrDialog" target="_blank" href="/IntraTransfer/InterTransfer_Print?TransferNo=@data.TransferNumber">View</a><br />
+                <a class="Link_Export" href="javascript:void()" onclick="ExportToExcel('/IntraTransfer/Export_InterTransferItems?TransferNumber=@data.TransferNumber')">Export Items</a>
+                    }
+                    @if(ViewBag.TransferType == "IntraTransfer")
+                    {
+                        <a class="IntrDialog" target="_blank" href="/IntraTransfer/IntraTransfer_Print?TransferNo=@data.TransferNumber">View</a><br />
+                        <a class="Link_Export" href="javascript:void()" onclick="ExportToExcel('/IntraTransfer/Export_IntraTransferItems?TransferNumber=@data.TransferNumber')">Export Items</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<input type="hidden" name="HDN_TransferType" value="@ViewBag.TransferType" />
+
+<br />
+@if (ViewBag.Status == "Pending" && Model.Count()>0)
+{
+<input type="button" id="BtnFormSubmit" class="btn btn-primary" value="Submit"/>
+}
+
+
+<script>
+    $(document).ready(function () {
+        $(".DatePicker").datepicker({
+            dateFormat: 'mm/dd/yy',
+            maxDate: 0,
+            changeMonth: true,
+            changeYear: true,
+            value: "",
+            constrainInput:true
+        });
+    });
+</script>

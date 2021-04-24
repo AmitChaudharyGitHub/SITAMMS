@@ -1,0 +1,667 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    string layout = "";
+    var cheking = Session["EmailCheck"].ToString();
+    if (cheking == "admin@sitanet.in")
+    {
+        layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else
+    {
+        layout = "~/Views/Shared/_Layout.cshtml";//
+    }
+    Layout = layout;
+}
+
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+
+<link type="text/css" href="~/Content/toastr.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+<script type="text/javascript" src="~/Scripts/toastr.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link href="@Url.Content("~/Content/themes/base/minified/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+<script>
+    $(function () {
+        $("#txtDateOfaward").datepicker();
+        $("#txtloidate").datepicker();
+        $("#txtStipulatedDateOfStart").datepicker();
+        $("#txtDateofactualStart").datepicker();
+        $("#txtStipulatedDateOfFinish").datepicker();
+    });
+</script>
+
+
+<script type="text/javascript">
+
+    var redUrl = '@Url.Action("Index", "AddProject")';
+
+    var SaveProject = '@Url.Action("SaveProject", "AddProject")';
+    var GetRegion = '@Url.Action("BindRegion", "AddProject")';
+    var GetState = '@Url.Action("GetState", "AddProject")';
+</script>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.ajax({
+            type: 'POST',
+            url: GetRegion,
+
+            dataType: 'json',
+            data: {},
+            complete: function () {
+
+            },
+            success: function (result) {
+                var procemessage = "<option value='0'> Please wait...</option>";
+                $("#ddlRegion").html(procemessage).show();
+                var markup = "<option value='0'>Select Region</option>";
+                $("#ddlRegion").html(markup).show();
+                result = $.parseJSON(result)
+
+                var selectedDeviceModel = $('#ddlRegion');
+                $.each(result, function (index, item) {
+                    selectedDeviceModel.append(
+                        $('<option/>', {
+                            value: item.Value,
+                            text: item.Text
+                        })
+                    );
+                });
+
+
+            },
+            error: function (ex) {
+                alert('Failed to retrieve Region.' + ex);
+            }
+        });
+
+
+        $.ajax({
+
+            type: 'POST',
+            url: GetState,
+            dataType: 'json',
+            data: { CountryID: 'FD49C22E-4C33-4DEA-BC9E-0EDBD7F191E4' },
+            success: function (data) {
+
+                $.each(data, function (i, itname) {
+                    $("#ddlState").append('<option value="' + itname.Value + '">' +
+                         itname.Text + '</option>');
+
+
+
+                });
+
+            }
+
+        })
+
+
+
+
+        $('#btnsave').click(function (e) {
+            debugger;
+
+            var V = Valid();
+
+            if (V == false)
+                return;
+
+            var _griddata = gridToArray();
+
+            var url = SaveProject;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: JSON.stringify(_griddata),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processdata: true,
+
+                success: function (json) {
+                    debugger;
+
+                    if (json.Status == "1") {
+
+                        alert("Data Saved Successfully");
+                        window.location.href = redUrl;
+
+                    } else if (json.Status == "2")
+                    {
+                        alert("Name already exist.");
+                    } else if (json.Status == "3")
+                    {
+                        alert("Server problem")
+                    } else if (json.Status == "4")
+                    {
+                        alert("Problem in saving record.");
+                    }
+
+                },
+
+                error: function () {
+                    alert('Error in Submit Data');
+                }
+            });
+        });
+
+        function gridToArray() {
+            var obj = new Object();
+
+            obj.ProjectName = $("#txtprojectName").val();
+            obj.Location = $("#txtAddress").val();
+            obj.DateOfAward = $("#txtDateOfaward").val();
+            obj.LOiNO = $("#txtloiNo").val();
+            obj.LOIDate = $("#txtloidate").val();
+            obj.Region = $("#txtregionHandlingProject").val();
+            obj.ProjectInCharge = $("#txtProjectInchargeName").val();
+            obj.MobileNumber = $("#txtMobileNo").val();
+            obj.StipulatedDateOfStart = $("#txtStipulatedDateOfStart").val();
+            obj.DateofActualStart = $("#txtDateofactualStart").val();
+            obj.StipulatedDateOfFinish = $("#txtStipulatedDateOfFinish").val();
+            obj.OrignalContractValue = $("#txtOrginalContractValue").val();
+            obj.RegionId = $("#ddlRegion option:selected").val();
+            obj.ProjectCode = $("#txtProjectCode").val();
+            obj.StateId = $("#ddlState option:selected").val();
+            obj.TINNo = $("#txtCompnayTinNo").val();
+            obj.GSTNO = $("#txtCompnayGSTNo").val();
+            return obj;
+
+        }
+
+
+        function Valid() {
+
+
+
+
+            var ProjectName = $("#txtprojectName").val();
+            var Location = $("#txtAddress").val();
+            var DateOfAward = $("#txtDateOfaward").val();
+            var Region = $("#txtregionHandlingProject").val();
+            var ProjectInCharge = $("#txtProjectInchargeName").val();
+            var MobileNumber = $("#txtMobileNo").val();
+            var StipulatedDateOfStart = $("#txtStipulatedDateOfStart").val();
+            var DateofActualStart = $("#txtDateofactualStart").val();
+            var StipulatedDateOfFinish = $("#txtStipulatedDateOfFinish").val();
+            var OrignalContractValue = $("#txtOrginalContractValue").val();
+            var RegionI = $("#ddlRegion option:selected").text();
+            var ProjectCode = $("#txtProjectCode").val();
+            var StateId = $("#ddlState option:selected").val();
+            var TinNo = $("#txtCompnayTinNo").val();
+            var GSTNo = $("#txtCompnayGSTNo").val();
+
+            var rr = true;
+            if (ProjectName == "") {
+                alert('Enter the Project Name.');
+                $('#txtprojectName').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtprojectName').css('border-color', '');
+            }
+
+            if (Location == "") {
+                alert('Enter the Address.');
+                $('#txtAddress').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtAddress').css('border-color', '');
+            }
+
+
+            if (DateOfAward == "") {
+                alert('Enter the Date of award.');
+                $('#txtDateOfaward').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtDateOfaward').css('border-color', '');
+            }
+
+
+            if (Region == "") {
+                alert('Enter the Name Of Region Handling Project.');
+                $('#txtregionHandlingProject').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtregionHandlingProject').css('border-color', '');
+            }
+
+
+            if (ProjectInCharge == "") {
+                alert('Enter Project InCharge Name.');
+                $('#txtProjectInchargeName').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtProjectInchargeName').css('border-color', '');
+            }
+
+
+            if (MobileNumber == "") {
+                alert('Enter Mobile Number.');
+                $('#txtMobileNo').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtMobileNo').css('border-color', '');
+            }
+
+            if (StipulatedDateOfStart == "") {
+                alert('Enter Stipulated Date Of Start.');
+                $('#txtStipulatedDateOfStart').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtStipulatedDateOfStart').css('border-color', '');
+            }
+
+
+            if (DateofActualStart == "") {
+                alert('Enter Date of Actual Start.');
+                $('#txtDateofactualStart').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtDateofactualStart').css('border-color', '');
+            }
+
+            if (StipulatedDateOfFinish == "") {
+                alert('Enter Stipulated Date Of Finish.');
+                $('#txtStipulatedDateOfFinish').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtStipulatedDateOfFinish').css('border-color', '');
+            }
+
+            if (OrignalContractValue == "") {
+                alert('Enter Orignal Contract Value.');
+                $('#txtOrginalContractValue').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtOrginalContractValue').css('border-color', '');
+            }
+
+
+            if (RegionI == "Select Region") {
+                alert('Select Region.');
+                $('#ddlRegion').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlRegion').css('border-color', '');
+            }
+
+            if (ProjectCode == "") {
+                alert('Enter Project Code.');
+                $('#txtProjectCode').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtProjectCode').css('border-color', '');
+            }
+
+
+            if (StateId == "Select State") {
+                alert('Select State.');
+                $('#ddlState').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#ddlState').css('border-color', '');
+            }
+
+            if (TinNo == "") {
+                alert('Enter TIN NO.');
+                $('#txtCompnayTinNo').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtCompnayTinNo').css('border-color', '');
+            }
+
+            if (GSTNo == "") {
+                alert('Enter GST NO.');
+                $('#txtCompnayGSTNo').css('border-color', '#f0551b');
+
+                rr = false;
+            }
+            else {
+                $('#txtCompnayGSTNo').css('border-color', '');
+            }
+
+            
+
+
+
+
+            if (rr == false) {
+
+
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+ 
+
+    });
+</script>
+
+
+
+<section id="content_wrapper">
+    <!-- Begin: Content -->
+    <section id="content" class="table-layout animated fadeIn">
+
+        <!-- begin: .tray-center -->
+        <div class="tray tray-center">
+
+            <div class="mw1000 center-block">
+                <div class="admin-form theme-primary">
+                    <!-- Begin: Content Header -->
+                    <!-- Begin: Admin Form -->
+                    <div class="form-headerStyle theme-primary">
+
+                        <div class="panel heading-border">
+                            <div class="panel-body bg-light">
+                                <div class="section-divider mb40" id="spy1">
+                                    <span style="color:#4a89dc">Project Master</span>
+                                </div>
+
+                                <form class="row" id="loginForm">
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-horizontal">
+
+                                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ProjectName", null, new { id = "txtprojectName", @class = "form-control gui-input", @placeholder = "Name Of Project" })
+                                                            <label for="projectname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("Location", null, new { id = "txtAddress", @class = "form-control gui-input", @placeholder = "Address" })
+                                                            <label for="location" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("Region", new SelectList(string.Empty, "Value", "Text"), "Select Region", htmlAttributes: new { @id = "ddlRegion", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ProjectCode", null, new { id = "txtProjectCode", @class = "form-control gui-input", @placeholder = "Project Code(Up To 4 Letter.)" })
+                                                            <label for="location" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("DateOfaward", null, new { id = "txtDateOfaward", @class = "form-control gui-input", @placeholder = "Date of Award" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("LOINo", null, new { id = "txtloiNo", @class = "form-control gui-input", @placeholder = "LOI No." })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="row">
+
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("LOIDate", null, new { id = "txtloidate", @class = "form-control gui-input", @placeholder = "LOI Date" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("RegionalHandlingProject", null, new { id = "txtregionHandlingProject", @class = "form-control gui-input", @placeholder = "Name Of Region Handling Project" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("ProjectInChargeName", null, new { id = "txtProjectInchargeName", @class = "form-control gui-input", @placeholder = "Enter Project InCharge Name" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("MobileNo", null, new { id = "txtMobileNo", @class = "form-control gui-input", @placeholder = "Enter Contact No." })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("StipulatedDateOfStart", null, new { id = "txtStipulatedDateOfStart", @class = "form-control gui-input", @placeholder = "Stipulated Date Of Start" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("DateofActualStart", null, new { id = "txtDateofactualStart", @class = "form-control gui-input", @placeholder = "Date of Actual Start" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("StipulatedDateOfFinish", null, new { id = "txtStipulatedDateOfFinish", @class = "form-control gui-input", @placeholder = "Stipulated Date Of Finish" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("OrignalContractValue", null, new { id = "txtOrginalContractValue", @class = "form-control gui-input", @placeholder = "Orignal Contract Value" })
+                                                            <label for="firstname" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field select">
+
+                                                            @Html.DropDownList("State", new SelectList(string.Empty, "Value", "Text"), "Select State", htmlAttributes: new { @id = "ddlState", @class = "form-control" })
+
+                                                            <i class="arrow"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("CompanyTinNo", null, new { id = "txtCompnayTinNo", @class = "form-control gui-input", @placeholder = "TIN NO." })
+                                                            <label for="location" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="section">
+                                                        <label class="field prepend-icon">
+                                                            @Html.TextBox("CompanyGSTNo", null, new { id = "txtCompnayGSTNo", @class = "form-control gui-input", @placeholder = "GST NO." })
+                                                            <label for="location" class="field-icon">
+                                                                <i class="fa fa-building"></i>
+                                                            </label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-10" style="text-align:right;">
+                                                    @*<input type="button" id="btnsave" class="btn btn-primary" value="Create" />*@
+                                                    <input type="button" id="btnsave" class="btn btn-primary" value="Save Project Detail" />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    }
+
+
+
+
+                                </form>
+
+
+
+                                
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- end: .tray-center -->
+        <!-- begin: .tray-right -->
+        <!-- end: .tray-right -->
+
+    </section>
+    <!-- End: Content -->
+</section>

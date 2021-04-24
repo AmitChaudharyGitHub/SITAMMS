@@ -1,0 +1,393 @@
+﻿
+
+@model MMS.Controllers.View_Print_Slip_ApprovalController.PrintData
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+
+
+    @* FOR EMPLOYEE NAME BINDING HERE *@
+
+    <style>
+        td {
+            text-align: center;
+        }
+
+        table tr td {
+            font-size: 12px;
+        }
+    </style>
+    <style type="text/css">
+        .tblEmployee {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+
+        .EmployeeTableTH {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #dedede;
+        }
+
+        .EmployeeTableTD {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+    </style>
+
+
+
+
+
+
+    @* Print Code here *@
+    <style>
+        #divtoprint, #divtoprint * {
+            visibility: visible;
+        }
+
+        #divtoprint {
+        }
+    </style>
+
+
+
+
+    <script>
+        function PrintContent() {
+            var DocumentContainer = document.getElementById('divtoprint');
+            var WindowObject = window.open("", "PrintWindow",
+            "width=1000,height=650,top=50,left=50,toolbars=no,scrollbars=yes,status=no,resizable=yes");
+            WindowObject.document.writeln(DocumentContainer.innerHTML);
+            WindowObject.document.close();
+            WindowObject.focus();
+            WindowObject.print();
+            WindowObject.close();
+
+        }
+    </script>
+
+
+
+</head>
+<body>
+    <div id="divtoprint">
+        <style type="text/css">
+            @@media print {
+                table, p, div {
+                    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+
+                table {
+                    border-style: solid;
+                    border-color: #000000;
+                    border-top-width: 0.5px;
+                    border-left-width: 0.5px;
+                    border-bottom-width: 0px;
+                    border-right-width: 0px;
+                }
+
+                tr, td {
+                    border-style: solid;
+                    border-color: #000000;
+                }
+
+                tr {
+                    border-width: 0px;
+                }
+
+                .nb {
+                    border-bottom-width: 0px;
+                }
+
+                td, th {
+                    border-top-width: 0px;
+                    border-left-width: 0px;
+                    border-bottom-width: 0.5px;
+                    border-right-width: 0.5px;
+                }
+
+                .breakpage {
+                    page-break-after: always;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                    page-break-after: auto;
+                }
+            }
+        </style>
+
+
+
+
+        <center>
+            <table class="table table-bordered" cellpadding="4" cellspacing="0" border="1" width="100%">
+
+                <tbody>
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <span style="font-weight:bold; font-size:14px;"><u>Debit Note</u></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3"><img src="~/Images/logo.png" /></td>
+                        <td>
+                            <p>
+                                <span style="font-size:20px; font-weight:bold;">Ahluwalia Contracts (India) Ltd</span>
+                                <span style="float:right;">@Model.HeaderData.ProjectName</span>
+                            </p>
+                            <p>
+                                @ViewBag.BillingAddress
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+
+        <table class="table table-bordered" style="width:100%" cellpadding="4" cellspacing="0" border="1">
+
+            <thead>
+
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:left; font-size:12px;">
+                        <strong>Project Name & Address:  </strong>
+                        <p>@Model.HeaderData.ProjectName</p>
+                        <p style="margin:0px; font-size:12px;">@Model.HeaderData.Location</p>
+                    </td>
+                    <td colspan="2" style="text-align:left;">
+                        <strong>GSTIN No.: </strong>
+                        @ViewBag.SiteGSTIN
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:left; font-size:12px;">
+                        <strong>CIN No.:</strong> <span>L45101DL1979PLC009654</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px;">
+                        <strong>Supplier's Name & Address:</strong>
+                        <p>
+                            @Model.HeaderData.Name     <br />  @Model.HeaderData.Address <br /> @Model.HeaderData.Vendor_country_state_city
+                        </p>
+                        <p style="margin:0px; font-size:12px;"><strong>Supplier GST No.</strong> @Model.HeaderData.VendorGSTNo</p>
+                        <p style="margin:0px; font-size:12px;"><strong>Contact:</strong> @Model.HeaderData.ContactPerson (@Model.HeaderData.MobileNo)</p>
+                    </td>
+                    <td style="text-align:left; font-size:14px;" colspan="1">
+                        <strong>Debit Note No.</strong>  @ViewBag.DebitNoteCode
+                    </td>
+                    <td style="text-align:left; font-size:14px;" colspan="1">
+                        <strong> Debit Note Date</strong>  @ViewBag.DebitNoteDate
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left; font-size:12px;" colspan="3">
+                        <strong> Reason: </strong>  @ViewBag.Reason
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        <br/>
+
+        <div class="panel-body pn">
+
+            @{int rowNo = 1;}
+
+            <table id="t01" width="100%" style="font-size:10px;" cellpadding="4" cellspacing="0" border="1">
+                <thead>
+                    <tr>
+                        <th rowspan="2">S.No.</th>
+                        <th colspan="16" style="text-align:center">Description</th>
+                        <th>HSN Code</th>
+                        <th>Item Code</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <th>Qty</th>
+                        <th>Rate (Rs.) </th>
+                        <th>Discount (%) </th>
+                        <th>Amount(After Discount)</th>
+                        <th>P&F Chrg. %</th>
+                        <th>P&F Amt</th>
+                        <th>Cartage Type</th>
+                        <th>Cartage Type Rate</th>
+                        <th>Cartage Amt.</th>
+                        <th>Insurance (%)</th>
+                        <th>Ins. Amt.</th>
+                        <th>Taxable Amount</th>
+                        <th>CGST (%)</th>
+                        <th>SGST/UTGST (%) </th>
+                        <th>IGST (%) </th>
+                        <th>CGST Amt.(Rs.)</th>
+                        <th>SGST/UTGST Amt.(Rs.)</th>
+                        <th>IGST Amt.(Rs.)</th>
+                        <th>Amt(Rs.)</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+
+                    @foreach (var c in Model.ItemData)
+                    {
+
+
+                        <tr>
+                            <td rowspan="2"><label>@rowNo</label>   @{ rowNo++; }</td>
+                            <td colspan="16">
+                                @c.ItemName <br />
+                                @if (c.ItemDescrp == null)
+                                {
+                                }
+                                else
+                                {
+
+                                    @c.ItemDescrp.ToString()
+                                }
+                            </td>
+                            <td>@c.HSNCode</td>
+                            <td>@c.ItemNo</td>
+                            <td>@c.UnitName</td>
+                        </tr>
+                        <tr>
+                            <td>@c.Qty</td>
+                            <td>@c.Rate</td>
+                            <td>@c.Discount</td>
+                            <td>@c.ItemToTAmt</td>
+                            <td>@c.PackagePercentage</td>
+                            <td>@c.PackingPercentageAmt</td>
+                            <td>@c.CartageType</td>
+                            <td>@c.CartageTypeRate</td>
+                            <td>@c.CartageAmt</td>
+                            <td>@c.InsurancePercentage</td>
+                            <td>@c.InsurancePercentageAmt</td>
+                            <td>@c.TaxableAmount</td>
+                            <td>@c.CGSTPercentage</td>
+                            <td>@c.SGSTAndUTGSTPercentage</td>
+                            <td>@c.IGST</td>
+                            <td>@c.CGSTAmt</td>
+                            <td>@c.SGSTAndUTGSTAmt</td>
+                            <td>@c.IGSTAmt</td>
+                            <td>@(c.GrossAmount+c.TaxableAmount)</td>
+                        </tr>
+
+                                }
+
+                </tbody>
+
+
+
+
+                <tfoot>
+                    <tr>
+                        <td colspan="2"><b>Grand Total</b></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.Total</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalPackingSum</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalCartageSum</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalInsuranceSum</td>
+                        <td>@Model.HeaderData.TotalTaxableAmountSum</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>@Model.HeaderData.TotalCGSTSum</td>
+                        <td>@Model.HeaderData.TotalSCGSTAndUTGSTSum</td>
+                        <td>@Model.HeaderData.IGSTSum</td>
+                        <td>@Model.HeaderData.GrandTotal</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="20" style="text-align:left;">
+                            <b> Amount In Word :</b>  @ViewBag.PrintamountInWord
+                        </td>
+                    </tr>
+                </tfoot>
+
+
+            </table>
+
+        </div>
+
+        <br />
+        <table class="table" style="width:50%; text-align:center;  border:1px solid black;" cellpadding="4" cellspacing="0" border="1">
+            <tr>
+                <td colspan="4">
+                    <h4>Particulars of Item Returned / Debited</h4>
+                </td>
+            </tr>
+            <tr>
+                <th>S.No.</th>
+                <th>Supplier/PC Bill No</th>
+                <th>Date</th>
+                <th>Amt</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>@ViewBag.ChallanNo</td>
+                <td>@ViewBag.ChallanDate</td>
+                <td>@Model.HeaderData.GrandTotal</td>
+                    </tr>
+
+                </table>
+                <br />
+                <table class="table table-bordered" style="width:100%" cellpadding="4" cellspacing="0" border="1">
+                    <tr>
+                        <td style="text-align:left; font-size:14px;" colspan="2"><strong>Reason for Debit</strong></td>
+
+                    </tr>
+                    <tr style="height:80px;">
+                        <th style="text-align:left; font-size:18px; vertical-align:bottom;" rowspan="2">Acceptance by</th>
+                        <th style="text-align:left; font-size:18px; vertical-align:bottom;" rowspan="2">Authorised Signatory</th>
+                    </tr>
+                </table>
+
+
+                <br />
+
+                <div class="breakpage"></div>
+
+                <br />
+
+
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div>
+                <input type="button" id="btnPrint" class="btn btn-primary" value="Print" onclick="PrintContent();" />
+                @if (!ViewBag.ViewOnly)
+                {
+                    <a href="@Url.Action("EditDebitNote", "VendorDebitNote", new { DebitCode = ViewBag.DebitNoteCode })" class="btn btn-primary">Edit</a>
+                    <input type="button" id="btnFinalApprove" class="btn btn-danger" value="Final Approve" data="@Model.HeaderData.UId" />
+                }
+            </div>
+
+        </body>
+    </html>

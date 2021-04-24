@@ -1,0 +1,93 @@
+﻿@model List<MMS.ViewModels.BudgetItems>
+    @{ 
+        int itmsno = 0;
+        int itmyrsnqty = 0;
+        int itmyrsnrate = 0;
+        int itmyrsnamt = 0;
+    }
+
+<style>
+    th {
+        font-weight: bold !important;
+    }
+    tr input {
+    width:80px;
+    }
+
+</style>
+
+    <table class="table table-bordered">
+
+        <thead>
+            <tr>
+                <th>SNo.</th>
+                <th>Items</th>
+                <th>Unit</th>
+                <th></th>
+                <th>Total Budget</th>
+                @for (int i = 0; i < (int)ViewBag.TotalYears; i++)
+            {
+                    <th>@(DateTime.Now.Year + i + "-" + (DateTime.Now.Year + i + 1))</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td rowspan="4">@(itmsno+1)</td>
+                    <td rowspan="4">
+                        @item.ItemName
+                </td>
+                <td rowspan="4">@item.ItemUnit</td>
+
+            </tr>
+            <tr>
+                <td>Qty</td>
+                <td>
+                    <input type="text" class="BudgetQty" indexnum="@itmsno" name="YearBudget[@itmsno].BudgetItemQty" oninput="this.value.replace(/[^0-9\.]/g,'')" />
+                    <input type="hidden" class="BudgetQtyDiff@(itmsno)" />
+                    <input type="hidden" class="ItemName" name="ItemName" value="@item.ItemName" />
+                </td>
+                @for (int i = 0; i < (int)ViewBag.TotalYears; i++)
+                {
+                    <td>
+                        <input type="text" class="YearQty@(itmsno)" name="YearBudget[@itmyrsnqty].ItemQty" oninput="this.value.replace(/[^0-9\.]/g,'')" />
+                        <input type="hidden" name="YearBudget[@itmyrsnqty].BudgetYear" value="@(DateTime.Now.Year+i)" />
+                        <input type="hidden" class="ItemID" name="YearBudget[@itmyrsnqty].ItemID" value="@item.ItemID" />
+                        <input type="hidden" id="hdProject" name="YearBudget[@itmyrsnqty].ProjectID" value="@ViewBag.ProjectID" />
+                     
+                    </td>
+                    itmyrsnqty++;
+                }
+            </tr>
+            <tr>
+                <td>Rate</td>
+                <td><input type="text" class="BudgetRate" indexnum="@itmsno" name="YearBudget[@itmsno].BudgetItemRate" oninput="this.value.replace(/[^0-9\.]/g,'')" /></td>
+                @for (int i = 0; i < (int)ViewBag.TotalYears; i++)
+                {
+                    <td><input type="text" class="YearRate@(itmsno)" name="YearBudget[@itmyrsnrate].ItemRate" oninput="this.value.replace(/[^0-9\.]/g,'')" /></td>
+                    itmyrsnrate++;
+                }
+                
+            </tr>
+            <tr>
+                <td>Amount</td>
+                <td>
+                    <input type="text" class="BudgetAmt@(itmsno)" indexnum="@itmsno" name="YearBudget[@itmsno].BudgetItemAmt" oninput="this.value.replace(/[^0-9\.]/g,'')" readonly />
+                     <input type="hidden" class="BudgetAmtDiff@(itmsno)"  indexnum="@itmsno" />
+                </td>
+                @for (int i = 0; i < (int)ViewBag.TotalYears; i++)
+                {
+                    <td><input type="text" class="YearAmt@(itmsno)" name="YearBudget[@itmyrsnamt].TotalAmt" oninput="this.value.replace(/[^0-9\.]/g,'')" readonly/></td>
+                    itmyrsnamt++;
+                }
+              
+            </tr>
+
+                itmsno++;
+            }
+        </tbody>
+
+    </table>
+

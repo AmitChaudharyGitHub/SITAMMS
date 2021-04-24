@@ -1,0 +1,44 @@
+﻿@model MMS_P.ViewModels.GetInterDetailOnPrint
+
+
+
+
+<table style="width:100%" id="tbl_Data" border="1">
+    @{int rowNo = 1;}
+    <tr>
+        <th>S.No</th>
+        <th>Description of Good</th>
+        <th>HSN Code</th>
+        <th>UOM</th>
+        <th>Stock Qty.</th>
+        <th>Stock Delivery Qty.</th>
+
+        <th>Balance Quantity</th>
+
+        <th>Delivery Rate</th>
+        <th>Discounted Rate</th>
+        <th> Estimated Value @*Estimated Value(rs.)*@</th>
+    </tr>
+
+    @foreach (var dt in Model.ItemData)
+    {
+
+
+        <tr>
+            <td>@rowNo  @{ rowNo++; }</td>
+            <td>@dt.ItemName</td>
+            <td>@dt.HSNCode</td>
+            <td>@dt.UnitCode</td>
+            <td style="text-align:right">@dt.StockQty</td>
+            <td style="text-align:right">@dt.DeliveryQty</td>
+
+            <td style="text-align:right">@dt.StockBalancedQty</td>
+            <td style="text-align:right">@dt.DeliveryRate</td>
+            <td style="text-align:right">@dt.DiscountedRate</td>
+            <td style="text-align:right">@dt.PICEstimatedValue</td>
+
+        </tr>
+                }
+
+</table>
+
