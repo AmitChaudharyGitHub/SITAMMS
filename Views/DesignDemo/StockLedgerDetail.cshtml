@@ -206,32 +206,32 @@
                                                             <label class="field select">
 
                                                                 @Html.DropDownList("Projects", new SelectList(string.Empty, "Value", "Text"), "Select Project ", htmlAttributes: new { @id = "Projects", @class = "form-control" })
-                                                               
+
                                                             </label>
                                                         </div>
                                                     </div>
-                                                   
-                                                 
-                                                <div class="col-md-2">
-                                                    <div class="section">
-                                                        <label>Group Name</label>
-                                                        <label class="field select">
-                                                            @Html.DropDownList("ItemGroup", null, "Select Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
-                                                           
-                                                        </label>
+
+
+                                                    <div class="col-md-2">
+                                                        <div class="section">
+                                                            <label>Group Name</label>
+                                                            <label class="field select">
+                                                                @Html.DropDownList("ItemGroup", null, "Select Group", htmlAttributes: new { @id = "ItemGroup", @class = "form-control" })
+
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                </div>
 
                                                     <div class="col-md-3">
                                                         <div class="section">
                                                             <label>Item Name</label>
                                                             <label class="field select">
                                                                 @Html.DropDownList("ItemMaster", new SelectList(string.Empty, "Value", "Text"), "Select Item", new { @id = "ItemMaster", @class = "form-control" })
-                                                               
+
                                                             </label>
                                                         </div>
                                                     </div>
-                                  
+
 
                                                     <div class="col-md-2">
                                                         <label>&nbsp;</label> <div class="clearfix"></div>
@@ -261,10 +261,10 @@
                                     </div>
                                     <div class="col-md-4"></div>
                                 </div>
-                               
 
 
-                                
+
+
                                 <div class="pager glyphicon-align-center" id="formbody">
 
 
@@ -275,8 +275,12 @@
                                     <span></span>
                                 </div>
 
+                                <br />
+                                <div>
+                                    @Html.ActionLink("Export to Excel", "GetExcelStockLedgerDetail", "DesignDemo", new { @class = "btn btn-primary" })
+                                    @*@Html.ActionLink("Print", "CurrentStockPdf", "CurrentStock_Report", new { @class = "btn btn-primary", @target = "_blank" })*@
+                                </div>
 
-                               
 
                             </div>
                         </div>

@@ -788,6 +788,37 @@ namespace MMS.Controllers
         }
 
 
+        public void GetExcelStockLedgerDetail()
+        {
+            List<StockLedgerDetail> allCust = (List<StockLedgerDetail>)Session["KeepLedger"];
+            WebGrid grid1 = new WebGrid(source: allCust, canPage: false, canSort: false);
+
+
+            string gridHtml = grid1.GetHtml(
+                    columns: grid1.Columns(
+                   grid1.Column(header: "S.No", format: (item) => item.WebGrid.Rows.IndexOf(item) + 1),
+                     grid1.Column("Datee", header: "Date", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.Datee)),
+                       grid1.Column("Particulars", header: "Vendor Name"),
+                       //grid1.Column("IssueTo", header: "Issue To", style: "alignC"),
+                       grid1.Column("MRN", header: "MRN", style: "alignC"),
+                       grid1.Column("IssueNo", header: "Issue No."),
+                       grid1.Column("ReceiveQty", header: "Receive Qty.", style: "alignR"),
+                       grid1.Column("Issue_Qty", header: "Issue Qty.", style: "alignR"),
+                       grid1.Column("BalanceQty", header: "Balance Qty.", format: (item) => string.Format("{0:0.00}", item.BalanceQty), style: "alignR"),
+                       grid1.Column("Receive_Rate", header: "Transaction Rate"),
+                       grid1.Column("TransactionAmount", header: "Transaction Amount", style: "alignR"),
+                       grid1.Column("NetAMount", header: "Balance Amount", format: (item) => string.Format("{0:0.00}", item.NetAMount), style: "alignR")
+                       )
+                    ).ToString();
+
+            Response.ClearContent();
+            Response.AddHeader("content-disposition", "attachment; filename=StockLedgerReport.xls");
+            Response.ContentType = "application/excel";
+            Response.Write(gridHtml);
+            Response.End();
+        }
+
+
         public FileStreamResult StockLedgerRecordPdf()
         {
             List<StockLedgerDetail> allCust = (List<StockLedgerDetail>)Session["KeepLedger"];
